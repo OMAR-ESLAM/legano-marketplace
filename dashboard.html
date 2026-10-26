@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>لوحة المحامي | LEGANO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F8FAFB;--bg2:#F1F5F9;--gold:#0F172A;--gold-soft:#92620C;--accent:#B8860B;--cyber:#2563EB;--white:#1E293B;--gray:#64748B;--success:#059669;--danger:#E5484D;--surface:#fff;--border:#E2E8F0}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--white);min-height:100vh;line-height:1.7}
+.logo{font-family:'Syne',sans-serif;font-weight:800;letter-spacing:5px;background:linear-gradient(90deg,var(--gold),var(--gold-soft));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none}
+#msg{position:fixed;top:78px;left:50%;transform:translateX(-50%);z-index:9000;padding:11px 20px;border-radius:12px;display:none;font-size:13px;font-weight:700;box-shadow:0 8px 28px rgba(0,0,0,.12);max-width:90%}.ok{background:#E7F7EF;color:var(--success);border:1px solid #BCE6D2}.er{background:#FDECEC;color:var(--danger);border:1px solid #F6C7C9}
+#authBox{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:16px;overflow-y:auto}
+.login-box{background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:40px 32px;width:100%;max-width:400px;text-align:center;box-shadow:0 20px 60px rgba(15,23,42,.08)}
+.login-box .logo{font-size:24px;letter-spacing:6px;display:inline-block}.login-box h1{font-size:16px;font-weight:900;margin:12px 0 22px}
+.f{margin-bottom:14px;text-align:right}.f label{font-size:12px;color:var(--gray);margin-bottom:6px;display:block;font-weight:600}
+.f input,.f textarea,.f select{width:100%;padding:12px 14px;background:rgba(15,23,42,.02);border:1px solid rgba(15,23,42,.08);border-radius:10px;color:var(--white);font-family:'Cairo',sans-serif;font-size:13px;outline:none;transition:border-color .2s}
+.f input:focus,.f textarea:focus,.f select:focus{border-color:rgba(184,134,11,.5)}.f textarea{resize:vertical;line-height:1.8}
+.m-submit{width:100%;margin-top:6px;background:linear-gradient(135deg,#0F172A,#1E3A5F);color:#fff;border:none;padding:14px;border-radius:12px;font-family:'Cairo',sans-serif;font-size:14px;font-weight:900;cursor:pointer;transition:transform .15s,box-shadow .2s}.m-submit:hover{transform:scale(1.01);box-shadow:0 8px 28px rgba(15,23,42,.25)}
+.link{background:none;border:0;color:var(--cyber);font-family:'Cairo',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;margin-top:16px}
+.topbar{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.topbar .logo{font-size:16px}
+.tabs{display:flex;gap:4px;flex-wrap:wrap}.tab-btn{padding:9px 16px;border-radius:8px;border:none;background:transparent;color:var(--gray);font-family:'Cairo',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;transition:all .15s}.tab-btn:hover{background:var(--bg2);color:var(--white)}.tab-btn.active{background:#0F172A;color:#fff}
+.logout-btn{background:transparent;border:1px solid var(--border);color:var(--gray);padding:8px 14px;border-radius:8px;font-family:'Cairo',sans-serif;font-size:12px;font-weight:700;cursor:pointer}
+.wrap{max-width:900px;margin:0 auto;padding:24px 16px 80px}.view{display:none}.view.active{display:block;animation:fi .3s}@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.hello{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:20px}.hello h2{font-size:20px;font-weight:900}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin-bottom:24px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px}.stat-card .lbl{font-size:12px;color:var(--gray);font-weight:700;margin-bottom:8px}.stat-card .val{font-family:'Syne',sans-serif;font-size:32px;font-weight:800}.stat-card .sub{font-size:11px;color:var(--gray);margin-top:2px}
+.stat-card.gold .val{color:var(--accent)}.stat-card.success .val{color:var(--success)}.stat-card.cyber .val{color:var(--cyber)}
+.status-tag{font-size:11px;font-weight:800;padding:4px 12px;border-radius:20px;background:rgba(100,116,139,.12);color:var(--gray)}.status-tag.approved{background:rgba(5,150,105,.12);color:var(--success)}.status-tag.rejected{background:rgba(229,72,77,.12);color:var(--danger)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:18px}.card h3{font-size:15px;font-weight:900;margin-bottom:4px}.card .hint{font-size:12px;color:var(--gray);margin-bottom:16px}
+.lbl2{font-size:12.5px;font-weight:800;color:var(--gold-soft);margin:18px 0 10px}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:560px){.row{grid-template-columns:1fr}}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{cursor:pointer}.chip input{position:absolute;opacity:0;pointer-events:none}.chip span{display:inline-block;padding:8px 14px;border:2px solid rgba(15,23,42,.08);border-radius:12px;font-size:12.5px;font-weight:700;background:rgba(15,23,42,.02);transition:all .15s}.chip:has(input:checked) span{border-color:var(--accent);background:rgba(184,134,11,.08);color:var(--gold-soft)}
+.m-upload{position:relative;border:2px dashed rgba(184,134,11,.3);border-radius:10px;padding:16px;text-align:center;cursor:pointer;font-size:12.5px;color:var(--gray);transition:border-color .2s,background .2s;margin-bottom:14px}.m-upload:hover{border-color:rgba(184,134,11,.55);background:rgba(184,134,11,.03)}.m-upload input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.pub{display:flex;align-items:center;gap:10px;padding:14px;border-radius:12px;background:rgba(37,99,235,.05);border:1px solid rgba(37,99,235,.15);font-size:13px;font-weight:700;margin-top:16px;cursor:pointer}.pub input{width:18px;height:18px;accent-color:var(--cyber)}
+.hide{display:none}
+</style></head><body>
+<div id="msg"></div>
+<div id="authBox"><div class="login-box">
+  <div class="logo">LEGANO</div><h1 id="aTitle">دخول المحامين</h1>
+  <div class="f" id="nameWrap" style="display:none"><label>الاسم (يظهر للزوار)</label><input id="aName" placeholder="مثال: أ. أحمد محمد"></div>
+  <div class="f"><label>البريد الإلكتروني</label><input id="aEmail" type="email" dir="ltr" autocomplete="email"></div>
+  <div class="f"><label>كلمة السر (8 حروف على الأقل)</label><input id="aPass" type="password" dir="ltr" autocomplete="current-password"></div>
+  <button class="m-submit" id="bLogin">دخول</button><button class="link" id="bSwitch"></button>
+</div></div>
+
+<div id="panel" class="hide">
+  <div class="topbar"><a class="logo" href="find-lawyer.html">LEGANO</a>
+    <div class="tabs"><button class="tab-btn active" data-tab="stats">الإحصائيات</button><button class="tab-btn" data-tab="profile">بياناتي</button><button class="tab-btn" data-tab="verify">التوثيق</button></div>
+    <button class="logout-btn" id="bOut">خروج</button></div>
+  <div class="wrap">
+    <div class="view active" id="v_stats">
+      <div class="hello"><h2>أهلاً <span id="hName"></span></h2><span class="status-tag" id="hStat"></span><span class="status-tag" id="hPub"></span></div>
+      <div class="stats-grid" id="stats"></div>
+      <div class="card"><h3>إزاي ترفع أرقامك؟</h3><p class="hint" style="margin:0">كمّل بياناتك وصورتك، وقدّم على التوثيق علشان تظهر بشارة «موثّق» وتاخد ثقة أكتر من الزوار.</p></div>
+    </div>
+    <div class="view" id="v_profile"><div class="card"><h3>بياناتك العامة</h3><p class="hint">دي اللي بتظهر للزوار في صفحتك.</p>
+      <div class="f"><label>الاسم</label><input id="fName" maxlength="80"></div>
+      <div class="row"><div class="f"><label>المحافظة</label><select id="fCity"></select></div><div class="f"><label>سنوات الخبرة</label><input id="fExp" type="number" min="0" max="70"></div></div>
+      <div class="row"><div class="f"><label>درجة القيد</label><select id="fLic"><option>ابتدائي</option><option>استئناف</option><option>نقض</option></select></div><div class="f"><label>سعر الاستشارة</label><input id="fFee" placeholder="تبدأ من ٢٠٠ ج"></div></div>
+      <div class="f"><label>رقم التليفون (بيظهر للزائر لما يضغط اتصال أو واتساب)</label><input id="fPhone" dir="ltr" placeholder="01012345678"></div>
+      <div class="lbl2">التخصصات</div><div class="chips" id="fSpec"></div>
+      <div class="lbl2">المحافظات اللي بتشتغل فيها</div><div class="chips" id="fServed"></div>
+      <div class="f" style="margin-top:18px"><label>نبذة عنك</label><textarea id="fBio" rows="4"></textarea></div>
+      <div class="f"><label>الخدمات (كل خدمة في سطر)</label><textarea id="fServ" rows="3"></textarea></div>
+      <div class="f"><label>المحاكم (كل محكمة في سطر)</label><textarea id="fCourts" rows="2"></textarea></div>
+      <div class="f"><label>ساعات العمل</label><input id="fHours"></div>
+      <div class="lbl2">الصورة الشخصية</div><label class="m-upload" data-t="📷 اضغط لاختيار صورة"><span>📷 اضغط لاختيار صورة</span><input id="fPhoto" type="file" accept="image/*"></label>
+      <label class="pub"><input id="fPub" type="checkbox"> إظهار بروفايلي للزوار (لازم رقم التليفون)</label>
+      <button class="m-submit" id="bSave" style="margin-top:16px">حفظ التعديلات</button></div></div>
+    <div class="view" id="v_verify"><div class="card"><h3>توثيق القيد بالنقابة</h3><p class="hint">الصور بتتحفظ في مكان خاص، والإدارة بس هي اللي تشوفها.</p>
+      <div class="f"><label>رقم القيد بالنقابة</label><input id="vNo" dir="ltr"></div>
+      <div class="lbl2">صورة كارنيه النقابة</div><label class="m-upload" data-t="🪪 اضغط لاختيار الصورة"><span>🪪 اضغط لاختيار الصورة</span><input id="vId" type="file" accept="image/*"></label>
+      <div class="lbl2">سيلفي وانت ماسك الكارنيه</div><label class="m-upload" data-t="🤳 اضغط لاختيار الصورة"><span>🤳 اضغط لاختيار الصورة</span><input id="vSelf" type="file" accept="image/*"></label>
+      <button class="m-submit" id="bVer">إرسال للمراجعة</button></div></div>
+  </div>
+</div>
+<script src="js/data.js"></script>
+<script>
+const U = 'https://qlboprdqnjvsmcwfpjwl.supabase.co', K = 'sb_publishable_i-9FiXSNKe5xf_mEawmEfQ_PjSjf2_i', CW = window.CaseWidget, $ = id => document.getElementById(id);
+let S = null; // الجلسة
+const store = { get(){ try { return JSON.parse(localStorage.getItem('lg_s')); } catch { return null; } }, set(v){ try { v ? localStorage.setItem('lg_s', JSON.stringify(v)) : localStorage.removeItem('lg_s'); } catch {} } };
+function say(t, bad){ const m = $('msg'); m.textContent = t; m.className = bad ? 'er' : 'ok'; m.style.display = 'block'; clearTimeout(say.t); say.t = setTimeout(() => m.style.display = 'none', 5000); }
+const lines = s => s.split('\n').map(x => x.trim()).filter(Boolean);
+const checked = id => [...$(id).querySelectorAll('input:checked')].map(i => i.value);
+function boxes(id, arr, sel){ $(id).innerHTML = arr.map(x => `<label class="chip"><input type="checkbox" value="${CW.escapeHTML(x.key||x)}" ${sel.includes(x.key||x)?'checked':''}><span>${CW.escapeHTML(x.label||x)}</span></label>`).join(''); }
+function tab(n){ document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === 'v_' + n)); document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === n)); scrollTo(0,0); }
+let mode = 'login';
+function setMode(m){ mode = m; $('nameWrap').style.display = m === 'signup' ? 'block' : 'none'; $('bLogin').textContent = m === 'signup' ? 'إنشاء حساب' : 'دخول'; $('bSwitch').textContent = m === 'signup' ? 'عندك حساب؟ سجّل دخول' : 'محامي جديد؟ أنشئ حسابك'; $('aTitle').textContent = m === 'signup' ? 'انضم كمحامي على LEGANO' : 'دخول المحامين'; }
+
+async function api(path, o = {}, raw){
+  const r = await fetch(U + path, { ...o, headers: { apikey: K, Authorization: 'Bearer ' + (S ? S.access_token : K), ...(o.json ? {'Content-Type':'application/json'} : {}), ...(o.headers||{}) }, body: o.json ? JSON.stringify(o.json) : o.body });
+  const t = await r.text(), j = t ? (()=>{ try { return JSON.parse(t); } catch { return t; } })() : null;
+  if (!r.ok) throw new Error((j && (j.msg || j.message || j.error_description || j.error)) || 'HTTP ' + r.status);
+  return j;
+}
+async function auth(kind){
+  const email = $('aEmail').value.trim(), password = $('aPass').value;
+  try {
+    const j = kind === 'signup'
+      ? await api('/auth/v1/signup', { method:'POST', json:{ email, password, data:{ display_name: $('aName').value.trim() } } })
+      : await api('/auth/v1/token?grant_type=password', { method:'POST', json:{ email, password } });
+    if (!j.access_token) return say('اتبعتلك إيميل تأكيد، افتحه وبعدين سجّل دخول.');
+    S = j; store.set(j); load();
+  } catch(e){ say(/Invalid login/i.test(e.message) ? 'البريد أو كلمة السر غلط' : e.message, 1); }
+}
+async function load(){
+  try {
+    const uid = S.user.id;
+    const [l] = await api(`/rest/v1/lawyers?id=eq.${uid}&select=*`);
+    const [c] = await api(`/rest/v1/lawyer_contacts?lawyer_id=eq.${uid}&select=phone`);
+    const st = await api('/rest/v1/rpc/my_stats', { method:'POST', json:{} });
+    $('authBox').style.display = 'none'; $('panel').classList.remove('hide'); tab('stats');
+    $('hName').textContent = l.display_name || ''; $('fName').value = l.display_name || '';
+    const VS = { verified:['موثّق ✔','approved'], pending:['قيد المراجعة','pending'], rejected:['مرفوض، ابعت تاني','rejected'], unverified:['غير موثّق','pending'] }[l.verification_status] || ['—','pending'];
+    $('hStat').textContent = VS[0]; $('hStat').className = 'status-tag ' + VS[1];
+    $('hPub').textContent = l.is_public ? 'ظاهر للزوار' : 'مخفي عن الزوار'; $('hPub').className = 'status-tag ' + (l.is_public ? 'approved' : 'pending');
+    $('fExp').value = l.experience_years ?? ''; $('fLic').value = l.license_level || 'ابتدائي'; $('fFee').value = l.consultation_fee || '';
+    $('fPhone').value = c ? c.phone : ''; $('fBio').value = l.bio || ''; $('fHours').value = l.hours || '';
+    $('fServ').value = (l.services||[]).join('\n'); $('fCourts').value = (l.courts||[]).join('\n'); $('fPub').checked = !!l.is_public;
+    $('fCity').innerHTML = CW.EGYPT_GOVERNORATES.map(g => `<option ${g===l.city?'selected':''}>${g}</option>`).join('');
+    boxes('fSpec', CW.LEAD_CATEGORIES, l.specialties||[]); boxes('fServed', CW.EGYPT_GOVERNORATES, l.served||[]);
+    const L = { view:['مشاهدات البروفايل','cyber'], call:['ضغطات الاتصال','success'], whatsapp:['ضغطات واتساب','gold'], reveal:['إظهار الرقم','']  };
+    const g = (k, f) => { const r = (st||[]).find(x => x.type === k); return r ? Number(r[f]) : 0; };
+    $('stats').innerHTML = Object.keys(L).map(k => `<div class="stat-card ${L[k][1]}"><div class="lbl">${L[k][0]}</div><div class="val">${g(k,'last30')}</div><div class="sub">الإجمالي ${g(k,'total')}</div></div>`).join('');
+  } catch(e){ if (/JWT|expired/i.test(e.message)) out(); else say(e.message, 1); }
+}
+async function upload(bucket, file){
+  const path = `${S.user.id}/${Date.now()}-${Math.random().toString(36).slice(2,8)}.${(file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')}`;
+  if (file.size > 5e6) throw new Error('الصورة أكبر من 5MB');
+  await api(`/storage/v1/object/${bucket}/${path}`, { method:'POST', body:file, headers:{ 'Content-Type': file.type || 'image/jpeg' } });
+  return path;
+}
+async function save(){
+  try {
+    const uid = S.user.id, phone = $('fPhone').value.replace(/\D/g,'');
+    if (phone) {
+      const has = (await api(`/rest/v1/lawyer_contacts?lawyer_id=eq.${uid}&select=lawyer_id`)).length;
+      await api(has ? `/rest/v1/lawyer_contacts?lawyer_id=eq.${uid}` : '/rest/v1/lawyer_contacts', { method: has ? 'PATCH' : 'POST', json: has ? { phone } : { lawyer_id: uid, phone }, headers:{ 'Content-Type':'application/json' } });
+    }
+    const b = { display_name: $('fName').value.trim(), city: $('fCity').value, experience_years: +$('fExp').value || 0, license_level: $('fLic').value, consultation_fee: $('fFee').value.trim(),
+      bio: $('fBio').value.trim(), hours: $('fHours').value.trim(), services: lines($('fServ').value), courts: lines($('fCourts').value),
+      specialties: checked('fSpec'), served: checked('fServed'), is_public: $('fPub').checked };
+    if ($('fPhoto').files[0]) b.photo_path = await upload('lawyer-photos', $('fPhoto').files[0]);
+    await api(`/rest/v1/lawyers?id=eq.${uid}`, { method:'PATCH', json:b, headers:{ 'Content-Type':'application/json' } });
+    say('اتحفظ ✔'); load();
+  } catch(e){ say(/phone_required/.test(e.message) ? 'اكتب رقم التليفون الأول علشان تظهر' : e.message, 1); }
+}
+async function verify(){
+  try {
+    const f = $('vId').files[0], s = $('vSelf').files[0];
+    if (!$('vNo').value.trim() || !f || !s) return say('رقم القيد وصورتين مطلوبين', 1);
+    const id_card_path = await upload('verification-docs', f), selfie_path = await upload('verification-docs', s);
+    await api('/rest/v1/verification_requests', { method:'POST', json:{ lawyer_id: S.user.id, bar_number: $('vNo').value.trim(), id_card_path, selfie_path }, headers:{ 'Content-Type':'application/json' } });
+    say('اتبعت للمراجعة ✔'); load();
+  } catch(e){ say(e.message, 1); }
+}
+function out(){ S = null; store.set(null); $('panel').classList.add('hide'); $('authBox').style.display = 'flex'; }
+$('bLogin').onclick = () => auth(mode); $('bSwitch').onclick = () => { location.href = 'register.html'; }; document.querySelectorAll('.tab-btn').forEach(b => b.onclick = () => tab(b.dataset.tab)); document.querySelectorAll('.m-upload input').forEach(i => i.onchange = () => { i.parentNode.querySelector('span').textContent = i.files[0] ? '✔ ' + i.files[0].name : i.parentNode.dataset.t; }); [ 'aEmail','aPass' ].forEach(id => $(id).onkeydown = e => { if (e.key === 'Enter') auth(mode); }); setMode('login'); $('bOut').onclick = out; $('bSave').onclick = save; $('bVer').onclick = verify;
+S = store.get(); if (S) load();
+</script></body></html>

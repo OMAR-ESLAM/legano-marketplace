@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>سجّل كمحامي | LEGANO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F8FAFB;--bg2:#F1F5F9;--gold:#0F172A;--gold-soft:#92620C;--accent:#B8860B;--cyber:#2563EB;--white:#1E293B;--gray:#64748B;--success:#059669;--danger:#E5484D;--surface:#fff;--border:#E2E8F0}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--white);min-height:100vh;line-height:1.7}
+.logo{font-family:'Syne',sans-serif;font-weight:800;letter-spacing:5px;background:linear-gradient(90deg,var(--gold),var(--gold-soft));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none}
+#msg{position:fixed;top:78px;left:50%;transform:translateX(-50%);z-index:9000;padding:11px 20px;border-radius:12px;display:none;font-size:13px;font-weight:700;box-shadow:0 8px 28px rgba(0,0,0,.12);max-width:90%}.ok{background:#E7F7EF;color:var(--success);border:1px solid #BCE6D2}.er{background:#FDECEC;color:var(--danger);border:1px solid #F6C7C9}
+#authBox{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:16px;overflow-y:auto}
+.login-box{background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:40px 32px;width:100%;max-width:400px;text-align:center;box-shadow:0 20px 60px rgba(15,23,42,.08)}
+.login-box .logo{font-size:24px;letter-spacing:6px;display:inline-block}.login-box h1{font-size:16px;font-weight:900;margin:12px 0 22px}
+.f{margin-bottom:14px;text-align:right}.f label{font-size:12px;color:var(--gray);margin-bottom:6px;display:block;font-weight:600}
+.f input,.f textarea,.f select{width:100%;padding:12px 14px;background:rgba(15,23,42,.02);border:1px solid rgba(15,23,42,.08);border-radius:10px;color:var(--white);font-family:'Cairo',sans-serif;font-size:13px;outline:none;transition:border-color .2s}
+.f input:focus,.f textarea:focus,.f select:focus{border-color:rgba(184,134,11,.5)}.f textarea{resize:vertical;line-height:1.8}
+.m-submit{width:100%;margin-top:6px;background:linear-gradient(135deg,#0F172A,#1E3A5F);color:#fff;border:none;padding:14px;border-radius:12px;font-family:'Cairo',sans-serif;font-size:14px;font-weight:900;cursor:pointer;transition:transform .15s,box-shadow .2s}.m-submit:hover{transform:scale(1.01);box-shadow:0 8px 28px rgba(15,23,42,.25)}
+.link{background:none;border:0;color:var(--cyber);font-family:'Cairo',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;margin-top:16px}
+.topbar{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.topbar .logo{font-size:16px}
+.tabs{display:flex;gap:4px;flex-wrap:wrap}.tab-btn{padding:9px 16px;border-radius:8px;border:none;background:transparent;color:var(--gray);font-family:'Cairo',sans-serif;font-size:12.5px;font-weight:700;cursor:pointer;transition:all .15s}.tab-btn:hover{background:var(--bg2);color:var(--white)}.tab-btn.active{background:#0F172A;color:#fff}
+.logout-btn{background:transparent;border:1px solid var(--border);color:var(--gray);padding:8px 14px;border-radius:8px;font-family:'Cairo',sans-serif;font-size:12px;font-weight:700;cursor:pointer}
+.wrap{max-width:900px;margin:0 auto;padding:24px 16px 80px}.view{display:none}.view.active{display:block;animation:fi .3s}@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.hello{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:20px}.hello h2{font-size:20px;font-weight:900}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin-bottom:24px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:22px}.stat-card .lbl{font-size:12px;color:var(--gray);font-weight:700;margin-bottom:8px}.stat-card .val{font-family:'Syne',sans-serif;font-size:32px;font-weight:800}.stat-card .sub{font-size:11px;color:var(--gray);margin-top:2px}
+.stat-card.gold .val{color:var(--accent)}.stat-card.success .val{color:var(--success)}.stat-card.cyber .val{color:var(--cyber)}
+.status-tag{font-size:11px;font-weight:800;padding:4px 12px;border-radius:20px;background:rgba(100,116,139,.12);color:var(--gray)}.status-tag.approved{background:rgba(5,150,105,.12);color:var(--success)}.status-tag.rejected{background:rgba(229,72,77,.12);color:var(--danger)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:18px}.card h3{font-size:15px;font-weight:900;margin-bottom:4px}.card .hint{font-size:12px;color:var(--gray);margin-bottom:16px}
+.lbl2{font-size:12.5px;font-weight:800;color:var(--gold-soft);margin:18px 0 10px}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:560px){.row{grid-template-columns:1fr}}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{cursor:pointer}.chip input{position:absolute;opacity:0;pointer-events:none}.chip span{display:inline-block;padding:8px 14px;border:2px solid rgba(15,23,42,.08);border-radius:12px;font-size:12.5px;font-weight:700;background:rgba(15,23,42,.02);transition:all .15s}.chip:has(input:checked) span{border-color:var(--accent);background:rgba(184,134,11,.08);color:var(--gold-soft)}
+.m-upload{position:relative;border:2px dashed rgba(184,134,11,.3);border-radius:10px;padding:16px;text-align:center;cursor:pointer;font-size:12.5px;color:var(--gray);transition:border-color .2s,background .2s;margin-bottom:14px}.m-upload:hover{border-color:rgba(184,134,11,.55);background:rgba(184,134,11,.03)}.m-upload input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.pub{display:flex;align-items:center;gap:10px;padding:14px;border-radius:12px;background:rgba(37,99,235,.05);border:1px solid rgba(37,99,235,.15);font-size:13px;font-weight:700;margin-top:16px;cursor:pointer}.pub input{width:18px;height:18px;accent-color:var(--cyber)}
+.hide{display:none}
+
+body{display:flex;justify-content:center;padding:28px 16px}.login-box{max-width:520px;text-align:right}.login-box h1{text-align:center}.sub{font-size:12.5px;color:var(--gray);text-align:center;margin:-14px 0 20px}.lbl2{margin-top:6px}</style></head><body>
+<div id="msg"></div>
+<div class="login-box">
+  <div style="text-align:center"><a class="logo" href="find-lawyer.html" style="font-size:24px;letter-spacing:6px">LEGANO</a></div>
+  <h1>انضم كمحامي على LEGANO</h1><p class="sub">بروفايلك هيوصل لعملاء بيدوروا على محامي دلوقتي.</p>
+  <div class="f"><label>الاسم (يظهر للزوار)</label><input id="rName" maxlength="80" placeholder="مثال: أ. أحمد محمد"></div>
+  <div class="row"><div class="f"><label>البريد الإلكتروني</label><input id="rEmail" type="email" dir="ltr" autocomplete="email"></div>
+  <div class="f"><label>كلمة السر (8 حروف على الأقل)</label><input id="rPass" type="password" dir="ltr" autocomplete="new-password"></div></div>
+  <div class="row"><div class="f"><label>رقم التليفون (للتواصل مع العملاء)</label><input id="rPhone" dir="ltr" placeholder="01012345678"></div>
+  <div class="f"><label>المحافظة</label><select id="rCity"></select></div></div>
+  <div class="lbl2">تخصصاتك</div><div class="chips" id="rSpec" style="margin-bottom:18px"></div>
+  <button class="m-submit" id="bReg">إنشاء الحساب</button>
+  <div style="text-align:center"><a class="link" href="dashboard.html" style="text-decoration:none;display:inline-block">عندك حساب؟ سجّل دخول</a></div>
+</div>
+<script src="js/data.js"></script>
+<script>
+const U = 'https://qlboprdqnjvsmcwfpjwl.supabase.co', K = 'sb_publishable_i-9FiXSNKe5xf_mEawmEfQ_PjSjf2_i', CW = window.CaseWidget, $ = id => document.getElementById(id);
+function say(t, bad){ const m = $('msg'); m.textContent = t; m.className = bad ? 'er' : 'ok'; m.style.display = 'block'; clearTimeout(say.t); say.t = setTimeout(() => m.style.display = 'none', 6000); }
+async function api(path, o = {}, tok){
+  const r = await fetch(U + path, { method: o.method || 'GET', headers: { apikey: K, Authorization: 'Bearer ' + (tok || K), 'Content-Type': 'application/json' }, body: o.json ? JSON.stringify(o.json) : undefined });
+  const t = await r.text(), j = t ? (() => { try { return JSON.parse(t); } catch { return t; } })() : null;
+  if (!r.ok) throw new Error((j && (j.msg || j.message || j.error_description || j.error)) || 'HTTP ' + r.status);
+  return j;
+}
+$('rCity').innerHTML = '<option value="">اختار المحافظة</option>' + CW.EGYPT_GOVERNORATES.map(g => `<option>${g}</option>`).join('');
+$('rSpec').innerHTML = CW.LEAD_CATEGORIES.map(c => `<label class="chip"><input type="checkbox" value="${c.key}"><span>${CW.escapeHTML(c.label)}</span></label>`).join('');
+$('bReg').onclick = async () => {
+  const name = $('rName').value.trim(), email = $('rEmail').value.trim(), password = $('rPass').value, phone = $('rPhone').value.replace(/\D/g, ''), city = $('rCity').value;
+  const spec = [...document.querySelectorAll('#rSpec input:checked')].map(i => i.value);
+  if (name.length < 3) return say('اكتب اسمك', 1);
+  if (!/^01[0125]\d{8}$/.test(phone)) return say('رقم التليفون لازم يكون رقم موبايل مصري صحيح (11 رقم)', 1);
+  if (!city) return say('اختار المحافظة', 1);
+  if (!spec.length) return say('اختار تخصص واحد على الأقل', 1);
+  if (password.length < 8) return say('كلمة السر لازم 8 حروف على الأقل', 1);
+  $('bReg').disabled = true;
+  try {
+    const j = await api('/auth/v1/signup', { method: 'POST', json: { email, password, data: { display_name: name } } });
+    if (!j.access_token) { say('اتبعتلك إيميل تأكيد. افتحه وبعدين سجّل دخول من صفحة الدخول وكمّل بياناتك.'); $('bReg').disabled = false; return; }
+    await api('/rest/v1/lawyer_contacts', { method: 'POST', json: { lawyer_id: j.user.id, phone } }, j.access_token);
+    await api(`/rest/v1/lawyers?id=eq.${j.user.id}`, { method: 'PATCH', json: { display_name: name, city, served: [city], specialties: spec } }, j.access_token);
+    try { localStorage.setItem('lg_s', JSON.stringify(j)); } catch {}
+    location.href = 'dashboard.html';
+  } catch (e) {
+    say(/already registered|already been registered/i.test(e.message) ? 'البريد ده مسجّل قبل كده، سجّل دخول' : e.message, 1); $('bReg').disabled = false;
+  }
+};
+</script></body></html>
