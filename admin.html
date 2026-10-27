@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>لوحة التحكم — LEGANO</title><meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+
+:root {
+  --bg: #FAF7F0;
+  --bg2: #F3EEE1;
+  --gold: #B8860B;
+  --gold-soft: #8B6F1F;
+  --cyber: #0077B6;
+  --white: #1A1A2E;
+  --gray: #6B6B78;
+  --success: #0F9D68;
+  --danger: #E5484D;
+  --surface: #FFFFFF;
+  --border: rgba(184,134,11,0.18);
+}
+* , *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--white); min-height:100vh; }
+::-webkit-scrollbar { width:8px; } ::-webkit-scrollbar-thumb { background:rgba(184,134,11,0.25); border-radius:4px; }
+
+/* ══ LOGIN GATE ══ */
+#loginScreen { position:fixed; inset:0; z-index:9999; background:var(--bg); display:flex; align-items:center; justify-content:center; }
+.login-box { background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:44px 36px; width:100%; max-width:360px; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.08); }
+.login-box .logo { font-family:'Syne',sans-serif; font-weight:800; letter-spacing:6px; font-size:22px; background:linear-gradient(90deg,var(--gold),var(--gold-soft)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:6px; }
+.login-box h1 { font-size:16px; font-weight:800; margin:14px 0 22px; }
+.login-box input { width:100%; padding:13px 16px; border-radius:10px; border:1px solid var(--border); background:var(--bg2); font-family:'Cairo',sans-serif; font-size:14px; text-align:center; letter-spacing:2px; outline:none; margin-bottom:14px; }
+.login-box input:focus { border-color:var(--gold); }
+.login-box button { width:100%; padding:13px; border:none; border-radius:10px; background:linear-gradient(135deg,var(--gold),#96700e); color:#fff; font-family:'Cairo',sans-serif; font-size:14px; font-weight:800; cursor:pointer; }
+.login-err { color:var(--danger); font-size:12px; margin-top:10px; min-height:14px; }
+
+/* ══ SHELL ══ */
+#dashboard { display:none; }
+#dashboard.show { display:block; }
+.topbar { position:sticky; top:0; z-index:100; background:rgba(255,255,255,0.85); backdrop-filter:blur(14px); border-bottom:1px solid var(--border); padding:14px 24px; display:flex; align-items:center; justify-content:space-between; }
+.topbar .logo { font-family:'Syne',sans-serif; font-weight:800; letter-spacing:5px; font-size:16px; background:linear-gradient(90deg,var(--gold),var(--gold-soft)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.topbar .tabs { display:flex; gap:4px; flex-wrap:wrap; }
+.topbar .tab-btn { padding:9px 16px; border-radius:8px; border:none; background:transparent; color:var(--gray); font-family:'Cairo',sans-serif; font-size:12.5px; font-weight:700; cursor:pointer; transition:all .15s; }
+.topbar .tab-btn:hover { background:var(--bg2); color:var(--white); }
+.topbar .tab-btn.active { background:var(--gold); color:#fff; }
+.logout-btn { background:transparent; border:1px solid var(--border); color:var(--gray); padding:8px 14px; border-radius:8px; font-family:'Cairo',sans-serif; font-size:12px; font-weight:700; cursor:pointer; }
+
+.wrap { max-width:1200px; margin:0 auto; padding:28px 24px 80px; }
+.view { display:none; }
+.view.active { display:block; animation:fadeIn .3s; }
+@keyframes fadeIn { from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+/* ══ STAT CARDS ══ */
+.stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-bottom:28px; }
+.stat-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:22px; }
+.stat-card .lbl { font-size:12px; color:var(--gray); font-weight:700; margin-bottom:8px; }
+.stat-card .val { font-family:'Syne',sans-serif; font-size:32px; font-weight:800; }
+.stat-card.gold .val { color:var(--gold); }
+.stat-card.success .val { color:var(--success); }
+.stat-card.danger .val { color:var(--danger); }
+.stat-card.cyber .val { color:var(--cyber); }
+
+.chart-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:22px; margin-bottom:20px; }
+.chart-card h3 { font-size:14px; font-weight:800; margin-bottom:16px; }
+.charts-grid { display:grid; grid-template-columns:1.4fr 1fr; gap:16px; }
+@media (max-width:800px) { .charts-grid { grid-template-columns:1fr; } }
+
+/* ══ SEARCH ══ */
+.search-bar { display:flex; gap:10px; margin-bottom:18px; }
+.search-bar input { flex:1; padding:12px 16px; border-radius:10px; border:1px solid var(--border); background:var(--surface); font-family:'Cairo',sans-serif; font-size:13px; outline:none; }
+.search-bar input:focus { border-color:var(--gold); }
+
+/* ══ USER CARDS ══ */
+.user-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:16px 18px; margin-bottom:12px; display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+.user-card img.avatar { width:44px; height:44px; border-radius:50%; object-fit:cover; flex-shrink:0; background:var(--bg2); }
+.user-card .info { flex:1; min-width:180px; }
+.user-card .name-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:3px; }
+.user-card .name { font-size:14px; font-weight:800; }
+.user-card .code { font-size:10px; color:var(--gold-soft); background:rgba(184,134,11,0.1); padding:2px 8px; border-radius:6px; font-weight:800; }
+.user-card .email { font-size:12px; color:var(--gray); }
+.user-card .phone-link { font-size:12px; color:var(--success); text-decoration:none; font-weight:700; display:inline-flex; align-items:center; gap:4px; }
+.user-card .phone-link:hover { text-decoration:underline; }
+.badge { font-size:11px; font-weight:800; padding:5px 12px; border-radius:20px; white-space:nowrap; }
+.badge.paid { background:rgba(15,157,104,0.12); color:var(--success); }
+.badge.free { background:rgba(107,107,120,0.12); color:var(--gray); }
+.sub-toggle-btn { border:none; padding:9px 16px; border-radius:8px; font-family:'Cairo',sans-serif; font-size:12px; font-weight:800; cursor:pointer; white-space:nowrap; }
+.sub-toggle-btn.to-paid { background:var(--success); color:#fff; }
+.sub-toggle-btn.to-free { background:var(--gray); color:#fff; }
+.user-card .shot-thumb { width:44px; height:44px; border-radius:8px; object-fit:cover; cursor:pointer; border:1px solid var(--border); }
+.empty-state { text-align:center; padding:60px 20px; color:var(--gray); font-size:13px; }
+
+/* ══ EXPIRY ══ */
+.expiry-row { display:flex; align-items:center; gap:14px; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:14px 18px; margin-bottom:10px; }
+.expiry-row .days-left { font-family:'Syne',sans-serif; font-size:22px; font-weight:800; min-width:70px; text-align:center; }
+.expiry-row .days-left.soon { color:var(--danger); }
+.expiry-row .days-left.ok { color:var(--success); }
+.expiry-row .meta { flex:1; }
+.expiry-row .meta .n { font-size:13px; font-weight:700; }
+.expiry-row .meta .d { font-size:11px; color:var(--gray); }
+
+/* ══ PAYMENT REQUESTS ══ */
+.payment-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px; margin-bottom:14px; display:flex; gap:16px; flex-wrap:wrap; align-items:flex-start; }
+.payment-card img.shot { width:90px; height:90px; border-radius:10px; object-fit:cover; cursor:pointer; border:1px solid var(--border); flex-shrink:0; }
+.payment-card .info { flex:1; min-width:200px; font-size:12.5px; line-height:2; }
+.payment-card .info b { color:var(--white); }
+.payment-actions { display:flex; gap:8px; flex-wrap:wrap; align-self:center; }
+.pbtn { border:none; padding:9px 16px; border-radius:8px; font-family:'Cairo',sans-serif; font-size:12px; font-weight:800; cursor:pointer; }
+.pbtn.approve { background:var(--success); color:#fff; }
+.pbtn.reject { background:var(--danger); color:#fff; }
+.pbtn.pending { background:rgba(107,107,120,0.15); color:var(--gray); }
+.status-tag { font-size:11px; font-weight:800; padding:4px 10px; border-radius:20px; }
+.status-tag.pending { background:rgba(107,107,120,0.12); color:var(--gray); }
+.status-tag.approved { background:rgba(15,157,104,0.12); color:var(--success); }
+.status-tag.rejected { background:rgba(229,72,77,0.12); color:var(--danger); }
+
+/* ══ FEEDBACK ══ */
+.feedback-card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px; margin-bottom:12px; }
+.feedback-card .top { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+.feedback-card .type-tag { font-size:11px; font-weight:800; padding:4px 10px; border-radius:20px; background:rgba(0,119,182,0.1); color:var(--cyber); }
+.feedback-card .name { font-size:13px; font-weight:800; }
+.feedback-card .msg { font-size:13px; color:var(--white); line-height:1.8; margin-bottom:10px; }
+.feedback-card img { max-width:160px; border-radius:8px; cursor:pointer; }
+.feedback-card .date { font-size:11px; color:var(--gray); }
+
+/* ══ MAINTENANCE ══ */
+.maint-box { background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:36px; text-align:center; max-width:480px; margin:0 auto; }
+.maint-box .icon { font-size:40px; margin-bottom:16px; }
+.maint-status { font-size:14px; font-weight:800; margin-bottom:20px; padding:10px; border-radius:10px; }
+.maint-status.off { background:rgba(15,157,104,0.1); color:var(--success); }
+.maint-status.on { background:rgba(229,72,77,0.1); color:var(--danger); }
+.maint-btn { padding:14px 32px; border:none; border-radius:12px; font-family:'Cairo',sans-serif; font-size:14px; font-weight:800; cursor:pointer; }
+.maint-btn.enable { background:var(--danger); color:#fff; }
+.maint-btn.disable { background:var(--success); color:#fff; }
+
+/* ══ FILES ══ */
+.file-toolbar { display:flex; gap:10px; margin-bottom:18px; align-items:center; flex-wrap:wrap; }
+.upload-btn { background:linear-gradient(135deg,var(--gold),#96700e); color:#fff; border:none; padding:11px 20px; border-radius:10px; font-family:'Cairo',sans-serif; font-size:13px; font-weight:800; cursor:pointer; }
+.file-row { display:flex; align-items:center; gap:12px; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:12px 16px; margin-bottom:8px; }
+.file-row .fname { flex:1; font-size:13px; font-weight:700; }
+.file-row .fsize { font-size:11px; color:var(--gray); }
+.file-del-btn { background:rgba(229,72,77,0.1); color:var(--danger); border:none; padding:7px 14px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; }
+.file-view-btn { background:rgba(0,119,182,0.1); color:var(--cyber); border:none; padding:7px 14px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; text-decoration:none; }
+
+.section-title { font-size:18px; font-weight:900; margin-bottom:18px; }
+.toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:var(--white); color:#fff; padding:12px 22px; border-radius:10px; font-size:13px; font-weight:700; z-index:5000; opacity:0; pointer-events:none; transition:opacity .25s, transform .25s; }
+.toast.show { opacity:1; transform:translateX(-50%) translateY(-6px); }
+.lightbox { position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:6000; display:none; align-items:center; justify-content:center; padding:24px; }
+.lightbox.show { display:flex; }
+.lightbox img { max-width:90vw; max-height:90vh; border-radius:8px; }
+.loading-msg { text-align:center; padding:40px; color:var(--gray); font-size:13px; }
+
+/* ══ INVITES ══ */
+.inv-form { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:20px; margin-bottom:22px; display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; align-items:end; }
+.inv-form label { display:block; font-size:11.5px; font-weight:700; color:var(--gray); margin-bottom:6px; }
+.inv-form input { width:100%; padding:11px 13px; border-radius:9px; border:1px solid var(--border); background:var(--bg2); font-family:'Cairo',sans-serif; font-size:13px; outline:none; }
+.inv-form input:focus { border-color:var(--gold); }
+.inv-form .gen-btn { padding:12px 18px; border:none; border-radius:10px; background:linear-gradient(135deg,var(--gold),#96700e); color:#fff; font-family:'Cairo',sans-serif; font-size:13px; font-weight:800; cursor:pointer; }
+.inv-stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:12px; margin-bottom:20px; }
+.inv-stats .stat-card { padding:14px 16px; }
+.inv-stats .stat-card .val { font-size:24px; }
+.inv-row { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:14px 18px; margin-bottom:10px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+.inv-row .info { flex:1; min-width:200px; }
+.inv-row .nm { font-size:14px; font-weight:800; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.inv-row .cd { font-family:'Syne',sans-serif; font-size:11px; letter-spacing:1px; color:var(--gold-soft); background:rgba(184,134,11,0.1); padding:2px 9px; border-radius:6px; }
+.inv-row .meta { font-size:11.5px; color:var(--gray); margin-top:4px; line-height:1.8; }
+.inv-st { font-size:11px; font-weight:800; padding:5px 12px; border-radius:20px; white-space:nowrap; }
+.inv-st.new { background:rgba(107,107,120,0.12); color:var(--gray); }
+.inv-st.opened { background:rgba(0,119,182,0.12); color:var(--cyber); }
+.inv-st.toured { background:rgba(184,134,11,0.14); color:var(--gold-soft); }
+.inv-st.active { background:rgba(15,157,104,0.12); color:var(--success); }
+.inv-st.done { background:rgba(124,58,237,0.12); color:#7C3AED; }
+.inv-st.dead { background:rgba(229,72,77,0.12); color:var(--danger); }
+.inv-acts { display:flex; gap:6px; flex-wrap:wrap; }
+.inv-acts .pbtn { padding:8px 13px; }
+.pbtn.copy { background:var(--cyber); color:#fff; }
+.pbtn.wa { background:#25D366; color:#fff; }
+
+#dashboard{display:none}#dashboard.show{display:block}.stat-card .label{font-size:12px;color:var(--gray);font-weight:700;margin-bottom:8px}.stat-card .value{font-family:'Syne',sans-serif;font-size:32px;font-weight:800}.user-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.user-card .info{flex:1;min-width:200px;line-height:2}#pendBadge{color:var(--danger);font-weight:900}
+
+</style></head><body>
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="logo">LEGANO</div><h1>لوحة تحكم السوق</h1>
+    <div class="login-err" id="loginErr"></div>
+    <input id="lEmail" type="email" dir="ltr" placeholder="البريد الإلكتروني" autocomplete="email" style="margin-bottom:10px">
+    <input id="lPass" type="password" dir="ltr" placeholder="كلمة السر" autocomplete="current-password" style="margin-bottom:12px">
+    <button id="lBtn">دخول</button>
+  </div>
+</div>
+
+<div id="dashboard">
+  <div class="topbar">
+    <div class="logo">LEGANO — Admin</div>
+    <div class="tabs">
+      <button class="tab-btn active" data-view="overview">نظرة عامة</button>
+      <button class="tab-btn" data-view="verify">طلبات التوثيق <span id="pendBadge"></span></button>
+      <button class="tab-btn" data-view="lawyers">المحامين</button>
+      <button class="tab-btn" data-view="files">ملفات الموقع</button>
+    </div>
+    <button class="logout-btn" id="bOut">خروج</button>
+  </div>
+  <div class="wrap">
+    <div class="view active" id="view-overview">
+      <div class="section-title">نظرة عامة</div><div class="stats-grid" id="stA"></div>
+      <div class="section-title" style="margin-top:28px">آخر 30 يوم</div><div class="stats-grid" id="stB"></div>
+    </div>
+    <div class="view" id="view-verify">
+      <div class="section-title">طلبات توثيق القيد</div>
+      <div class="file-toolbar"><select id="vFilter" class="search-bar" style="max-width:220px"><option value="pending">المعلّقة</option><option value="approved">الموافَق عليها</option><option value="rejected">المرفوضة</option></select></div>
+      <div id="verifyWrap"><div class="loading-msg">جارٍ التحميل...</div></div>
+    </div>
+    <div class="view" id="view-lawyers">
+      <div class="section-title">المحامين</div>
+      <input class="search-bar" id="lSearch" placeholder="ابحث بالاسم أو المحافظة...">
+      <div id="lawyersWrap"><div class="loading-msg">جارٍ التحميل...</div></div>
+    </div>
+    <div class="view" id="view-files">
+      <div class="section-title">ملفات الموقع (GitHub)</div>
+      <div class="file-toolbar">
+        <input type="file" id="fileIn" style="display:none">
+        <input class="search-bar" id="dirIn" dir="ltr" placeholder="المجلد (فاضي = الرئيسي، أو js)" style="max-width:260px;margin:0">
+        <button class="upload-btn" id="bUp">⬆️ رفع ملف</button>
+        <button class="upload-btn" style="background:var(--cyber)" id="bRef">🔄 تحديث</button>
+      </div>
+      <div style="font-size:12px;color:var(--gray);margin-bottom:12px">كل رفع أو حذف بيتسجّل على GitHub، والموقع بيتحدّث لوحده خلال دقيقة تقريباً.</div>
+      <div id="filesWrap"><div class="loading-msg">جارٍ التحميل...</div></div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<div class="lightbox" id="lightbox"><img id="lightboxImg" src=""></div>
+<script>
+const U = 'https://qlboprdqnjvsmcwfpjwl.supabase.co', K = 'sb_publishable_i-9FiXSNKe5xf_mEawmEfQ_PjSjf2_i', $ = id => document.getElementById(id);
+let S = null, LAWYERS = [];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const store = { get() { try { return JSON.parse(localStorage.getItem('lg_s')); } catch { return null; } }, set(v) { try { v ? localStorage.setItem('lg_s', JSON.stringify(v)) : localStorage.removeItem('lg_s'); } catch {} } };
+function toast(m) { const t = $('toast'); t.textContent = m; t.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 2600); }
+
+async function raw(path, o = {}) {
+  return fetch(U + path, { ...o, headers: { apikey: K, Authorization: 'Bearer ' + (S ? S.access_token : K), ...(o.json ? { 'Content-Type': 'application/json' } : {}), ...(o.headers || {}) }, body: o.json ? JSON.stringify(o.json) : o.body });
+}
+async function refresh() {
+  if (!S || !S.refresh_token) return false;
+  const r = await fetch(U + '/auth/v1/token?grant_type=refresh_token', { method: 'POST', headers: { apikey: K, 'Content-Type': 'application/json' }, body: JSON.stringify({ refresh_token: S.refresh_token }) });
+  if (!r.ok) return false; S = await r.json(); store.set(S); return true;
+}
+async function api(path, o = {}) {
+  let r = await raw(path, o);
+  if (r.status === 401 && await refresh()) r = await raw(path, o);
+  const t = await r.text(); let j = null; try { j = t ? JSON.parse(t) : null; } catch { j = t; }
+  if (!r.ok) throw new Error((j && (j.message || j.msg || j.error_description || j.error)) || 'HTTP ' + r.status);
+  return j;
+}
+const rpc = (fn, args = {}) => api('/rest/v1/rpc/' + fn, { method: 'POST', json: args });
+
+/* دخول */
+async function enter() {
+  try { if (await rpc('is_admin') !== true) throw new Error('الحساب ده مش أدمن'); }
+  catch (e) { S = null; store.set(null); $('loginErr').textContent = e.message; $('loginErr').style.display = 'block'; return; }
+  $('loginScreen').style.display = 'none'; $('dashboard').classList.add('show');
+  loadOverview(); loadVerify(); loadLawyers();
+}
+async function login() {
+  $('loginErr').style.display = 'none';
+  try {
+    const r = await fetch(U + '/auth/v1/token?grant_type=password', { method: 'POST', headers: { apikey: K, 'Content-Type': 'application/json' }, body: JSON.stringify({ email: $('lEmail').value.trim(), password: $('lPass').value }) });
+    const j = await r.json(); if (!r.ok) throw new Error('البريد أو كلمة السر غلط');
+    S = j; store.set(j); enter();
+  } catch (e) { $('loginErr').textContent = e.message; $('loginErr').style.display = 'block'; }
+}
+function logout() { S = null; store.set(null); location.reload(); }
+$('lBtn').onclick = login; $('bOut').onclick = logout; $('lPass').onkeydown = e => { if (e.key === 'Enter') login(); };
+document.querySelectorAll('.tab-btn').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.tab-btn').forEach(x => x.classList.toggle('active', x === b));
+  document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === 'view-' + b.dataset.view));
+  if (b.dataset.view === 'files') loadFiles();
+});
+$('lightbox').onclick = () => $('lightbox').classList.remove('show');
+const lightbox = src => { $('lightboxImg').src = src; $('lightbox').classList.add('show'); };
+
+/* نظرة عامة */
+async function loadOverview() {
+  try {
+    const s = await rpc('admin_stats'), e = s.events30 || {};
+    const card = (cls, l, v) => `<div class="stat-card ${cls}"><div class="label">${l}</div><div class="value">${v ?? 0}</div></div>`;
+    $('stA').innerHTML = card('', 'إجمالي المحامين', s.lawyers) + card('success', 'ظاهرين للزوار', s.public) + card('cyber', 'موثّقين', s.verified) + card(s.pending > 0 ? 'danger' : '', 'طلبات توثيق معلّقة', s.pending) + card('gold', 'مميزين حالياً', s.featured);
+    $('stB').innerHTML = card('cyber', 'مشاهدات', e.view) + card('success', 'ضغطات اتصال', e.call) + card('gold', 'ضغطات واتساب', e.whatsapp) + card('', 'إظهار الرقم', e.reveal);
+    $('pendBadge').textContent = s.pending > 0 ? `(${s.pending})` : '';
+  } catch (e) { $('stA').innerHTML = `<div class="empty-state">${esc(e.message)}</div>`; }
+}
+
+/* التوثيق */
+async function signed(bucket, path) {
+  const j = await api(`/storage/v1/object/sign/${bucket}/${path.split('/').map(encodeURIComponent).join('/')}`, { method: 'POST', json: { expiresIn: 600 } });
+  return U + '/storage/v1' + j.signedURL;
+}
+async function loadVerify() {
+  const wrap = $('verifyWrap'); wrap.innerHTML = '<div class="loading-msg">جارٍ التحميل...</div>';
+  try {
+    const rows = await api(`/rest/v1/verification_requests?status=eq.${$('vFilter').value}&select=*&order=created_at.asc`);
+    if (!rows.length) { wrap.innerHTML = '<div class="empty-state">مفيش طلبات</div>'; return; }
+    const ids = [...new Set(rows.map(r => r.lawyer_id))];
+    const ls = await api(`/rest/v1/lawyers?id=in.(${ids.join(',')})&select=id,display_name,city`);
+    const L = Object.fromEntries(ls.map(l => [l.id, l]));
+    const imgs = await Promise.all(rows.map(async r => { try { return [await signed('verification-docs', r.id_card_path), await signed('verification-docs', r.selfie_path)]; } catch { return ['', '']; } }));
+    wrap.innerHTML = rows.map((r, i) => { const l = L[r.lawyer_id] || {}; return `
+      <div class="payment-card">
+        ${imgs[i][0] ? `<img class="shot" src="${imgs[i][0]}" data-z="1" title="الكارنيه">` : ''}${imgs[i][1] ? `<img class="shot" src="${imgs[i][1]}" data-z="1" title="سيلفي">` : ''}
+        <div class="info">
+          <div><b>الاسم:</b> ${esc(l.display_name || '—')} (${esc(l.city || '—')})</div>
+          <div><b>رقم القيد:</b> <span dir="ltr">${esc(r.bar_number)}</span></div>
+          <div><b>التاريخ:</b> ${new Date(r.created_at).toLocaleString('ar-EG')}</div>
+          <div><b>الحالة:</b> <span class="status-tag ${r.status}">${{ pending: 'قيد المراجعة', approved: 'تمت الموافقة', rejected: 'مرفوض' }[r.status]}</span>${r.reviewer_note ? ' — ' + esc(r.reviewer_note) : ''}</div>
+          <div><a class="file-view-btn" target="_blank" href="lawyer.html?id=${esc(r.lawyer_id)}">عرض البروفايل</a></div>
+        </div>
+        ${r.status === 'pending' ? `<div class="payment-actions"><button class="pbtn approve" data-rv="${r.id}" data-ok="1">✔ توثيق</button><button class="pbtn reject" data-rv="${r.id}" data-ok="0">✕ رفض</button></div>` : ''}
+      </div>`; }).join('');
+    wrap.querySelectorAll('img[data-z]').forEach(im => im.onclick = () => lightbox(im.src));
+    wrap.querySelectorAll('[data-rv]').forEach(b => b.onclick = () => review(b.dataset.rv, b.dataset.ok === '1'));
+  } catch (e) { wrap.innerHTML = `<div class="empty-state">${esc(e.message)}</div>`; }
+}
+async function review(id, ok) {
+  let note = null;
+  if (!ok) { note = prompt('سبب الرفض (هيظهر للمحامي):'); if (note === null) return; }
+  try { await rpc('admin_review_verification', { p_request: id, p_approve: ok, p_note: note }); toast(ok ? 'تم التوثيق' : 'تم الرفض'); loadVerify(); loadOverview(); loadLawyers(); }
+  catch (e) { toast('خطأ: ' + e.message); }
+}
+$('vFilter').onchange = loadVerify;
+
+/* المحامين */
+async function loadLawyers() {
+  try { LAWYERS = await api('/rest/v1/lawyers?select=id,display_name,city,verification_status,featured,featured_until,is_public,suspended,created_at&order=created_at.desc'); renderLawyers(); }
+  catch (e) { $('lawyersWrap').innerHTML = `<div class="empty-state">${esc(e.message)}</div>`; }
+}
+function renderLawyers() {
+  const q = $('lSearch').value.trim().toLowerCase();
+  const rows = LAWYERS.filter(l => !q || (l.display_name + ' ' + l.city).toLowerCase().includes(q));
+  if (!rows.length) { $('lawyersWrap').innerHTML = '<div class="empty-state">مفيش محامين</div>'; return; }
+  const now = Date.now();
+  $('lawyersWrap').innerHTML = rows.map(l => {
+    const feat = l.featured && (!l.featured_until || new Date(l.featured_until) > now);
+    return `<div class="user-card">
+      <div class="info"><b>${esc(l.display_name || '—')}</b> <small>${esc(l.city || '')}</small><br>
+        <span class="status-tag ${l.verification_status === 'verified' ? 'approved' : l.verification_status === 'rejected' ? 'rejected' : 'pending'}">${{ verified: 'موثّق', pending: 'قيد المراجعة', rejected: 'مرفوض', unverified: 'غير موثّق' }[l.verification_status] || l.verification_status}</span>
+        <span class="status-tag ${l.is_public ? 'approved' : 'pending'}">${l.is_public ? 'ظاهر' : 'مخفي'}</span>
+        ${feat ? '<span class="status-tag approved">⭐ مميز' + (l.featured_until ? ' حتى ' + new Date(l.featured_until).toLocaleDateString('ar-EG') : '') + '</span>' : ''}
+        ${l.suspended ? '<span class="status-tag rejected">موقوف</span>' : ''}</div>
+      <div class="payment-actions">
+        <a class="pbtn copy" target="_blank" href="lawyer.html?id=${l.id}">عرض</a>
+        <button class="pbtn approve" data-ft="${l.id}" data-on="${feat ? 0 : 1}">${feat ? 'إلغاء التمييز' : '⭐ تمييز 30 يوم'}</button>
+        <button class="pbtn reject" data-sp="${l.id}" data-on="${l.suspended ? 0 : 1}">${l.suspended ? 'رفع الإيقاف' : '⛔ إيقاف'}</button>
+      </div></div>`;
+  }).join('');
+  $('lawyersWrap').querySelectorAll('[data-ft]').forEach(b => b.onclick = async () => {
+    const on = b.dataset.on === '1';
+    try { await rpc('admin_set_featured', { p_lawyer: b.dataset.ft, p_featured: on, p_until: on ? new Date(Date.now() + 30 * 864e5).toISOString() : null }); toast(on ? 'اتفعّل التمييز 30 يوم' : 'اتلغى التمييز'); loadLawyers(); loadOverview(); } catch (e) { toast('خطأ: ' + e.message); }
+  });
+  $('lawyersWrap').querySelectorAll('[data-sp]').forEach(b => b.onclick = async () => {
+    const on = b.dataset.on === '1'; if (on && !confirm('إيقاف المحامي هيخفيه من الموقع ومحدش يقدر يظهره غيرك. متأكد؟')) return;
+    try { await rpc('admin_suspend', { p_lawyer: b.dataset.sp, p_suspended: on }); toast(on ? 'تم الإيقاف' : 'تم رفع الإيقاف'); loadLawyers(); loadOverview(); } catch (e) { toast('خطأ: ' + e.message); }
+  });
+}
+$('lSearch').oninput = renderLawyers;
+
+/* ملفات GitHub (عن طريق /api، والسيرفر بيتأكد إنك أدمن) */
+const authH = () => ({ Authorization: 'Bearer ' + (S && S.access_token), 'Content-Type': 'application/json' });
+async function fapi(path, o = {}) {
+  let r = await fetch(path, { ...o, headers: authH() });
+  if (r.status === 401 && await refresh()) r = await fetch(path, { ...o, headers: authH() });
+  const d = await r.json().catch(() => ({})); if (!r.ok) throw new Error(d.error || 'خطأ'); return d;
+}
+const dir = () => $('dirIn').value.trim().replace(/^\/+|\/+$/g, '');
+async function loadFiles() {
+  const w = $('filesWrap'); w.innerHTML = '<div class="loading-msg">جارٍ التحميل...</div>';
+  try {
+    const d = await fapi('/api/files-list?dir=' + encodeURIComponent(dir()));
+    const items = d.files.sort((a, b) => (a.type === b.type ? a.name.localeCompare(b.name) : a.type === 'dir' ? -1 : 1));
+    w.innerHTML = items.map(f => f.type === 'dir'
+      ? `<div class="file-row"><span class="fname">📁 ${esc(f.name)}</span><span class="fsize"></span><button class="file-view-btn" data-open="${esc(f.path)}">فتح</button></div>`
+      : `<div class="file-row"><span class="fname">${esc(f.name)}</span><span class="fsize">${(f.size / 1024).toFixed(1)} KB</span>${f.download_url ? `<a class="file-view-btn" href="${esc(f.download_url)}" target="_blank">عرض</a>` : ''}<button class="file-del-btn" data-del="${esc(f.path)}">حذف</button></div>`).join('') || '<div class="empty-state">مفيش ملفات</div>';
+    w.querySelectorAll('[data-open]').forEach(b => b.onclick = () => { $('dirIn').value = b.dataset.open; loadFiles(); });
+    w.querySelectorAll('[data-del]').forEach(b => b.onclick = async () => {
+      if (!confirm(`متأكد إنك عايز تحذف "${b.dataset.del}"؟`)) return;
+      try { await fapi('/api/files-delete', { method: 'POST', body: JSON.stringify({ path: b.dataset.del }) }); toast('تم الحذف'); loadFiles(); } catch (e) { toast('خطأ: ' + e.message); }
+    });
+  } catch (e) { w.innerHTML = `<div class="empty-state">${esc(e.message)}</div>`; }
+}
+$('bRef').onclick = loadFiles; $('bUp').onclick = () => $('fileIn').click();
+$('fileIn').onchange = e => {
+  const f = e.target.files[0]; if (!f) return;
+  if (f.size > 3e6) { toast('الملف أكبر من 3MB'); e.target.value = ''; return; }
+  const rd = new FileReader();
+  rd.onload = async () => {
+    const path = (dir() ? dir() + '/' : '') + f.name;
+    try { const d = await fapi('/api/files-write', { method: 'POST', body: JSON.stringify({ path, contentBase64: rd.result.split(',')[1], message: `رفع ${path} من لوحة التحكم` }) }); toast(d.updated ? 'تم تحديث الملف' : 'تم رفع الملف'); loadFiles(); }
+    catch (er) { toast('خطأ: ' + er.message); }
+  };
+  rd.readAsDataURL(f); e.target.value = '';
+};
+
+S = store.get(); if (S) enter();
+</script></body></html>
