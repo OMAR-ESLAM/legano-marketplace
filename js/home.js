@@ -139,7 +139,6 @@ function renderGrid(lawyers) {
           <button type="button" class="fav-btn flex h-8 w-8 items-center justify-center rounded-full border border-app ${isFav ? 'text-gold-c' : 'text-fg'}" style="background:color-mix(in oklch, var(--background) 65%, transparent);" aria-label="حفظ" aria-pressed="${isFav}" data-id="${esc(l.id)}">
             <i data-lucide="heart" style="width:15px;height:15px;${isFav ? 'fill:currentColor;' : ''}"></i></button>
           <div class="flex flex-col items-end gap-1">
-            ${l.verified ? `<span class="rounded-full px-2 py-0.5 text-[10px] font-bold" style="background:rgba(5,150,105,.1);color:#047857;border:1px solid rgba(5,150,105,.35);">✔ موثّق</span>` : ''}
             ${l.featured ? `<span class="rounded-full px-2 py-0.5 text-[10px] font-bold badge-featured">مميز</span>` : ''}
           </div>
         </div>
@@ -147,7 +146,7 @@ function renderGrid(lawyers) {
       <div class="flex flex-1 flex-col gap-2 px-3 pb-3 pt-1 text-center">
         <div class="flex items-center justify-center gap-1.5">
           <i data-lucide="star" class="text-gold-c" style="width:13px;height:13px;"></i>
-          <h3 class="text-sm font-bold text-fg">${esc(p.displayName || l.name || 'محامي')}</h3>
+          <h3 class="text-sm font-bold text-fg">${esc(p.displayName || l.name || 'محامي')}${l.verified ? window.Social.badge() : ''}</h3>
         </div>
         <p class="text-xs leading-relaxed text-muted-c">${esc(line)}</p>
         ${p.city ? `<div class="flex items-center justify-center gap-1 text-xs text-muted-c"><i data-lucide="map-pin" style="width:12px;height:12px;"></i><span>${esc(p.city)}</span></div>` : ''}

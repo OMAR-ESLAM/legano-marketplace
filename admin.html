@@ -192,6 +192,7 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--white);
       <button class="tab-btn active" data-view="overview">نظرة عامة</button>
       <button class="tab-btn" data-view="verify">طلبات التوثيق <span id="pendBadge"></span></button>
       <button class="tab-btn" data-view="lawyers">المحامين</button>
+      <button class="tab-btn" data-view="reports">البلاغات</button>
       <button class="tab-btn" data-view="files">ملفات الموقع</button>
     </div>
     <button class="logout-btn" id="bOut">خروج</button>
@@ -210,6 +211,10 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--white);
       <div class="section-title">المحامين</div>
       <input class="search-bar" id="lSearch" placeholder="ابحث بالاسم أو المحافظة...">
       <div id="lawyersWrap"><div class="loading-msg">جارٍ التحميل...</div></div>
+    </div>
+    <div class="view" id="view-reports">
+      <div class="section-title">بلاغات المنشورات والتعليقات</div>
+      <div id="reportsWrap"><div class="loading-msg">جارٍ التحميل...</div></div>
     </div>
     <div class="view" id="view-files">
       <div class="section-title">ملفات الموقع (GitHub)</div>
@@ -271,6 +276,7 @@ document.querySelectorAll('.tab-btn').forEach(b => b.onclick = () => {
   document.querySelectorAll('.tab-btn').forEach(x => x.classList.toggle('active', x === b));
   document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === 'view-' + b.dataset.view));
   if (b.dataset.view === 'files') loadFiles();
+  if (b.dataset.view === 'reports') loadReports();
 });
 $('lightbox').onclick = () => $('lightbox').classList.remove('show');
 const lightbox = src => { $('lightboxImg').src = src; $('lightbox').classList.add('show'); };
@@ -323,6 +329,41 @@ async function review(id, ok) {
   catch (e) { toast('خطأ: ' + e.message); }
 }
 $('vFilter').onchange = loadVerify;
+
+/* البلاغات: إخفاء منشور / إرجاعه / حذف البلاغ */
+async function loadReports() {
+  const w = $('reportsWrap');
+  try {
+    const rep = await api('/rest/v1/post_reports?select=*&order=created_at.desc&limit=100');
+    if (!rep.length) { w.innerHTML = '<div class="empty-state">مفيش بلاغات</div>'; return; }
+    const ids = a => [...new Set(a.filter(Boolean))].join(',');
+    const [posts, cmts, who] = await Promise.all([
+      api(`/rest/v1/posts?select=id,body,status,author_id&id=in.(${ids(rep.map(r => r.post_id))})`),
+      ids(rep.map(r => r.comment_id)) ? api(`/rest/v1/post_comments?select=id,body&id=in.(${ids(rep.map(r => r.comment_id))})`) : [],
+      api(`/rest/v1/lawyers?select=id,display_name&id=in.(${ids(rep.flatMap(r => [r.reporter_id]))})`),
+    ]);
+    const P = Object.fromEntries(posts.map(p => [p.id, p])), C = Object.fromEntries(cmts.map(c => [c.id, c])), W = Object.fromEntries(who.map(x => [x.id, x.display_name]));
+    w.innerHTML = rep.map(r => {
+      const p = P[r.post_id] || {}, c = r.comment_id ? C[r.comment_id] : null, hidden = p.status === 'hidden';
+      return `<div class="user-card"><div class="info">
+        <span class="status-tag ${c ? 'pending' : 'rejected'}">${c ? 'بلاغ على تعليق' : 'بلاغ على منشور'}</span>
+        ${hidden ? '<span class="status-tag rejected">المنشور مخفي</span>' : ''}<br>
+        <small>${esc(c ? c.body : p.body || 'اتحذف').slice(0, 220)}</small><br>
+        <small>السبب: ${esc(r.reason || 'مش مكتوب')} • من: ${esc(W[r.reporter_id] || '—')} • ${new Date(r.created_at).toLocaleDateString('ar-EG')}</small></div>
+        <div class="payment-actions">
+          <a class="pbtn copy" target="_blank" href="feed.html?post=${esc(r.post_id)}">عرض</a>
+          <button class="pbtn reject" data-ph="${esc(r.post_id)}" data-st="${hidden ? 'visible' : 'hidden'}">${hidden ? 'إرجاع المنشور' : 'إخفاء المنشور'}</button>
+          <button class="pbtn approve" data-rd="${esc(r.id)}">تجاهل البلاغ</button>
+        </div></div>`;
+    }).join('');
+    w.querySelectorAll('[data-ph]').forEach(b => b.onclick = async () => {
+      try { await rpc('admin_set_post_status', { p_post: b.dataset.ph, p_status: b.dataset.st }); toast(b.dataset.st === 'hidden' ? 'اتخفى المنشور' : 'اتعاد المنشور'); loadReports(); } catch (e) { toast('خطأ: ' + e.message); }
+    });
+    w.querySelectorAll('[data-rd]').forEach(b => b.onclick = async () => {
+      try { await api(`/rest/v1/post_reports?id=eq.${b.dataset.rd}`, { method: 'DELETE' }); loadReports(); } catch (e) { toast('خطأ: ' + e.message); }
+    });
+  } catch (e) { w.innerHTML = `<div class="empty-state">${esc(e.message)}</div>`; }
+}
 
 /* المحامين */
 async function loadLawyers() {

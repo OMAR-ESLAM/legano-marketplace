@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منشورات المحامين | Legano</title>
+<meta name="description" content="منشورات وخبرات قانونية من محامين موثّقين في مصر.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Syne:wght@800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="js/social.css">
+<style>
+  :root { color-scheme: light; --background:#F8FAFB; --foreground:#1E293B; --card:#FFFFFF; --border:#E2E8F0; --muted-foreground:#64748B; --secondary:#EEF2F7; --gold:#0F172A; --gold-soft:#92620C; }
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Cairo', sans-serif; background: var(--background); color: var(--foreground); line-height: 1.7; }
+  .logo-text { font-family: 'Syne', sans-serif; font-weight: 800; letter-spacing: 5px; font-size: 18px; text-decoration: none; background: linear-gradient(90deg, #0F172A, #92620C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .top { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 20px; background: rgba(255,255,255,.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  #navSlot { display: flex; align-items: center; gap: 8px; }
+  h1 { font-size: 17px; margin: 18px 0 12px; font-weight: 900; }
+  .back { display: inline-block; margin-bottom: 12px; font-size: 13px; font-weight: 700; color: var(--gold-soft); text-decoration: none; }
+</style>
+</head>
+<body>
+<header class="top"><a class="logo-text" href="index.html">LEGANO</a><div id="navSlot"></div></header>
+
+<main class="soc-wrap">
+  <div id="single" hidden><a class="back" href="feed.html">كل المنشورات</a></div>
+  <div id="list">
+    <h1>منشورات المحامين</h1>
+    <div id="composer" class="soc-card composer"></div>
+    <div class="feed-tabs" role="tablist" aria-label="نوع المنشورات">
+      <button class="tab" role="tab" data-mode="all" aria-selected="true" type="button">الكل</button>
+      <button class="tab" role="tab" data-mode="following" aria-selected="false" type="button">اللي بتابعهم</button>
+    </div>
+    <div class="topic-row" id="topics" aria-label="فلتر التصنيف"></div>
+  </div>
+  <div id="feed" aria-live="polite"></div>
+  <div class="feed-foot"><button id="moreBtn" class="soc-btn" type="button" hidden>عرض المزيد</button></div>
+</main>
+
+<script src="js/social.js"></script>
+<script>
+(() => {
+  const $ = id => document.getElementById(id), S = window.Social;
+  const feed = $('feed'), more = $('moreBtn');
+  const state = { mode: 'all', topic: '', cur: null, busy: false, gen: 0 };
+  const postId = new URLSearchParams(location.search).get('post');
+
+  S.mountNav($('navSlot'));
+
+  const skeleton = () => { feed.innerHTML = '<div class="sk"></div><div class="sk"></div><div class="sk"></div>'; };
+  function emptyMsg() {
+    if (state.mode === 'following') return S.me() ? 'مفيش منشورات من اللي بتتابعهم لسه. افتح بروفايلات المحامين واضغط «متابعة».' : 'سجّل دخول علشان تشوف منشورات اللي بتتابعهم.';
+    return state.topic ? 'مفيش منشورات في التصنيف ده لسه.' : 'مفيش منشورات لسه. كن أول واحد ينشر.';
+  }
+
+  async function load(reset) {
+    if (state.busy && !reset) return;
+    const gen = ++state.gen; state.busy = true; more.disabled = true;
+    if (reset) { state.cur = null; feed.__st = null; feed.__bound = false; skeleton(); more.hidden = true; }
+    try {
+      const d = await S.listPosts({ mode: state.mode, topic: state.topic, before: state.cur, limit: 10 });
+      if (gen !== state.gen) return; // اتغيّر الفلتر أثناء التحميل
+      if (reset) feed.innerHTML = '';
+      if (!d.posts.length && reset) feed.innerHTML = `<div class="empty">${S.esc(emptyMsg())}</div>`;
+      else S.mount(feed, d, { onDelete: checkEmpty });
+      state.cur = d.last; more.hidden = !d.more;
+    } catch (e) {
+      if (gen !== state.gen) return;
+      if (reset) feed.innerHTML = '<div class="empty">تعذر تحميل المنشورات. حدّث الصفحة وحاول تاني.</div>'; else S.toast(S.friendly(e));
+    } finally { if (gen === state.gen) { state.busy = false; more.disabled = false; } }
+  }
+  function checkEmpty() { if (!feed.querySelector('.post-card')) feed.innerHTML = `<div class="empty">${S.esc(emptyMsg())}</div>`; }
+
+  if (postId) {
+    // عرض منشور واحد (من رابط مشاركة أو إشعار)
+    $('single').hidden = false; $('list').hidden = true; skeleton();
+    S.listPosts({ id: postId, limit: 1 }).then(d => {
+      feed.innerHTML = '';
+      if (!d.posts.length) feed.innerHTML = '<div class="empty">المنشور ده مش موجود أو اتشال.</div>';
+      else { S.mount(feed, d); feed.querySelector('[data-act=comments]')?.click(); }
+    }).catch(() => { feed.innerHTML = '<div class="empty">تعذر تحميل المنشور.</div>'; });
+  } else {
+    S.mountComposer($('composer'), (p, a) => {
+      // المنشور الجديد يظهر فوق فوراً (لو إحنا على تاب "الكل" أو "اللي بتابعهم" نضيفه برضه لأنه بتاعي)
+      feed.querySelector('.empty')?.remove();
+      const au = { [p.author_id]: Object.assign({ id: p.author_id, verified: false }, a, { id: p.author_id }) };
+      S.listPosts({ id: p.id, limit: 1 }).then(d => S.mount(feed, d, { prepend: true, onDelete: checkEmpty })).catch(() => S.mount(feed, { posts: [p], authors: au, liked: new Set() }, { prepend: true, onDelete: checkEmpty }));
+    });
+    if (!S.me()) $('composer').classList.remove('composer');
+    $('topics').innerHTML = [['', 'كل التصنيفات'], ...S.TOPICS].map(t => `<button type="button" class="chip-t" data-t="${t[0]}" aria-pressed="${t[0] === ''}">${t[1]}</button>`).join('');
+    $('topics').addEventListener('click', e => {
+      const b = e.target.closest('.chip-t'); if (!b) return;
+      state.topic = b.dataset.t; $('topics').querySelectorAll('.chip-t').forEach(x => x.setAttribute('aria-pressed', x === b)); load(true);
+    });
+    document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+      state.mode = t.dataset.mode; document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', x === t)); load(true);
+    }));
+    more.addEventListener('click', () => load(false));
+    load(true);
+  }
+})();
+</script>
+</body>
+</html>

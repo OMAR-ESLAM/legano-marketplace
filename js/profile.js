@@ -47,7 +47,6 @@ function render(l, similar) {
     : `<i data-lucide="scale" class="text-gold-c" style="width:40px;height:40px;"></i>`;
 
   const badges = [
-    l.verified ? `<span class="rounded-full px-2.5 py-1 text-[11px] font-bold" style="background:rgba(5,150,105,.1);color:#047857;border:1px solid rgba(5,150,105,.35);">✔ موثّق</span>` : '',
     l.featured ? `<span class="rounded-full px-2.5 py-1 text-[11px] font-bold badge-featured">مميز</span>` : '',
   ].join('');
 
@@ -68,7 +67,7 @@ function render(l, similar) {
       <h2 class="mb-3 text-sm font-bold text-gold-soft-c">محامون في نفس التخصص</h2>
       <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
         ${similar.map(s => `<a href="lawyer.html?id=${encodeURIComponent(s.id)}" class="flex flex-col gap-1 rounded-2xl border border-app bg-card-c/70 p-3 text-center transition hover:border-[color:var(--gold)]">
-          <div class="text-sm font-bold text-fg">${esc(s.publicProfile.displayName)}</div>
+          <div class="text-sm font-bold text-fg">${esc(s.publicProfile.displayName)}${s.verified ? window.Social.badge() : ''}</div>
           <div class="text-xs text-muted-c">${esc((s.publicProfile.specialties || []).map(catLabel).join(' • '))}</div>
           <div class="text-xs text-muted-c">📍 ${esc(s.publicProfile.city)}</div>
         </a>`).join('')}
@@ -81,7 +80,7 @@ function render(l, similar) {
       <div class="relative mx-auto h-44 w-36 shrink-0 overflow-hidden rounded-2xl bg-secondary-c flex items-center justify-center sm:mx-0">${photo}</div>
       <div class="flex-1 text-center sm:text-right">
         <div class="mb-2 flex flex-wrap justify-center gap-2 sm:justify-start">${badges}</div>
-        <h1 class="text-2xl font-extrabold text-gold-c md:text-3xl">${esc(p.displayName)}</h1>
+        <h1 class="text-2xl font-extrabold text-gold-c md:text-3xl">${esc(p.displayName)}${l.verified ? window.Social.badge('lg') : ''}</h1>
         <div class="mt-1 flex items-center justify-center gap-1 text-sm text-muted-c sm:justify-start"><i data-lucide="map-pin" style="width:14px;height:14px;"></i><span>${esc(p.city)}</span></div>
         <div class="mt-3 flex flex-wrap justify-center gap-2 sm:justify-start">${chips}</div>
       </div>
@@ -129,6 +128,8 @@ function render(l, similar) {
     </div>
   </section>
 
+  <section class="glass rounded-2xl p-4 md:p-6"><h2 class="mb-3 text-sm font-bold text-gold-soft-c">المنشورات</h2><div id="socialBox"></div></section>
+
   ${simHTML}
 
   <p class="text-center text-[11px] leading-loose text-muted-c/80">
@@ -143,6 +144,7 @@ function render(l, similar) {
 
   wire(l);
   icons();
+  window.Social.mountProfileSocial(document.getElementById('socialBox'), l);
 }
 
 function wire(l) {

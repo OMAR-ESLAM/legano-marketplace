@@ -106,6 +106,7 @@
   .reveal-in { animation: revealIn .25s ease; } @keyframes revealIn { from { opacity:0; transform:translateY(-4px);} to { opacity:1; transform:none; } }
   @media (min-width:768px){ .sticky-bar{display:none;} }
 </style>
+<link rel="stylesheet" href="js/social.css">
 </head>
 <body class="bg-app text-fg">
 
@@ -237,8 +238,9 @@
     </div>
   </div>
 
-  <header class="flex items-center justify-between px-6 py-5 md:px-10">
+  <header class="flex flex-wrap items-center justify-between gap-3 px-6 py-5 md:px-10">
     <a href="find-lawyer.html" class="flex items-center gap-1.5 text-sm font-semibold text-gold-soft-c"><i data-lucide="arrow-right" style="width:16px;height:16px;"></i><span>رجوع للنتائج</span></a>
+    <div id="navSlot" class="flex items-center gap-2"></div>
     <a href="index.html" class="flex items-center gap-1.5 text-lg font-extrabold tracking-widest text-fg"><span class="logo-text">LEGANO</span></a>
   </header>
 
@@ -251,6 +253,8 @@
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <script src="js/data.js"></script>
+<script src="js/social.js"></script>
 <script src="js/profile.js"></script>
+<script>Social.mountNav(document.getElementById('navSlot'));</script>
 </body>
 </html>

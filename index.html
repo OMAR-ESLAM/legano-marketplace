@@ -90,6 +90,7 @@
   }
 
   </style>
+<link rel="stylesheet" href="js/social.css">
 </head>
 <body class="bg-app text-fg">
 
@@ -223,7 +224,7 @@
   </div>
 
   <!-- Logo -->
-  <header class="flex items-center justify-between px-6 py-5 md:px-10"><div class="flex items-center gap-2"><a href="register.html" class="btn-ghost-link">سجّل كمحامي</a><a href="dashboard.html" class="btn-ghost-link">دخول المحامين</a></div>
+  <header class="flex items-center justify-between px-6 py-5 md:px-10"><div id="navSlot" class="flex items-center gap-2"><a href="register.html" class="btn-ghost-link">سجّل كمحامي</a><a href="dashboard.html" class="btn-ghost-link">دخول المحامين</a></div>
     <div class="flex items-center gap-1.5 text-lg font-extrabold tracking-widest text-fg">
       <span class="logo-text">LEGANO</span>
     </div>
@@ -285,6 +286,8 @@
 
 
 <script src="js/data.js"></script>
+<script src="js/social.js"></script>
 <script src="js/home.js"></script>
+<script>Social.mountNav(document.getElementById('navSlot'));</script>
 </body>
 </html>
