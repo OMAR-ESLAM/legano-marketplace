@@ -38,7 +38,12 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--white);min-
   <div class="f" id="nameWrap" style="display:none"><label>الاسم (يظهر للزوار)</label><input id="aName" placeholder="مثال: أ. أحمد محمد"></div>
   <div class="f"><label>البريد الإلكتروني</label><input id="aEmail" type="email" dir="ltr" autocomplete="email"></div>
   <div class="f"><label>كلمة السر (8 حروف على الأقل)</label><input id="aPass" type="password" dir="ltr" autocomplete="current-password"></div>
-  <button class="m-submit" id="bLogin">دخول</button><button class="link" id="bSwitch"></button>
+  <button class="m-submit" id="bLogin">دخول</button><button class="link" id="bSwitch"></button><br><button class="link" id="bForgot" type="button">نسيت كلمة السر؟</button>
+</div>
+<div class="login-box hide" id="resetBox">
+  <div class="logo">LEGANO</div><h1>اختار كلمة سر جديدة</h1>
+  <div class="f"><label>كلمة السر الجديدة (8 حروف على الأقل)</label><input id="rpNew" type="password" dir="ltr" autocomplete="new-password"></div>
+  <button class="m-submit" id="bReset" type="button">حفظ ودخول</button>
 </div></div>
 
 <div id="panel" class="hide">
@@ -154,5 +159,28 @@ async function verify(){
 }
 function out(){ S = null; store.set(null); $('panel').classList.add('hide'); $('authBox').style.display = 'flex'; }
 $('bLogin').onclick = () => auth(mode); $('bSwitch').onclick = () => { location.href = 'register.html'; }; document.querySelectorAll('.tab-btn').forEach(b => b.onclick = () => tab(b.dataset.tab)); document.querySelectorAll('.m-upload input').forEach(i => i.onchange = () => { i.parentNode.querySelector('span').textContent = i.files[0] ? '✔ ' + i.files[0].name : i.parentNode.dataset.t; }); [ 'aEmail','aPass' ].forEach(id => $(id).onkeydown = e => { if (e.key === 'Enter') auth(mode); }); setMode('login'); $('bOut').onclick = out; $('bSave').onclick = save; $('bVer').onclick = verify;
-S = store.get(); if (S) load();
+// نسيت كلمة السر: بنبعت رابط على الإيميل، والرابط بيرجّعك هنا بتوكن مؤقت علشان تختار كلمة جديدة
+$('bForgot').onclick = async () => {
+  const email = $('aEmail').value.trim();
+  if (!email) return say('اكتب إيميلك فوق الأول وبعدين اضغط «نسيت كلمة السر»', 1);
+  try {
+    await api('/auth/v1/recover?redirect_to=' + encodeURIComponent(location.origin + location.pathname), { method: 'POST', json: { email } });
+    say('لو الإيميل مسجّل عندنا هيوصلك رابط تعيين كلمة السر. بص في الـ Spam كمان.');
+  } catch (e) { say(/rate|seconds/i.test(e.message) ? 'استنى دقيقة قبل ما تطلب رابط تاني' : e.message, 1); }
+};
+const hp = new URLSearchParams(location.hash.slice(1));
+if (hp.get('type') === 'recovery' && hp.get('access_token')) {
+  history.replaceState(null, '', location.pathname); // نشيل التوكن من الرابط
+  const rtok = hp.get('access_token');
+  document.querySelector('#authBox > .login-box:not(#resetBox)').classList.add('hide'); $('resetBox').classList.remove('hide');
+  $('bReset').onclick = async () => {
+    const password = $('rpNew').value;
+    if (password.length < 8) return say('كلمة السر لازم 8 حروف على الأقل', 1);
+    try {
+      await fetch(U + '/auth/v1/user', { method: 'PUT', headers: { apikey: K, Authorization: 'Bearer ' + rtok, 'Content-Type': 'application/json' }, body: JSON.stringify({ password }) }).then(async r => { if (!r.ok) throw new Error((await r.json()).msg || 'تعذر تغيير كلمة السر'); });
+      say('اتغيّرت كلمة السر، سجّل دخول بيها دلوقتي.');
+      $('resetBox').classList.add('hide'); document.querySelector('#authBox > .login-box:not(#resetBox)').classList.remove('hide');
+    } catch (e) { say(/expired|invalid|JWT/i.test(e.message) ? 'الرابط انتهت صلاحيته، اطلب رابط جديد' : e.message, 1); }
+  };
+} else { S = store.get(); if (S) load(); }
 </script></body></html>
