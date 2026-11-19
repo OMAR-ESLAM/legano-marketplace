@@ -52,6 +52,7 @@
   <aside class="feed-side" aria-label="اقتراحات">
     <section class="soc-card side-card" id="sugCard" hidden><h2>الأعلى تقييماً من الموكلين</h2><div id="sugList"></div></section>
     <section class="soc-card side-card tip-card"><h2>💡 نصايح للنشر</h2><ul><li>انشر معلومة قانونية مفيدة، مش إعلان مباشر.</li><li>اختار الجمهور: زمايل، موكلين، أو الاتنين.</li><li>رد على تعليقات زمايلك، التفاعل بيزوّد ظهورك.</li><li>الإعلان للموكلين لازم يلتزم بقواعد النقابة.</li></ul></section>
+    <section class="soc-card side-card" id="grpCard"><h2>جروباتي</h2><div id="grpList"><div class="grp-empty">بتحمّل…</div></div><div class="grp-btns"><a class="soc-btn" href="groups.html">استكشف الجروبات</a><a class="soc-btn primary" href="groups.html?new=1">+ إنشاء جروب</a></div></section>
   </aside>
 </div>
 
@@ -96,6 +97,13 @@
       });
     } catch {}
   })();
+
+  // ---- جروباتي ----
+  S.myGroups().then(gs => {
+    $('grpList').innerHTML = gs.length
+      ? gs.slice(0, 6).map(g => `<a class="grp-row" href="group.html?id=${esc(g.id)}"><span class="grp-ico" aria-hidden="true">${esc([...g.name][0] || '؟')}</span><span class="grp-t"><b>${esc(g.name)}</b><small>${esc(S.num(g.member_count))} عضو</small></span></a>`).join('') + (gs.length > 6 ? `<a class="grp-more" href="groups.html">و${gs.length - 6} جروبات تانية ←</a>` : '')
+      : '<div class="grp-empty">لسه ما انضمتش لأي جروب. استكشف الجروبات أو اعمل جروب لزمايلك.</div>';
+  }).catch(() => { $('grpList').innerHTML = ''; });
 
   // ---- الفيد ----
   const skeleton = () => { feed.innerHTML = '<div class="sk"></div><div class="sk"></div><div class="sk"></div>'; };

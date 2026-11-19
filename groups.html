@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>الجروبات | Legano</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Syne:wght@800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="js/social.css">
+<style>
+  :root { color-scheme: light; --background:#F8FAFB; --foreground:#1E293B; --card:#FFFFFF; --border:#E2E8F0; --muted-foreground:#64748B; --secondary:#EEF2F7; --gold:#0F172A; --gold-soft:#92620C; }
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Cairo', sans-serif; background: var(--background); color: var(--foreground); line-height: 1.7; }
+  .logo-text { font-family: 'Syne', sans-serif; font-weight: 800; letter-spacing: 5px; font-size: 18px; text-decoration: none; background: linear-gradient(90deg, #0F172A, #92620C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .top { position: sticky; top: 0; z-index: 50; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; padding: 10px 20px; background: rgba(255,255,255,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  #navSlot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .back { display: inline-block; margin-bottom: 12px; font-size: 13px; font-weight: 700; color: var(--gold-soft); text-decoration: none; }
+  .warn { padding: 12px 14px; margin-bottom: 14px; background: #FFF8E6; border: 1px solid #F1D48A; color: #7A5200; border-radius: 12px; font-size: 13px; line-height: 1.9; }
+  .warn a { color: inherit; font-weight: 800; }
+</style>
+</head>
+<body>
+<header class="top"><a class="logo-text" href="index.html?browse=1">LEGANO</a><div id="navSlot"></div></header>
+<div id="gate" class="soc-card gate" hidden>
+  <h1>منطقة المحامين</h1>
+  <p>الجروبات للمحامين بس. سجّل دخول علشان تنضم وتنشر.</p>
+  <a class="soc-btn primary" href="dashboard.html">دخول المحامين</a><a class="soc-btn" href="register.html">سجّل كمحامي</a>
+</div>
+<div id="wrap" class="grp-wrap" hidden>
+  <div class="grp-head"><div><h1>الجروبات</h1><p>مجتمعات صغيرة للمحامين حسب التخصص أو المحافظة. المنشورات جوه الجروب بتظهر لأعضائه بس.</p></div><button id="newBtn" type="button" class="soc-btn primary">+ إنشاء جروب</button></div>
+  <section id="mineBox" class="soc-card side-card" hidden><h2>جروباتي</h2><div id="mine" class="grp-grid"></div></section>
+  <div class="grp-search"><input id="q" type="search" placeholder="دوّر على جروب…" aria-label="بحث في الجروبات" maxlength="40"></div>
+  <section><h2 class="grp-h2">استكشف الجروبات</h2><div id="all" class="grp-grid" aria-live="polite"></div></section>
+</div>
+<div id="newOv" class="modal-ov" hidden><div class="modal" role="dialog" aria-modal="true" aria-labelledby="nTitle">
+  <div class="modal-h"><h2 id="nTitle">إنشاء جروب</h2><button type="button" class="modal-x" id="nX" aria-label="إغلاق">×</button></div>
+  <div class="modal-b">
+    <label class="f-l" for="nName">اسم الجروب</label><input id="nName" class="f-i" maxlength="60" placeholder="مثال: محامين الأحوال الشخصية - القاهرة">
+    <label class="f-l" for="nDesc">وصف قصير (اختياري)</label><textarea id="nDesc" class="f-i" rows="3" maxlength="500" placeholder="الجروب ده لإيه؟"></textarea>
+    <p class="m-note">أي محامي يقدر ينضم للجروب. تقدر تعمل لحد 5 جروبات.</p>
+  </div>
+  <div class="modal-f"><button id="nGo" type="button" class="soc-btn primary" disabled>إنشاء</button></div>
+</div></div>
+<script src="js/social.js"></script>
+<script>
+(async () => {
+  const $ = id => document.getElementById(id), S = window.Social, esc = S.esc;
+  S.mountNav($('navSlot'));
+  if (!S.me()) { $('gate').hidden = false; return; }
+  $('wrap').hidden = false;
+  let mineIds = new Set();
+  const card = g => `<a class="grp-card" href="group.html?id=${esc(g.id)}"><span class="grp-ico" aria-hidden="true">${esc([...g.name][0] || '؟')}</span><span class="grp-t"><b>${esc(g.name)}</b><small>${esc(S.num(g.member_count))} عضو${mineIds.has(g.id) ? ' • أنت عضو' : ''}</small></span></a>`;
+  async function loadMine() {
+    try {
+      const m = await S.myGroups(); mineIds = new Set(m.map(g => g.id));
+      $('mineBox').hidden = !m.length; $('mine').innerHTML = m.map(card).join('');
+    } catch {}
+  }
+  let t, gen = 0;
+  async function loadAll() {
+    const g = ++gen;
+    try {
+      const rows = await S.listGroups({ q: $('q').value });
+      if (g !== gen) return;
+      $('all').innerHTML = rows.length ? rows.map(card).join('') : '<div class="empty">مفيش جروبات لسه. اعمل أول جروب!</div>';
+    } catch { if (g === gen) $('all').innerHTML = '<div class="empty">تعذر تحميل الجروبات.</div>'; }
+  }
+  $('q').addEventListener('input', () => { clearTimeout(t); t = setTimeout(loadAll, 300); });
+  const ov = $('newOv'), open = () => { ov.hidden = false; $('nName').focus(); }, close = () => { ov.hidden = true; };
+  $('newBtn').onclick = open; $('nX').onclick = close;
+  ov.addEventListener('mousedown', e => { if (e.target === ov) close(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !ov.hidden) close(); });
+  $('nName').addEventListener('input', () => { $('nGo').disabled = $('nName').value.trim().length < 3; });
+  $('nGo').onclick = async () => {
+    $('nGo').disabled = true;
+    try { const g = await S.createGroup({ name: $('nName').value, description: $('nDesc').value }); location.href = 'group.html?id=' + g.id; }
+    catch (e) { S.toast(S.friendly(e)); $('nGo').disabled = false; }
+  };
+  if (new URLSearchParams(location.search).get('new')) open();
+  await loadMine(); loadAll();
+})();
+</script>
+</body>
+</html>

@@ -66,6 +66,8 @@
   }
   function friendly(e) {
     const m = String((e && e.message) || '');
+    if (/group_limit/.test(m)) return 'وصلت للحد الأقصى: 5 جروبات لكل محامي.';
+    if (/not_member/.test(m)) return 'لازم تنضم للجروب الأول علشان تنشر فيه.';
     if (/contact_first/.test(m)) return 'تقدر تقيّم المحامي بعد ما تتصل بيه أو تبعتله واتساب من هنا.';
     if (/lawyers_cannot_rate/.test(m)) return 'التقييم للموكلين بس.';
     if (e && (e.code === '42501' || /row-level security|permission denied/i.test(m))) return 'علشان تتفاعل لازم بروفايلك يكون ظاهر للزوار. فعّله من لوحتك.';
@@ -120,9 +122,11 @@
     return Object.fromEntries(rows.map(r => [r.id, r]));
   }
   const EMPTY = () => ({ posts: [], authors: {}, liked: new Map() });
-  async function listPosts({ authorId, mode, topic, before, id, limit = 10 } = {}) {
+  async function listPosts({ authorId, groupId, mode, topic, before, id, limit = 10 } = {}) {
     let q = `/rest/v1/posts?select=*&status=eq.visible&order=created_at.desc&limit=${limit}`;
     if (id) { if (!UUID.test(id)) return EMPTY(); q += `&id=eq.${id}`; }
+    else if (groupId) { if (!UUID.test(groupId)) return EMPTY(); q += `&group_id=eq.${groupId}`; }
+    else q += '&group_id=is.null'; // منشورات الجروبات ما بتظهرش في الفيد العام
     if (authorId) { if (!UUID.test(authorId)) return EMPTY(); q += `&author_id=eq.${authorId}`; }
     if (topic && TOPICS.some(t => t[0] === topic)) q += `&topic=eq.${topic}`;
     if (before) q += `&created_at=lt.${encodeURIComponent(before)}`;
@@ -143,7 +147,7 @@
   }
 
   // ---------- كتابة ----------
-  async function createPost({ body, topic, file, audience }) {
+  async function createPost({ body, topic, file, audience, groupId }) {
     let image_path = null;
     if (file) {
       if (!/^image\//.test(file.type)) throw new Error('type');
@@ -153,7 +157,7 @@
       await call(`/storage/v1/object/post-images/${image_path}`, { method: 'POST', body: file, headers: { 'Content-Type': file.type } });
     }
     const aud = AUDIENCES.some(a => a[0] === audience) ? audience : 'all';
-    const rows = await call('/rest/v1/posts', { method: 'POST', json: { author_id: me(), body, topic: topic || null, image_path, audience: aud }, headers: { Prefer: 'return=representation' } });
+    const rows = await call('/rest/v1/posts', { method: 'POST', json: { author_id: me(), body, topic: topic || null, image_path, audience: groupId ? 'lawyers' : aud, ...(groupId ? { group_id: groupId } : {}) }, headers: { Prefer: 'return=representation' } });
     return rows[0];
   }
   async function deletePost(p) {
@@ -237,7 +241,7 @@
   async function mountNav(el) {
     if (!el) return;
     if (!me()) { if (!el.children.length) el.innerHTML = '<a href="register.html" class="btn-ghost-link">سجّل كمحامي</a><a href="dashboard.html" class="btn-ghost-link">دخول المحامين</a>'; return; }
-    el.innerHTML = `<a href="feed.html" class="btn-ghost-link">المنشورات</a><a href="index.html?browse=1" class="btn-ghost-link">سوق المحامين</a><a href="notifications.html" class="nav-bell" aria-label="الإشعارات">${BELL}<span class="nav-dot" hidden></span></a><a href="dashboard.html" class="btn-ghost-link">لوحتي</a>`;
+    el.innerHTML = `<a href="feed.html" class="btn-ghost-link">المنشورات</a><a href="groups.html" class="btn-ghost-link">الجروبات</a><a href="index.html?browse=1" class="btn-ghost-link">سوق المحامين</a><a href="notifications.html" class="nav-bell" aria-label="الإشعارات">${BELL}<span class="nav-dot" hidden></span></a><a href="dashboard.html" class="btn-ghost-link">لوحتي</a>`;
     const n = await unreadCount();
     const dot = el.querySelector('.nav-dot');
     if (n && dot) { dot.textContent = n > 99 ? '99+' : n; dot.hidden = false; }
@@ -465,15 +469,15 @@
   // ---------- صندوق كتابة المنشور (شريط مختصر + نافذة زي فيسبوك) ----------
   const lastAud = () => { const v = pref.get('lg_aud'); return AUDIENCES.some(a => a[0] === v) ? v : 'all'; };
 
-  function openComposeModal(meA, onPosted, opener) {
+  function openComposeModal(meA, onPosted, opener, grp) {
     const ov = document.createElement('div'); ov.className = 'modal-ov';
     ov.innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
       <div class="modal-h"><h2 id="mTitle">إنشاء منشور</h2><button type="button" class="modal-x" aria-label="إغلاق">×</button></div>
       <div class="modal-b">
         <div class="m-who">${avatar(meA)}<b>${esc(meA.display_name || '')}${meA.verified ? badge() : ''}</b></div>
-        <fieldset class="aud"><legend>مين يشوف المنشور ده؟</legend>
+        ${grp ? `<p class="m-grp">بتنشر في جروب <b>${esc(grp.name)}</b>. المنشور هيظهر لأعضاء الجروب بس.</p>` : `<fieldset class="aud"><legend>مين يشوف المنشور ده؟</legend>
           ${AUDIENCES.map(a => `<label class="aud-opt"><input type="radio" name="aud" value="${a[0]}" ${a[0] === lastAud() ? 'checked' : ''}><span><b>${a[1]}</b><small>${a[2]}</small></span></label>`).join('')}
-        </fieldset>
+        </fieldset>`}
         <textarea id="mBody" rows="5" maxlength="3000" placeholder="شارك معلومة قانونية أو خبرة من شغلك…" aria-label="نص المنشور"></textarea>
         <div id="mPrev" class="c-prev" hidden><img alt=""><button type="button" aria-label="شيل الصورة">×</button></div>
         <div class="composer-bar">
@@ -493,7 +497,7 @@
     document.addEventListener('keydown', onKey);
     ov.addEventListener('mousedown', e => { if (e.target === ov) close(); });
     $('.modal-x').onclick = close;
-    const aud = () => (ov.querySelector('input[name=aud]:checked') || {}).value || 'all';
+    const aud = () => grp ? 'lawyers' : (ov.querySelector('input[name=aud]:checked') || {}).value || 'all';
     const sync = () => { $('#mCount').textContent = `${body.value.length} / 3000`; go.disabled = !body.value.trim(); $('#mNote').hidden = aud() === 'lawyers'; };
     ov.querySelectorAll('input[name=aud]').forEach(r => r.addEventListener('change', sync));
     body.addEventListener('input', sync); sync();
@@ -506,15 +510,15 @@
     go.onclick = async () => {
       go.disabled = true; go.textContent = 'بننشر…';
       try {
-        const a = aud(); pref.set('lg_aud', a);
-        const p = await createPost({ body: body.value.trim(), topic: $('#mTopic').value, file: file.files[0], audience: a });
+        const a = aud(); if (!grp) pref.set('lg_aud', a);
+        const p = await createPost({ body: body.value.trim(), topic: $('#mTopic').value, file: file.files[0], audience: a, groupId: grp && grp.id });
         toast('اتنشر المنشور'); close(); onPosted && onPosted(p, meA);
       } catch (e) { toast(friendly(e)); go.textContent = 'نشر'; sync(); }
     };
     body.focus();
   }
 
-  async function mountComposer(el, onPosted) {
+  async function mountComposer(el, onPosted, grp) {
     if (!me()) {
       el.innerHTML = '<div class="composer-guest"><b>شارك خبرتك مع زمايلك المحامين.</b><span>سجّل دخول علشان تنشر وتعلّق وتتابع.</span><a class="soc-btn primary" href="dashboard.html">دخول المحامين</a><a class="soc-btn" href="register.html">سجّل كمحامي</a></div>';
       return;
@@ -522,7 +526,7 @@
     const meA = (await authors([me()]).catch(() => ({})))[me()] || { id: me(), display_name: (S.user.user_metadata || {}).display_name || '' };
     const first = (meA.display_name || '').replace(/^(أ\.?|د\.?|المستشار)\s*/, '').trim().split(/\s+/)[0] || '';
     el.innerHTML = `<div class="comp-trig">${avatar(meA)}<button type="button" class="comp-input">بتفكر في إيه${first ? ' يا أستاذ ' + esc(first) : ''}؟</button><button type="button" class="comp-photo" aria-label="إضافة صورة للمنشور">${'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-8 8"/></svg>'}</button></div>`;
-    el.querySelectorAll('button').forEach(b => b.addEventListener('click', () => openComposeModal(meA, onPosted, b)));
+    el.querySelectorAll('button').forEach(b => b.addEventListener('click', () => openComposeModal(meA, onPosted, b, grp)));
   }
 
   // ---------- منشورات بروفايل المحامي ----------
@@ -549,7 +553,33 @@
     more.onclick = page; page();
   }
 
+  // ---------- الجروبات ----------
+  const GCOLS = 'id,name,description,owner_id,member_count,created_at';
+  const listGroups = async ({ q } = {}) => {
+    let url = `/rest/v1/groups?select=${GCOLS}&order=member_count.desc,created_at.desc&limit=60`;
+    const t = (q || '').trim().replace(/[^\p{L}\p{N} ]/gu, '').slice(0, 40);
+    if (t) url += `&name=ilike.*${encodeURIComponent(t)}*`;
+    return call(url);
+  };
+  const myGroups = async () => {
+    if (!me()) return [];
+    const m = await call(`/rest/v1/group_members?select=group_id&lawyer_id=eq.${me()}`);
+    if (!m.length) return [];
+    return call(`/rest/v1/groups?select=${GCOLS}&id=in.(${m.map(x => x.group_id).join(',')})&order=member_count.desc`);
+  };
+  const getGroup = async id => UUID.test(id || '') ? (await call(`/rest/v1/groups?select=${GCOLS}&id=eq.${id}`))[0] || null : null;
+  const createGroup = async ({ name, description }) => (await call('/rest/v1/groups', { method: 'POST', json: { name: name.trim(), description: (description || '').trim() || null, owner_id: me() }, headers: { Prefer: 'return=representation' } }))[0];
+  const joinGroup = id => call('/rest/v1/group_members', { method: 'POST', json: { group_id: id, lawyer_id: me() } });
+  const leaveGroup = id => call(`/rest/v1/group_members?group_id=eq.${id}&lawyer_id=eq.${me()}`, { method: 'DELETE' });
+  const deleteGroup = id => call(`/rest/v1/groups?id=eq.${id}`, { method: 'DELETE' });
+  const groupMembers = async id => {
+    const m = await call(`/rest/v1/group_members?select=lawyer_id,role&group_id=eq.${id}&order=joined_at.asc&limit=100`);
+    const au = await authors(m.map(x => x.lawyer_id));
+    return m.map(x => ({ ...x, a: au[x.lawyer_id] })).filter(x => x.a);
+  };
+
   window.Social = {
+    listGroups, myGroups, getGroup, createGroup, joinGroup, leaveGroup, deleteGroup, groupMembers,
     me, call, esc, badge, avatar, ago, num, stars, toast, needLogin, friendly, TOPICS, AUDIENCES, REACTIONS, topicLabel, audLabel,
     listPosts, mount, mountComposer, mountNav, mountProfilePosts, profileSocial, follow, unfollow,
     unreadCount, listNotifications, markAllRead, nameHTML, ratingStatus, rate, deviceId, photoUrl,

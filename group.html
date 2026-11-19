@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>جروب | Legano</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Syne:wght@800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="js/social.css">
+<style>
+  :root { color-scheme: light; --background:#F8FAFB; --foreground:#1E293B; --card:#FFFFFF; --border:#E2E8F0; --muted-foreground:#64748B; --secondary:#EEF2F7; --gold:#0F172A; --gold-soft:#92620C; }
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Cairo', sans-serif; background: var(--background); color: var(--foreground); line-height: 1.7; }
+  .logo-text { font-family: 'Syne', sans-serif; font-weight: 800; letter-spacing: 5px; font-size: 18px; text-decoration: none; background: linear-gradient(90deg, #0F172A, #92620C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .top { position: sticky; top: 0; z-index: 50; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; padding: 10px 20px; background: rgba(255,255,255,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  #navSlot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .back { display: inline-block; margin-bottom: 12px; font-size: 13px; font-weight: 700; color: var(--gold-soft); text-decoration: none; }
+  .warn { padding: 12px 14px; margin-bottom: 14px; background: #FFF8E6; border: 1px solid #F1D48A; color: #7A5200; border-radius: 12px; font-size: 13px; line-height: 1.9; }
+  .warn a { color: inherit; font-weight: 800; }
+</style>
+</head>
+<body>
+<header class="top"><a class="logo-text" href="index.html?browse=1">LEGANO</a><div id="navSlot"></div></header>
+<div id="gate" class="soc-card gate" hidden>
+  <h1>منطقة المحامين</h1>
+  <p>الجروبات للمحامين بس. سجّل دخول علشان تنضم وتنشر.</p>
+  <a class="soc-btn primary" href="dashboard.html">دخول المحامين</a><a class="soc-btn" href="register.html">سجّل كمحامي</a>
+</div>
+<div id="wrap" class="grp-wrap grp-single" hidden>
+  <a class="back" href="groups.html">كل الجروبات</a>
+  <div id="gMissing" class="empty" hidden>الجروب ده مش موجود.</div>
+  <div id="gMain" class="grp-main">
+    <section class="soc-card grp-hero"><div class="grp-cover"></div><div class="grp-hero-b"><div><h1 id="gName"></h1><p id="gDesc" class="grp-desc"></p><p id="gMeta" class="grp-meta"></p></div><div class="grp-actions"><button id="joinBtn" type="button" class="soc-btn primary" hidden>انضم للجروب</button><button id="leaveBtn" type="button" class="soc-btn" hidden>مغادرة</button><button id="delBtn" type="button" class="soc-btn danger" hidden>حذف الجروب</button></div></div></section>
+    <div class="grp-cols">
+      <main><div id="composer" class="soc-card composer-card" hidden></div><div id="locked" class="soc-card gate-mini" hidden>انضم للجروب علشان تشوف المنشورات وتنشر.</div><div id="feed" aria-live="polite"></div><div class="feed-foot"><button id="moreBtn" class="soc-btn" type="button" hidden>عرض المزيد</button></div></main>
+      <aside><section class="soc-card side-card"><h2>الأعضاء</h2><div id="members"></div></section></aside>
+    </div>
+  </div>
+</div>
+<script src="js/social.js"></script>
+<script>
+(async () => {
+  const $ = id => document.getElementById(id), S = window.Social, esc = S.esc;
+  S.mountNav($('navSlot'));
+  if (!S.me()) { $('gate').hidden = false; return; }
+  $('wrap').hidden = false;
+  const id = new URLSearchParams(location.search).get('id');
+  const g = await S.getGroup(id).catch(() => null);
+  if (!g) { $('gMain').hidden = true; $('gMissing').hidden = false; return; }
+  document.title = g.name + ' | Legano';
+  const meId = S.me(), isOwner = g.owner_id === meId;
+  $('gName').textContent = g.name; $('gDesc').textContent = g.description || '';
+  let members = [], isMember = false, composerDone = false, feedLoaded = false, cur = null;
+  const feed = $('feed'), more = $('moreBtn');
+  async function loadMembers() {
+    members = await S.groupMembers(g.id).catch(() => []);
+    isMember = members.some(m => m.lawyer_id === meId);
+    $('gMeta').textContent = `${S.num(members.length || g.member_count)} عضو`;
+    $('members').innerHTML = members.map(m => `<div class="sug">${S.avatar(m.a)}<div class="sug-m">${S.nameHTML(m.a)}<small>${m.role === 'owner' ? 'مؤسس الجروب' : esc(m.a.city || '')}</small></div></div>`).join('') || '<div class="empty">لسه مفيش أعضاء.</div>';
+  }
+  function render() {
+    $('joinBtn').hidden = isMember; $('leaveBtn').hidden = !isMember || isOwner; $('delBtn').hidden = !isOwner;
+    $('composer').hidden = !isMember; $('locked').hidden = isMember;
+    if (!isMember) { feed.innerHTML = ''; more.hidden = true; feedLoaded = false; cur = null; return; }
+    if (!composerDone) {
+      composerDone = true;
+      S.mountComposer($('composer'), p => { feed.querySelector('.empty')?.remove(); S.listPosts({ id: p.id, limit: 1 }).then(d => S.mount(feed, d, { prepend: true })); }, { id: g.id, name: g.name });
+    }
+    if (!feedLoaded) { feedLoaded = true; loadPage(); }
+  }
+  async function loadPage() {
+    more.disabled = true;
+    try {
+      const d = await S.listPosts({ groupId: g.id, before: cur, limit: 10 });
+      if (!d.posts.length && !cur) feed.innerHTML = '<div class="empty">لسه مفيش منشورات في الجروب. اكتب أول منشور.</div>';
+      else S.mount(feed, d, {});
+      cur = d.last; more.hidden = !d.more;
+    } catch { feed.insertAdjacentHTML('beforeend', '<div class="empty">تعذر تحميل المنشورات.</div>'); }
+    more.disabled = false;
+  }
+  more.onclick = loadPage;
+  $('joinBtn').onclick = async () => { $('joinBtn').disabled = true; try { await S.joinGroup(g.id); await loadMembers(); render(); S.toast('انضميت للجروب'); } catch (e) { S.toast(S.friendly(e)); } $('joinBtn').disabled = false; };
+  $('leaveBtn').onclick = async () => { if (!confirm('تغادر الجروب؟')) return; try { await S.leaveGroup(g.id); await loadMembers(); render(); } catch (e) { S.toast(S.friendly(e)); } };
+  $('delBtn').onclick = async () => { if (!confirm('حذف الجروب ومنشوراته نهائياً؟')) return; try { await S.deleteGroup(g.id); location.href = 'groups.html'; } catch (e) { S.toast(S.friendly(e)); } };
+  await loadMembers(); render();
+})();
+</script>
+</body>
+</html>
