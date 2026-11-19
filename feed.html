@@ -50,7 +50,8 @@
   </main>
 
   <aside class="feed-side" aria-label="اقتراحات">
-    <section class="soc-card side-card" id="sugCard" hidden><h2>محامين ممكن تتابعهم</h2><div id="sugList"></div></section>
+    <section class="soc-card side-card" id="sugCard" hidden><h2>الأعلى تقييماً من الموكلين</h2><div id="sugList"></div></section>
+    <section class="soc-card side-card tip-card"><h2>💡 نصايح للنشر</h2><ul><li>انشر معلومة قانونية مفيدة، مش إعلان مباشر.</li><li>اختار الجمهور: زمايل، موكلين، أو الاتنين.</li><li>رد على تعليقات زمايلك، التفاعل بيزوّد ظهورك.</li><li>الإعلان للموكلين لازم يلتزم بقواعد النقابة.</li></ul></section>
   </aside>
 </div>
 
@@ -84,10 +85,10 @@
         S.call(`/rest/v1/follows?select=following_id&follower_id=eq.${meId}`),
       ]);
       const f = new Set(fl.map(x => x.following_id));
-      const pick = all.filter(x => x.id !== meId && !f.has(x.id)).slice(0, 5);
+      const pick = all.filter(x => x.id !== meId).slice(0, 5);
       if (!pick.length) return;
       $('sugCard').hidden = false;
-      $('sugList').innerHTML = pick.map(x => `<div class="sug">${S.avatar(x)}<div class="sug-m">${S.nameHTML(x)}<small>${esc(x.city || '')}</small></div><button type="button" class="soc-btn" data-f="${esc(x.id)}">متابعة</button></div>`).join('');
+      $('sugList').innerHTML = pick.map(x => `<div class="sug">${S.avatar(x)}<div class="sug-m">${S.nameHTML(x)}<small>${esc(x.city || '')}</small></div>${f.has(x.id) ? '<small>بتتابعه ✓</small>' : `<button type="button" class="soc-btn" data-f="${esc(x.id)}">متابعة</button>`}</div>`).join('');
       $('sugList').addEventListener('click', async e => {
         const b = e.target.closest('[data-f]'); if (!b) return;
         b.disabled = true;

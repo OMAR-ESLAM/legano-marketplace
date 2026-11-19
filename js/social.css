@@ -231,8 +231,8 @@ fieldset.aud legend { font-size: 12.5px; font-weight: 800; padding: 0 6px; color
 .rate-input button:disabled { opacity: .6; cursor: wait; }
 
 /* ===================== فيد المحامين (الصفحة الرئيسية للمحامي المسجّل) ===================== */
-.feed-layout { max-width: 1120px; margin: 0 auto; padding: 14px 14px 80px; display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); }
-@media (min-width: 1000px) { .feed-layout { grid-template-columns: 260px minmax(0, 640px) 280px; justify-content: center; } }
+.feed-layout { max-width: 1360px; margin: 0 auto; padding: 14px 14px 80px; display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 1000px) { .feed-layout { grid-template-columns: minmax(260px, 1fr) minmax(0, 680px) minmax(260px, 1fr); gap: 28px; } }
 .feed-side { display: none; }
 @media (min-width: 1000px) { .feed-side { display: flex; flex-direction: column; gap: 14px; position: sticky; top: 74px; align-self: start; } }
 .side-card { padding: 14px; }
@@ -256,3 +256,16 @@ fieldset.aud legend { font-size: 12.5px; font-weight: 800; padding: 0 6px; color
 .gate h1 { font-size: 20px; margin: 0 0 8px; }
 .gate p { color: var(--muted-foreground, #64748B); font-size: 14px; line-height: 2; margin: 0 0 16px; }
 .gate .soc-btn { margin: 0 4px; }
+
+/* حيوية الفيد: بطاقة الحساب بغلاف + كروت جانبية */
+.mini-me { padding: 0 0 14px; overflow: hidden; }
+.mini-me::before { content: ''; display: block; height: 64px; background: linear-gradient(120deg, #0F172A, #1E3A5F 60%, #92620C); }
+.mini-me > .avatar { margin: -34px auto 6px; border: 3px solid #fff; box-shadow: 0 2px 8px rgba(15,23,42,.18); position: relative; }
+.mini-me .mini-stats, .mini-me nav { padding: 0 14px; }
+.side-links { display: flex; flex-direction: column; margin-top: 8px; text-align: right; }
+.side-links a { padding: 9px 10px; border-radius: 10px; font-size: 13.5px; font-weight: 700; color: var(--foreground, #1E293B); text-decoration: none; }
+.side-links a:hover { background: var(--secondary, #EEF2F7); color: #92620C; }
+.tip-card { background: linear-gradient(160deg, #FFF8E6, #fff); border-color: #F1D48A; }
+.tip-card ul { margin: 0; padding: 0 18px 0 0; font-size: 12.5px; line-height: 2; color: #5b4a1c; }
+.sug-rate { font-size: 11px; color: #B7791F; }
+@media (min-width: 1000px) { .soc-card:hover { box-shadow: 0 6px 22px rgba(15,23,42,.06); } .feed-layout .post-card { margin-bottom: 14px; } }
