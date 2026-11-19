@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
 <title>منشورات المحامين | Legano</title>
-<meta name="description" content="منشورات وخبرات قانونية من محامين موثّقين في مصر.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Syne:wght@800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="js/social.css">
@@ -13,46 +13,95 @@
   *, *::before, *::after { box-sizing: border-box; }
   body { margin: 0; font-family: 'Cairo', sans-serif; background: var(--background); color: var(--foreground); line-height: 1.7; }
   .logo-text { font-family: 'Syne', sans-serif; font-weight: 800; letter-spacing: 5px; font-size: 18px; text-decoration: none; background: linear-gradient(90deg, #0F172A, #92620C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .top { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 20px; background: rgba(255,255,255,.9); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
-  #navSlot { display: flex; align-items: center; gap: 8px; }
-  h1 { font-size: 17px; margin: 18px 0 12px; font-weight: 900; }
+  .top { position: sticky; top: 0; z-index: 50; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; padding: 10px 20px; background: rgba(255,255,255,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  #navSlot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
   .back { display: inline-block; margin-bottom: 12px; font-size: 13px; font-weight: 700; color: var(--gold-soft); text-decoration: none; }
+  .warn { padding: 12px 14px; margin-bottom: 14px; background: #FFF8E6; border: 1px solid #F1D48A; color: #7A5200; border-radius: 12px; font-size: 13px; line-height: 1.9; }
+  .warn a { color: inherit; font-weight: 800; }
 </style>
 </head>
 <body>
-<header class="top"><a class="logo-text" href="index.html">LEGANO</a><div id="navSlot"></div></header>
+<header class="top"><a class="logo-text" href="index.html?browse=1">LEGANO</a><div id="navSlot"></div></header>
 
-<main class="soc-wrap">
-  <div id="single" hidden><a class="back" href="feed.html">كل المنشورات</a></div>
-  <div id="list">
-    <h1>منشورات المحامين</h1>
-    <div id="composer" class="soc-card composer"></div>
-    <div class="feed-tabs" role="tablist" aria-label="نوع المنشورات">
-      <button class="tab" role="tab" data-mode="all" aria-selected="true" type="button">الكل</button>
-      <button class="tab" role="tab" data-mode="following" aria-selected="false" type="button">اللي بتابعهم</button>
+<div id="gate" class="soc-card gate" hidden>
+  <h1>منطقة المحامين</h1>
+  <p>منشورات زمايلك المحامين وإشعاراتك بتظهر هنا بعد تسجيل الدخول.<br>لو إنت موكل وبتدوّر على محامي، ابدأ من الصفحة الرئيسية.</p>
+  <a class="soc-btn primary" href="dashboard.html">دخول المحامين</a><a class="soc-btn" href="register.html">سجّل كمحامي</a><a class="soc-btn" href="index.html">دوّر على محامي</a>
+</div>
+
+<div id="layout" class="feed-layout" hidden>
+  <aside class="feed-side" aria-label="حسابي">
+    <section class="soc-card side-card mini-me" id="meCard"></section>
+  </aside>
+
+  <main>
+    <div id="single" hidden><a class="back" href="feed.html">كل المنشورات</a></div>
+    <div id="hiddenWarn" class="warn" hidden>بروفايلك مخفي عن الزوار، وعلشان كده مش هتقدر تنشر ولا تتفاعل. فعّل «إظهار بروفايلي للزوار» من <a href="dashboard.html">لوحتك</a>.</div>
+    <div id="list">
+      <div id="composer" class="soc-card composer-card"></div>
+      <div class="feed-tabs" role="tablist" aria-label="نوع المنشورات">
+        <button class="tab" role="tab" data-mode="all" aria-selected="true" type="button">منشورات الزمايل</button>
+        <button class="tab" role="tab" data-mode="following" aria-selected="false" type="button">اللي بتابعهم</button>
+      </div>
+      <div class="topic-row" id="topics" aria-label="فلتر التصنيف"></div>
     </div>
-    <div class="topic-row" id="topics" aria-label="فلتر التصنيف"></div>
-  </div>
-  <div id="feed" aria-live="polite"></div>
-  <div class="feed-foot"><button id="moreBtn" class="soc-btn" type="button" hidden>عرض المزيد</button></div>
-</main>
+    <div id="feed" aria-live="polite"></div>
+    <div class="feed-foot"><button id="moreBtn" class="soc-btn" type="button" hidden>عرض المزيد</button></div>
+  </main>
+
+  <aside class="feed-side" aria-label="اقتراحات">
+    <section class="soc-card side-card" id="sugCard" hidden><h2>محامين ممكن تتابعهم</h2><div id="sugList"></div></section>
+  </aside>
+</div>
 
 <script src="js/social.js"></script>
 <script>
-(() => {
-  const $ = id => document.getElementById(id), S = window.Social;
+(async () => {
+  const $ = id => document.getElementById(id), S = window.Social, esc = S.esc;
+  S.mountNav($('navSlot'));
+  // الصفحة دي للمحامين بس
+  if (!S.me()) { $('gate').hidden = false; return; }
+  $('layout').hidden = false;
+
   const feed = $('feed'), more = $('moreBtn');
   const state = { mode: 'all', topic: '', cur: null, busy: false, gen: 0 };
   const postId = new URLSearchParams(location.search).get('post');
+  const meId = S.me();
 
-  S.mountNav($('navSlot'));
+  // ---- العمود الجانبي: بطاقتي + اقتراحات ----
+  (async () => {
+    let row = null;
+    try { row = (await S.call(`/rest/v1/public_lawyers?select=id,display_name,city,photo_path,verified&id=eq.${meId}`))[0]; } catch {}
+    if (!row) { $('hiddenWarn').hidden = false; }
+    const st = row ? await S.profileSocial(meId).catch(() => null) : null;
+    const a = row || { id: meId, display_name: 'حسابي' };
+    $('meCard').innerHTML = `${S.avatar(a)}<div>${S.nameHTML(a)}</div>
+      ${st ? `<div class="mini-stats"><span><b>${S.num(st.followers)}</b>متابع</span><span><b>${S.num(st.following)}</b>بيتابع</span><span><b>${S.num(st.posts)}</b>منشور</span></div>` : ''}
+      <nav class="side-links"><a href="lawyer.html?id=${esc(meId)}">بروفايلي</a><a href="dashboard.html">لوحتي وإحصائياتي</a><a href="notifications.html">الإشعارات</a><a href="index.html?browse=1">سوق المحامين</a></nav>`;
+    try {
+      const [all, fl] = await Promise.all([
+        S.call('/rest/v1/public_lawyers?select=id,display_name,city,photo_path,verified,specialties&order=rating_score.desc&limit=30'),
+        S.call(`/rest/v1/follows?select=following_id&follower_id=eq.${meId}`),
+      ]);
+      const f = new Set(fl.map(x => x.following_id));
+      const pick = all.filter(x => x.id !== meId && !f.has(x.id)).slice(0, 5);
+      if (!pick.length) return;
+      $('sugCard').hidden = false;
+      $('sugList').innerHTML = pick.map(x => `<div class="sug">${S.avatar(x)}<div class="sug-m">${S.nameHTML(x)}<small>${esc(x.city || '')}</small></div><button type="button" class="soc-btn" data-f="${esc(x.id)}">متابعة</button></div>`).join('');
+      $('sugList').addEventListener('click', async e => {
+        const b = e.target.closest('[data-f]'); if (!b) return;
+        b.disabled = true;
+        try { await S.follow(b.dataset.f); b.textContent = 'بتتابعه ✓'; } catch (er) { S.toast(S.friendly(er)); b.disabled = false; }
+      });
+    } catch {}
+  })();
 
+  // ---- الفيد ----
   const skeleton = () => { feed.innerHTML = '<div class="sk"></div><div class="sk"></div><div class="sk"></div>'; };
   function emptyMsg() {
-    if (state.mode === 'following') return S.me() ? 'مفيش منشورات من اللي بتتابعهم لسه. افتح بروفايلات المحامين واضغط «متابعة».' : 'سجّل دخول علشان تشوف منشورات اللي بتتابعهم.';
-    return state.topic ? 'مفيش منشورات في التصنيف ده لسه.' : 'مفيش منشورات لسه. كن أول واحد ينشر.';
+    if (state.mode === 'following') return 'مفيش منشورات من اللي بتتابعهم لسه. افتح بروفايلات زمايلك واضغط «متابعة».';
+    return state.topic ? 'مفيش منشورات في التصنيف ده لسه.' : 'مفيش منشورات من زمايلك لسه. كن أول واحد ينشر.';
   }
-
   async function load(reset) {
     if (state.busy && !reset) return;
     const gen = ++state.gen; state.busy = true; more.disabled = true;
@@ -61,7 +110,7 @@
       const d = await S.listPosts({ mode: state.mode, topic: state.topic, before: state.cur, limit: 10 });
       if (gen !== state.gen) return; // اتغيّر الفلتر أثناء التحميل
       if (reset) feed.innerHTML = '';
-      if (!d.posts.length && reset) feed.innerHTML = `<div class="empty">${S.esc(emptyMsg())}</div>`;
+      if (!d.posts.length && reset) feed.innerHTML = `<div class="empty">${esc(emptyMsg())}</div>`;
       else S.mount(feed, d, { onDelete: checkEmpty });
       state.cur = d.last; more.hidden = !d.more;
     } catch (e) {
@@ -69,35 +118,34 @@
       if (reset) feed.innerHTML = '<div class="empty">تعذر تحميل المنشورات. حدّث الصفحة وحاول تاني.</div>'; else S.toast(S.friendly(e));
     } finally { if (gen === state.gen) { state.busy = false; more.disabled = false; } }
   }
-  function checkEmpty() { if (!feed.querySelector('.post-card')) feed.innerHTML = `<div class="empty">${S.esc(emptyMsg())}</div>`; }
+  function checkEmpty() { if (!feed.querySelector('.post-card')) feed.innerHTML = `<div class="empty">${esc(emptyMsg())}</div>`; }
 
   if (postId) {
-    // عرض منشور واحد (من رابط مشاركة أو إشعار)
+    // عرض منشور واحد (من إشعار أو رابط مشاركة)
     $('single').hidden = false; $('list').hidden = true; skeleton();
     S.listPosts({ id: postId, limit: 1 }).then(d => {
       feed.innerHTML = '';
-      if (!d.posts.length) feed.innerHTML = '<div class="empty">المنشور ده مش موجود أو اتشال.</div>';
+      if (!d.posts.length) feed.innerHTML = '<div class="empty">المنشور ده مش موجود أو مش متاح ليك.</div>';
       else { S.mount(feed, d); feed.querySelector('[data-act=comments]')?.click(); }
     }).catch(() => { feed.innerHTML = '<div class="empty">تعذر تحميل المنشور.</div>'; });
-  } else {
-    S.mountComposer($('composer'), (p, a) => {
-      // المنشور الجديد يظهر فوق فوراً (لو إحنا على تاب "الكل" أو "اللي بتابعهم" نضيفه برضه لأنه بتاعي)
-      feed.querySelector('.empty')?.remove();
-      const au = { [p.author_id]: Object.assign({ id: p.author_id, verified: false }, a, { id: p.author_id }) };
-      S.listPosts({ id: p.id, limit: 1 }).then(d => S.mount(feed, d, { prepend: true, onDelete: checkEmpty })).catch(() => S.mount(feed, { posts: [p], authors: au, liked: new Set() }, { prepend: true, onDelete: checkEmpty }));
-    });
-    if (!S.me()) $('composer').classList.remove('composer');
-    $('topics').innerHTML = [['', 'كل التصنيفات'], ...S.TOPICS].map(t => `<button type="button" class="chip-t" data-t="${t[0]}" aria-pressed="${t[0] === ''}">${t[1]}</button>`).join('');
-    $('topics').addEventListener('click', e => {
-      const b = e.target.closest('.chip-t'); if (!b) return;
-      state.topic = b.dataset.t; $('topics').querySelectorAll('.chip-t').forEach(x => x.setAttribute('aria-pressed', x === b)); load(true);
-    });
-    document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
-      state.mode = t.dataset.mode; document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', x === t)); load(true);
-    }));
-    more.addEventListener('click', () => load(false));
-    load(true);
+    return;
   }
+
+  S.mountComposer($('composer'), p => {
+    // المنشور الجديد يظهر فوق فوراً
+    feed.querySelector('.empty')?.remove();
+    S.listPosts({ id: p.id, limit: 1 }).then(d => S.mount(feed, d, { prepend: true, onDelete: checkEmpty }));
+  });
+  $('topics').innerHTML = [['', 'كل التصنيفات'], ...S.TOPICS].map(t => `<button type="button" class="chip-t" data-t="${t[0]}" aria-pressed="${t[0] === ''}">${t[1]}</button>`).join('');
+  $('topics').addEventListener('click', e => {
+    const b = e.target.closest('.chip-t'); if (!b) return;
+    state.topic = b.dataset.t; $('topics').querySelectorAll('.chip-t').forEach(x => x.setAttribute('aria-pressed', x === b)); load(true);
+  });
+  document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+    state.mode = t.dataset.mode; document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', x === t)); load(true);
+  }));
+  more.addEventListener('click', () => load(false));
+  load(true);
 })();
 </script>
 </body>

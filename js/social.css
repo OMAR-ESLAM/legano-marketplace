@@ -108,3 +108,151 @@
 .soc-toast { position: fixed; bottom: 5.5rem; left: 50%; transform: translateX(-50%) translateY(20px); opacity: 0; pointer-events: none; background: var(--gold, #0F172A); color: #fff; font-weight: 700; font-size: .85rem; padding: .55rem 1.1rem; border-radius: 9999px; transition: all .25s; z-index: 9999; max-width: 90vw; text-align: center; }
 .soc-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 @media (prefers-reduced-motion: reduce) { .sk, .soc-toast { animation: none; transition: none; } }
+
+/* ===================== الجولة التانية: ريأكشنز، ردود، جمهور، نافذة النشر، بروفايل، فيد المحامين ===================== */
+[hidden] { display: none !important; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+/* نجوم التقييم: --p هي نسبة التعبئة (من اليمين لأن الصفحة RTL) */
+.rate { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--foreground, #1E293B); }
+.rate .starbar { background: linear-gradient(to left, #F5A623 var(--p, 0%), #D5DBE3 var(--p, 0%)); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; letter-spacing: 1px; font-size: 1.1em; line-height: 1; }
+.rate b { font-weight: 800; }
+.rate-c { color: var(--muted-foreground, #64748B); font-size: .92em; }
+.rate.lg { font-size: 15px; }
+.rate-new { font-size: 11px; color: var(--muted-foreground, #64748B); }
+
+/* التفاعلات */
+.post-actions .rx-wrap { position: relative; flex: 1; display: flex; }
+.post-actions .rx-main { flex: 1; }
+.post-actions .rx-main.on { color: #1D9BF0; font-weight: 800; }
+.rx-e { font-size: 17px; line-height: 1; }
+.rx-pop { position: absolute; bottom: 100%; inset-inline-start: 0; display: flex; gap: 2px; padding: 6px 8px; margin-bottom: 4px; background: var(--card, #fff); border: 1px solid var(--border, #E2E8F0); border-radius: 999px; box-shadow: 0 10px 30px rgba(15, 23, 42, .2); z-index: 30; animation: rxIn .16s ease-out; }
+.rx-pop::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 12px; }
+.post-actions .rx-pop button { flex: none; width: 42px; height: 42px; padding: 0; border-radius: 50%; position: relative; display: flex; align-items: center; justify-content: center; font-size: 26px; line-height: 1; transition: transform .12s; background: none; }
+.post-actions .rx-pop button:hover, .post-actions .rx-pop button:focus-visible { transform: translateY(-7px) scale(1.28); background: none; }
+.rx-pop i { position: absolute; bottom: 100%; font-style: normal; font-size: 10.5px; font-weight: 700; background: #0F172A; color: #fff; padding: 1px 8px; border-radius: 9px; white-space: nowrap; opacity: 0; pointer-events: none; }
+.rx-pop button:hover i, .rx-pop button:focus-visible i { opacity: 1; }
+@keyframes rxIn { from { opacity: 0; transform: translateY(6px) scale(.96); } to { opacity: 1; transform: none; } }
+.rx-sum { display: inline-flex; align-items: center; gap: 5px; }
+.rx-emo { font-size: 14px; letter-spacing: -2px; }
+.post-actions.ro button { flex: 0 0 auto; padding-inline: 14px; }
+.act-link { margin-inline-start: auto; align-self: center; padding: 0 8px; font-size: 12.5px; font-weight: 700; color: var(--gold-soft, #92620C); text-decoration: none; }
+.act-link:hover { text-decoration: underline; }
+.aud-chip { margin-inline-start: auto; align-self: flex-start; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: var(--secondary, #EEF2F7); color: var(--gold-soft, #92620C); border: 1px solid var(--border, #E2E8F0); white-space: nowrap; }
+.aud-chip.all { color: var(--muted-foreground, #64748B); }
+.ro-note { font-size: 12px; }
+
+/* الردود على الكومنتات */
+.cmt-replies { margin-inline-start: 42px; }
+.cmt-rform { margin-inline-start: 42px; margin-bottom: 10px; }
+.cmt-a { display: flex; gap: 14px; }
+.cmt-a button[data-act="creply"]:hover { color: var(--gold-soft, #92620C); }
+.cmt.reply .cmt-b { background: color-mix(in oklch, var(--secondary, #EEF2F7) 70%, #fff); }
+
+/* شريط الكتابة المختصر + نافذة النشر */
+.composer-card { padding: 12px 14px; margin-bottom: 14px; }
+.comp-trig { display: flex; align-items: center; gap: 10px; }
+.comp-input { flex: 1; text-align: start; border: 1px solid var(--border, #E2E8F0); background: var(--background, #F8FAFB); border-radius: 999px; padding: 10px 16px; font: inherit; font-size: 14px; color: var(--muted-foreground, #64748B); cursor: text; }
+.comp-input:hover { background: var(--secondary, #EEF2F7); }
+.comp-photo { width: 40px; height: 40px; border-radius: 50%; border: 0; background: none; color: #2E9E5B; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+.comp-photo:hover { background: var(--secondary, #EEF2F7); }
+.comp-input:focus-visible, .comp-photo:focus-visible { outline: 2px solid var(--gold-soft, #92620C); outline-offset: 2px; }
+.modal-ov { position: fixed; inset: 0; background: rgba(15, 23, 42, .55); display: flex; align-items: center; justify-content: center; padding: 14px; z-index: 10000; backdrop-filter: blur(3px); }
+.modal { width: 100%; max-width: 540px; max-height: 92vh; display: flex; flex-direction: column; background: var(--card, #fff); border-radius: 16px; box-shadow: 0 24px 70px rgba(15, 23, 42, .35); color: var(--foreground, #1E293B); }
+.modal-h { position: relative; display: flex; align-items: center; justify-content: center; padding: 14px; border-bottom: 1px solid var(--border, #E2E8F0); }
+.modal-h h2 { margin: 0; font-size: 16px; font-weight: 900; }
+.modal-x { position: absolute; inset-inline-end: 12px; top: 10px; width: 34px; height: 34px; border-radius: 50%; border: 0; background: var(--secondary, #EEF2F7); font-size: 20px; line-height: 1; cursor: pointer; color: inherit; }
+.modal-b { padding: 14px; overflow-y: auto; }
+.modal-f { padding: 12px 14px; border-top: 1px solid var(--border, #E2E8F0); }
+.modal-f .soc-btn { width: 100%; padding: 11px; font-size: 14px; }
+.m-who { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 14px; }
+.modal textarea { width: 100%; min-height: 120px; resize: vertical; border: 1px solid var(--border, #E2E8F0); border-radius: 12px; padding: 10px 12px; font: inherit; font-size: 14.5px; line-height: 1.9; background: var(--background, #F8FAFB); color: inherit; }
+.modal textarea:focus { outline: 2px solid var(--gold-soft, #92620C); outline-offset: 1px; }
+.modal .composer-bar { margin-top: 10px; }
+fieldset.aud { border: 1px solid var(--border, #E2E8F0); border-radius: 12px; margin: 0 0 12px; padding: 4px 10px 6px; }
+fieldset.aud legend { font-size: 12.5px; font-weight: 800; padding: 0 6px; color: var(--gold-soft, #92620C); }
+.aud-opt { display: flex; gap: 10px; align-items: flex-start; padding: 7px 4px; cursor: pointer; border-radius: 8px; }
+.aud-opt:hover { background: var(--secondary, #EEF2F7); }
+.aud-opt input { margin-top: 7px; accent-color: var(--gold, #0F172A); }
+.aud-opt b { font-size: 13.5px; }
+.aud-opt small { display: block; color: var(--muted-foreground, #64748B); font-size: 11.5px; line-height: 1.6; }
+.m-note { margin: 10px 0 0; font-size: 11.5px; line-height: 1.8; color: var(--muted-foreground, #64748B); background: var(--secondary, #EEF2F7); padding: 8px 10px; border-radius: 8px; }
+.attach { cursor: pointer; }
+
+/* منشور وسط نتايج المحامين (صفحة الزائر) */
+.post-slot { padding: 8px 0 2px; background: linear-gradient(to bottom, transparent, rgba(146, 98, 12, .06), transparent); }
+.post-slot .slot-label { font-size: 11px; font-weight: 800; color: var(--gold-soft, #92620C); text-align: center; margin: 2px 0 6px; letter-spacing: .3px; }
+.post-slot .post-card { max-width: 680px; margin: 0 auto 10px; }
+
+/* ===================== بروفايل المحامي بشكل فيسبوك ===================== */
+.fb-card { padding: 0; }
+.fb-cover { position: relative; height: 150px; background: linear-gradient(120deg, #0F172A 0%, #1E3A5F 55%, #92620C 135%); }
+.fb-cover svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+@media (min-width: 768px) { .fb-cover { height: 210px; } }
+.fb-idrow { position: relative; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 14px 18px; padding: 0 20px 8px; margin-top: -56px; }
+.fb-ava { width: 132px; height: 132px; padding: 4px; border-radius: 50%; background: #fff; box-shadow: 0 4px 18px rgba(15, 23, 42, .2); flex-shrink: 0; }
+.fb-main { flex: 1; min-width: 230px; padding-top: 60px; }
+.fb-name { display: flex; align-items: center; flex-wrap: wrap; font-size: 24px; font-weight: 900; line-height: 1.5; color: var(--gold, #0F172A); margin: 0; }
+.fb-sub { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted-foreground, #64748B); }
+.fb-rate { margin-top: 2px; }
+.fb-counts { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 4px; font-size: 13px; color: var(--muted-foreground, #64748B); }
+.fb-counts b { color: var(--foreground, #1E293B); font-weight: 800; }
+.fb-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.fb-act { padding: .55rem 1.1rem; font-size: .85rem; }
+.fb-tags { display: flex; flex-wrap: wrap; gap: 8px; padding: 6px 20px 14px; }
+.fb-more { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 0 20px 14px; }
+.fb-tabs { display: flex; gap: 2px; padding: 0 10px; border-top: 1px solid var(--border, #E2E8F0); overflow-x: auto; }
+.fb-tab { background: none; border: 0; border-bottom: 3px solid transparent; padding: 12px 14px; font: inherit; font-size: 14px; font-weight: 800; color: var(--muted-foreground, #64748B); cursor: pointer; white-space: nowrap; }
+.fb-tab:hover { background: var(--secondary, #EEF2F7); }
+.fb-tab[aria-selected="true"] { color: var(--gold, #0F172A); border-bottom-color: var(--gold-soft, #92620C); }
+.fb-tab:focus-visible { outline: 2px solid var(--gold-soft, #92620C); outline-offset: -2px; }
+@media (max-width: 640px) {
+  .fb-idrow { justify-content: center; text-align: center; }
+  .fb-ava { width: 112px; height: 112px; }
+  .fb-main { padding-top: 0; }
+  .fb-sub, .fb-counts, .fb-name { justify-content: center; }
+  .fb-actions { justify-content: center; width: 100%; }
+  .fb-tags { justify-content: center; }
+}
+.fb-grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
+@media (min-width: 900px) { .fb-grid { grid-template-columns: 320px minmax(0, 1fr); align-items: start; } .fb-side { position: sticky; top: 12px; } }
+.fb-side { display: flex; flex-direction: column; gap: 16px; }
+.fb-h { font-size: 15px; font-weight: 900; margin: 0 0 8px; color: var(--foreground, #1E293B); }
+.facts { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-direction: column; gap: 9px; }
+.fact { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.fact-l { color: var(--muted-foreground, #64748B); }
+.fact b { margin-inline-start: auto; font-weight: 700; text-align: end; }
+.rate-big { margin-bottom: 8px; }
+.rate-input { display: flex; gap: 2px; }
+.rate-input button { background: none; border: 0; padding: 0 2px; font-size: 34px; line-height: 1.1; color: #D5DBE3; cursor: pointer; transition: transform .1s, color .1s; }
+.rate-input button.on, .rate-input button.hv { color: #F5A623; }
+.rate-input button:hover { transform: scale(1.15); }
+.rate-input button:focus-visible { outline: 2px solid var(--gold-soft, #92620C); border-radius: 6px; }
+.rate-input button:disabled { opacity: .6; cursor: wait; }
+
+/* ===================== فيد المحامين (الصفحة الرئيسية للمحامي المسجّل) ===================== */
+.feed-layout { max-width: 1120px; margin: 0 auto; padding: 14px 14px 80px; display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 1000px) { .feed-layout { grid-template-columns: 260px minmax(0, 640px) 280px; justify-content: center; } }
+.feed-side { display: none; }
+@media (min-width: 1000px) { .feed-side { display: flex; flex-direction: column; gap: 14px; position: sticky; top: 74px; align-self: start; } }
+.side-card { padding: 14px; }
+.side-card h2 { font-size: 14px; font-weight: 900; margin: 0 0 8px; }
+.mini-me { text-align: center; }
+.mini-me .avatar { width: 68px; height: 68px; font-size: 26px; margin-bottom: 6px; }
+.mini-me .who { font-size: 15px; }
+.mini-stats { display: flex; justify-content: center; gap: 16px; margin: 8px 0 4px; font-size: 11.5px; color: var(--muted-foreground, #64748B); }
+.mini-stats b { display: block; font-size: 15px; color: var(--foreground, #1E293B); }
+.side-links { margin-top: 8px; border-top: 1px solid var(--border, #E2E8F0); padding-top: 6px; text-align: start; }
+.side-links a { display: block; padding: 8px 10px; border-radius: 8px; color: var(--foreground, #1E293B); text-decoration: none; font-weight: 700; font-size: 13px; }
+.side-links a:hover { background: var(--secondary, #EEF2F7); }
+.sug { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border, #E2E8F0); }
+.sug:last-child { border-bottom: 0; }
+.sug .avatar { width: 40px; height: 40px; font-size: 15px; }
+.sug-m { min-width: 0; flex: 1; }
+.sug-m .who { font-size: 13px; }
+.sug-m small { display: block; font-size: 11px; color: var(--muted-foreground, #64748B); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sug .soc-btn { padding: 5px 10px; font-size: 12px; }
+.gate { text-align: center; padding: 42px 20px; max-width: 520px; margin: 40px auto; }
+.gate h1 { font-size: 20px; margin: 0 0 8px; }
+.gate p { color: var(--muted-foreground, #64748B); font-size: 14px; line-height: 2; margin: 0 0 16px; }
+.gate .soc-btn { margin: 0 4px; }
