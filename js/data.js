@@ -39,6 +39,7 @@ async function sb(path, opts = {}) {
 function mapRow(r) {
   return {
     id: r.id, name: r.display_name, verified: !!r.verified, featured: !!r.featured,
+    rating: { avg: Number(r.rating_avg || 0), count: Number(r.rating_count || 0), score: Number(r.rating_score ?? 3.5) },
     publicProfile: {
       displayName: r.display_name, specialties: r.specialties || [], city: r.city, served: (r.served && r.served.length) ? r.served : [r.city].filter(Boolean),
       experienceYears: r.experience_years, licenseLevel: r.license_level, languages: r.languages || [],
@@ -50,9 +51,12 @@ function mapRow(r) {
 
 async function listAllPublicLawyers() {
   const rows = (await sb('public_lawyers?select=*')).map(mapRow);
-  // المميز أولاً ثم الموثّق ثم الباقي، وعشوائي جوه كل مجموعة
-  const tier = l => (l.featured ? 0 : l.verified ? 1 : 2);
-  return rows.map(l => ({ l, r: Math.random() })).sort((a, b) => tier(a.l) - tier(b.l) || a.r - b.r).map(x => x.l);
+  // الترتيب: (1) المميز (اشتراك مدفوع) اللي معاه علامة توثيق الأول، (2) بعدين الباقي بالتقييم من الأعلى للأقل.
+  // rating_score متوسط مرجّح (السيرفر بيحسبه) علشان تقييم واحد 5 نجوم ما يتخطاش محامي عنده 50 تقييم 4.8. اللي من غير تقييم بياخد درجة محايدة.
+  const top = l => (l.featured && l.verified ? 0 : 1);
+  return rows.map(l => ({ l, r: Math.random() }))
+    .sort((a, b) => top(a.l) - top(b.l) || b.l.rating.score - a.l.rating.score || (b.l.verified - a.l.verified) || a.r - b.r)
+    .map(x => x.l);
 }
 
 async function getLawyerById(id) {

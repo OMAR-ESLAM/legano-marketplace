@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>try{if(localStorage.getItem("lg_s")&&!/[?&]browse=1/.test(location.search))location.replace("feed.html");}catch(e){}</script>
 <title>اعثر على محاميك | Legano</title>
 <meta name="description" content="نحن نوصلك بأفضل المحامين المتخصصين في قضيتك.">
 <script src="https://cdn.tailwindcss.com"></script>
@@ -230,7 +231,7 @@
     </div>
   </header>
 
-  <div class="mx-auto flex max-w-6xl flex-col items-center px-4 pb-16">
+  <div class="mx-auto flex max-w-7xl flex-col items-center px-4 pb-16">
     <!-- Headline -->
     <div class="mt-6 text-center md:mt-10">
       <h1 class="text-3xl font-extrabold leading-tight text-gold-c md:text-5xl">
@@ -279,8 +280,9 @@
     </div>
 
     <!-- Lawyer cards -->
-    <div id="resultsCount" class="mt-6 text-xs text-muted-c w-full max-w-6xl"></div>
-    <div id="lawyerGrid" class="mt-3 grid w-full max-w-6xl grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5"></div>
+    <div id="resultsCount" class="mt-6 text-xs text-muted-c w-full max-w-7xl"></div>
+    <p class="mt-1 w-full max-w-7xl text-[11px] leading-relaxed text-muted-c/80">ترتيب النتائج: المحامون المميزون (عرض مدفوع) اللي معاهم علامة التوثيق الأول، وبعدهم الأعلى تقييماً من الموكلين.</p>
+    <div id="lawyerGrid" class="mt-3 grid w-full max-w-7xl grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6"></div>
   </div>
 </main>
 

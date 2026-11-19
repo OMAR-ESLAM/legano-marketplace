@@ -49,6 +49,7 @@ function writeURL() {
   if (state.cat !== 'all') q.set('cat', state.cat);
   if (state.verifiedOnly) q.set('verified', '1');
   if (state.sort !== 'default') q.set('sort', state.sort);
+  if (new URLSearchParams(location.search).get('browse')) q.set('browse', '1'); // المحامي المسجّل بيتصفح السوق بدل ما يتحوّل للمنشورات
   const s = q.toString();
   try { history.replaceState(null, '', s ? `?${s}` : location.pathname); } catch {}
 }
@@ -114,6 +115,36 @@ function applyFilters() {
   renderGrid(list);
 }
 
+
+// ---- منشورات المحامين وسط النتايج: بعد كل 6 بروفايلات منشور واحد (من محامي ظاهر في النتايج الحالية) ----
+const EVERY = 6;
+let feedData = null, slotPlan = [];
+function interleave(cards, lawyers) {
+  slotPlan = [];
+  if (!feedData || !feedData.posts.length) return cards.join('');
+  const ids = new Set(lawyers.map(l => l.id)), used = new Set();
+  const pool = feedData.posts.filter(p => ids.has(p.author_id));
+  let html = '';
+  cards.forEach((c, i) => {
+    html += c;
+    if ((i + 1) % EVERY === 0) {
+      const p = pool.find(x => !used.has(x.id));
+      if (p) { used.add(p.id); slotPlan.push(p); html += `<div class="post-slot col-span-full" data-slot="${slotPlan.length - 1}"><div class="slot-label">من منشورات المحامين</div></div>`; }
+    }
+  });
+  return html;
+}
+function mountSlots() {
+  $grid.querySelectorAll('.post-slot').forEach(el => {
+    const p = slotPlan[Number(el.dataset.slot)]; if (!p) return;
+    window.Social.mount(el, { posts: [p], authors: feedData.authors, liked: feedData.liked });
+  });
+  icons();
+}
+async function loadFeed() {
+  try { feedData = await window.Social.listPosts({ limit: 30 }); } catch { feedData = null; }
+}
+
 function renderGrid(lawyers) {
   $count.textContent = lawyers.length ? `${lawyers.length} محامي متاح` : '';
   if (!lawyers.length) {
@@ -122,7 +153,7 @@ function renderGrid(lawyers) {
     return;
   }
   const fav = new Set(favs());
-  $grid.innerHTML = lawyers.map(l => {
+  const cards = lawyers.map(l => {
     const p = l.publicProfile || {};
     const sp = p.specialties || [];
     const line = sp.length ? sp.map(categoryLabel).join(' - ') : `محامي مسجّل على ${SITE}`;
@@ -148,6 +179,7 @@ function renderGrid(lawyers) {
           <i data-lucide="star" class="text-gold-c" style="width:13px;height:13px;"></i>
           <h3 class="text-sm font-bold text-fg">${esc(p.displayName || l.name || 'محامي')}${l.verified ? window.Social.badge() : ''}</h3>
         </div>
+        <div class="text-[11px]">${window.Social.stars(l.rating.avg, l.rating.count)}</div>
         <p class="text-xs leading-relaxed text-muted-c">${esc(line)}</p>
         ${p.city ? `<div class="flex items-center justify-center gap-1 text-xs text-muted-c"><i data-lucide="map-pin" style="width:12px;height:12px;"></i><span>${esc(p.city)}</span></div>` : ''}
         ${p.experienceYears ? `<div class="text-[11px] text-muted-c">خبرة ${esc(p.experienceYears)} سنة</div>` : ''}
@@ -160,7 +192,9 @@ function renderGrid(lawyers) {
         <p class="mt-1 text-[10px] leading-relaxed text-muted-c/70">من ضمن الشبكة المسجّلة على ${SITE}</p>
       </div>
     </article>`;
-  }).join('');
+  });
+  $grid.innerHTML = interleave(cards, lawyers);
+  mountSlots();
 
   const go = id => { location.href = `lawyer.html?id=${encodeURIComponent(id)}`; };
   $grid.querySelectorAll('.lawyer-card').forEach(card => {
@@ -199,7 +233,7 @@ async function boot() {
   renderChips();
   skeleton();
   try {
-    allLawyers = await CW.listAllPublicLawyers();
+    [allLawyers] = await Promise.all([CW.listAllPublicLawyers(), loadFeed()]);
     applyFilters();
   } catch (e) {
     console.error('find-lawyer boot error', e);

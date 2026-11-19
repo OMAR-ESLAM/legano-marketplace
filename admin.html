@@ -193,6 +193,7 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--white);
       <button class="tab-btn" data-view="verify">طلبات التوثيق <span id="pendBadge"></span></button>
       <button class="tab-btn" data-view="lawyers">المحامين</button>
       <button class="tab-btn" data-view="reports">البلاغات</button>
+      <button class="tab-btn" data-view="ratings">التقييمات</button>
       <button class="tab-btn" data-view="files">ملفات الموقع</button>
     </div>
     <button class="logout-btn" id="bOut">خروج</button>
@@ -215,6 +216,11 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--white);
     <div class="view" id="view-reports">
       <div class="section-title">بلاغات المنشورات والتعليقات</div>
       <div id="reportsWrap"><div class="loading-msg">جارٍ التحميل...</div></div>
+    </div>
+    <div class="view" id="view-ratings">
+      <div class="section-title">تقييمات الموكلين</div>
+      <div style="font-size:12px;color:var(--gray);margin-bottom:12px">آخر 100 تقييم. لو لقيت تقييم مشبوه (تقييمات كتير من نفس الشخص أو تلاعب) امسحه والمتوسط بيتحدث لوحده.</div>
+      <div id="ratingsWrap"><div class="loading-msg">جارٍ التحميل...</div></div>
     </div>
     <div class="view" id="view-files">
       <div class="section-title">ملفات الموقع (GitHub)</div>
@@ -277,6 +283,7 @@ document.querySelectorAll('.tab-btn').forEach(b => b.onclick = () => {
   document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === 'view-' + b.dataset.view));
   if (b.dataset.view === 'files') loadFiles();
   if (b.dataset.view === 'reports') loadReports();
+  if (b.dataset.view === 'ratings') loadRatings();
 });
 $('lightbox').onclick = () => $('lightbox').classList.remove('show');
 const lightbox = src => { $('lightboxImg').src = src; $('lightbox').classList.add('show'); };
@@ -361,6 +368,25 @@ async function loadReports() {
     });
     w.querySelectorAll('[data-rd]').forEach(b => b.onclick = async () => {
       try { await api(`/rest/v1/post_reports?id=eq.${b.dataset.rd}`, { method: 'DELETE' }); loadReports(); } catch (e) { toast('خطأ: ' + e.message); }
+    });
+  } catch (e) { w.innerHTML = `<div class="empty-state">${esc(e.message)}</div>`; }
+}
+
+/* التقييمات: عرض آخر التقييمات وحذف أي تقييم مشبوه */
+async function loadRatings() {
+  const w = $('ratingsWrap');
+  try {
+    const rows = await api('/rest/v1/lawyer_ratings?select=id,lawyer_id,stars,ip_hash,created_at&order=created_at.desc&limit=100');
+    if (!rows.length) { w.innerHTML = '<div class="empty-state">مفيش تقييمات لسه</div>'; return; }
+    const ids = [...new Set(rows.map(r => r.lawyer_id))].join(',');
+    const ls = await api(`/rest/v1/lawyers?select=id,display_name&id=in.(${ids})`);
+    const N = Object.fromEntries(ls.map(l => [l.id, l.display_name]));
+    w.innerHTML = rows.map(r => `<div class="user-card"><div class="info"><b>${esc(N[r.lawyer_id] || '—')}</b> <span class="status-tag ${r.stars >= 4 ? 'approved' : r.stars <= 2 ? 'rejected' : 'pending'}">${'★'.repeat(r.stars)}${'☆'.repeat(5 - r.stars)}</span><br>
+        <small>جهاز/شبكة: <span dir="ltr">${esc(r.ip_hash.slice(0, 8))}</span> • ${new Date(r.created_at).toLocaleString('ar-EG')}</small></div>
+      <div class="payment-actions"><button class="pbtn reject" data-rr="${r.id}">حذف التقييم</button></div></div>`).join('');
+    w.querySelectorAll('[data-rr]').forEach(b => b.onclick = async () => {
+      if (!confirm('تمسح التقييم ده؟')) return;
+      try { await api(`/rest/v1/lawyer_ratings?id=eq.${b.dataset.rr}`, { method: 'DELETE' }); toast('اتمسح التقييم'); loadRatings(); } catch (e) { toast('خطأ: ' + e.message); }
     });
   } catch (e) { w.innerHTML = `<div class="empty-state">${esc(e.message)}</div>`; }
 }

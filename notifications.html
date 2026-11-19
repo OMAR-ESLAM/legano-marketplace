@@ -41,7 +41,8 @@
       const who = a ? `<b>${esc(a.display_name)}</b>${a.verified ? S.badge() : ''}` : '<b>محامي</b>';
       let txt, href, lead = a ? S.avatar(a) : `<span class="n-ico">${ICON}</span>`;
       if (n.type === 'follow') { txt = `${who} بدأ يتابعك.`; href = a ? `lawyer.html?id=${esc(a.id)}` : '#'; }
-      else if (n.type === 'like') { txt = `${who} أعجبه منشورك.`; href = `feed.html?post=${esc(n.post_id)}`; }
+      else if (n.type === 'like') { txt = `${who} تفاعل مع منشورك.`; href = `feed.html?post=${esc(n.post_id)}`; }
+      else if (n.type === 'reply') { txt = `${who} رد على تعليقك.`; href = `feed.html?post=${esc(n.post_id)}`; }
       else if (n.type === 'comment') { txt = `${who} علّق على منشورك.`; href = `feed.html?post=${esc(n.post_id)}`; }
       else if (n.type === 'verified') { txt = 'تم توثيق حسابك. العلامة الزرقاء ظهرت جنب اسمك.'; href = 'dashboard.html'; lead = `<span class="n-ico">${ICON}</span>`; }
       else { txt = 'طلب التوثيق اتراجع واترفض. تقدر تبعته تاني من لوحتك.'; href = 'dashboard.html'; lead = `<span class="n-ico">${ICON}</span>`; }
