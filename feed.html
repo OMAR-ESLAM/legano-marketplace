@@ -43,7 +43,7 @@
         <button class="tab" role="tab" data-mode="all" aria-selected="true" type="button">منشورات الزمايل</button>
         <button class="tab" role="tab" data-mode="following" aria-selected="false" type="button">اللي بتابعهم</button>
       </div>
-      <div class="topic-row" id="topics" aria-label="فلتر التصنيف"></div>
+      <select id="topicSel" class="topic-sel" aria-label="فلتر التصنيف"></select>
     </div>
     <div id="feed" aria-live="polite"></div>
     <div class="feed-foot"><button id="moreBtn" class="soc-btn" type="button" hidden>عرض المزيد</button></div>
@@ -51,7 +51,6 @@
 
   <aside class="feed-side" aria-label="اقتراحات">
     <section class="soc-card side-card" id="sugCard" hidden><h2>الأعلى تقييماً من الموكلين</h2><div id="sugList"></div></section>
-    <section class="soc-card side-card tip-card"><h2>💡 نصايح للنشر</h2><ul><li>انشر معلومة قانونية مفيدة، مش إعلان مباشر.</li><li>اختار الجمهور: زمايل، موكلين، أو الاتنين.</li><li>رد على تعليقات زمايلك، التفاعل بيزوّد ظهورك.</li><li>الإعلان للموكلين لازم يلتزم بقواعد النقابة.</li></ul></section>
     <section class="soc-card side-card" id="grpCard"><h2>جروباتي</h2><div id="grpList"><div class="grp-empty">بتحمّل…</div></div><div class="grp-btns"><a class="soc-btn" href="groups.html">استكشف الجروبات</a><a class="soc-btn primary" href="groups.html?new=1">+ إنشاء جروب</a></div></section>
   </aside>
 </div>
@@ -79,14 +78,14 @@
     const a = row || { id: meId, display_name: 'حسابي' };
     $('meCard').innerHTML = `${S.avatar(a)}<div>${S.nameHTML(a)}</div>
       ${st ? `<div class="mini-stats"><span><b>${S.num(st.followers)}</b>متابع</span><span><b>${S.num(st.following)}</b>بيتابع</span><span><b>${S.num(st.posts)}</b>منشور</span></div>` : ''}
-      <nav class="side-links"><a href="lawyer.html?id=${esc(meId)}">بروفايلي</a><a href="dashboard.html">لوحتي وإحصائياتي</a><a href="notifications.html">الإشعارات</a><a href="index.html?browse=1">سوق المحامين</a></nav>`;
+      <nav class="side-links"><a href="lawyer.html?id=${esc(meId)}">عرض بروفايلي</a></nav>`;
     try {
       const [all, fl] = await Promise.all([
         S.call('/rest/v1/public_lawyers?select=id,display_name,city,photo_path,verified,specialties&order=rating_score.desc&limit=30'),
         S.call(`/rest/v1/follows?select=following_id&follower_id=eq.${meId}`),
       ]);
       const f = new Set(fl.map(x => x.following_id));
-      const pick = all.filter(x => x.id !== meId).slice(0, 5);
+      const pick = all.filter(x => x.id !== meId).slice(0, 3);
       if (!pick.length) return;
       $('sugCard').hidden = false;
       $('sugList').innerHTML = pick.map(x => `<div class="sug">${S.avatar(x)}<div class="sug-m">${S.nameHTML(x)}<small>${esc(x.city || '')}</small></div>${f.has(x.id) ? '<small>بتتابعه ✓</small>' : `<button type="button" class="soc-btn" data-f="${esc(x.id)}">متابعة</button>`}</div>`).join('');
@@ -160,11 +159,8 @@
     feed.querySelector('.empty')?.remove();
     S.listPosts({ id: p.id, limit: 1 }).then(d => S.mount(feed, d, { prepend: true, onDelete: checkEmpty }));
   });
-  $('topics').innerHTML = [['', 'كل التصنيفات'], ...S.TOPICS].map(t => `<button type="button" class="chip-t" data-t="${t[0]}" aria-pressed="${t[0] === ''}">${t[1]}</button>`).join('');
-  $('topics').addEventListener('click', e => {
-    const b = e.target.closest('.chip-t'); if (!b) return;
-    state.topic = b.dataset.t; $('topics').querySelectorAll('.chip-t').forEach(x => x.setAttribute('aria-pressed', x === b)); load(true);
-  });
+  $('topicSel').innerHTML = [['', 'كل التصنيفات'], ...S.TOPICS].map(t => `<option value="${t[0]}">${t[1]}</option>`).join('');
+  $('topicSel').addEventListener('change', () => { state.topic = $('topicSel').value; load(true); });
   document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
     state.mode = t.dataset.mode; document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', x === t)); load(true);
   }));
