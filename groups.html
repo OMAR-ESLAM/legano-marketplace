@@ -38,7 +38,10 @@
   <div class="modal-b">
     <label class="f-l" for="nName">اسم الجروب</label><input id="nName" class="f-i" maxlength="60" placeholder="مثال: محامين الأحوال الشخصية - القاهرة">
     <label class="f-l" for="nDesc">وصف قصير (اختياري)</label><textarea id="nDesc" class="f-i" rows="3" maxlength="500" placeholder="الجروب ده لإيه؟"></textarea>
-    <p class="m-note">أي محامي يقدر ينضم للجروب. تقدر تعمل لحد 5 جروبات.</p>
+    <fieldset class="aud"><legend>الانضمام للجروب</legend>
+      <label class="aud-opt"><input type="radio" name="jm" value="open" checked><span><b>مفتوح</b><small>أي محامي ينضم على طول من غير موافقة</small></span></label>
+      <label class="aud-opt"><input type="radio" name="jm" value="approval"><span><b>بموافقتك</b><small>المحامي يبعت طلب وإنت توافق أو ترفض</small></span></label></fieldset>
+    <p class="m-note">تقدر تعمل لحد 5 جروبات وتغيّر نوع الانضمام بعد كده.</p>
   </div>
   <div class="modal-f"><button id="nGo" type="button" class="soc-btn primary" disabled>إنشاء</button></div>
 </div></div>
@@ -50,7 +53,7 @@
   if (!S.me()) { $('gate').hidden = false; return; }
   $('wrap').hidden = false;
   let mineIds = new Set();
-  const card = g => `<a class="grp-card" href="group.html?id=${esc(g.id)}"><span class="grp-ico" aria-hidden="true">${esc([...g.name][0] || '؟')}</span><span class="grp-t"><b>${esc(g.name)}</b><small>${esc(S.num(g.member_count))} عضو${mineIds.has(g.id) ? ' • أنت عضو' : ''}</small></span></a>`;
+  const card = g => `<a class="grp-card" href="group.html?id=${esc(g.id)}"><span class="grp-ico" aria-hidden="true">${esc([...g.name][0] || '؟')}</span><span class="grp-t"><b>${esc(g.name)}</b><small>${esc(S.num(g.member_count))} عضو${mineIds.has(g.id) ? ' • أنت عضو' : (g.join_mode === 'approval' ? ' • بموافقة المؤسس' : ' • مفتوح')}</small></span></a>`;
   async function loadMine() {
     try {
       const m = await S.myGroups(); mineIds = new Set(m.map(g => g.id));
@@ -74,7 +77,7 @@
   $('nName').addEventListener('input', () => { $('nGo').disabled = $('nName').value.trim().length < 3; });
   $('nGo').onclick = async () => {
     $('nGo').disabled = true;
-    try { const g = await S.createGroup({ name: $('nName').value, description: $('nDesc').value }); location.href = 'group.html?id=' + g.id; }
+    try { const g = await S.createGroup({ name: $('nName').value, description: $('nDesc').value, join_mode: (document.querySelector('input[name=jm]:checked') || {}).value }); location.href = 'group.html?id=' + g.id; }
     catch (e) { S.toast(S.friendly(e)); $('nGo').disabled = false; }
   };
   if (new URLSearchParams(location.search).get('new')) open();

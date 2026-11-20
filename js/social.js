@@ -66,6 +66,7 @@
   }
   function friendly(e) {
     const m = String((e && e.message) || '');
+    if (/not_owner/.test(m)) return 'الصلاحية دي لمؤسس الجروب بس.';
     if (/group_limit/.test(m)) return 'وصلت للحد الأقصى: 5 جروبات لكل محامي.';
     if (/not_member/.test(m)) return 'لازم تنضم للجروب الأول علشان تنشر فيه.';
     if (/contact_first/.test(m)) return 'تقدر تقيّم المحامي بعد ما تتصل بيه أو تبعتله واتساب من هنا.';
@@ -122,11 +123,11 @@
     return Object.fromEntries(rows.map(r => [r.id, r]));
   }
   const EMPTY = () => ({ posts: [], authors: {}, liked: new Map() });
-  async function listPosts({ authorId, groupId, mode, topic, before, id, limit = 10 } = {}) {
+  async function listPosts({ authorId, groupId, withGroups, mode, topic, before, id, limit = 10 } = {}) {
     let q = `/rest/v1/posts?select=*&status=eq.visible&order=created_at.desc&limit=${limit}`;
     if (id) { if (!UUID.test(id)) return EMPTY(); q += `&id=eq.${id}`; }
     else if (groupId) { if (!UUID.test(groupId)) return EMPTY(); q += `&group_id=eq.${groupId}`; }
-    else q += '&group_id=is.null'; // منشورات الجروبات ما بتظهرش في الفيد العام
+    else if (!withGroups) q += '&group_id=is.null'; // منشورات الجروبات بتظهر بس لما الصفحة تطلبها (الفيد)
     if (authorId) { if (!UUID.test(authorId)) return EMPTY(); q += `&author_id=eq.${authorId}`; }
     if (topic && TOPICS.some(t => t[0] === topic)) q += `&topic=eq.${topic}`;
     if (before) q += `&created_at=lt.${encodeURIComponent(before)}`;
@@ -139,6 +140,8 @@
     const raw = await call(q);
     const au = await authors(raw.map(p => p.author_id));
     const posts = raw.filter(p => au[p.author_id]); // بنخفي منشورات الحسابات الموقوفة/المخفية
+    const gids = [...new Set(posts.map(p => p.group_id).filter(x => UUID.test(x || '')))];
+    if (gids.length) { try { const gs = await call(`/rest/v1/groups?select=id,name&id=in.(${gids.join(',')})`); const gm = Object.fromEntries(gs.map(g => [g.id, g])); posts.forEach(p => { if (p.group_id) p._group = gm[p.group_id] || null; }); } catch {} }
     const liked = new Map();
     if (me() && posts.length) {
       try { (await call(`/rest/v1/post_likes?select=post_id,reaction&post_id=in.(${posts.map(p => p.id).join(',')})`)).forEach(x => liked.set(x.post_id, x.reaction)); } catch {}
@@ -270,7 +273,7 @@
     const text = esc(long ? p.body.slice(0, SHORT).trimEnd() + '…' : p.body);
     const sub = [a.city, topicLabel(p.topic)].filter(Boolean).map(esc).join(' • ');
     const cur = st.liked.get(p.id);
-    const audChip = mine && p.audience && p.audience !== 'all' ? `<span class="aud-chip" title="مين يشوف المنشور">${esc(audLabel(p.audience))}</span>` : (mine ? '<span class="aud-chip all" title="مين يشوف المنشور">للكل</span>' : (p.audience === 'lawyers' ? '<span class="aud-chip" title="المنشور ده للمحامين بس">للمحامين</span>' : ''));
+    const audChip = p.group_id && p._group ? `<a class="aud-chip grp-chip" href="group.html?id=${esc(p.group_id)}" title="منشور داخل جروب">👥 ${esc(p._group.name)}</a>` : mine && p.audience && p.audience !== 'all' ? `<span class="aud-chip" title="مين يشوف المنشور">${esc(audLabel(p.audience))}</span>` : (mine ? '<span class="aud-chip all" title="مين يشوف المنشور">للكل</span>' : (p.audience === 'lawyers' ? '<span class="aud-chip" title="المنشور ده للمحامين بس">للمحامين</span>' : ''));
     const actions = o.readonly
       ? `<button type="button" data-act="comments">${CHAT}تعليقات</button><button type="button" data-act="share">${SHARE}مشاركة</button>${o.noProfileLink ? '' : `<a class="act-link" href="lawyer.html?id=${esc(a.id)}">عرض البروفايل والتواصل</a>`}`
       : `<div class="rx-wrap"><button type="button" data-act="react" class="rx-main ${cur ? 'on' : ''}" aria-haspopup="menu" aria-pressed="${!!cur}" aria-label="تفاعل (اضغط مطولاً أو مرّر الماوس لاختيار تفاعل تاني)">${reactBtnHTML(cur)}</button>
@@ -554,7 +557,7 @@
   }
 
   // ---------- الجروبات ----------
-  const GCOLS = 'id,name,description,owner_id,member_count,created_at';
+  const GCOLS = 'id,name,description,owner_id,member_count,created_at,join_mode';
   const listGroups = async ({ q } = {}) => {
     let url = `/rest/v1/groups?select=${GCOLS}&order=member_count.desc,created_at.desc&limit=60`;
     const t = (q || '').trim().replace(/[^\p{L}\p{N} ]/gu, '').slice(0, 40);
@@ -568,10 +571,20 @@
     return call(`/rest/v1/groups?select=${GCOLS}&id=in.(${m.map(x => x.group_id).join(',')})&order=member_count.desc`);
   };
   const getGroup = async id => UUID.test(id || '') ? (await call(`/rest/v1/groups?select=${GCOLS}&id=eq.${id}`))[0] || null : null;
-  const createGroup = async ({ name, description }) => (await call('/rest/v1/groups', { method: 'POST', json: { name: name.trim(), description: (description || '').trim() || null, owner_id: me() }, headers: { Prefer: 'return=representation' } }))[0];
+  const createGroup = async ({ name, description, join_mode }) => (await call('/rest/v1/groups', { method: 'POST', json: { name: name.trim(), description: (description || '').trim() || null, owner_id: me(), join_mode: join_mode === 'approval' ? 'approval' : 'open' }, headers: { Prefer: 'return=representation' } }))[0];
   const joinGroup = id => call('/rest/v1/group_members', { method: 'POST', json: { group_id: id, lawyer_id: me() } });
   const leaveGroup = id => call(`/rest/v1/group_members?group_id=eq.${id}&lawyer_id=eq.${me()}`, { method: 'DELETE' });
   const deleteGroup = id => call(`/rest/v1/groups?id=eq.${id}`, { method: 'DELETE' });
+  const setJoinMode = (id, mode) => call(`/rest/v1/groups?id=eq.${id}`, { method: 'PATCH', json: { join_mode: mode === 'approval' ? 'approval' : 'open' } });
+  const requestJoin = id => call('/rest/v1/group_join_requests', { method: 'POST', json: { group_id: id, lawyer_id: me() } });
+  const cancelRequest = id => call(`/rest/v1/group_join_requests?group_id=eq.${id}&lawyer_id=eq.${me()}`, { method: 'DELETE' });
+  const myRequests = async () => me() ? call(`/rest/v1/group_join_requests?select=group_id&lawyer_id=eq.${me()}`) : [];
+  const listRequests = async id => {
+    const r = await call(`/rest/v1/group_join_requests?select=lawyer_id,created_at&group_id=eq.${id}&order=created_at.asc&limit=100`);
+    const au = await authors(r.map(x => x.lawyer_id));
+    return r.map(x => ({ ...x, a: au[x.lawyer_id] })).filter(x => x.a);
+  };
+  const reviewRequest = (g, l, ok) => call('/rest/v1/rpc/review_join_request', { method: 'POST', json: { p_group: g, p_lawyer: l, p_approve: !!ok } });
   const addGroupMember = (gid, lid) => call('/rest/v1/group_members', { method: 'POST', json: { group_id: gid, lawyer_id: lid } });
   const removeGroupMember = (gid, lid) => call(`/rest/v1/group_members?group_id=eq.${gid}&lawyer_id=eq.${lid}`, { method: 'DELETE' });
   const searchLawyers = async q => {
@@ -586,7 +599,7 @@
   };
 
   window.Social = {
-    addGroupMember, removeGroupMember, searchLawyers, listGroups, myGroups, getGroup, createGroup, joinGroup, leaveGroup, deleteGroup, groupMembers,
+    setJoinMode, requestJoin, cancelRequest, myRequests, listRequests, reviewRequest, addGroupMember, removeGroupMember, searchLawyers, listGroups, myGroups, getGroup, createGroup, joinGroup, leaveGroup, deleteGroup, groupMembers,
     me, call, esc, badge, avatar, ago, num, stars, toast, needLogin, friendly, TOPICS, AUDIENCES, REACTIONS, topicLabel, audLabel,
     listPosts, mount, mountComposer, mountNav, mountProfilePosts, profileSocial, follow, unfollow,
     unreadCount, listNotifications, markAllRead, nameHTML, ratingStatus, rate, deviceId, photoUrl,

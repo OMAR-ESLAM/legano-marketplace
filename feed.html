@@ -103,7 +103,22 @@
     $('grpList').innerHTML = gs.length
       ? gs.slice(0, 6).map(g => `<a class="grp-row" href="group.html?id=${esc(g.id)}"><span class="grp-ico" aria-hidden="true">${esc([...g.name][0] || '؟')}</span><span class="grp-t"><b>${esc(g.name)}</b><small>${esc(S.num(g.member_count))} عضو</small></span></a>`).join('') + (gs.length > 6 ? `<a class="grp-more" href="groups.html">و${gs.length - 6} جروبات تانية ←</a>` : '')
       : '<div class="grp-empty">لسه ما انضمتش لأي جروب. استكشف الجروبات أو اعمل جروب لزمايلك.</div>';
+    // جروبات مقترحة
+    Promise.all([S.listGroups(), S.myRequests().catch(() => [])]).then(([all, rq]) => {
+      const mine = new Set(gs.map(g => g.id)), pend = new Set(rq.map(r => r.group_id));
+      const pick = all.filter(g => !mine.has(g.id)).slice(0, 3);
+      if (!pick.length) return;
+      $('grpList').insertAdjacentHTML('beforeend', `<h3 class="grp-sub">جروبات ممكن تنضم لها</h3>` + pick.map(g => `<div class="grp-row"><a class="grp-ico" href="group.html?id=${esc(g.id)}" aria-hidden="true" tabindex="-1">${esc([...g.name][0] || '؟')}</a><a class="grp-t" href="group.html?id=${esc(g.id)}"><b>${esc(g.name)}</b><small>${esc(S.num(g.member_count))} عضو${g.join_mode === 'approval' ? ' • بموافقة المؤسس' : ''}</small></a>${pend.has(g.id) ? '<small class="grp-pend">قيد المراجعة</small>' : `<button type="button" class="soc-btn" data-gj="${esc(g.id)}" data-mode="${esc(g.join_mode)}">${g.join_mode === 'approval' ? 'طلب' : 'انضم'}</button>`}</div>`).join(''));
+    }).catch(() => {});
   }).catch(() => { $('grpList').innerHTML = ''; });
+  $('grpList').addEventListener('click', async e => {
+    const b = e.target.closest('[data-gj]'); if (!b) return;
+    b.disabled = true;
+    try {
+      if (b.dataset.mode === 'approval') { await S.requestJoin(b.dataset.gj); b.outerHTML = '<small class="grp-pend">قيد المراجعة</small>'; S.toast('اتبعت طلب الانضمام للمؤسس'); }
+      else { await S.joinGroup(b.dataset.gj); location.reload(); }
+    } catch (er) { S.toast(S.friendly(er)); b.disabled = false; }
+  });
 
   // ---- الفيد ----
   const skeleton = () => { feed.innerHTML = '<div class="sk"></div><div class="sk"></div><div class="sk"></div>'; };
@@ -116,7 +131,7 @@
     const gen = ++state.gen; state.busy = true; more.disabled = true;
     if (reset) { state.cur = null; feed.__st = null; feed.__bound = false; skeleton(); more.hidden = true; }
     try {
-      const d = await S.listPosts({ mode: state.mode, topic: state.topic, before: state.cur, limit: 10 });
+      const d = await S.listPosts({ mode: state.mode, topic: state.topic, before: state.cur, limit: 10, withGroups: state.mode === 'all' });
       if (gen !== state.gen) return; // اتغيّر الفلتر أثناء التحميل
       if (reset) feed.innerHTML = '';
       if (!d.posts.length && reset) feed.innerHTML = `<div class="empty">${esc(emptyMsg())}</div>`;

@@ -31,7 +31,13 @@
   <a class="back" href="groups.html">كل الجروبات</a>
   <div id="gMissing" class="empty" hidden>الجروب ده مش موجود.</div>
   <div id="gMain" class="grp-main">
-    <section class="soc-card grp-hero"><div class="grp-cover"></div><div class="grp-hero-b"><div><h1 id="gName"></h1><p id="gDesc" class="grp-desc"></p><p id="gMeta" class="grp-meta"></p></div><div class="grp-actions"><button id="joinBtn" type="button" class="soc-btn primary" hidden>انضم للجروب</button><button id="leaveBtn" type="button" class="soc-btn" hidden>مغادرة</button><button id="delBtn" type="button" class="soc-btn danger" hidden>حذف الجروب</button></div></div></section>
+    <section class="soc-card grp-hero"><div class="grp-cover"></div><div class="grp-hero-b"><div><h1 id="gName"></h1><p id="gDesc" class="grp-desc"></p><p id="gMeta" class="grp-meta"></p></div><div class="grp-actions"><button id="joinBtn" type="button" class="soc-btn primary" hidden>انضم للجروب</button><span id="pendTag" class="grp-pend" hidden>طلبك قيد المراجعة</span><button id="cancelBtn" type="button" class="soc-btn" hidden>إلغاء الطلب</button><button id="leaveBtn" type="button" class="soc-btn" hidden>مغادرة</button><button id="delBtn" type="button" class="soc-btn danger" hidden>حذف الجروب</button></div></div></section>
+    <section id="ownerBox" class="soc-card side-card" hidden>
+      <h2>إدارة الجروب</h2>
+      <label class="f-l" for="modeSel">الانضمام للجروب</label>
+      <select id="modeSel" class="f-i"><option value="open">مفتوح: أي محامي ينضم على طول</option><option value="approval">بموافقتي: المحامي يبعت طلب</option></select>
+      <h3 class="grp-sub">طلبات الانضمام <span id="reqN"></span></h3><div id="reqs"><div class="grp-empty">مفيش طلبات.</div></div>
+    </section>
     <div class="grp-cols">
       <main><div id="composer" class="soc-card composer-card" hidden></div><div id="locked" class="soc-card gate-mini" hidden>انضم للجروب علشان تشوف المنشورات وتنشر.</div><div id="feed" aria-live="polite"></div><div class="feed-foot"><button id="moreBtn" class="soc-btn" type="button" hidden>عرض المزيد</button></div></main>
       <aside><section class="soc-card side-card"><h2>الأعضاء</h2>
@@ -53,6 +59,7 @@
   document.title = g.name + ' | Legano';
   const meId = S.me(), isOwner = g.owner_id === meId;
   $('gName').textContent = g.name; $('gDesc').textContent = g.description || '';
+  let myPending = false;
   let members = [], isMember = false, composerDone = false, feedLoaded = false, cur = null;
   const feed = $('feed'), more = $('moreBtn');
   async function loadMembers() {
@@ -62,7 +69,10 @@
     $('members').innerHTML = members.map(m => `<div class="sug">${S.avatar(m.a)}<div class="sug-m">${S.nameHTML(m.a)}<small>${m.role === 'owner' ? 'مؤسس الجروب' : esc(m.a.city || '')}</small></div>${isOwner && m.role !== 'owner' ? `<button type="button" class="soc-btn danger rm-m" data-rm="${esc(m.lawyer_id)}" aria-label="إزالة العضو">إزالة</button>` : ''}</div>`).join('') || '<div class="empty">لسه مفيش أعضاء.</div>';
   }
   function render() {
-    $('joinBtn').hidden = isMember; $('leaveBtn').hidden = !isMember || isOwner; $('delBtn').hidden = !isOwner;
+    const appr = g.join_mode === 'approval';
+    $('joinBtn').hidden = isMember || (appr && myPending); $('joinBtn').textContent = appr ? 'طلب انضمام' : 'انضم للجروب';
+    $('pendTag').hidden = isMember || !myPending; $('cancelBtn').hidden = isMember || !myPending;
+    $('locked').textContent = appr ? (myPending ? 'طلبك قيد المراجعة عند مؤسس الجروب.' : 'الجروب ده بموافقة المؤسس. ابعت طلب انضمام علشان تشوف المنشورات.') : 'انضم للجروب علشان تشوف المنشورات وتنشر.'; $('leaveBtn').hidden = !isMember || isOwner; $('delBtn').hidden = !isOwner;
     $('composer').hidden = !isMember; $('locked').hidden = isMember;
     if (!isMember) { feed.innerHTML = ''; more.hidden = true; feedLoaded = false; cur = null; return; }
     if (!composerDone) {
@@ -110,9 +120,32 @@
       try { await S.removeGroupMember(g.id, b.dataset.rm); await loadMembers(); } catch (er) { S.toast(S.friendly(er)); b.disabled = false; }
     });
   }
-  $('joinBtn').onclick = async () => { $('joinBtn').disabled = true; try { await S.joinGroup(g.id); await loadMembers(); render(); S.toast('انضميت للجروب'); } catch (e) { S.toast(S.friendly(e)); } $('joinBtn').disabled = false; };
+  $('joinBtn').onclick = async () => {
+    $('joinBtn').disabled = true;
+    try {
+      if (g.join_mode === 'approval') { await S.requestJoin(g.id); myPending = true; render(); S.toast('اتبعت طلب الانضمام للمؤسس'); }
+      else { await S.joinGroup(g.id); await loadMembers(); render(); S.toast('انضميت للجروب'); }
+    } catch (e) { S.toast(S.friendly(e)); }
+    $('joinBtn').disabled = false;
+  };
+  $('cancelBtn').onclick = async () => { try { await S.cancelRequest(g.id); myPending = false; render(); } catch (e) { S.toast(S.friendly(e)); } };
   $('leaveBtn').onclick = async () => { if (!confirm('تغادر الجروب؟')) return; try { await S.leaveGroup(g.id); await loadMembers(); render(); } catch (e) { S.toast(S.friendly(e)); } };
   $('delBtn').onclick = async () => { if (!confirm('حذف الجروب ومنشوراته نهائياً؟')) return; try { await S.deleteGroup(g.id); location.href = 'groups.html'; } catch (e) { S.toast(S.friendly(e)); } };
+  if (isOwner) {
+    $('ownerBox').hidden = false; $('modeSel').value = g.join_mode || 'open';
+    $('modeSel').onchange = async () => { try { await S.setJoinMode(g.id, $('modeSel').value); g.join_mode = $('modeSel').value; S.toast('اتحفظ'); } catch (e) { S.toast(S.friendly(e)); } };
+    const loadReqs = async () => {
+      const r = await S.listRequests(g.id).catch(() => []);
+      $('reqN').textContent = r.length ? `(${S.num(r.length)})` : '';
+      $('reqs').innerHTML = r.length ? r.map(x => `<div class="sug">${S.avatar(x.a)}<div class="sug-m">${S.nameHTML(x.a)}<small>${esc(x.a.city || '')}</small></div><button type="button" class="soc-btn primary" data-ok="${esc(x.lawyer_id)}">قبول</button><button type="button" class="soc-btn" data-no="${esc(x.lawyer_id)}">رفض</button></div>`).join('') : '<div class="grp-empty">مفيش طلبات.</div>';
+    };
+    $('reqs').addEventListener('click', async e => {
+      const b = e.target.closest('[data-ok],[data-no]'); if (!b) return;
+      b.disabled = true;
+      try { await S.reviewRequest(g.id, b.dataset.ok || b.dataset.no, !!b.dataset.ok); await loadReqs(); await loadMembers(); } catch (er) { S.toast(S.friendly(er)); b.disabled = false; }
+    });
+    loadReqs();
+  } else { myPending = (await S.myRequests().catch(() => [])).some(r => r.group_id === g.id); }
   await loadMembers(); render();
 })();
 </script>
