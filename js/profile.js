@@ -61,7 +61,7 @@ function render(l, similar) {
     <section>
       <h2 class="mb-3 text-sm font-bold text-gold-soft-c">محامون في نفس التخصص</h2>
       <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
-        ${similar.map(s => `<a href="lawyer.html?id=${encodeURIComponent(s.id)}" class="flex flex-col gap-1 rounded-2xl border border-app bg-card-c/70 p-3 text-center transition hover:border-[color:var(--gold)]">
+        ${similar.map(s => `<a href="/lawyer/${encodeURIComponent(s.id)}" class="flex flex-col gap-1 rounded-2xl border border-app bg-card-c/70 p-3 text-center transition hover:border-[color:var(--gold)]">
           <div class="text-sm font-bold text-fg">${esc(s.publicProfile.displayName)}${s.verified ? S.badge() : ''}</div>
           <div class="text-[11px]">${S.stars(s.rating.avg, s.rating.count)}</div>
           <div class="text-xs text-muted-c">${esc((s.publicProfile.specialties || []).map(catLabel).join(' • '))}</div>
@@ -268,7 +268,7 @@ function wire(l, isMe) {
 }
 
 async function boot() {
-  const id = new URLSearchParams(location.search).get('id');
+  const id = new URLSearchParams(location.search).get('id') || (location.pathname.match(/\/lawyer\/([0-9a-fA-F-]{36})/) || [])[1];
   if (!id) return notFound();
   try {
     const l = await CW.getLawyerById(id);

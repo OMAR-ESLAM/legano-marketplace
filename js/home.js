@@ -55,6 +55,9 @@ function writeURL() {
 }
 function readURL() {
   const q = new URLSearchParams(location.search);
+  const P = window.__SEO || {}; // صفحات /lawyers/تخصص/محافظة بتبعت القيم الافتراضية دي
+  if (P.cat && P.cat !== 'all' && CW.LEAD_CATEGORIES.some(c => c.key === P.cat)) state.cat = P.cat;
+  if (P.city && !q.get('city')) { $city.value = P.city; $cityLabel.textContent = P.city; }
   $input.value = q.get('q') || '';
   if (q.get('city')) { $city.value = q.get('city'); $cityLabel.textContent = $city.value || 'كل المحافظات'; }
   if (q.get('cat') && CW.LEAD_CATEGORIES.some(c => c.key === q.get('cat'))) state.cat = q.get('cat');
@@ -196,7 +199,7 @@ function renderGrid(lawyers) {
   $grid.innerHTML = interleave(cards, lawyers);
   mountSlots();
 
-  const go = id => { location.href = `lawyer.html?id=${encodeURIComponent(id)}`; };
+  const go = id => { location.href = `/lawyer/${encodeURIComponent(id)}`; };
   $grid.querySelectorAll('.lawyer-card').forEach(card => {
     card.addEventListener('click', () => go(card.dataset.id));
     card.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target === card) go(card.dataset.id); });
