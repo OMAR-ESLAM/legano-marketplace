@@ -30,14 +30,11 @@
 </div>
 
 <div id="layout" class="feed-layout" hidden>
-  <aside class="feed-side" aria-label="حسابي">
-    <section class="soc-card side-card mini-me" id="meCard"></section>
-  </aside>
-
   <main>
     <div id="single" hidden><a class="back" href="feed.html">كل المنشورات</a></div>
     <div id="hiddenWarn" class="warn" hidden>بروفايلك مخفي عن الزوار، وعلشان كده مش هتقدر تنشر ولا تتفاعل. فعّل «إظهار بروفايلي للزوار» من <a href="dashboard.html">لوحتك</a>.</div>
     <div id="list">
+      <section id="today" class="soc-card today-card" aria-label="شغلي النهارده"><div class="today-h"><div><h1 id="hello" class="today-hello"></h1><p id="activeN" class="today-sub"></p></div><button id="focusBtn" type="button" class="soc-btn focus-btn" aria-pressed="false" title="إخفاء الأعمدة الجانبية">⛶ تركيز</button></div><div id="todayItems" class="today-items"></div></section>
       <div id="composer" class="soc-card composer-card"></div>
       <div class="feed-tabs" role="tablist" aria-label="نوع المنشورات">
         <button class="tab" role="tab" data-mode="all" aria-selected="true" type="button">منشورات الزمايل</button>
@@ -49,8 +46,8 @@
     <div class="feed-foot"><button id="moreBtn" class="soc-btn" type="button" hidden>عرض المزيد</button></div>
   </main>
 
-  <aside class="feed-side" aria-label="اقتراحات">
-    <section class="soc-card side-card" id="sugCard" hidden><h2>الأعلى تقييماً من الموكلين</h2><div id="sugList"></div></section>
+  <aside class="feed-side" aria-label="حسابي وجروباتي" id="side">
+    <section class="soc-card side-card mini-me" id="meCard"></section>
     <section class="soc-card side-card" id="grpCard"><h2>جروباتي</h2><div id="grpList"><div class="grp-empty">بتحمّل…</div></div><div class="grp-btns"><a class="soc-btn" href="groups.html">استكشف الجروبات</a><a class="soc-btn primary" href="groups.html?new=1">+ إنشاء جروب</a></div></section>
   </aside>
 </div>
@@ -69,31 +66,81 @@
   const postId = new URLSearchParams(location.search).get('post');
   const meId = S.me();
 
-  // ---- العمود الجانبي: بطاقتي + اقتراحات ----
+  let sug = [], stripEl = null;
+  const hr = new Date().getHours();
+  function greet(a) {
+    const first = ((a && a.display_name) || '').replace(/^(أ\.?|د\.?|المستشار)\s*/, '').trim().split(/\s+/)[0] || '';
+    $('hello').textContent = `${hr < 12 ? 'صباح الخير' : hr < 18 ? 'نهارك سعيد' : 'مساء الخير'}${first ? ' يا أستاذ ' + first : ''} 👋`;
+  }
+  greet(null);
+  // شريط اقتراحات المتابعة وسط الفيد (بعد 5 منشورات)
+  function placeStrip() {
+    if (stripEl) { stripEl.remove(); stripEl = null; }
+    if (!sug.length || state.mode !== 'all' || state.topic || postId) return;
+    const cards = feed.querySelectorAll('.post-card');
+    if (!cards.length) return;
+    stripEl = document.createElement('section');
+    stripEl.className = 'soc-card sug-strip';
+    stripEl.innerHTML = `<h2>محامين ممكن تتابعهم</h2><div class="strip-row">${sug.map(x => `<div class="strip-c">${S.avatar(x)}<div class="strip-n">${S.nameHTML(x)}</div><small>${esc(x.city || '')}</small><button type="button" class="soc-btn" data-f="${esc(x.id)}">متابعة</button></div>`).join('')}</div>`;
+    stripEl.addEventListener('click', async e => {
+      const b = e.target.closest('[data-f]'); if (!b) return;
+      b.disabled = true;
+      try { await S.follow(b.dataset.f); b.textContent = 'بتتابعه ✓'; } catch (er) { S.toast(S.friendly(er)); b.disabled = false; }
+    });
+    (cards[4] || cards[cards.length - 1]).after(stripEl);
+  }
+
+  // ---- شغلي النهارده ----
+  (async () => {
+    const items = [], todayISO = new Date().toISOString().slice(0, 10);
+    const fmtD = d => new Date(d + 'T00:00:00').toLocaleDateString('ar-EG', { weekday: 'long', day: 'numeric', month: 'long' });
+    const [cs, gs, un, act] = await Promise.allSettled([
+      S.listCases(), S.myGroups(), S.unreadCount(),
+      S.call(`/rest/v1/posts?select=author_id&created_at=gte.${encodeURIComponent(new Date(Date.now() - 864e5).toISOString())}&group_id=is.null&limit=300`),
+    ]);
+    if (cs.status === 'fulfilled') {
+      cs.value.filter(c => c.status === 'active').map(c => ({ c, d: (c.updates.find(u => u.next_date) || {}).next_date })).filter(x => x.d && x.d >= todayISO).sort((a, b) => a.d.localeCompare(b.d)).slice(0, 2)
+        .forEach(x => items.push(`<a href="cases.html">📅 ${esc(x.d === todayISO ? 'النهارده' : fmtD(x.d))} — ${esc(x.c.title)}</a>`));
+    }
+    if (gs.status === 'fulfilled') {
+      const owned = gs.value.filter(g => g.owner_id === meId && g.join_mode === 'approval');
+      if (owned.length) {
+        try {
+          const rq = await S.call(`/rest/v1/group_join_requests?select=group_id&group_id=in.(${owned.map(g => g.id).join(',')})`);
+          const by = {}; rq.forEach(r => { by[r.group_id] = (by[r.group_id] || 0) + 1; });
+          owned.filter(g => by[g.id]).forEach(g => items.push(`<a href="group.html?id=${esc(g.id)}">👥 ${S.num(by[g.id])} طلب انضمام على «${esc(g.name)}»</a>`));
+        } catch {}
+      }
+    }
+    if (un.status === 'fulfilled' && un.value) items.push(`<a href="notifications.html">🔔 ${S.num(un.value)} إشعار جديد</a>`);
+    if (act.status === 'fulfilled') { const n = new Set(act.value.map(x => x.author_id)).size; if (n > 1) $('activeN').textContent = `${S.num(n)} محامي نشروا في آخر 24 ساعة`; }
+    $('todayItems').innerHTML = items.length ? items.join('') : '<span class="today-none">مفيش حاجة مستعجلة النهارده 👌</span>';
+  })();
+
+  // وضع التركيز
+  const lay = $('layout');
+  const setFocus = on => { lay.classList.toggle('focus', on); $('focusBtn').setAttribute('aria-pressed', on); try { localStorage.setItem('lg_focus', on ? '1' : '0'); } catch {} };
+  try { if (localStorage.getItem('lg_focus') === '1') setFocus(true); } catch {}
+  $('focusBtn').onclick = () => setFocus(!lay.classList.contains('focus'));
+
+  // ---- العمود الجانبي: بطاقتي + جروباتي ----
   (async () => {
     let row = null;
     try { row = (await S.call(`/rest/v1/public_lawyers?select=id,display_name,city,photo_path,verified&id=eq.${meId}`))[0]; } catch {}
     if (!row) { $('hiddenWarn').hidden = false; }
     const st = row ? await S.profileSocial(meId).catch(() => null) : null;
     const a = row || { id: meId, display_name: 'حسابي' };
-    $('meCard').innerHTML = `${S.avatar(a)}<div>${S.nameHTML(a)}</div>
-      ${st ? `<div class="mini-stats"><span><b>${S.num(st.followers)}</b>متابع</span><span><b>${S.num(st.following)}</b>بيتابع</span><span><b>${S.num(st.posts)}</b>منشور</span></div>` : ''}
-      <nav class="side-links"><a href="lawyer.html?id=${esc(meId)}">عرض بروفايلي</a></nav>`;
+    $('meCard').innerHTML = `<a class="me-row" href="lawyer.html?id=${esc(meId)}">${S.avatar(a)}<span class="me-t"><b>${esc(a.display_name || 'حسابي')}${a.verified ? S.badge() : ''}</b><small>${st ? `${S.num(st.followers)} متابع • ${S.num(st.posts)} منشور` : 'عرض بروفايلي'}</small></span></a>`;
+    window.__me = a;
+    greet(a);
     try {
       const [all, fl] = await Promise.all([
         S.call('/rest/v1/public_lawyers?select=id,display_name,city,photo_path,verified,specialties&order=rating_score.desc&limit=30'),
         S.call(`/rest/v1/follows?select=following_id&follower_id=eq.${meId}`),
       ]);
       const f = new Set(fl.map(x => x.following_id));
-      const pick = all.filter(x => x.id !== meId).slice(0, 3);
-      if (!pick.length) return;
-      $('sugCard').hidden = false;
-      $('sugList').innerHTML = pick.map(x => `<div class="sug">${S.avatar(x)}<div class="sug-m">${S.nameHTML(x)}<small>${esc(x.city || '')}</small></div>${f.has(x.id) ? '<small>بتتابعه ✓</small>' : `<button type="button" class="soc-btn" data-f="${esc(x.id)}">متابعة</button>`}</div>`).join('');
-      $('sugList').addEventListener('click', async e => {
-        const b = e.target.closest('[data-f]'); if (!b) return;
-        b.disabled = true;
-        try { await S.follow(b.dataset.f); b.textContent = 'بتتابعه ✓'; } catch (er) { S.toast(S.friendly(er)); b.disabled = false; }
-      });
+      sug = all.filter(x => x.id !== meId && !f.has(x.id)).slice(0, 8);
+      placeStrip();
     } catch {}
   })();
 
@@ -136,6 +183,7 @@
       if (!d.posts.length && reset) feed.innerHTML = `<div class="empty">${esc(emptyMsg())}</div>`;
       else S.mount(feed, d, { onDelete: checkEmpty });
       state.cur = d.last; more.hidden = !d.more;
+      if (reset) placeStrip();
     } catch (e) {
       if (gen !== state.gen) return;
       if (reset) feed.innerHTML = '<div class="empty">تعذر تحميل المنشورات. حدّث الصفحة وحاول تاني.</div>'; else S.toast(S.friendly(e));
@@ -165,6 +213,7 @@
     state.mode = t.dataset.mode; document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', x === t)); load(true);
   }));
   more.addEventListener('click', () => load(false));
+  if (new URLSearchParams(location.search).get('compose')) setTimeout(() => document.querySelector('.comp-input')?.click(), 400);
   load(true);
 })();
 </script>

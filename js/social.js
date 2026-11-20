@@ -245,13 +245,47 @@
 
   const BELL = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10.3 20a1.9 1.9 0 0 0 3.4 0"/></svg>';
   // الزائر (الموكل) مفيش له منشورات ولا إشعارات. المحامي بيشوف المنشورات وسوق المحامين والجرس ولوحته.
+  const IC = {
+    home: '<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg>',
+    groups: '<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M2.8 20c.4-3.6 3-5.6 6.2-5.6s5.8 2 6.2 5.6"/><circle cx="17.2" cy="9" r="2.5"/><path d="M17 14.3c2.6.1 4.1 1.8 4.4 4.7"/></svg>',
+    cases: '<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7"/><path d="M3 13h18"/></svg>',
+    plus: '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
+  };
+  // الزائر (الموكل) مفيش له منشورات ولا إشعارات. المحامي: 4 أيقونات + قايمة حسابه، وعلى الموبايل شريط سفلي.
   async function mountNav(el) {
     if (!el) return;
     if (!me()) { if (!el.children.length) el.innerHTML = '<a href="register.html" class="btn-ghost-link">سجّل كمحامي</a><a href="dashboard.html" class="btn-ghost-link">دخول المحامين</a>'; return; }
-    el.innerHTML = `<a href="feed.html" class="btn-ghost-link">المنشورات</a><a href="cases.html" class="btn-ghost-link">قضاياي</a><a href="groups.html" class="btn-ghost-link">الجروبات</a><a href="index.html?browse=1" class="btn-ghost-link">سوق المحامين</a><a href="notifications.html" class="nav-bell" aria-label="الإشعارات">${BELL}<span class="nav-dot" hidden></span></a><a href="dashboard.html" class="btn-ghost-link">لوحتي</a>`;
+    const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+    const act = h => (h === here || (h === 'groups.html' && here === 'group.html')) ? ' on' : '';
+    const item = (h, label, icon, extra = '') => `<a href="${h}" class="nav-ic${act(h)}" aria-label="${label}" title="${label}"${act(h) ? ' aria-current="page"' : ''}>${icon}<span class="nav-lb">${label}</span>${extra}</a>`;
+    el.innerHTML = item('feed.html', 'المنشورات', IC.home) + item('groups.html', 'الجروبات', IC.groups) + item('cases.html', 'قضاياي', IC.cases)
+      + item('notifications.html', 'الإشعارات', BELL, '<span class="nav-dot" hidden></span>')
+      + `<div class="nav-me"><button type="button" class="nav-av" id="navAv" aria-haspopup="menu" aria-expanded="false" aria-label="حسابي"><span class="avatar sm">${esc('؟')}</span></button>
+        <div class="nav-menu" id="navMenu" role="menu" hidden>
+          <a role="menuitem" href="lawyer.html?id=${esc(me())}">بروفايلي</a><a role="menuitem" href="dashboard.html">لوحتي وإحصائياتي</a><a role="menuitem" href="index.html?browse=1">سوق المحامين</a>
+          <button role="menuitem" type="button" id="navOut">تسجيل الخروج</button></div></div>`;
+    const menu = el.querySelector('#navMenu'), btn = el.querySelector('#navAv');
+    const close = () => { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); };
+    btn.addEventListener('click', e => { e.stopPropagation(); menu.hidden = !menu.hidden; btn.setAttribute('aria-expanded', String(!menu.hidden)); });
+    document.addEventListener('click', e => { if (!menu.contains(e.target)) close(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+    el.querySelector('#navOut').addEventListener('click', () => { store.set(null); location.href = 'index.html'; });
+
+    // شريط سفلي للموبايل
+    if (!document.getElementById('tabbar')) {
+      const tb = document.createElement('nav');
+      tb.id = 'tabbar'; tb.className = 'tabbar'; tb.setAttribute('aria-label', 'التنقل');
+      const t = (h, label, icon, extra = '') => `<a href="${h}" class="tb-i${act(h)}" aria-label="${label}">${icon}<span>${label}</span>${extra}</a>`;
+      tb.innerHTML = t('feed.html', 'الرئيسية', IC.home) + t('groups.html', 'الجروبات', IC.groups)
+        + `<a href="feed.html?compose=1" class="tb-plus" id="tbPlus" aria-label="منشور جديد">${IC.plus}</a>`
+        + t('cases.html', 'قضاياي', IC.cases) + t('notifications.html', 'الإشعارات', BELL, '<span class="nav-dot tb-dot" hidden></span>');
+      document.body.appendChild(tb); document.body.classList.add('has-tabbar');
+      tb.querySelector('#tbPlus').addEventListener('click', e => { const c = document.querySelector('.comp-input'); if (c) { e.preventDefault(); c.click(); } });
+    }
+    // صورتي + عدّاد الإشعارات
+    authors([me()]).then(m => { const a = m[me()]; if (a) btn.innerHTML = avatar(a, 'sm'); }).catch(() => {});
     const n = await unreadCount();
-    const dot = el.querySelector('.nav-dot');
-    if (n && dot) { dot.textContent = n > 99 ? '99+' : n; dot.hidden = false; }
+    if (n) document.querySelectorAll('.nav-dot').forEach(d => { d.textContent = n > 99 ? '99+' : n; d.hidden = false; });
   }
 
   // ---------- كارت المنشور ----------
