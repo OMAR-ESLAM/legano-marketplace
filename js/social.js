@@ -76,6 +76,8 @@
     if (/case_limit/.test(m)) return 'وصلت للحد الأقصى من القضايا.';
     if (/not_owner/.test(m)) return 'الصلاحية دي لمؤسس الجروب بس.';
     if (/group_limit/.test(m)) return 'وصلت للحد الأقصى: 5 جروبات لكل محامي.';
+    if (/not_completed/.test(m)) return 'التقييم بيتفتح بعد ما الإحالة تتقفل كمكتملة.';
+    if (/not_party/.test(m)) return 'التقييم متاح لطرفَي الإحالة بس.';
     if (/not_member/.test(m)) return 'لازم تنضم للجروب الأول علشان تنشر فيه.';
     if (/contact_first/.test(m)) return 'تقدر تقيّم المحامي بعد ما تتصل بيه أو تبعتله واتساب من هنا.';
     if (/lawyers_cannot_rate/.test(m)) return 'التقييم للموكلين بس.';
@@ -243,7 +245,11 @@
     const pids = [...new Set(rows.map(r => r.post_id).filter(Boolean))];
     let posts = {};
     if (pids.length) { try { posts = Object.fromEntries((await call(`/rest/v1/posts?select=id,body&id=in.(${pids.join(',')})`)).map(p => [p.id, p.body])); } catch {} }
-    return { rows, authors: au, posts };
+    const rids = [...new Set(rows.map(r => r.referral_id).filter(Boolean))], gids = [...new Set(rows.map(r => r.group_id).filter(Boolean))];
+    let refs = {}, groups = {};
+    if (rids.length) { try { refs = Object.fromEntries((await call(`/rest/v1/referrals?select=id,title&id=in.(${rids.join(',')})`)).map(p => [p.id, p.title])); } catch {} }
+    if (gids.length) { try { groups = Object.fromEntries((await call(`/rest/v1/groups?select=id,name&id=in.(${gids.join(',')})`)).map(p => [p.id, p.name])); } catch {} }
+    return { rows, authors: au, posts, refs, groups };
   }
   const markAllRead = () => call('/rest/v1/notifications?read=eq.false', { method: 'PATCH', json: { read: true }, headers: { Prefer: 'return=minimal' } });
 
@@ -647,8 +653,12 @@
   const lawyersInfo = async ids => {
     ids = [...new Set(ids.filter(x => UUID.test(x || '')))];
     if (!ids.length) return {};
-    const r = await call(`/rest/v1/public_lawyers?select=id,display_name,city,photo_path,verified,specialties,rating_avg,rating_count&id=in.(${ids.join(',')})`);
-    return Object.fromEntries(r.map(x => [x.id, x]));
+    const [r, ps] = await Promise.all([
+      call(`/rest/v1/public_lawyers?select=id,display_name,city,photo_path,verified,specialties,rating_avg,rating_count&id=in.(${ids.join(',')})`),
+      call(`/rest/v1/peer_stats?select=lawyer_id,avg,count&count=gt.0&lawyer_id=in.(${ids.join(',')})`).catch(() => []),
+    ]);
+    const pm = Object.fromEntries(ps.map(x => [x.lawyer_id, x]));
+    return Object.fromEntries(r.map(x => [x.id, { ...x, peer: pm[x.id] ? { avg: Number(pm[x.id].avg), count: pm[x.id].count } : null }]));
   };
   const listMarket = async ({ q, type, city } = {}) => {
     let u = `/rest/v1/referrals?select=${RCOLS}&status=eq.open&author_id=neq.${me()}&or=(deadline.is.null,deadline.gte.${todayISO()})&order=created_at.desc&limit=60`;
@@ -687,6 +697,9 @@
   const withdrawOffer = id => call(`/rest/v1/referral_offers?referral_id=eq.${id}&lawyer_id=eq.${me()}`, { method: 'DELETE' });
   const acceptOffer = (id, lawyer) => call('/rest/v1/rpc/accept_offer', { method: 'POST', json: { p_referral: id, p_lawyer: lawyer } });
   const referralContact = id => call('/rest/v1/rpc/referral_contact', { method: 'POST', json: { p_referral: id } });
+  const reviewPeer = (id, stars) => call('/rest/v1/rpc/review_peer', { method: 'POST', json: { p_referral: id, p_stars: stars } });
+  const myPeerReviews = async () => Object.fromEntries((await call(`/rest/v1/referral_reviews?select=reviewee_id,stars&reviewer_id=eq.${me()}`).catch(() => [])).map(x => [x.reviewee_id, x.stars]));
+  const peerChip = p => p ? `<span class="peer-chip" title="تقييم الزملاء المحامين (ظاهر للمحامين بس)">زملاء ★${p.avg.toFixed(1)} · ${p.count}</span>` : '';
   const referralStats = async () => {
     const r = await call(`/rest/v1/referrals?select=id,title,status,offers_count,author_id,assigned_to&or=(author_id.eq.${me()},assigned_to.eq.${me()})&status=in.(open,assigned)&limit=60`);
     return { offers: r.filter(x => x.author_id === me() && x.status === 'open').reduce((n, x) => n + x.offers_count, 0), tasks: r.filter(x => x.assigned_to === me() && x.status === 'assigned') };
@@ -716,7 +729,7 @@
   };
 
   window.Social = {
-    listMarket, listMyReferrals, listTaken, createReferral, setReferralStatus, deleteReferral, makeOffer, withdrawOffer, acceptOffer, referralContact, referralStats, lawyersInfo, STAGES, todayISO, nextHearing, listCases, createCase, updateCase, deleteCase, addCaseUpdate, deleteCaseUpdate, caseLink, getCaseByToken, rateCase,
+    listMarket, listMyReferrals, listTaken, createReferral, setReferralStatus, deleteReferral, makeOffer, withdrawOffer, acceptOffer, referralContact, referralStats, reviewPeer, myPeerReviews, peerChip, lawyersInfo, STAGES, todayISO, nextHearing, listCases, createCase, updateCase, deleteCase, addCaseUpdate, deleteCaseUpdate, caseLink, getCaseByToken, rateCase,
     setJoinMode, requestJoin, cancelRequest, myRequests, listRequests, reviewRequest, addGroupMember, removeGroupMember, searchLawyers, listGroups, myGroups, getGroup, createGroup, joinGroup, leaveGroup, deleteGroup, groupMembers,
     me, call, esc, badge, avatar, ago, num, stars, toast, needLogin, friendly, TOPICS, AUDIENCES, REACTIONS, topicLabel, audLabel,
     listPosts, mount, mountComposer, mountNav, mountProfilePosts, profileSocial, follow, unfollow,

@@ -448,3 +448,9 @@ a.grp-ico { text-decoration: none; }
 
 .ref-star { color: #B7791F; font-weight: 800; }
 .ref-who small { display: block; }
+
+.peer-chip{display:inline-block;margin-inline-start:6px;padding:1px 8px;border-radius:99px;background:#EEF2FF;color:#3730A3;font-size:11px;font-weight:700}
+.ref-rate{display:flex;align-items:center;gap:4px;margin-top:10px;padding-top:10px;border-top:1px dashed #E5E7EB;font-size:13px}
+.ref-rate small{color:#6B7280;margin-inline-start:6px}
+.ref-rs{border:0;background:none;font-size:22px;line-height:1;color:#D1D5DB;cursor:pointer;padding:2px}
+.ref-rs.on,.ref-rs:hover{color:#F59E0B}

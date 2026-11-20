@@ -44,6 +44,11 @@
       else if (n.type === 'like') { txt = `${who} تفاعل مع منشورك.`; href = `feed.html?post=${esc(n.post_id)}`; }
       else if (n.type === 'reply') { txt = `${who} رد على تعليقك.`; href = `feed.html?post=${esc(n.post_id)}`; }
       else if (n.type === 'comment') { txt = `${who} علّق على منشورك.`; href = `feed.html?post=${esc(n.post_id)}`; }
+      else if (n.type === 'ref_offer') { const t = d.refs[n.referral_id]; txt = `${who} قدّم عرض على إحالتك${t ? ' «' + esc(t) + '»' : ''}.`; href = 'referrals.html?tab=mine'; }
+      else if (n.type === 'ref_accepted') { const t = d.refs[n.referral_id]; txt = `${who} اختارك تاخد إحالة${t ? ' «' + esc(t) + '»' : ''}. رقم تواصله ظهر لك.`; href = 'referrals.html?tab=taken'; }
+      else if (n.type === 'ref_done') { const t = d.refs[n.referral_id]; txt = `${who} قفل الإحالة${t ? ' «' + esc(t) + '»' : ''} كمكتملة. تقدر تقيّمه.`; href = 'referrals.html?tab=taken'; }
+      else if (n.type === 'group_request') { const g = d.groups[n.group_id]; txt = `${who} طلب الانضمام لجروب${g ? ' «' + esc(g) + '»' : ' بتاعك'}.`; href = `group.html?id=${esc(n.group_id)}`; }
+      else if (n.type === 'group_approved') { const g = d.groups[n.group_id]; txt = `طلب انضمامك لجروب${g ? ' «' + esc(g) + '»' : ''} اتقبل.`; href = `group.html?id=${esc(n.group_id)}`; lead = `<span class="n-ico">${ICON}</span>`; }
       else if (n.type === 'verified') { txt = 'تم توثيق حسابك. العلامة الزرقاء ظهرت جنب اسمك.'; href = 'dashboard.html'; lead = `<span class="n-ico">${ICON}</span>`; }
       else { txt = 'طلب التوثيق اتراجع واترفض. تقدر تبعته تاني من لوحتك.'; href = 'dashboard.html'; lead = `<span class="n-ico">${ICON}</span>`; }
       const snip = n.post_id && d.posts[n.post_id] ? `<span class="n-snip">${esc(d.posts[n.post_id].slice(0, 90))}</span>` : '';
