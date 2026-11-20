@@ -572,6 +572,13 @@
   const joinGroup = id => call('/rest/v1/group_members', { method: 'POST', json: { group_id: id, lawyer_id: me() } });
   const leaveGroup = id => call(`/rest/v1/group_members?group_id=eq.${id}&lawyer_id=eq.${me()}`, { method: 'DELETE' });
   const deleteGroup = id => call(`/rest/v1/groups?id=eq.${id}`, { method: 'DELETE' });
+  const addGroupMember = (gid, lid) => call('/rest/v1/group_members', { method: 'POST', json: { group_id: gid, lawyer_id: lid } });
+  const removeGroupMember = (gid, lid) => call(`/rest/v1/group_members?group_id=eq.${gid}&lawyer_id=eq.${lid}`, { method: 'DELETE' });
+  const searchLawyers = async q => {
+    const t = (q || '').trim().replace(/[^\p{L}\p{N} ]/gu, '').slice(0, 40);
+    if (t.length < 2) return [];
+    return call(`/rest/v1/public_lawyers?select=id,display_name,city,photo_path,verified&display_name=ilike.*${encodeURIComponent(t)}*&limit=8`);
+  };
   const groupMembers = async id => {
     const m = await call(`/rest/v1/group_members?select=lawyer_id,role&group_id=eq.${id}&order=joined_at.asc&limit=100`);
     const au = await authors(m.map(x => x.lawyer_id));
@@ -579,7 +586,7 @@
   };
 
   window.Social = {
-    listGroups, myGroups, getGroup, createGroup, joinGroup, leaveGroup, deleteGroup, groupMembers,
+    addGroupMember, removeGroupMember, searchLawyers, listGroups, myGroups, getGroup, createGroup, joinGroup, leaveGroup, deleteGroup, groupMembers,
     me, call, esc, badge, avatar, ago, num, stars, toast, needLogin, friendly, TOPICS, AUDIENCES, REACTIONS, topicLabel, audLabel,
     listPosts, mount, mountComposer, mountNav, mountProfilePosts, profileSocial, follow, unfollow,
     unreadCount, listNotifications, markAllRead, nameHTML, ratingStatus, rate, deviceId, photoUrl,

@@ -34,7 +34,9 @@
     <section class="soc-card grp-hero"><div class="grp-cover"></div><div class="grp-hero-b"><div><h1 id="gName"></h1><p id="gDesc" class="grp-desc"></p><p id="gMeta" class="grp-meta"></p></div><div class="grp-actions"><button id="joinBtn" type="button" class="soc-btn primary" hidden>انضم للجروب</button><button id="leaveBtn" type="button" class="soc-btn" hidden>مغادرة</button><button id="delBtn" type="button" class="soc-btn danger" hidden>حذف الجروب</button></div></div></section>
     <div class="grp-cols">
       <main><div id="composer" class="soc-card composer-card" hidden></div><div id="locked" class="soc-card gate-mini" hidden>انضم للجروب علشان تشوف المنشورات وتنشر.</div><div id="feed" aria-live="polite"></div><div class="feed-foot"><button id="moreBtn" class="soc-btn" type="button" hidden>عرض المزيد</button></div></main>
-      <aside><section class="soc-card side-card"><h2>الأعضاء</h2><div id="members"></div></section></aside>
+      <aside><section class="soc-card side-card"><h2>الأعضاء</h2>
+        <div id="addBox" class="add-box" hidden><label class="f-l" for="addQ">إضافة محامي للجروب</label><input id="addQ" class="f-i" type="search" maxlength="40" placeholder="اكتب اسم المحامي…" autocomplete="off"><div id="addRes" class="add-res"></div></div>
+        <div id="members"></div></section></aside>
     </div>
   </div>
 </div>
@@ -57,7 +59,7 @@
     members = await S.groupMembers(g.id).catch(() => []);
     isMember = members.some(m => m.lawyer_id === meId);
     $('gMeta').textContent = `${S.num(members.length || g.member_count)} عضو`;
-    $('members').innerHTML = members.map(m => `<div class="sug">${S.avatar(m.a)}<div class="sug-m">${S.nameHTML(m.a)}<small>${m.role === 'owner' ? 'مؤسس الجروب' : esc(m.a.city || '')}</small></div></div>`).join('') || '<div class="empty">لسه مفيش أعضاء.</div>';
+    $('members').innerHTML = members.map(m => `<div class="sug">${S.avatar(m.a)}<div class="sug-m">${S.nameHTML(m.a)}<small>${m.role === 'owner' ? 'مؤسس الجروب' : esc(m.a.city || '')}</small></div>${isOwner && m.role !== 'owner' ? `<button type="button" class="soc-btn danger rm-m" data-rm="${esc(m.lawyer_id)}" aria-label="إزالة العضو">إزالة</button>` : ''}</div>`).join('') || '<div class="empty">لسه مفيش أعضاء.</div>';
   }
   function render() {
     $('joinBtn').hidden = isMember; $('leaveBtn').hidden = !isMember || isOwner; $('delBtn').hidden = !isOwner;
@@ -80,6 +82,34 @@
     more.disabled = false;
   }
   more.onclick = loadPage;
+  // إدارة الأعضاء (للمؤسس)
+  if (isOwner) {
+    $('addBox').hidden = false;
+    let t, gen = 0;
+    $('addQ').addEventListener('input', () => {
+      clearTimeout(t);
+      t = setTimeout(async () => {
+        const my = ++gen, q = $('addQ').value;
+        if (q.trim().length < 2) { $('addRes').innerHTML = ''; return; }
+        try {
+          const rows = (await S.searchLawyers(q)).filter(r => !members.some(m => m.lawyer_id === r.id));
+          if (my !== gen) return;
+          $('addRes').innerHTML = rows.length ? rows.map(r => `<div class="sug">${S.avatar(r)}<div class="sug-m">${S.nameHTML(r)}<small>${esc(r.city || '')}</small></div><button type="button" class="soc-btn" data-add="${esc(r.id)}">إضافة</button></div>`).join('') : '<div class="grp-empty">مفيش محامي بالاسم ده (أو هو عضو بالفعل).</div>';
+        } catch { $('addRes').innerHTML = ''; }
+      }, 300);
+    });
+    $('addRes').addEventListener('click', async e => {
+      const b = e.target.closest('[data-add]'); if (!b) return;
+      b.disabled = true;
+      try { await S.addGroupMember(g.id, b.dataset.add); b.closest('.sug').remove(); await loadMembers(); S.toast('اتضاف للجروب'); }
+      catch (er) { S.toast(S.friendly(er)); b.disabled = false; }
+    });
+    $('members').addEventListener('click', async e => {
+      const b = e.target.closest('[data-rm]'); if (!b || !confirm('تشيل العضو ده من الجروب؟')) return;
+      b.disabled = true;
+      try { await S.removeGroupMember(g.id, b.dataset.rm); await loadMembers(); } catch (er) { S.toast(S.friendly(er)); b.disabled = false; }
+    });
+  }
   $('joinBtn').onclick = async () => { $('joinBtn').disabled = true; try { await S.joinGroup(g.id); await loadMembers(); render(); S.toast('انضميت للجروب'); } catch (e) { S.toast(S.friendly(e)); } $('joinBtn').disabled = false; };
   $('leaveBtn').onclick = async () => { if (!confirm('تغادر الجروب؟')) return; try { await S.leaveGroup(g.id); await loadMembers(); render(); } catch (e) { S.toast(S.friendly(e)); } };
   $('delBtn').onclick = async () => { if (!confirm('حذف الجروب ومنشوراته نهائياً؟')) return; try { await S.deleteGroup(g.id); location.href = 'groups.html'; } catch (e) { S.toast(S.friendly(e)); } };
