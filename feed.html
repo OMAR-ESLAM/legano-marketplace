@@ -112,6 +112,11 @@
         } catch {}
       }
     }
+    try {
+      const rs = await S.referralStats();
+      if (rs.offers) items.unshift(`<a href="referrals.html?tab=mine">🤝 ${S.num(rs.offers)} عرض على إحالاتك</a>`);
+      rs.tasks.slice(0, 2).forEach(t => items.unshift(`<a href="referrals.html?tab=taken">🤝 اتسندتلك إحالة: ${esc(t.title)}</a>`));
+    } catch {}
     if (un.status === 'fulfilled' && un.value) items.push(`<a href="notifications.html">🔔 ${S.num(un.value)} إشعار جديد</a>`);
     if (act.status === 'fulfilled') { const n = new Set(act.value.map(x => x.author_id)).size; if (n > 1) $('activeN').textContent = `${S.num(n)} محامي نشروا في آخر 24 ساعة`; }
     $('todayItems').innerHTML = items.length ? items.join('') : '<span class="today-none">مفيش حاجة مستعجلة النهارده 👌</span>';

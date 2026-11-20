@@ -66,6 +66,10 @@
   }
   function friendly(e) {
     const m = String((e && e.message) || '');
+    if (/referral_limit/.test(m)) return 'عندك 10 إحالات مفتوحة. اقفل أو الغي واحدة قبل ما تضيف.';
+    if (/locked/.test(m)) return 'الإحالة اتسندت، ما ينفعش تعدّل تفاصيلها.';
+    if (/no_offer/.test(m)) return 'العرض ده مش موجود (يمكن اتسحب).';
+    if (/bad_status/.test(m)) return 'حالة الإحالة اتغيّرت. حدّث الصفحة.';
     if (/case_open/.test(m)) return 'التقييم بيفتح لما المحامي يقفل القضية.';
     if (/case_too_new/.test(m)) return 'التقييم بيتاح بعد يومين من بداية القضية.';
     if (/already_rated/.test(m)) return 'القضية دي اتقيّمت قبل كده.';
@@ -262,7 +266,7 @@
       + item('notifications.html', 'الإشعارات', BELL, '<span class="nav-dot" hidden></span>')
       + `<div class="nav-me"><button type="button" class="nav-av" id="navAv" aria-haspopup="menu" aria-expanded="false" aria-label="حسابي"><span class="avatar sm">${esc('؟')}</span></button>
         <div class="nav-menu" id="navMenu" role="menu" hidden>
-          <a role="menuitem" href="calendar.html">مفكرة الجلسات</a><a role="menuitem" href="lawyer.html?id=${esc(me())}">بروفايلي</a><a role="menuitem" href="dashboard.html">لوحتي وإحصائياتي</a><a role="menuitem" href="index.html?browse=1">سوق المحامين</a>
+          <a role="menuitem" href="referrals.html">سوق الإحالات</a><a role="menuitem" href="calendar.html">مفكرة الجلسات</a><a role="menuitem" href="lawyer.html?id=${esc(me())}">بروفايلي</a><a role="menuitem" href="dashboard.html">لوحتي وإحصائياتي</a><a role="menuitem" href="index.html?browse=1">سوق المحامين</a>
           <button role="menuitem" type="button" id="navOut">تسجيل الخروج</button></div></div>`;
     const menu = el.querySelector('#navMenu'), btn = el.querySelector('#navAv');
     const close = () => { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); };
@@ -638,6 +642,56 @@
   const getCaseByToken = t => call('/rest/v1/rpc/get_case', { method: 'POST', json: { p_token: t } });
   const rateCase = (t, stars) => call('/rest/v1/rpc/rate_case', { method: 'POST', json: { p_token: t, p_stars: stars } });
 
+  // ---------- سوق الإحالات ----------
+  const RCOLS = 'id,author_id,title,case_type,city,court,description,deadline,arrangement,status,assigned_to,assigned_at,offers_count,created_at';
+  const lawyersInfo = async ids => {
+    ids = [...new Set(ids.filter(x => UUID.test(x || '')))];
+    if (!ids.length) return {};
+    const r = await call(`/rest/v1/public_lawyers?select=id,display_name,city,photo_path,verified,specialties,rating_avg,rating_count&id=in.(${ids.join(',')})`);
+    return Object.fromEntries(r.map(x => [x.id, x]));
+  };
+  const listMarket = async ({ q, type, city } = {}) => {
+    let u = `/rest/v1/referrals?select=${RCOLS}&status=eq.open&author_id=neq.${me()}&or=(deadline.is.null,deadline.gte.${todayISO()})&order=created_at.desc&limit=60`;
+    if (type) u += `&case_type=eq.${encodeURIComponent(type)}`;
+    const c = (city || '').trim().replace(/[^\p{L}\p{N} ]/gu, '').slice(0, 40); if (c) u += `&city=ilike.*${encodeURIComponent(c)}*`;
+    const t = (q || '').trim().replace(/[^\p{L}\p{N} ]/gu, '').slice(0, 40); if (t) u += `&or=(title.ilike.*${encodeURIComponent(t)}*,description.ilike.*${encodeURIComponent(t)}*)`;
+    const [rows, mine] = await Promise.all([call(u), call(`/rest/v1/referral_offers?select=referral_id&lawyer_id=eq.${me()}`)]);
+    const au = await lawyersInfo(rows.map(r => r.author_id)), mo = new Set(mine.map(x => x.referral_id));
+    return rows.map(r => ({ ...r, a: au[r.author_id] || null, offered: mo.has(r.id) }));
+  };
+  const listMyReferrals = async () => {
+    const rows = await call(`/rest/v1/referrals?select=${RCOLS}&author_id=eq.${me()}&order=created_at.desc&limit=100`);
+    const open = rows.filter(r => r.offers_count > 0 && r.status === 'open').map(r => r.id);
+    const offers = open.length ? await call(`/rest/v1/referral_offers?select=referral_id,lawyer_id,message,created_at&referral_id=in.(${open.join(',')})&order=created_at.asc`) : [];
+    const info = await lawyersInfo([...offers.map(o => o.lawyer_id), ...rows.map(r => r.assigned_to)]);
+    return rows.map(r => ({ ...r, offers: offers.filter(o => o.referral_id === r.id).map(o => ({ ...o, a: info[o.lawyer_id] || null })).filter(o => o.a), assignee: info[r.assigned_to] || null }));
+  };
+  const listTaken = async () => {
+    const [mine, assigned] = await Promise.all([
+      call(`/rest/v1/referral_offers?select=referral_id,message,created_at&lawyer_id=eq.${me()}&order=created_at.desc&limit=100`),
+      call(`/rest/v1/referrals?select=${RCOLS}&assigned_to=eq.${me()}&order=assigned_at.desc&limit=100`),
+    ]);
+    const ids = mine.map(o => o.referral_id).filter(id => !assigned.some(a => a.id === id));
+    const vis = ids.length ? await call(`/rest/v1/referrals?select=${RCOLS}&id=in.(${ids.join(',')})`) : [];
+    const info = await lawyersInfo([...assigned.map(r => r.author_id), ...vis.map(r => r.author_id)]);
+    return {
+      assigned: assigned.map(r => ({ ...r, a: info[r.author_id] || null })),
+      pending: vis.filter(r => r.status === 'open').map(r => ({ ...r, a: info[r.author_id] || null, msg: (mine.find(o => o.referral_id === r.id) || {}).message })),
+      lost: mine.length - assigned.length - vis.filter(r => r.status === 'open').length,
+    };
+  };
+  const createReferral = async f => (await call('/rest/v1/referrals', { method: 'POST', json: { author_id: me(), title: f.title.trim(), case_type: f.case_type || null, city: (f.city || '').trim() || null, court: (f.court || '').trim() || null, description: f.description.trim(), deadline: f.deadline || null, arrangement: (f.arrangement || '').trim() || null }, headers: { Prefer: 'return=representation' } }))[0];
+  const setReferralStatus = (id, status) => call(`/rest/v1/referrals?id=eq.${id}`, { method: 'PATCH', json: { status } });
+  const deleteReferral = id => call(`/rest/v1/referrals?id=eq.${id}`, { method: 'DELETE' });
+  const makeOffer = (id, message) => call('/rest/v1/referral_offers', { method: 'POST', json: { referral_id: id, lawyer_id: me(), message: (message || '').trim() || null } });
+  const withdrawOffer = id => call(`/rest/v1/referral_offers?referral_id=eq.${id}&lawyer_id=eq.${me()}`, { method: 'DELETE' });
+  const acceptOffer = (id, lawyer) => call('/rest/v1/rpc/accept_offer', { method: 'POST', json: { p_referral: id, p_lawyer: lawyer } });
+  const referralContact = id => call('/rest/v1/rpc/referral_contact', { method: 'POST', json: { p_referral: id } });
+  const referralStats = async () => {
+    const r = await call(`/rest/v1/referrals?select=id,title,status,offers_count,author_id,assigned_to&or=(author_id.eq.${me()},assigned_to.eq.${me()})&status=in.(open,assigned)&limit=60`);
+    return { offers: r.filter(x => x.author_id === me() && x.status === 'open').reduce((n, x) => n + x.offers_count, 0), tasks: r.filter(x => x.assigned_to === me() && x.status === 'assigned') };
+  };
+
   const setJoinMode = (id, mode) => call(`/rest/v1/groups?id=eq.${id}`, { method: 'PATCH', json: { join_mode: mode === 'approval' ? 'approval' : 'open' } });
   const requestJoin = id => call('/rest/v1/group_join_requests', { method: 'POST', json: { group_id: id, lawyer_id: me() } });
   const cancelRequest = id => call(`/rest/v1/group_join_requests?group_id=eq.${id}&lawyer_id=eq.${me()}`, { method: 'DELETE' });
@@ -662,7 +716,7 @@
   };
 
   window.Social = {
-    STAGES, todayISO, nextHearing, listCases, createCase, updateCase, deleteCase, addCaseUpdate, deleteCaseUpdate, caseLink, getCaseByToken, rateCase,
+    listMarket, listMyReferrals, listTaken, createReferral, setReferralStatus, deleteReferral, makeOffer, withdrawOffer, acceptOffer, referralContact, referralStats, lawyersInfo, STAGES, todayISO, nextHearing, listCases, createCase, updateCase, deleteCase, addCaseUpdate, deleteCaseUpdate, caseLink, getCaseByToken, rateCase,
     setJoinMode, requestJoin, cancelRequest, myRequests, listRequests, reviewRequest, addGroupMember, removeGroupMember, searchLawyers, listGroups, myGroups, getGroup, createGroup, joinGroup, leaveGroup, deleteGroup, groupMembers,
     me, call, esc, badge, avatar, ago, num, stars, toast, needLogin, friendly, TOPICS, AUDIENCES, REACTIONS, topicLabel, audLabel,
     listPosts, mount, mountComposer, mountNav, mountProfilePosts, profileSocial, follow, unfollow,
