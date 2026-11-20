@@ -66,6 +66,10 @@
   }
   function friendly(e) {
     const m = String((e && e.message) || '');
+    if (/case_open/.test(m)) return 'التقييم بيفتح لما المحامي يقفل القضية.';
+    if (/case_too_new/.test(m)) return 'التقييم بيتاح بعد يومين من بداية القضية.';
+    if (/already_rated/.test(m)) return 'القضية دي اتقيّمت قبل كده.';
+    if (/case_limit/.test(m)) return 'وصلت للحد الأقصى من القضايا.';
     if (/not_owner/.test(m)) return 'الصلاحية دي لمؤسس الجروب بس.';
     if (/group_limit/.test(m)) return 'وصلت للحد الأقصى: 5 جروبات لكل محامي.';
     if (/not_member/.test(m)) return 'لازم تنضم للجروب الأول علشان تنشر فيه.';
@@ -244,7 +248,7 @@
   async function mountNav(el) {
     if (!el) return;
     if (!me()) { if (!el.children.length) el.innerHTML = '<a href="register.html" class="btn-ghost-link">سجّل كمحامي</a><a href="dashboard.html" class="btn-ghost-link">دخول المحامين</a>'; return; }
-    el.innerHTML = `<a href="feed.html" class="btn-ghost-link">المنشورات</a><a href="groups.html" class="btn-ghost-link">الجروبات</a><a href="index.html?browse=1" class="btn-ghost-link">سوق المحامين</a><a href="notifications.html" class="nav-bell" aria-label="الإشعارات">${BELL}<span class="nav-dot" hidden></span></a><a href="dashboard.html" class="btn-ghost-link">لوحتي</a>`;
+    el.innerHTML = `<a href="feed.html" class="btn-ghost-link">المنشورات</a><a href="cases.html" class="btn-ghost-link">قضاياي</a><a href="groups.html" class="btn-ghost-link">الجروبات</a><a href="index.html?browse=1" class="btn-ghost-link">سوق المحامين</a><a href="notifications.html" class="nav-bell" aria-label="الإشعارات">${BELL}<span class="nav-dot" hidden></span></a><a href="dashboard.html" class="btn-ghost-link">لوحتي</a>`;
     const n = await unreadCount();
     const dot = el.querySelector('.nav-dot');
     if (n && dot) { dot.textContent = n > 99 ? '99+' : n; dot.hidden = false; }
@@ -575,6 +579,28 @@
   const joinGroup = id => call('/rest/v1/group_members', { method: 'POST', json: { group_id: id, lawyer_id: me() } });
   const leaveGroup = id => call(`/rest/v1/group_members?group_id=eq.${id}&lawyer_id=eq.${me()}`, { method: 'DELETE' });
   const deleteGroup = id => call(`/rest/v1/groups?id=eq.${id}`, { method: 'DELETE' });
+  // ---------- تتبّع القضايا ----------
+  const STAGES = [
+    ['filed', 'تم رفع الدعوى', '📄'], ['hearing', 'جلسة', '⚖️'], ['adjourned', 'تأجيل الجلسة', '📅'], ['expert', 'إحالة لخبير', '🔎'],
+    ['reserved', 'حجز للحكم', '⏳'], ['judgment', 'صدر الحكم', '🏛️'], ['appeal', 'طعن / استئناف', '📤'], ['settled', 'صلح / تسوية', '🤝'],
+    ['note', 'مستجد', '📝'], ['closed', 'إقفال القضية', '✅'],
+  ];
+  const CCOLS = 'id,title,case_type,court,case_number,client_label,token,status,views,last_viewed_at,created_at,updated_at,closed_at';
+  const listCases = async () => {
+    const cs = await call(`/rest/v1/cases?select=${CCOLS}&lawyer_id=eq.${me()}&order=updated_at.desc&limit=200`);
+    const ups = cs.length ? await call(`/rest/v1/case_updates?select=id,case_id,stage,title,note,next_date,created_at&case_id=in.(${cs.map(c => c.id).join(',')})&order=created_at.desc&limit=1000`) : [];
+    const by = {}; ups.forEach(u => (by[u.case_id] = by[u.case_id] || []).push(u));
+    return cs.map(c => ({ ...c, updates: by[c.id] || [] }));
+  };
+  const createCase = async f => (await call('/rest/v1/cases', { method: 'POST', json: { lawyer_id: me(), title: f.title.trim(), case_type: f.case_type || null, court: (f.court || '').trim() || null, case_number: (f.case_number || '').trim() || null, client_label: (f.client_label || '').trim() || null }, headers: { Prefer: 'return=representation' } }))[0];
+  const updateCase = (id, patch) => call(`/rest/v1/cases?id=eq.${id}`, { method: 'PATCH', json: patch });
+  const deleteCase = id => call(`/rest/v1/cases?id=eq.${id}`, { method: 'DELETE' });
+  const addCaseUpdate = (case_id, u) => call('/rest/v1/case_updates', { method: 'POST', json: { case_id, stage: u.stage, title: u.title.trim(), note: (u.note || '').trim() || null, next_date: u.next_date || null } });
+  const deleteCaseUpdate = id => call(`/rest/v1/case_updates?id=eq.${id}`, { method: 'DELETE' });
+  const caseLink = token => new URL('track.html?t=' + token, location.href).href;
+  const getCaseByToken = t => call('/rest/v1/rpc/get_case', { method: 'POST', json: { p_token: t } });
+  const rateCase = (t, stars) => call('/rest/v1/rpc/rate_case', { method: 'POST', json: { p_token: t, p_stars: stars } });
+
   const setJoinMode = (id, mode) => call(`/rest/v1/groups?id=eq.${id}`, { method: 'PATCH', json: { join_mode: mode === 'approval' ? 'approval' : 'open' } });
   const requestJoin = id => call('/rest/v1/group_join_requests', { method: 'POST', json: { group_id: id, lawyer_id: me() } });
   const cancelRequest = id => call(`/rest/v1/group_join_requests?group_id=eq.${id}&lawyer_id=eq.${me()}`, { method: 'DELETE' });
@@ -599,6 +625,7 @@
   };
 
   window.Social = {
+    STAGES, listCases, createCase, updateCase, deleteCase, addCaseUpdate, deleteCaseUpdate, caseLink, getCaseByToken, rateCase,
     setJoinMode, requestJoin, cancelRequest, myRequests, listRequests, reviewRequest, addGroupMember, removeGroupMember, searchLawyers, listGroups, myGroups, getGroup, createGroup, joinGroup, leaveGroup, deleteGroup, groupMembers,
     me, call, esc, badge, avatar, ago, num, stars, toast, needLogin, friendly, TOPICS, AUDIENCES, REACTIONS, topicLabel, audLabel,
     listPosts, mount, mountComposer, mountNav, mountProfilePosts, profileSocial, follow, unfollow,

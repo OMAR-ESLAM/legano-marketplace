@@ -163,9 +163,9 @@ function render(l, similar) {
 // عدّاد المتابعين + زرار المتابعة (للمحامي المسجّل بس: الموكل مفيش له حساب)
 async function loadCounts(l, isMe) {
   let st = null; try { st = await S.profileSocial(l.id); } catch {}
-  st = st || { followers: 0, following: 0, posts: 0, views: 0, i_follow: false };
+  st = st || { followers: 0, following: 0, posts: 0, views: 0, cases: 0, i_follow: false };
   const draw = () => {
-    $('fbCounts').innerHTML = `<span><b>${S.num(st.followers)}</b> متابع</span><span><b>${S.num(st.following)}</b> بيتابع</span><span><b>${S.num(st.posts)}</b> منشور</span>${isMe ? `<span title="المشاهدات تظهر لصاحب البروفايل بس"><b>${S.num(st.views)}</b> مشاهدة</span>` : ''}`;
+    $('fbCounts').innerHTML = `<span><b>${S.num(st.followers)}</b> متابع</span><span><b>${S.num(st.following)}</b> بيتابع</span><span><b>${S.num(st.posts)}</b> منشور</span>${st.cases ? `<span class="fb-case" title="المحامي بيتابع قضايا موكليه من خلال Legano"><b>${S.num(st.cases)}</b> قضية متتبَّعة</span>` : ''}${isMe ? `<span title="المشاهدات تظهر لصاحب البروفايل بس"><b>${S.num(st.views)}</b> مشاهدة</span>` : ''}`;
     const f = $('fBtn');
     if (f) { f.hidden = false; f.textContent = st.i_follow ? 'بتتابعه ✓' : 'متابعة'; f.classList.toggle('btn-ghost', st.i_follow); f.classList.toggle('btn-call', !st.i_follow); }
   };

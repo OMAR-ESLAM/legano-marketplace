@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>قضاياي | Legano</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Syne:wght@800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="js/social.css">
+<style>
+  :root { color-scheme: light; --background:#F8FAFB; --foreground:#1E293B; --card:#FFFFFF; --border:#E2E8F0; --muted-foreground:#64748B; --secondary:#EEF2F7; --gold:#0F172A; --gold-soft:#92620C; }
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Cairo', sans-serif; background: var(--background); color: var(--foreground); line-height: 1.7; }
+  .logo-text { font-family: 'Syne', sans-serif; font-weight: 800; letter-spacing: 5px; font-size: 18px; text-decoration: none; background: linear-gradient(90deg, #0F172A, #92620C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .top { position: sticky; top: 0; z-index: 50; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; padding: 10px 20px; background: rgba(255,255,255,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  #navSlot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .back { display: inline-block; margin-bottom: 12px; font-size: 13px; font-weight: 700; color: var(--gold-soft); text-decoration: none; }
+  .warn { padding: 12px 14px; margin-bottom: 14px; background: #FFF8E6; border: 1px solid #F1D48A; color: #7A5200; border-radius: 12px; font-size: 13px; line-height: 1.9; }
+  .warn a { color: inherit; font-weight: 800; }
+</style>
+</head>
+<body>
+<header class="top"><a class="logo-text" href="index.html?browse=1">LEGANO</a><div id="navSlot"></div></header>
+<div id="gate" class="soc-card gate" hidden><h1>منطقة المحامين</h1><p>تتبّع القضايا للمحامين بس. سجّل دخول علشان تبدأ.</p><a class="soc-btn primary" href="dashboard.html">دخول المحامين</a></div>
+<div id="wrap" class="grp-wrap" hidden>
+  <div class="grp-head"><div><h1>قضاياي</h1><p>افتح قضية، وابعت للموكل لينك يتابع منه حالة قضيته خطوة بخطوة من غير حساب. كل ما تحدّث مرحلة الموكل يشوفها فوراً.</p></div><button id="newBtn" type="button" class="soc-btn primary">+ قضية جديدة</button></div>
+  <div class="warn" style="margin:0">⚠️ ما تكتبش في القضية بيانات حساسة (أسماء كاملة، أرقام قومية، تفاصيل سرية). اللينك سري لكن أي حد معاه اللينك يقدر يشوف الصفحة.</div>
+  <div class="feed-tabs" role="tablist"><button class="tab" data-f="active" aria-selected="true" type="button">شغّالة</button><button class="tab" data-f="closed" aria-selected="false" type="button">مقفولة</button></div>
+  <div id="list" aria-live="polite"></div>
+</div>
+<div id="newOv" class="modal-ov" hidden><div class="modal" role="dialog" aria-modal="true" aria-labelledby="nTitle">
+  <div class="modal-h"><h2 id="nTitle">قضية جديدة</h2><button type="button" class="modal-x" id="nX" aria-label="إغلاق">×</button></div>
+  <div class="modal-b">
+    <label class="f-l" for="cTitle">عنوان القضية (الموكل هيشوفه)</label><input id="cTitle" class="f-i" maxlength="80" placeholder="مثال: دعوى نفقة">
+    <label class="f-l" for="cLabel">اسم الموكل الأول (اختياري)</label><input id="cLabel" class="f-i" maxlength="40" placeholder="مثال: أ. منى">
+    <label class="f-l" for="cType">نوع القضية</label><select id="cType" class="f-i"><option value="">—</option><option>أحوال شخصية</option><option>جنائي</option><option>مدني</option><option>عمالي</option><option>تجاري</option><option>إيجارات وعقارات</option><option>إداري</option><option>أخرى</option></select>
+    <label class="f-l" for="cCourt">المحكمة (اختياري)</label><input id="cCourt" class="f-i" maxlength="80" placeholder="مثال: محكمة الأسرة بالتجمع">
+    <label class="f-l" for="cNo">رقم الدعوى (اختياري)</label><input id="cNo" class="f-i" maxlength="40" placeholder="مثال: 1234 لسنة 2026">
+  </div>
+  <div class="modal-f"><button id="nGo" type="button" class="soc-btn primary" disabled>إنشاء</button></div>
+</div></div>
+<div id="shareOv" class="modal-ov" hidden><div class="modal" role="dialog" aria-modal="true" aria-labelledby="sTitle">
+  <div class="modal-h"><h2 id="sTitle">إرسال اللينك للموكل</h2><button type="button" class="modal-x" id="sX" aria-label="إغلاق">×</button></div>
+  <div class="modal-b">
+    <label class="f-l" for="sLink">رابط المتابعة</label><input id="sLink" class="f-i" readonly dir="ltr">
+    <label class="f-l" for="sPhone">رقم واتساب الموكل (اختياري، مش بيتخزّن)</label><input id="sPhone" class="f-i" dir="ltr" inputmode="tel" placeholder="01XXXXXXXXX">
+    <label class="f-l" for="sMsg">الرسالة</label><textarea id="sMsg" class="f-i" rows="4"></textarea>
+  </div>
+  <div class="modal-f"><button id="sCopy" type="button" class="soc-btn">نسخ الرابط</button><button id="sWa" type="button" class="soc-btn primary">إرسال على واتساب</button></div>
+</div></div>
+<script src="js/social.js"></script>
+<script>
+(async () => {
+  const $ = id => document.getElementById(id), S = window.Social, esc = S.esc;
+  S.mountNav($('navSlot'));
+  if (!S.me()) { $('gate').hidden = false; return; }
+  $('wrap').hidden = false;
+  const SM = Object.fromEntries(S.STAGES.map(x => [x[0], x]));
+  const fmtD = d => d ? new Date(d.length === 10 ? d + 'T00:00:00' : d).toLocaleDateString('ar-EG', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+  let cases = [], filter = 'active', open = null, myName = '';
+  try { const r = (await S.call(`/rest/v1/public_lawyers?select=display_name&id=eq.${S.me()}`))[0]; myName = r ? r.display_name : ''; } catch {}
+
+  function nextDate(c) { const u = c.updates.find(x => x.next_date); return u ? u.next_date : null; }
+  function cardHTML(c) {
+    const last = c.updates[0], nd = c.status === 'active' ? nextDate(c) : null, isOpen = open === c.id;
+    return `<article class="soc-card case-card" data-id="${esc(c.id)}">
+      <div class="case-top"><div><h3>${esc(c.title)}</h3><div class="case-meta">${[c.case_type, c.court, c.case_number].filter(Boolean).map(esc).join(' • ')}${c.client_label ? ` • الموكل: ${esc(c.client_label)}` : ''}</div></div>
+      <span class="case-st ${c.status}">${c.status === 'closed' ? 'مقفولة' : 'شغّالة'}</span></div>
+      <div class="case-last">${last ? `${SM[last.stage] ? SM[last.stage][2] : '•'} آخر مستجد: <b>${esc(last.title)}</b>` : 'لسه مفيش مستجدات. أضف أول مرحلة.'}${nd ? ` <span class="case-next">الجلسة القادمة: ${esc(fmtD(nd))}</span>` : ''}</div>
+      <div class="case-seen">${c.views ? `👁 الموكل فتح الصفحة ${S.num(c.views)} مرة${c.last_viewed_at ? ' • آخرها ' + S.ago(c.last_viewed_at) : ''}` : 'الموكل لسه ما فتحش اللينك'}</div>
+      <div class="case-act"><button type="button" class="soc-btn primary" data-a="share">📲 إرسال للموكل</button><button type="button" class="soc-btn" data-a="toggle">${isOpen ? 'إخفاء التفاصيل' : 'المستجدات والتحديث'}</button></div>
+      ${isOpen ? detailHTML(c) : ''}
+    </article>`;
+  }
+  function detailHTML(c) {
+    return `<div class="case-detail">
+      <form class="case-form" data-a="add">
+        <div class="cf-row"><div><label class="f-l">المرحلة</label><select class="f-i" name="stage">${S.STAGES.filter(x => x[0] !== 'closed').map(x => `<option value="${x[0]}">${x[2]} ${x[1]}</option>`).join('')}</select></div>
+        <div><label class="f-l">ميعاد الجلسة القادمة (اختياري)</label><input class="f-i" type="date" name="next_date"></div></div>
+        <label class="f-l">العنوان (الموكل هيشوفه)</label><input class="f-i" name="title" maxlength="100" placeholder="مثال: الجلسة اتأجلت لتقديم المستندات">
+        <label class="f-l">ملاحظة للموكل (اختياري)</label><textarea class="f-i" name="note" rows="2" maxlength="500" placeholder="اشرح له بكلمتين إيه اللي حصل وإيه المطلوب منه"></textarea>
+        <button class="soc-btn primary" type="submit">إضافة المستجد وإبلاغ الموكل</button>
+      </form>
+      <ol class="case-tl">${c.updates.map(u => `<li><span class="tl-ic">${SM[u.stage] ? SM[u.stage][2] : '•'}</span><div><b>${esc(u.title)}</b>${u.note ? `<p>${esc(u.note)}</p>` : ''}<small>${esc(fmtD(u.created_at))}${u.next_date ? ' • الجلسة القادمة ' + esc(fmtD(u.next_date)) : ''}</small></div><button type="button" class="tl-x" data-a="delup" data-u="${esc(u.id)}" aria-label="حذف المستجد">×</button></li>`).join('') || '<li class="grp-empty">لسه مفيش مستجدات.</li>'}</ol>
+      <div class="case-foot">${c.status === 'active' ? '<button type="button" class="soc-btn" data-a="close">✅ إقفال القضية (يفتح تقييم الموكل)</button>' : '<button type="button" class="soc-btn" data-a="reopen">إعادة فتح القضية</button>'}<a class="soc-btn" target="_blank" rel="noopener" href="${esc(S.caseLink(c.token))}">معاينة صفحة الموكل</a><button type="button" class="soc-btn danger" data-a="del">حذف القضية</button></div>
+    </div>`;
+  }
+  function render() {
+    const rows = cases.filter(c => c.status === filter);
+    $('list').innerHTML = rows.length ? rows.map(cardHTML).join('') : `<div class="empty">${filter === 'active' ? 'مفيش قضايا شغّالة. اضغط «قضية جديدة» وابعت اللينك للموكل.' : 'مفيش قضايا مقفولة.'}</div>`;
+  }
+  async function reload() { try { cases = await S.listCases(); } catch (e) { S.toast(S.friendly(e)); } render(); }
+
+  document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => { filter = t.dataset.f; open = null; document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', x === t)); render(); }));
+  // إنشاء
+  const nOv = $('newOv'), sOv = $('shareOv');
+  const onEsc = e => { if (e.key === 'Escape') { nOv.hidden = true; sOv.hidden = true; } };
+  document.addEventListener('keydown', onEsc);
+  [nOv, sOv].forEach(o => o.addEventListener('mousedown', e => { if (e.target === o) o.hidden = true; }));
+  $('newBtn').onclick = () => { nOv.hidden = false; $('cTitle').focus(); };
+  $('nX').onclick = () => { nOv.hidden = true; }; $('sX').onclick = () => { sOv.hidden = true; };
+  $('cTitle').addEventListener('input', () => { $('nGo').disabled = $('cTitle').value.trim().length < 3; });
+  $('nGo').onclick = async () => {
+    $('nGo').disabled = true;
+    try {
+      const c = await S.createCase({ title: $('cTitle').value, client_label: $('cLabel').value, case_type: $('cType').value, court: $('cCourt').value, case_number: $('cNo').value });
+      nOv.hidden = true; ['cTitle', 'cLabel', 'cCourt', 'cNo'].forEach(i => { $(i).value = ''; }); $('cType').value = '';
+      await reload(); filter = 'active'; open = c.id; render(); openShare(cases.find(x => x.id === c.id));
+    } catch (e) { S.toast(S.friendly(e)); $('nGo').disabled = false; }
+  };
+  // مشاركة
+  let shareC = null;
+  function msgFor(c) {
+    return `أهلاً${c.client_label ? ' ' + c.client_label : ''} 👋\nدي صفحة متابعة قضيتك «${c.title}»${myName ? ' مع ' + myName : ''}. هتلاقي فيها آخر المستجدات وميعاد الجلسة الجاية، وبتتحدّث أول بأول:\n${S.caseLink(c.token)}`;
+  }
+  function openShare(c) { if (!c) return; shareC = c; $('sLink').value = S.caseLink(c.token); $('sMsg').value = msgFor(c); $('sPhone').value = ''; sOv.hidden = false; }
+  $('sCopy').onclick = async () => { try { await navigator.clipboard.writeText($('sLink').value); S.toast('اتنسخ الرابط'); } catch { $('sLink').select(); S.toast('انسخ الرابط يدوياً'); } };
+  $('sWa').onclick = () => {
+    let p = $('sPhone').value.replace(/[^0-9]/g, '');
+    if (p.startsWith('00')) p = p.slice(2); else if (p.startsWith('0')) p = '20' + p.slice(1);
+    window.open(`https://wa.me/${p}?text=${encodeURIComponent($('sMsg').value)}`, '_blank', 'noopener');
+  };
+  // إجراءات الكروت
+  $('list').addEventListener('click', async e => {
+    const b = e.target.closest('[data-a]'); if (!b || b.tagName === 'FORM') return;
+    const id = b.closest('.case-card').dataset.id, c = cases.find(x => x.id === id), a = b.dataset.a;
+    try {
+      if (a === 'share') openShare(c);
+      else if (a === 'toggle') { open = open === id ? null : id; render(); }
+      else if (a === 'close') { if (!confirm('تقفل القضية؟ الموكل هيقدر يقيّمك بعد يومين من بداية القضية.')) return; await S.addCaseUpdate(id, { stage: 'closed', title: 'تم إقفال القضية' }); await S.updateCase(id, { status: 'closed' }); filter = 'closed'; open = null; document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', x.dataset.f === 'closed')); await reload(); S.toast('اتقفلت القضية'); }
+      else if (a === 'reopen') { await S.updateCase(id, { status: 'active' }); filter = 'active'; document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', x.dataset.f === 'active')); await reload(); }
+      else if (a === 'del') { if (!confirm('حذف القضية ومستجداتها نهائياً؟ لينك الموكل هيبطل يشتغل.')) return; await S.deleteCase(id); open = null; await reload(); }
+      else if (a === 'delup') { if (!confirm('تحذف المستجد ده؟')) return; await S.deleteCaseUpdate(b.dataset.u); await reload(); }
+    } catch (er) { S.toast(S.friendly(er)); }
+  });
+  $('list').addEventListener('change', e => {
+    if (e.target.name !== 'stage') return;
+    const t = e.target.closest('form').elements.title; if (!t.value || t.dataset.auto) { t.value = SM[e.target.value][1]; t.dataset.auto = '1'; }
+  });
+  $('list').addEventListener('input', e => { if (e.target.name === 'title') delete e.target.dataset.auto; });
+  $('list').addEventListener('submit', async e => {
+    e.preventDefault();
+    const f = e.target, id = f.closest('.case-card').dataset.id, fd = new FormData(f);
+    const title = (fd.get('title') || '').trim() || SM[fd.get('stage')][1];
+    const btn = f.querySelector('button[type=submit]'); btn.disabled = true;
+    try { await S.addCaseUpdate(id, { stage: fd.get('stage'), title, note: fd.get('note'), next_date: fd.get('next_date') }); await reload(); S.toast('اتضاف المستجد'); }
+    catch (er) { S.toast(S.friendly(er)); btn.disabled = false; }
+  });
+  if (new URLSearchParams(location.search).get('new')) $('newBtn').click();
+  reload();
+})();
+</script>
+</body>
+</html>

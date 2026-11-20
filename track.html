@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer">
+<title>متابعة القضية | Legano</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Syne:wght@800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="js/social.css">
+<style>
+:root { color-scheme: light; --background:#F8FAFB; --foreground:#1E293B; --card:#FFFFFF; --border:#E2E8F0; --muted-foreground:#64748B; --secondary:#EEF2F7; --gold:#0F172A; --gold-soft:#92620C; }
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; font-family: 'Cairo', sans-serif; background: var(--background); color: var(--foreground); line-height: 1.7; }
+.logo-text { font-family: 'Syne', sans-serif; font-weight: 800; letter-spacing: 5px; font-size: 18px; text-decoration: none; background: linear-gradient(90deg, #0F172A, #92620C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.top { display: flex; justify-content: center; padding: 14px; background: #fff; border-bottom: 1px solid var(--border); }
+.tr { max-width: 640px; margin: 0 auto; padding: 16px 14px 70px; display: flex; flex-direction: column; gap: 14px; }
+.hero { padding: 20px; background: linear-gradient(135deg, #0F172A, #1E3A5F 65%, #92620C); color: #fff; border-radius: 18px; }
+.hero h1 { margin: 0 0 4px; font-size: 20px; } .hero p { margin: 0; font-size: 13px; opacity: .85; }
+.hero .badge-st { display: inline-block; margin-top: 10px; padding: 4px 12px; border-radius: 999px; font-size: 12.5px; font-weight: 800; background: rgba(255,255,255,.18); }
+.next { padding: 14px 16px; border-radius: 14px; background: #FFF8E6; border: 1px solid #F1D48A; color: #7A5200; font-weight: 800; }
+.next small { display: block; font-weight: 600; font-size: 12px; margin-top: 2px; }
+.lw { display: flex; align-items: center; gap: 12px; padding: 14px; }
+.lw a.btn { margin-inline-start: auto; }
+.tl { list-style: none; margin: 0; padding: 0 6px 0 0; position: relative; }
+.tl::before { content: ''; position: absolute; top: 12px; bottom: 12px; right: 21px; width: 2px; background: var(--border); }
+.tl li { position: relative; display: flex; gap: 12px; padding: 8px 0; }
+.tl .ic { flex: none; z-index: 1; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: #fff; border: 2px solid var(--border); font-size: 15px; }
+.tl li:first-child .ic { border-color: #92620C; background: #FFF8E6; }
+.tl b { font-size: 14.5px; } .tl p { margin: 2px 0 0; font-size: 13px; color: #475569; line-height: 1.9; white-space: pre-wrap; }
+.tl small { display: block; color: var(--muted-foreground); font-size: 11.5px; }
+.rate-box { padding: 16px; text-align: center; }
+.rate-box h2 { font-size: 15px; margin: 0 0 4px; } .rate-box p { margin: 0 0 10px; font-size: 12.5px; color: var(--muted-foreground); }
+.stars-in { display: inline-flex; gap: 4px; direction: ltr; }
+.stars-in button { border: 0; background: none; font-size: 34px; line-height: 1; cursor: pointer; color: #CBD5E1; padding: 2px; }
+.stars-in button.on { color: #F59E0B; }
+.foot { text-align: center; font-size: 11.5px; color: var(--muted-foreground); line-height: 1.9; padding: 6px 10px; }
+.err { text-align: center; padding: 40px 16px; }
+</style>
+</head>
+<body>
+<div class="top"><a class="logo-text" href="index.html">LEGANO</a></div>
+<div class="tr" id="root"><div class="sk"></div><div class="sk"></div></div>
+<script src="js/social.js"></script>
+<script>
+(async () => {
+  const S = window.Social, esc = S.esc, root = document.getElementById('root');
+  const t = new URLSearchParams(location.search).get('t') || '';
+  const SM = Object.fromEntries(S.STAGES.map(x => [x[0], x]));
+  const fmtD = d => d ? new Date(d.length === 10 ? d + 'T00:00:00' : d).toLocaleDateString('ar-EG', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+  let d = null;
+  try { d = await S.getCaseByToken(t); } catch {}
+  if (!d) { root.innerHTML = '<div class="soc-card err"><h1 style="font-size:18px">الرابط ده مش شغّال</h1><p style="color:#64748B;font-size:13.5px">ممكن يكون الرابط ناقص أو المحامي حذف القضية. اطلب منه يبعتلك الرابط تاني.</p></div>'; return; }
+  document.title = d.case.title + ' | متابعة القضية';
+  const c = d.case, l = d.lawyer || {}, ups = [...d.updates].reverse();
+  const next = c.status === 'active' ? (d.updates.slice().reverse().find(u => u.next_date) || {}).next_date : null;
+  const upcoming = next && new Date(next + 'T23:59:59') >= new Date() ? next : null;
+
+  function ratingHTML() {
+    if (d.my_rating) return `<section class="soc-card rate-box"><h2>شكراً لتقييمك 🙏</h2><div class="stars-in" aria-label="تقييمك">${[1,2,3,4,5].map(i => `<button type="button" disabled class="${i <= d.my_rating ? 'on' : ''}">★</button>`).join('')}</div></section>`;
+    if (!d.can_rate) return c.status === 'closed' ? '<section class="soc-card rate-box"><p style="margin:0">التقييم هيتاح بعد يومين من بداية القضية.</p></section>' : '';
+    return `<section class="soc-card rate-box"><h2>قيّم تجربتك مع المحامي</h2><p>تقييمك من قضية فعلية، بيساعد موكلين تانيين يختاروا صح.</p><div class="stars-in" id="stars" role="radiogroup" aria-label="التقييم">${[1,2,3,4,5].map(i => `<button type="button" data-s="${i}" role="radio" aria-checked="false" aria-label="${i} من 5">★</button>`).join('')}</div></section>`;
+  }
+  root.innerHTML = `
+    <section class="hero"><h1>${esc(c.title)}</h1><p>${[c.case_type, c.court, c.case_number].filter(Boolean).map(esc).join(' • ') || 'متابعة القضية'}</p><span class="badge-st">${c.status === 'closed' ? '✅ القضية اتقفلت' : '🟢 القضية شغّالة'}</span></section>
+    ${upcoming ? `<div class="next">📅 الجلسة القادمة: ${esc(fmtD(upcoming))}<small>خليك جاهز بالمستندات اللي المحامي طلبها منك.</small></div>` : ''}
+    <section class="soc-card lw">${S.avatar(l)}<div><div class="who" style="font-weight:800">${esc(l.display_name || 'المحامي')}${l.verified ? S.badge() : ''}</div><small style="color:#64748B">${esc(l.city || '')}${l.city ? ' • ' : ''}المحامي المتابع لقضيتك</small></div>${l.is_public ? `<a class="soc-btn btn" href="lawyer.html?id=${esc(l.id)}">بروفايله</a>` : ''}</section>
+    <section class="soc-card" style="padding:16px"><h2 style="font-size:15px;margin:0 0 8px">مراحل القضية</h2><ol class="tl">${ups.map(u => `<li><span class="ic" aria-hidden="true">${SM[u.stage] ? SM[u.stage][2] : '•'}</span><div><b>${esc(u.title)}</b>${u.note ? `<p>${esc(u.note)}</p>` : ''}<small>${esc(fmtD(u.created_at))}</small></div></li>`).join('') || '<li><div class="grp-empty">المحامي لسه ما أضافش مستجدات. هتظهر هنا أول ما يبدأ.</div></li>'}</ol></section>
+    ${ratingHTML()}
+    <p class="foot">الصفحة دي بيحدّثها المحامي بنفسه. للتفاصيل القانونية الرسمية تواصل مع المحامي مباشرة. Legano وسيط للتعارف فقط ولا يقدّم استشارات قانونية.</p>`;
+  const st = document.getElementById('stars');
+  if (st) {
+    let pick = 0;
+    const paint = n => st.querySelectorAll('button').forEach((b, i) => { b.classList.toggle('on', i < n); b.setAttribute('aria-checked', i + 1 === pick); });
+    st.addEventListener('mouseover', e => { const b = e.target.closest('[data-s]'); if (b) paint(+b.dataset.s); });
+    st.addEventListener('mouseleave', () => paint(pick));
+    st.addEventListener('click', async e => {
+      const b = e.target.closest('[data-s]'); if (!b) return;
+      pick = +b.dataset.s; paint(pick);
+      try { await S.rateCase(t, pick); d.my_rating = pick; d.can_rate = false; S.toast('شكراً لتقييمك'); setTimeout(() => location.reload(), 700); }
+      catch (er) { S.toast(S.friendly(er)); pick = 0; paint(0); }
+    });
+  }
+})();
+</script>
+</body>
+</html>
