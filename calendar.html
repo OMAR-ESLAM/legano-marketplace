@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>مفكرة الجلسات | Legano</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Syne:wght@800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="js/social.css">
+<style>
+  :root { color-scheme: light; --background:#F8FAFB; --foreground:#1E293B; --card:#FFFFFF; --border:#E2E8F0; --muted-foreground:#64748B; --secondary:#EEF2F7; --gold:#0F172A; --gold-soft:#92620C; }
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Cairo', sans-serif; background: var(--background); color: var(--foreground); line-height: 1.7; }
+  .logo-text { font-family: 'Syne', sans-serif; font-weight: 800; letter-spacing: 5px; font-size: 18px; text-decoration: none; background: linear-gradient(90deg, #0F172A, #92620C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .top { position: sticky; top: 0; z-index: 50; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; padding: 10px 20px; background: rgba(255,255,255,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  #navSlot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .back { display: inline-block; margin-bottom: 12px; font-size: 13px; font-weight: 700; color: var(--gold-soft); text-decoration: none; }
+  .warn { padding: 12px 14px; margin-bottom: 14px; background: #FFF8E6; border: 1px solid #F1D48A; color: #7A5200; border-radius: 12px; font-size: 13px; line-height: 1.9; }
+  .warn a { color: inherit; font-weight: 800; }
+</style>
+</head>
+<body>
+<header class="top"><a class="logo-text" href="index.html?browse=1">LEGANO</a><div id="navSlot"></div></header>
+<div id="gate" class="soc-card gate" hidden><h1>منطقة المحامين</h1><p>مفكرة الجلسات للمحامين بس. سجّل دخول علشان تشوف جلساتك.</p><a class="soc-btn primary" href="dashboard.html">دخول المحامين</a></div>
+<div id="wrap" class="grp-wrap cal-wrap" hidden>
+  <div class="grp-head"><div><h1>مفكرة الجلسات</h1><p>كل جلسات قضاياك في مكان واحد. بتتحدّث لوحدها من «قضاياي».</p></div><div class="grp-actions"><a class="soc-btn" href="cases.html">قضاياي</a><button id="icsAll" type="button" class="soc-btn primary">⬇ إضافة الكل لتقويم الموبايل</button></div></div>
+  <div id="alerts"></div>
+  <div class="cal-cols">
+    <section class="soc-card cal-box" aria-label="التقويم">
+      <div class="cal-nav"><button id="nxt" type="button" class="soc-btn" aria-label="الشهر اللي بعده">‹</button><b id="mTitle"></b><button id="prv" type="button" class="soc-btn" aria-label="الشهر اللي فات">›</button><button id="tdy" type="button" class="soc-btn">النهارده</button></div>
+      <div class="cal-grid cal-dow" aria-hidden="true"></div><div id="grid" class="cal-grid" role="grid"></div>
+    </section>
+    <section><h2 class="grp-h2" id="listT">الجلسات القادمة</h2><div id="agenda" aria-live="polite"></div></section>
+  </div>
+</div>
+<div id="upOv" class="modal-ov" hidden><div class="modal" role="dialog" aria-modal="true" aria-labelledby="uT">
+  <div class="modal-h"><h2 id="uT">نتيجة الجلسة</h2><button type="button" class="modal-x" id="uX" aria-label="إغلاق">×</button></div>
+  <div class="modal-b">
+    <p id="uCase" class="m-note" style="margin-top:0"></p>
+    <label class="f-l" for="uStage">إيه اللي حصل؟</label><select id="uStage" class="f-i"></select>
+    <label class="f-l" for="uTitle">العنوان (الموكل هيشوفه)</label><input id="uTitle" class="f-i" maxlength="100">
+    <label class="f-l" for="uNote">ملاحظة للموكل (اختياري)</label><textarea id="uNote" class="f-i" rows="2" maxlength="500"></textarea>
+    <label class="f-l" for="uDate">ميعاد الجلسة الجاية (سيبه فاضي لو مفيش)</label><input id="uDate" class="f-i" type="date">
+  </div>
+  <div class="modal-f"><button id="uGo" type="button" class="soc-btn primary">حفظ وإبلاغ الموكل</button></div>
+</div></div>
+<script src="js/social.js"></script>
+<script>
+(async () => {
+  const $ = id => document.getElementById(id), S = window.Social, esc = S.esc;
+  S.mountNav($('navSlot'));
+  if (!S.me()) { $('gate').hidden = false; return; }
+  $('wrap').hidden = false;
+  const SM = Object.fromEntries(S.STAGES.map(x => [x[0], x]));
+  const DOW = ['سبت', 'أحد', 'اثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة']; // الأسبوع بيبدأ السبت
+  document.querySelector('.cal-dow').innerHTML = DOW.map(d => `<span>${d}</span>`).join('');
+  const pad = n => String(n).padStart(2, '0'), iso = (y, m, d) => `${y}-${pad(m + 1)}-${pad(d)}`;
+  const dObj = s => new Date(s + 'T00:00:00');
+  const fmt = s => dObj(s).toLocaleDateString('ar-EG', { weekday: 'long', day: 'numeric', month: 'long' });
+  const TODAY = S.todayISO();
+  const diff = s => Math.round((dObj(s) - dObj(TODAY)) / 864e5);
+  let cases = [], hs = [], view = new Date(), sel = null;
+  view.setDate(1);
+
+  const build = () => {
+    hs = cases.map(c => ({ c, d: S.nextHearing(c) })).filter(x => x.d).sort((a, b) => a.d.localeCompare(b.d) || a.c.title.localeCompare(b.c.title));
+  };
+  const byDay = () => { const m = {}; hs.forEach(h => (m[h.d] = m[h.d] || []).push(h)); return m; };
+  function conflicts(m) {
+    const out = [];
+    Object.keys(m).filter(d => d >= TODAY).sort().forEach(d => {
+      const l = m[d]; if (l.length < 2) return;
+      const courts = new Set(l.map(x => (x.c.court || '').trim()).filter(Boolean));
+      out.push({ d, n: l.length, diff: courts.size > 1 });
+    });
+    return out;
+  }
+  function dayLabel(d) { const n = diff(d); return n === 0 ? 'النهارده' : n === 1 ? 'بكرة' : n === -1 ? 'امبارح' : fmt(d); }
+
+  function renderAlerts(m) {
+    const late = hs.filter(h => h.d < TODAY), cf = conflicts(m), box = [];
+    if (late.length) box.push(`<div class="cal-alert late">⏰ عندك <b>${S.num(late.length)}</b> ${late.length > 2 ? 'جلسات عدّى ميعادها' : 'جلسة عدّى ميعادها'} ومحتاجة تحديث نتيجة.</div>`);
+    cf.slice(0, 3).forEach(x => box.push(`<div class="cal-alert ${x.diff ? 'conf' : ''}">⚠️ يوم <b>${esc(fmt(x.d))}</b>: ${S.num(x.n)} جلسات${x.diff ? ' في محاكم مختلفة، خد بالك من التعارض' : ''}.</div>`));
+    $('alerts').innerHTML = box.join('');
+  }
+
+  function renderGrid(m) {
+    const y = view.getFullYear(), mo = view.getMonth();
+    $('mTitle').textContent = view.toLocaleDateString('ar-EG', { month: 'long', year: 'numeric' });
+    const first = new Date(y, mo, 1), lead = (first.getDay() + 1) % 7; // السبت = 0
+    const days = new Date(y, mo + 1, 0).getDate(), cells = [];
+    for (let i = 0; i < lead; i++) cells.push('<span class="cal-c empty"></span>');
+    for (let d = 1; d <= days; d++) {
+      const k = iso(y, mo, d), l = m[k] || [], cls = ['cal-c'];
+      if (k === TODAY) cls.push('today'); if (k === sel) cls.push('sel'); if (l.length) cls.push('has'); if (l.length && k < TODAY) cls.push('late'); if ((new Date(y, mo, d).getDay()) === 5) cls.push('fri');
+      cells.push(`<button type="button" class="${cls.join(' ')}" data-d="${k}" role="gridcell" aria-label="${esc(fmt(k))}${l.length ? ' — ' + l.length + ' جلسة' : ''}"><b>${S.num(d)}</b>${l.length ? `<i>${l.slice(0, 3).map(() => '<u></u>').join('')}${l.length > 3 ? '+' : ''}</i>` : ''}</button>`);
+    }
+    $('grid').innerHTML = cells.join('');
+  }
+
+  function itemHTML(h) {
+    const n = diff(h.d), late = n < 0, c = h.c;
+    return `<article class="soc-card cal-item ${late ? 'late' : ''}" data-id="${esc(c.id)}" data-d="${esc(h.d)}">
+      <div class="ci-top"><span class="ci-day ${n === 0 ? 'now' : ''}">${esc(dayLabel(h.d))}</span>${late ? '<span class="ci-badge">محتاجة تحديث</span>' : (n >= 0 && n <= 1 ? '<span class="ci-badge soon">قريب</span>' : '')}</div>
+      <h3>${esc(c.title)}</h3>
+      <div class="case-meta">${[c.case_type, c.court, c.case_number].filter(Boolean).map(esc).join(' • ')}${c.client_label ? ` • الموكل: ${esc(c.client_label)}` : ''}</div>
+      <div class="case-act"><button type="button" class="soc-btn primary" data-a="res">${late ? 'سجّل نتيجة الجلسة' : 'تحديث / تأجيل'}</button><button type="button" class="soc-btn" data-a="ics">⬇ تقويم</button><a class="soc-btn" href="cases.html">فتح القضية</a></div>
+    </article>`;
+  }
+  function renderAgenda(m) {
+    let list, title;
+    if (sel) { list = m[sel] || []; title = 'جلسات ' + dayLabel(sel); }
+    else { list = hs; title = 'كل الجلسات'; }
+    $('listT').innerHTML = esc(title) + (sel ? ' <button type="button" class="soc-btn" id="clr" style="padding:3px 10px;font-size:12px;margin-inline-start:8px">عرض الكل</button>' : '');
+    if (!list.length) { $('agenda').innerHTML = `<div class="empty">${sel ? 'مفيش جلسات في اليوم ده.' : 'مفيش جلسات مسجّلة. حدّد «ميعاد الجلسة القادمة» في أي قضية وهتظهر هنا.'}</div>`; return; }
+    const late = list.filter(h => h.d < TODAY), up = list.filter(h => h.d >= TODAY);
+    const grp = (t, l) => l.length ? `<h3 class="cal-grp">${t}</h3>${l.map(itemHTML).join('')}` : '';
+    $('agenda').innerHTML = sel ? list.map(itemHTML).join('') : grp('⏰ عدّى ميعادها', late) + grp('القادمة', up);
+  }
+  function render() { build(); const m = byDay(); renderAlerts(m); renderGrid(m); renderAgenda(m); }
+  async function reload() { try { cases = await S.listCases(); } catch (e) { S.toast(S.friendly(e)); } render(); }
+
+  // ----- تنقّل -----
+  $('prv').onclick = () => { view.setMonth(view.getMonth() - 1); render(); };
+  $('nxt').onclick = () => { view.setMonth(view.getMonth() + 1); render(); };
+  $('tdy').onclick = () => { view = new Date(); view.setDate(1); sel = null; render(); };
+  $('grid').addEventListener('click', e => { const b = e.target.closest('[data-d]'); if (!b) return; sel = sel === b.dataset.d ? null : b.dataset.d; render(); });
+  $('agenda').addEventListener('click', e => { if (e.target.id === 'clr') { sel = null; render(); } });
+  $('listT').addEventListener('click', e => { if (e.target.id === 'clr') { sel = null; render(); } });
+
+  // ----- ICS -----
+  const ics = list => {
+    const esc2 = t => String(t || '').replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
+    const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
+    const L = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Legano//Court Calendar//AR', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'X-WR-CALNAME:جلسات Legano'];
+    list.forEach(h => {
+      const d0 = h.d.replace(/-/g, ''), nx = dObj(h.d); nx.setDate(nx.getDate() + 1);
+      const d1 = `${nx.getFullYear()}${pad(nx.getMonth() + 1)}${pad(nx.getDate())}`;
+      L.push('BEGIN:VEVENT', `UID:${h.c.id}-${d0}@legano`, `DTSTAMP:${stamp}`, `DTSTART;VALUE=DATE:${d0}`, `DTEND;VALUE=DATE:${d1}`,
+        `SUMMARY:${esc2('جلسة: ' + h.c.title)}`, ...(h.c.court ? [`LOCATION:${esc2(h.c.court)}`] : []),
+        `DESCRIPTION:${esc2([h.c.case_number && 'رقم الدعوى: ' + h.c.case_number, h.c.client_label && 'الموكل: ' + h.c.client_label].filter(Boolean).join(' - '))}`,
+        'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:جلسة بكرة', 'TRIGGER:-PT15H', 'END:VALARM',
+        'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:جلسة النهارده', 'TRIGGER:PT7H', 'END:VALARM', 'END:VEVENT');
+    });
+    L.push('END:VCALENDAR');
+    return L.join('\r\n');
+  };
+  const download = (name, text) => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type: 'text/calendar;charset=utf-8' })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); };
+  $('icsAll').onclick = () => { const l = hs.filter(h => h.d >= TODAY); if (!l.length) { S.toast('مفيش جلسات قادمة'); return; } download('legano-sessions.ics', ics(l)); };
+
+  // ----- نتيجة الجلسة -----
+  const ov = $('upOv'); let cur = null;
+  $('uStage').innerHTML = S.STAGES.filter(x => x[0] !== 'closed' && x[0] !== 'filed').map(x => `<option value="${x[0]}">${x[2]} ${x[1]}</option>`).join('');
+  const close = () => { ov.hidden = true; };
+  $('uX').onclick = close; ov.addEventListener('mousedown', e => { if (e.target === ov) close(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !ov.hidden) close(); });
+  $('uStage').addEventListener('change', () => { if (!$('uTitle').value || $('uTitle').dataset.auto) { $('uTitle').value = SM[$('uStage').value][1]; $('uTitle').dataset.auto = '1'; } });
+  $('uTitle').addEventListener('input', () => { delete $('uTitle').dataset.auto; });
+  $('agenda').addEventListener('click', e => {
+    const b = e.target.closest('[data-a]'); if (!b) return;
+    const card = b.closest('.cal-item'), h = hs.find(x => x.c.id === card.dataset.id && x.d === card.dataset.d); if (!h) return;
+    if (b.dataset.a === 'ics') download('legano-session.ics', ics([h]));
+    else {
+      cur = h; $('uCase').textContent = `${h.c.title} — جلسة ${dayLabel(h.d)}`;
+      $('uStage').value = 'adjourned'; $('uTitle').value = SM.adjourned[1]; $('uTitle').dataset.auto = '1'; $('uNote').value = ''; $('uDate').value = ''; $('uDate').min = TODAY; ov.hidden = false; $('uDate').focus();
+    }
+  });
+  $('uGo').onclick = async () => {
+    if (!cur) return;
+    const stage = $('uStage').value, date = $('uDate').value;
+    if (stage === 'adjourned' && !date && !confirm('اخترت «تأجيل» من غير ميعاد جديد. تكمّل؟ هتتشال الجلسة من المفكرة.')) return;
+    $('uGo').disabled = true;
+    try { await S.addCaseUpdate(cur.c.id, { stage, title: $('uTitle').value.trim() || SM[stage][1], note: $('uNote').value, next_date: date || null }); close(); await reload(); S.toast('اتسجّلت النتيجة'); }
+    catch (er) { S.toast(S.friendly(er)); }
+    $('uGo').disabled = false;
+  };
+  await reload();
+})();
+</script>
+</body>
+</html>

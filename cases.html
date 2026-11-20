@@ -24,7 +24,7 @@
 <header class="top"><a class="logo-text" href="index.html?browse=1">LEGANO</a><div id="navSlot"></div></header>
 <div id="gate" class="soc-card gate" hidden><h1>منطقة المحامين</h1><p>تتبّع القضايا للمحامين بس. سجّل دخول علشان تبدأ.</p><a class="soc-btn primary" href="dashboard.html">دخول المحامين</a></div>
 <div id="wrap" class="grp-wrap" hidden>
-  <div class="grp-head"><div><h1>قضاياي</h1><p>افتح قضية، وابعت للموكل لينك يتابع منه حالة قضيته خطوة بخطوة من غير حساب. كل ما تحدّث مرحلة الموكل يشوفها فوراً.</p></div><button id="newBtn" type="button" class="soc-btn primary">+ قضية جديدة</button></div>
+  <div class="grp-head"><div><h1>قضاياي</h1><p>افتح قضية، وابعت للموكل لينك يتابع منه حالة قضيته خطوة بخطوة من غير حساب. كل ما تحدّث مرحلة الموكل يشوفها فوراً.</p></div><div class="grp-actions"><a class="soc-btn" href="calendar.html">📅 مفكرة الجلسات</a><button id="newBtn" type="button" class="soc-btn primary">+ قضية جديدة</button></div></div>
   <div class="warn" style="margin:0">⚠️ ما تكتبش في القضية بيانات حساسة (أسماء كاملة، أرقام قومية، تفاصيل سرية). اللينك سري لكن أي حد معاه اللينك يقدر يشوف الصفحة.</div>
   <div class="feed-tabs" role="tablist"><button class="tab" data-f="active" aria-selected="true" type="button">شغّالة</button><button class="tab" data-f="closed" aria-selected="false" type="button">مقفولة</button></div>
   <div id="list" aria-live="polite"></div>
@@ -61,7 +61,7 @@
   let cases = [], filter = 'active', open = null, myName = '';
   try { const r = (await S.call(`/rest/v1/public_lawyers?select=display_name&id=eq.${S.me()}`))[0]; myName = r ? r.display_name : ''; } catch {}
 
-  function nextDate(c) { const u = c.updates.find(x => x.next_date); return u ? u.next_date : null; }
+  function nextDate(c) { return S.nextHearing(c); }
   function cardHTML(c) {
     const last = c.updates[0], nd = c.status === 'active' ? nextDate(c) : null, isOpen = open === c.id;
     return `<article class="soc-card case-card" data-id="${esc(c.id)}">

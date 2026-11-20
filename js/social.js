@@ -262,7 +262,7 @@
       + item('notifications.html', 'الإشعارات', BELL, '<span class="nav-dot" hidden></span>')
       + `<div class="nav-me"><button type="button" class="nav-av" id="navAv" aria-haspopup="menu" aria-expanded="false" aria-label="حسابي"><span class="avatar sm">${esc('؟')}</span></button>
         <div class="nav-menu" id="navMenu" role="menu" hidden>
-          <a role="menuitem" href="lawyer.html?id=${esc(me())}">بروفايلي</a><a role="menuitem" href="dashboard.html">لوحتي وإحصائياتي</a><a role="menuitem" href="index.html?browse=1">سوق المحامين</a>
+          <a role="menuitem" href="calendar.html">مفكرة الجلسات</a><a role="menuitem" href="lawyer.html?id=${esc(me())}">بروفايلي</a><a role="menuitem" href="dashboard.html">لوحتي وإحصائياتي</a><a role="menuitem" href="index.html?browse=1">سوق المحامين</a>
           <button role="menuitem" type="button" id="navOut">تسجيل الخروج</button></div></div>`;
     const menu = el.querySelector('#navMenu'), btn = el.querySelector('#navAv');
     const close = () => { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); };
@@ -631,6 +631,9 @@
   const deleteCase = id => call(`/rest/v1/cases?id=eq.${id}`, { method: 'DELETE' });
   const addCaseUpdate = (case_id, u) => call('/rest/v1/case_updates', { method: 'POST', json: { case_id, stage: u.stage, title: u.title.trim(), note: (u.note || '').trim() || null, next_date: u.next_date || null } });
   const deleteCaseUpdate = id => call(`/rest/v1/case_updates?id=eq.${id}`, { method: 'DELETE' });
+  const todayISO = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+  // ميعاد الجلسة الجاية: آخر مستجد غير "ملاحظة" هو اللي بيحدد (لو فيه تاريخ يبقى جلسة، لو مفيش يبقى مفيش جلسة معلّقة)
+  const nextHearing = c => { if (!c || c.status !== 'active') return null; const u = (c.updates || []).find(x => x.stage !== 'note'); return (u && u.next_date) || null; };
   const caseLink = token => new URL('track.html?t=' + token, location.href).href;
   const getCaseByToken = t => call('/rest/v1/rpc/get_case', { method: 'POST', json: { p_token: t } });
   const rateCase = (t, stars) => call('/rest/v1/rpc/rate_case', { method: 'POST', json: { p_token: t, p_stars: stars } });
@@ -659,7 +662,7 @@
   };
 
   window.Social = {
-    STAGES, listCases, createCase, updateCase, deleteCase, addCaseUpdate, deleteCaseUpdate, caseLink, getCaseByToken, rateCase,
+    STAGES, todayISO, nextHearing, listCases, createCase, updateCase, deleteCase, addCaseUpdate, deleteCaseUpdate, caseLink, getCaseByToken, rateCase,
     setJoinMode, requestJoin, cancelRequest, myRequests, listRequests, reviewRequest, addGroupMember, removeGroupMember, searchLawyers, listGroups, myGroups, getGroup, createGroup, joinGroup, leaveGroup, deleteGroup, groupMembers,
     me, call, esc, badge, avatar, ago, num, stars, toast, needLogin, friendly, TOPICS, AUDIENCES, REACTIONS, topicLabel, audLabel,
     listPosts, mount, mountComposer, mountNav, mountProfilePosts, profileSocial, follow, unfollow,

@@ -92,15 +92,15 @@
 
   // ---- شغلي النهارده ----
   (async () => {
-    const items = [], todayISO = new Date().toISOString().slice(0, 10);
+    const items = [], todayISO = S.todayISO();
     const fmtD = d => new Date(d + 'T00:00:00').toLocaleDateString('ar-EG', { weekday: 'long', day: 'numeric', month: 'long' });
     const [cs, gs, un, act] = await Promise.allSettled([
       S.listCases(), S.myGroups(), S.unreadCount(),
       S.call(`/rest/v1/posts?select=author_id&created_at=gte.${encodeURIComponent(new Date(Date.now() - 864e5).toISOString())}&group_id=is.null&limit=300`),
     ]);
     if (cs.status === 'fulfilled') {
-      cs.value.filter(c => c.status === 'active').map(c => ({ c, d: (c.updates.find(u => u.next_date) || {}).next_date })).filter(x => x.d && x.d >= todayISO).sort((a, b) => a.d.localeCompare(b.d)).slice(0, 2)
-        .forEach(x => items.push(`<a href="cases.html">📅 ${esc(x.d === todayISO ? 'النهارده' : fmtD(x.d))} — ${esc(x.c.title)}</a>`));
+      cs.value.map(c => ({ c, d: S.nextHearing(c) })).filter(x => x.d && x.d >= todayISO).sort((a, b) => a.d.localeCompare(b.d)).slice(0, 2)
+        .forEach(x => items.push(`<a href="calendar.html">📅 ${esc(x.d === todayISO ? 'النهارده' : fmtD(x.d))} — ${esc(x.c.title)}</a>`));
     }
     if (gs.status === 'fulfilled') {
       const owned = gs.value.filter(g => g.owner_id === meId && g.join_mode === 'approval');

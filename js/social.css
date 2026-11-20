@@ -401,3 +401,32 @@ a.grp-ico { text-decoration: none; }
 @keyframes cardIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 .post-card { animation: cardIn .35s ease-out both; }
 @media (prefers-reduced-motion: reduce) { .post-card { animation: none; } }
+
+/* مفكرة الجلسات */
+.cal-wrap { max-width: 1100px; }
+.cal-cols { display: grid; gap: 18px; grid-template-columns: minmax(0, 1fr); align-items: start; }
+@media (min-width: 900px) { .cal-cols { grid-template-columns: 400px minmax(0, 1fr); } .cal-box { position: sticky; top: 76px; } }
+.cal-box { padding: 14px; }
+.cal-nav { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 10px; }
+.cal-nav b { flex: 1; text-align: center; font-size: 15px; }
+.cal-nav .soc-btn { padding: 4px 11px; font-size: 14px; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.cal-dow span { text-align: center; font-size: 11px; font-weight: 800; color: var(--muted-foreground, #64748B); padding: 4px 0; }
+.cal-c { position: relative; aspect-ratio: 1; border: 1px solid transparent; border-radius: 10px; background: var(--secondary, #EEF2F7); font: inherit; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer; padding: 0; color: inherit; }
+.cal-c.empty { background: none; cursor: default; }
+.cal-c b { font-size: 13px; } .cal-c.fri { color: #94A3B8; }
+.cal-c i { display: flex; gap: 2px; align-items: center; font-style: normal; font-size: 9px; color: #92620C; font-weight: 900; }
+.cal-c u { width: 6px; height: 6px; border-radius: 50%; background: #92620C; }
+.cal-c.has { background: #FFF8E6; border-color: #F1D48A; }
+.cal-c.late.has { background: #FEF2F2; border-color: #FCA5A5; } .cal-c.late u { background: #DC2626; }
+.cal-c.today { outline: 2px solid #0F172A; outline-offset: -2px; }
+.cal-c.sel { background: #0F172A; color: #fff; border-color: #0F172A; } .cal-c.sel u { background: #F1D48A; }
+.cal-alert { margin-bottom: 8px; padding: 10px 14px; border-radius: 12px; background: #FFF8E6; border: 1px solid #F1D48A; color: #7A5200; font-size: 13px; }
+.cal-alert.late, .cal-alert.conf { background: #FEF2F2; border-color: #FCA5A5; color: #991B1B; }
+.cal-grp { font-size: 13px; font-weight: 900; margin: 14px 0 8px; color: var(--muted-foreground, #64748B); }
+.cal-item { padding: 14px 16px; margin-bottom: 10px; border-inline-start: 4px solid #92620C; }
+.cal-item.late { border-inline-start-color: #DC2626; }
+.cal-item h3 { margin: 4px 0 0; font-size: 15px; }
+.ci-top { display: flex; align-items: center; gap: 8px; }
+.ci-day { font-size: 12.5px; font-weight: 900; color: #92620C; } .ci-day.now { color: #fff; background: #0F172A; padding: 1px 10px; border-radius: 999px; }
+.ci-badge { font-size: 11px; font-weight: 800; padding: 1px 9px; border-radius: 999px; background: #FEE2E2; color: #B91C1C; } .ci-badge.soon { background: #FEF3C7; color: #92400E; }
