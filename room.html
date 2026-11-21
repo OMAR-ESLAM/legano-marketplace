@@ -22,7 +22,7 @@
   .cs-fa { display: flex; gap: 10px; flex-shrink: 0; }
   .cs-room { grid-template-columns: 1fr 320px; grid-template-areas: "v a"; }
   .cs-vbox { grid-area: v; } .cs-doc { grid-area: d; } .cs-room > aside { grid-area: a; }
-  .cs-room.withdoc { grid-template-columns: 1fr 340px; grid-template-areas: "d v" "d a"; }
+  .cs-room.withdoc { grid-template-columns: 1fr clamp(360px, 38%, 560px); grid-template-areas: "d v" "d a"; }
   .cs-doc { display: flex; flex-direction: column; height: min(82vh, 860px); background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
   .cs-doc[hidden] { display: none; }
   .cs-dochd { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid var(--border); font-size: 13px; }
@@ -197,6 +197,7 @@
   window.addEventListener('beforeunload', stopP2P);
   document.addEventListener('click', e => {
     if (e.target.id === 'vmsg') { const rv = $('rv'); if (rv && rv.srcObject) { rv.play().then(() => vmsg('')).catch(() => {}); } }
+    if (e.target.closest('#bFs')) { const v = $('vid'); if (document.fullscreenElement) document.exitFullscreen(); else if (v && v.requestFullscreen) v.requestFullscreen().catch(() => {}); return; }
     const b = e.target.closest('#bMic, #bCam'); if (!b || !localStream) return;
     if (b.id === 'bMic') { micOn = !micOn; localStream.getAudioTracks().forEach(t => t.enabled = micOn); b.classList.toggle('off', !micOn); b.textContent = micOn ? '🎤' : '🔇'; }
     else { camOn = !camOn; localStream.getVideoTracks().forEach(t => t.enabled = camOn); b.classList.toggle('off', !camOn); b.textContent = camOn ? '📷' : '🚫'; }
@@ -242,7 +243,7 @@
         <div class="cs-note" id="cnote" style="display:none"></div>
         <div class="cs-brand">LEGANO<small>غرفة استشارة</small></div>
         <div class="cs-ov" id="vmsg">جاري تجهيز الكاميرا...</div>
-        <div class="cs-ctl"><button type="button" id="bMic" title="الميكروفون">🎤</button><button type="button" id="bCam" title="الكاميرا">📷</button></div></div>
+        <div class="cs-ctl"><button type="button" id="bMic" title="الميكروفون">🎤</button><button type="button" id="bCam" title="الكاميرا">📷</button><button type="button" id="bFs" title="ملء الشاشة">⛶</button></div></div>
       <div class="cs-bar"><span id="room-status">${statusLine()}</span><button class="soc-btn" data-a="end" type="button">إنهاء الاستشارة</button></div>${DEBUG ? '<pre id="dbg" dir="ltr" style="font-size:11px;white-space:pre-wrap;background:#0F172A;color:#A7F3D0;padding:8px;border-radius:10px;margin:0"></pre>' : ''}</div>
       <section class="cs-doc" id="docv" hidden><div class="cs-dochd"><b id="docname"></b><select id="docsel" aria-label="اختار المستند"></select><button type="button" data-a="dldoc">تحميل</button><button type="button" data-a="closedoc" aria-label="إغلاق">✕</button></div><div class="cs-docbody" id="docbody"></div></section>
       <aside class="cs-box" id="room-wrap"><h2>الملفات</h2><div class="cs-drop" id="drop">اسحب الملفات هنا أو اضغط للاختيار<br><small>PDF أو صور أو Word، حتى 4 ميجا</small></div><input type="file" id="pick" multiple hidden accept=".pdf,.png,.jpg,.jpeg,.webp,.txt,.doc,.docx"><div id="files"></div></aside></div>`);
