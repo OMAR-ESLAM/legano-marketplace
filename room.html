@@ -73,7 +73,7 @@
   }
   // ---- الغرفة: اتصال مباشر (WebRTC) بين الطرفين. الإشارات بتعدّي عن طريق قاعدة البيانات، والفيديو نفسه ما بيعدّيش على أي سيرفر ----
   const mySid = Math.random().toString(36).slice(2, 10);
-  let pc = null, localStream = null, peerSid = null, sigAfter = 0, sigTimer = null, helloTimer = null, p2pOn = false, polling = false, pendingIce = [], iceCfg = null, connState = '', mediaErr = '', camOn = true, micOn = true;
+  let camNote = '', pc = null, localStream = null, peerSid = null, sigAfter = 0, sigTimer = null, helloTimer = null, p2pOn = false, polling = false, pendingIce = [], iceCfg = null, connState = '', mediaErr = '', camOn = true, micOn = true;
   const sig = p => C.signalSend(cid(), tk(), p).catch(() => {});
   const vmsg = t => { const m = $('vmsg'); if (m) { m.textContent = t || ''; m.style.display = t ? 'flex' : 'none'; } };
   async function getIce() {
@@ -85,16 +85,25 @@
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { mediaErr = 'المتصفح ده مش بيدعم الفيديو. استخدم Chrome أو Safari حديث.'; return; }
     try { localStream = await navigator.mediaDevices.getUserMedia({ video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: 'user' }, audio: { echoCancellation: true, noiseSuppression: true } }); }
     catch (e) {
-      try { localStream = await navigator.mediaDevices.getUserMedia({ audio: true }); camOn = false; S.toast('الكاميرا مش متاحة، الاستشارة صوت بس.'); }
+      try { localStream = await navigator.mediaDevices.getUserMedia({ audio: true }); camOn = false; camNote = e && e.name === 'NotReadableError' ? 'الكاميرا مستخدمة في برنامج أو متصفح تاني، فالاستشارة عندك صوت بس.' : 'الكاميرا مش متاحة (اتأكد من السماح للمتصفح)، فالاستشارة عندك صوت بس.'; }
       catch (e2) { mediaErr = 'لازم تسمح للمتصفح باستخدام الميكروفون (والكاميرا) علشان تدخل الغرفة. اسمح من شريط العنوان وحدّث الصفحة.'; }
     }
   }
+  function showNotes() {
+    const n = $('cnote'); if (!n) return; const rv = $('rv'), src = rv && rv.srcObject;
+    const noRemoteCam = connState === 'connected' && (!src || !src.getVideoTracks().length || !rv.videoWidth);
+    n.textContent = camNote || (noRemoteCam ? 'كاميرا الطرف التاني مش ظاهرة (قافلها أو مش شغالة عنده).' : ''); n.style.display = n.textContent ? 'block' : 'none';
+  }
+  setInterval(showNotes, 1500);
   function attachLocal() { const lv = $('lv'); if (lv && localStream) { lv.srcObject = localStream; lv.play().catch(() => {}); } }
   async function newPc() {
     closePc();
     pc = new RTCPeerConnection({ iceServers: await getIce() });
     const me = pc;
-    if (localStream) localStream.getTracks().forEach(t => me.addTrack(t, localStream));
+    // لازم الاتنين يكون عندهم خط صوت وخط فيديو في العرض حتى لو كاميرا اللي بيعرض مش شغالة، وإلا كاميرا الطرف التاني ما تقدرش توصل
+    const at = localStream && localStream.getAudioTracks()[0], vt = localStream && localStream.getVideoTracks()[0];
+    if (at) me.addTrack(at, localStream); else if (ROLE === 'lawyer') me.addTransceiver('audio', { direction: 'recvonly' });
+    if (vt) me.addTrack(vt, localStream); else if (ROLE === 'lawyer') me.addTransceiver('video', { direction: 'recvonly' });
     me.onicecandidate = e => { if (e.candidate && pc === me) sig({ t: 'ice', from: mySid, to: peerSid, c: e.candidate.toJSON() }); };
     me.ontrack = e => { const rv = $('rv'); if (!rv) return; rv.srcObject = e.streams[0]; rv.play().catch(() => vmsg('اضغط هنا لتشغيل الصوت والفيديو')); };
     me.onconnectionstatechange = () => {
@@ -192,6 +201,7 @@
     set(`<div class="cs-room"><div><div class="cs-video" id="vid">
         <video id="rv" autoplay playsinline></video>
         <video id="lv" autoplay playsinline muted></video>
+        <div class="cs-note" id="cnote" style="display:none"></div>
         <div class="cs-brand">LEGANO<small>غرفة استشارة</small></div>
         <div class="cs-ov" id="vmsg">جاري تجهيز الكاميرا...</div>
         <div class="cs-ctl"><button type="button" id="bMic" title="الميكروفون">🎤</button><button type="button" id="bCam" title="الكاميرا">📷</button></div></div>
