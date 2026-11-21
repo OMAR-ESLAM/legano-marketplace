@@ -762,7 +762,7 @@
     signalPoll: (id, token, after) => rpc('consult_signal_poll', { p_id: id, p_token: token || null, p_after: after || 0 }),
     heartbeat: () => rpc('consult_heartbeat'),
     mySettings: async () => (await call(`/rest/v1/lawyer_consult?select=enabled,price,minutes,last_seen&lawyer_id=eq.${me()}`))[0] || null,
-    saveSettings: f => call('/rest/v1/lawyer_consult?on_conflict=lawyer_id', { method: 'POST', json: { lawyer_id: me(), enabled: !!f.enabled, price: Number(f.price), minutes: Number(f.minutes) }, headers: { Prefer: 'resolution=merge-duplicates,return=minimal' } }),
+    saveSettings: f => rpc('consult_save_settings', { p_enabled: !!f.enabled, p_price: Number(f.price), p_minutes: Number(f.minutes) }),
     mine: () => call(`/rest/v1/consultations?select=${CONSULT_COLS}&order=created_at.desc&limit=60`),
     limits: async () => (await call('/rest/v1/consult_settings?select=fee_pct,fee_flat,min_price,max_price,min_minutes,confirm_hours,retain_hours&id=eq.1'))[0],
     wallet: () => rpc('wallet_summary'),
