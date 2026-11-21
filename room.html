@@ -18,6 +18,25 @@
   .back { display: inline-block; margin-bottom: 12px; font-size: 13px; font-weight: 700; color: var(--gold-soft); text-decoration: none; }
   .warn { padding: 12px 14px; margin-bottom: 14px; background: #FFF8E6; border: 1px solid #F1D48A; color: #7A5200; border-radius: 12px; font-size: 13px; line-height: 1.9; }
   .warn a { color: inherit; font-weight: 800; }
+  .cs-wrap { max-width: 1240px; }
+  .cs-fa { display: flex; gap: 10px; flex-shrink: 0; }
+  .cs-room { grid-template-columns: 1fr 320px; grid-template-areas: "v a"; }
+  .cs-vbox { grid-area: v; } .cs-doc { grid-area: d; } .cs-room > aside { grid-area: a; }
+  .cs-room.withdoc { grid-template-columns: 1fr 340px; grid-template-areas: "d v" "d a"; }
+  .cs-doc { display: flex; flex-direction: column; height: min(82vh, 860px); background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+  .cs-doc[hidden] { display: none; }
+  .cs-dochd { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .cs-dochd b { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cs-dochd select, .cs-dochd button { font-family: inherit; font-size: 12.5px; padding: 5px 10px; border: 1px solid var(--border); border-radius: 9px; background: #fff; cursor: pointer; max-width: 180px; }
+  .cs-docbody { flex: 1; min-height: 0; overflow: auto; background: var(--secondary); padding: 12px; text-align: center; }
+  .cs-docbody.flush { padding: 0; }
+  .cs-docbody canvas { display: block; max-width: 100%; height: auto; margin: 0 auto 12px; background: #fff; box-shadow: 0 1px 6px rgba(0,0,0,.15); }
+  .cs-docbody img { max-width: 100%; height: auto; border-radius: 6px; background: #fff; }
+  .cs-docbody iframe { width: 100%; height: 100%; border: 0; background: #fff; }
+  .cs-docbody pre { text-align: start; white-space: pre-wrap; word-break: break-word; background: #fff; padding: 14px; border-radius: 10px; font-family: inherit; font-size: 14px; line-height: 1.9; margin: 0; }
+  .cs-dmsg { padding: 40px 16px; color: var(--muted-foreground); font-size: 14px; line-height: 2; }
+  .cs-dmsg button { font-family: inherit; padding: 8px 16px; border-radius: 10px; border: 1px solid var(--border); background: #fff; font-weight: 700; cursor: pointer; }
+  @media (max-width: 820px) { .cs-room, .cs-room.withdoc { grid-template-columns: 1fr; grid-template-areas: "v" "d" "a"; } .cs-doc { height: 70vh; } }
 </style>
 </head>
 <body>
@@ -217,7 +236,7 @@
   function viewRoom() {
     if (st.status === 'live') startPing();
     if ($('room-wrap')) { $('room-status').innerHTML = statusLine(); return; }
-    set(`<div class="cs-room"><div><div class="cs-video" id="vid">
+    set(`<div class="cs-room" id="roomgrid"><div class="cs-vbox"><div class="cs-video" id="vid">
         <video id="rv" autoplay playsinline></video>
         <video id="lv" autoplay playsinline muted></video>
         <div class="cs-note" id="cnote" style="display:none"></div>
@@ -225,8 +244,9 @@
         <div class="cs-ov" id="vmsg">جاري تجهيز الكاميرا...</div>
         <div class="cs-ctl"><button type="button" id="bMic" title="الميكروفون">🎤</button><button type="button" id="bCam" title="الكاميرا">📷</button></div></div>
       <div class="cs-bar"><span id="room-status">${statusLine()}</span><button class="soc-btn" data-a="end" type="button">إنهاء الاستشارة</button></div>${DEBUG ? '<pre id="dbg" dir="ltr" style="font-size:11px;white-space:pre-wrap;background:#0F172A;color:#A7F3D0;padding:8px;border-radius:10px;margin:0"></pre>' : ''}</div>
+      <section class="cs-doc" id="docv" hidden><div class="cs-dochd"><b id="docname"></b><select id="docsel" aria-label="اختار المستند"></select><button type="button" data-a="dldoc">تحميل</button><button type="button" data-a="closedoc" aria-label="إغلاق">✕</button></div><div class="cs-docbody" id="docbody"></div></section>
       <aside class="cs-box" id="room-wrap"><h2>الملفات</h2><div class="cs-drop" id="drop">اسحب الملفات هنا أو اضغط للاختيار<br><small>PDF أو صور أو Word، حتى 4 ميجا</small></div><input type="file" id="pick" multiple hidden accept=".pdf,.png,.jpg,.jpeg,.webp,.txt,.doc,.docx"><div id="files"></div></aside></div>`);
-    wireDrop(); renderFiles(); startP2P();
+    wireDrop(); renderFiles(); $('docsel').onchange = e => openDoc(e.target.value); startP2P();
   }
   function statusLine() {
     if (st.status === 'accepted') return `<span style="color:#7A5200;font-weight:800">في انتظار ${who()} يدخل الغرفة...</span>`;
@@ -261,11 +281,11 @@
 
   // ---- الملفات ----
   async function refreshFiles() {
-    try { const l = await C.files(cid(), tk()); const sig = JSON.stringify(l.map(f => f.id)); if (sig !== filesSig) { filesSig = sig; fileList = l; renderFiles(); } } catch {}
+    try { const l = await C.files(cid(), tk()); const sig = JSON.stringify(l.map(f => f.id)); if (sig !== filesSig) { filesSig = sig; fileList = l; renderFiles(); onFilesChanged(l); } } catch {}
   }
   function renderFiles() {
     const box = $('files'); if (!box) return;
-    box.innerHTML = fileList.length ? fileList.map(f => `<div class="cs-file"><span title="${esc(f.name)}">${esc(f.name)} <small>(${f.uploader === ROLE ? 'أنت' : 'الطرف التاني'})</small></span><button type="button" data-a="dl" data-f="${esc(f.id)}">تحميل</button></div>`).join('') : '<small style="color:var(--muted-foreground)">مفيش ملفات لسه.</small>';
+    box.innerHTML = fileList.length ? fileList.map(f => `<div class="cs-file"><span title="${esc(f.name)}">${esc(f.name)} <small>(${f.uploader === ROLE ? 'أنت' : 'الطرف التاني'})</small></span><span class="cs-fa">${$('docv') ? `<button type="button" data-a="view" data-f="${esc(f.id)}">عرض</button>` : ''}<button type="button" data-a="dl" data-f="${esc(f.id)}">تحميل</button></span></div>`).join('') : '<small style="color:var(--muted-foreground)">مفيش ملفات لسه.</small>';
   }
   const OK = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp', 'text/plain', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
   async function upload(files) {
@@ -294,6 +314,60 @@
     } catch (e) { S.toast(S.friendly(e)); }
   }
 
+  // ---- ساحة عرض المستندات: أي مستند يتضاف بيتفتح عند الطرفين من غير تحميل ----
+  let viewerId = null, viewTok = 0, knownIds = null, curUrl = null; const docCache = {}, libs = {};
+  const PDFJS = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js', PDFW = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js', MAMMOTH = 'https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js';
+  const loadLib = (k, url) => libs[k] || (libs[k] = new Promise((res, rej) => { const el = document.createElement('script'); el.src = url; el.onload = res; el.onerror = () => { delete libs[k]; rej(new Error('lib')); }; document.head.appendChild(el); }));
+  function onFilesChanged(l) {
+    const ids = l.map(f => f.id);
+    if (knownIds === null) { knownIds = new Set(ids); return; }
+    const fresh = l.filter(f => !knownIds.has(f.id)); ids.forEach(i => knownIds.add(i));
+    if (fresh.length && $('docv')) { const f = fresh[fresh.length - 1]; if (f.uploader !== ROLE) S.toast('الطرف التاني بعت مستند: ' + f.name); openDoc(f.id); }
+    else if (viewerId && !ids.includes(viewerId)) closeDoc();
+    if (viewerId) fillSel();
+  }
+  function fillSel() { const sel = $('docsel'); if (!sel) return; sel.innerHTML = fileList.map(f => `<option value="${esc(f.id)}"${f.id === viewerId ? ' selected' : ''}>${esc(f.name)}</option>`).join(''); sel.style.display = fileList.length > 1 ? '' : 'none'; }
+  function closeDoc() { viewerId = null; viewTok++; if (curUrl) { URL.revokeObjectURL(curUrl); curUrl = null; } const g = $('roomgrid'); if (g) g.classList.remove('withdoc'); const d = $('docv'); if (d) d.hidden = true; const b = $('docbody'); if (b) b.innerHTML = ''; }
+  async function openDoc(id) {
+    const meta = fileList.find(f => f.id === id); if (!meta || !$('docv')) return;
+    viewerId = id; const tok = ++viewTok;
+    $('roomgrid').classList.add('withdoc'); $('docv').hidden = false; $('docname').textContent = meta.name; fillSel();
+    const body = $('docbody'); body.className = 'cs-docbody'; body.innerHTML = '<div class="cs-dmsg">جاري فتح المستند...</div>';
+    try {
+      let d = docCache[id];
+      if (!d) { const f = await C.fileGet(cid(), id, tk()); if (!f) throw new Error('x'); const bin = atob(f.b64), u8 = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i); d = docCache[id] = { name: f.name, mime: f.mime, u8 }; }
+      if (tok !== viewTok) return;
+      await renderDoc(d, tok, body);
+    } catch { if (tok === viewTok) body.innerHTML = `<div class="cs-dmsg">تعذّر عرض المستند هنا.<br><button type="button" data-a="dldoc">تحميل المستند</button></div>`; }
+  }
+  async function renderDoc(d, tok, body) {
+    if (curUrl) { URL.revokeObjectURL(curUrl); curUrl = null; }
+    if (d.mime === 'application/pdf') {
+      await loadLib('pdf', PDFJS); window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFW;
+      const pdf = await window.pdfjsLib.getDocument({ data: d.u8.slice() }).promise; if (tok !== viewTok) return;
+      body.innerHTML = ''; const w = Math.max(240, body.clientWidth - 24), n = Math.min(pdf.numPages, 40), dpr = Math.min(2, window.devicePixelRatio || 1);
+      for (let i = 1; i <= n; i++) {
+        const pg = await pdf.getPage(i); if (tok !== viewTok) return;
+        const v0 = pg.getViewport({ scale: 1 }), sc = Math.min(2.5, w / v0.width), vp = pg.getViewport({ scale: sc * dpr });
+        const cv = document.createElement('canvas'); cv.width = Math.floor(vp.width); cv.height = Math.floor(vp.height); cv.style.width = Math.floor(vp.width / dpr) + 'px'; body.appendChild(cv);
+        await pg.render({ canvasContext: cv.getContext('2d'), viewport: vp }).promise;
+      }
+      if (pdf.numPages > n) body.insertAdjacentHTML('beforeend', `<div class="cs-dmsg">اتعرضت أول ${n} صفحة. حمّل الملف لباقي الصفحات.</div>`);
+    } else if (d.mime.startsWith('image/')) {
+      curUrl = URL.createObjectURL(new Blob([d.u8], { type: d.mime })); body.innerHTML = ''; const im = document.createElement('img'); im.src = curUrl; im.alt = d.name; body.appendChild(im);
+    } else if (d.mime === 'text/plain') {
+      body.innerHTML = ''; const pre = document.createElement('pre'); pre.dir = 'auto'; pre.textContent = new TextDecoder('utf-8').decode(d.u8); body.appendChild(pre);
+    } else if (d.mime.includes('wordprocessingml')) {
+      await loadLib('mammoth', MAMMOTH);
+      const r = await window.mammoth.convertToHtml({ arrayBuffer: d.u8.buffer.slice(d.u8.byteOffset, d.u8.byteOffset + d.u8.byteLength) }); if (tok !== viewTok) return;
+      body.className = 'cs-docbody flush'; body.innerHTML = ''; const fr = document.createElement('iframe'); fr.setAttribute('sandbox', ''); fr.title = d.name;
+      fr.srcdoc = '<meta charset="utf-8"><style>body{font-family:Cairo,Tahoma,sans-serif;padding:18px;line-height:1.9;color:#1E293B}img{max-width:100%;height:auto}table{border-collapse:collapse}td,th{border:1px solid #cbd5e1;padding:4px 8px}</style><body dir="auto">' + r.value + '</body>';
+      body.appendChild(fr);
+    } else {
+      body.innerHTML = `<div class="cs-dmsg">المعاينة مش متاحة لنوع الملف ده (Word القديم).<br><button type="button" data-a="dldoc">تحميل المستند</button></div>`;
+    }
+  }
+
   // ---- أزرار ----
   let busy = false;
   document.addEventListener('click', async e => {
@@ -309,6 +383,9 @@
       else if (a === 'problem') $('prob').hidden = false;
       else if (a === 'dispute') { const r = $('reason').value.trim(); if (r.length < 5) S.toast('اكتب المشكلة بجملة واضحة'); else await C.dispute(TOKEN, r); }
       else if (a === 'dl') await download(b.dataset.f);
+      else if (a === 'view') await openDoc(b.dataset.f);
+      else if (a === 'dldoc') { if (viewerId) await download(viewerId); }
+      else if (a === 'closedoc') closeDoc();
     } catch (er) { S.toast(S.friendly(er)); }
     busy = false; tick();
   });
