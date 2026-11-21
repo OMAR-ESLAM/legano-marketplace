@@ -73,7 +73,7 @@
   }
   // ---- الغرفة: اتصال مباشر (WebRTC) بين الطرفين. الإشارات بتعدّي عن طريق قاعدة البيانات، والفيديو نفسه ما بيعدّيش على أي سيرفر ----
   const mySid = Math.random().toString(36).slice(2, 10);
-  let camNote = '', pc = null, localStream = null, peerSid = null, sigAfter = 0, sigTimer = null, helloTimer = null, p2pOn = false, polling = false, pendingIce = [], iceCfg = null, connState = '', mediaErr = '', camOn = true, micOn = true;
+  let remoteStream = null, camNote = '', pc = null, localStream = null, peerSid = null, sigAfter = 0, sigTimer = null, helloTimer = null, p2pOn = false, polling = false, pendingIce = [], iceCfg = null, connState = '', mediaErr = '', camOn = true, micOn = true;
   const sig = p => C.signalSend(cid(), tk(), p).catch(() => {});
   const vmsg = t => { const m = $('vmsg'); if (m) { m.textContent = t || ''; m.style.display = t ? 'flex' : 'none'; } };
   async function getIce() {
@@ -95,6 +95,15 @@
     n.textContent = camNote || (noRemoteCam ? 'كاميرا الطرف التاني مش ظاهرة (قافلها أو مش شغالة عنده).' : ''); n.style.display = n.textContent ? 'block' : 'none';
   }
   setInterval(showNotes, 1500);
+  const DEBUG = q.get('debug') === '1';
+  setInterval(async () => {
+    const d = $('dbg'); if (!DEBUG || !d) return; const t = [];
+    t.push(pc ? 'pc:' + pc.connectionState + ' ice:' + pc.iceConnectionState : 'pc:none');
+    t.push('local:' + (localStream ? localStream.getTracks().map(x => x.kind + ':' + x.readyState + (x.enabled ? '' : ':off')).join(',') : 'none'));
+    const rv = $('rv'), rs = rv && rv.srcObject; t.push('remote:' + (rs ? rs.getTracks().map(x => x.kind + ':' + x.readyState + (x.muted ? ':muted' : '')).join(',') : 'none') + ' videoWidth:' + (rv ? rv.videoWidth : 0));
+    try { (await pc.getStats()).forEach(r => { if (r.type === 'inbound-rtp') t.push('in-' + r.kind + ' bytes:' + r.bytesReceived + (r.framesDecoded != null ? ' frames:' + r.framesDecoded : '')); if (r.type === 'outbound-rtp') t.push('out-' + r.kind + ' bytes:' + r.bytesSent); }); } catch {}
+    d.textContent = t.join('\n');
+  }, 2000);
   function attachLocal() { const lv = $('lv'); if (lv && localStream) { lv.srcObject = localStream; lv.play().catch(() => {}); } }
   async function newPc() {
     closePc();
@@ -102,10 +111,12 @@
     const me = pc;
     // لازم الاتنين يكون عندهم خط صوت وخط فيديو في العرض حتى لو كاميرا اللي بيعرض مش شغالة، وإلا كاميرا الطرف التاني ما تقدرش توصل
     const at = localStream && localStream.getAudioTracks()[0], vt = localStream && localStream.getVideoTracks()[0];
-    if (at) me.addTrack(at, localStream); else if (ROLE === 'lawyer') me.addTransceiver('audio', { direction: 'recvonly' });
-    if (vt) me.addTrack(vt, localStream); else if (ROLE === 'lawyer') me.addTransceiver('video', { direction: 'recvonly' });
+    if (ROLE === 'lawyer') {
+      if (at) me.addTrack(at, localStream); else me.addTransceiver('audio', { direction: 'recvonly' });
+      if (vt) me.addTrack(vt, localStream); else me.addTransceiver('video', { direction: 'recvonly' });
+    }
     me.onicecandidate = e => { if (e.candidate && pc === me) sig({ t: 'ice', from: mySid, to: peerSid, c: e.candidate.toJSON() }); };
-    me.ontrack = e => { const rv = $('rv'); if (!rv) return; rv.srcObject = e.streams[0]; rv.play().catch(() => vmsg('اضغط هنا لتشغيل الصوت والفيديو')); };
+    me.ontrack = e => { const rv = $('rv'); if (!rv) return; if (!remoteStream) remoteStream = new MediaStream(); remoteStream.addTrack(e.track); rv.srcObject = remoteStream; e.track.onunmute = () => { rv.play().catch(() => {}); }; rv.play().catch(() => vmsg('اضغط هنا لتشغيل الصوت والفيديو')); };
     me.onconnectionstatechange = () => {
       if (pc !== me) return; connState = me.connectionState;
       if (connState === 'connected') vmsg('');
@@ -116,12 +127,19 @@
     };
     return me;
   }
-  function closePc() { if (pc) { const o = pc; pc = null; o.onicecandidate = o.ontrack = o.onconnectionstatechange = null; try { o.close(); } catch {} } pendingIce = []; connState = ''; }
+  function closePc() { remoteStream = null; if (pc) { const o = pc; pc = null; o.onicecandidate = o.ontrack = o.onconnectionstatechange = null; try { o.close(); } catch {} } pendingIce = []; connState = ''; }
   async function renegotiate(restart) {
     if (ROLE !== 'lawyer' || !pc) return;
     try { const o = await pc.createOffer(restart ? { iceRestart: true } : undefined); await pc.setLocalDescription(o); sig({ t: 'offer', from: mySid, to: peerSid, sdp: { type: pc.localDescription.type, sdp: pc.localDescription.sdp } }); } catch {}
   }
   async function makeOffer(sid) { peerSid = sid; vmsg('جاري الاتصال...'); await newPc(); await renegotiate(false); }
+  async function attachMine() {
+    for (const tr of pc.getTransceivers()) {
+      const k = tr.receiver && tr.receiver.track && tr.receiver.track.kind, t = localStream && localStream.getTracks().find(x => x.kind === k);
+      if (!t) continue;
+      try { tr.direction = 'sendrecv'; await tr.sender.replaceTrack(t); if (tr.sender.setStreams) tr.sender.setStreams(localStream); } catch {}
+    }
+  }
   async function flushIce() { const q = pendingIce; pendingIce = []; for (const c of q) { try { await pc.addIceCandidate(c); } catch {} } }
   async function onSignal(m) {
     if (!m || typeof m !== 'object') return;
@@ -129,8 +147,9 @@
       if (m.sid === peerSid) return;
       if (ROLE === 'lawyer') await makeOffer(m.sid); else sig({ t: 'hello', sid: mySid });
     } else if (m.t === 'offer' && ROLE === 'client' && m.to === mySid && m.sdp) {
-      if (!pc || peerSid !== m.from) { peerSid = m.from; await newPc(); }
-      try { await pc.setRemoteDescription(m.sdp); await flushIce(); const a = await pc.createAnswer(); await pc.setLocalDescription(a); sig({ t: 'answer', from: mySid, to: m.from, sdp: { type: pc.localDescription.type, sdp: pc.localDescription.sdp } }); } catch {}
+      const fresh = !pc || peerSid !== m.from;
+      if (fresh) { peerSid = m.from; await newPc(); }
+      try { await pc.setRemoteDescription(m.sdp); if (fresh) await attachMine(); await flushIce(); const a = await pc.createAnswer(); await pc.setLocalDescription(a); sig({ t: 'answer', from: mySid, to: m.from, sdp: { type: pc.localDescription.type, sdp: pc.localDescription.sdp } }); } catch {}
     } else if (m.t === 'answer' && ROLE === 'lawyer' && m.to === mySid && m.from === peerSid && pc && m.sdp) {
       try { await pc.setRemoteDescription(m.sdp); await flushIce(); } catch {}
     } else if (m.t === 'ice' && m.to === mySid && m.from === peerSid && pc && m.c) {
@@ -205,7 +224,7 @@
         <div class="cs-brand">LEGANO<small>غرفة استشارة</small></div>
         <div class="cs-ov" id="vmsg">جاري تجهيز الكاميرا...</div>
         <div class="cs-ctl"><button type="button" id="bMic" title="الميكروفون">🎤</button><button type="button" id="bCam" title="الكاميرا">📷</button></div></div>
-      <div class="cs-bar"><span id="room-status">${statusLine()}</span><button class="soc-btn" data-a="end" type="button">إنهاء الاستشارة</button></div></div>
+      <div class="cs-bar"><span id="room-status">${statusLine()}</span><button class="soc-btn" data-a="end" type="button">إنهاء الاستشارة</button></div>${DEBUG ? '<pre id="dbg" dir="ltr" style="font-size:11px;white-space:pre-wrap;background:#0F172A;color:#A7F3D0;padding:8px;border-radius:10px;margin:0"></pre>' : ''}</div>
       <aside class="cs-box" id="room-wrap"><h2>الملفات</h2><div class="cs-drop" id="drop">اسحب الملفات هنا أو اضغط للاختيار<br><small>PDF أو صور أو Word، حتى 4 ميجا</small></div><input type="file" id="pick" multiple hidden accept=".pdf,.png,.jpg,.jpeg,.webp,.txt,.doc,.docx"><div id="files"></div></aside></div>`);
     wireDrop(); renderFiles(); startP2P();
   }
