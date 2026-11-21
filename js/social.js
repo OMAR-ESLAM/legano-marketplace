@@ -73,7 +73,7 @@
     if (/lawyer_offline/.test(m)) return 'المحامي مش أونلاين دلوقتي. جرّب محامي تاني.';
     if (/lawyer_busy/.test(m)) return 'المحامي في استشارة دلوقتي. جرّب محامي تاني أو استنى شوية.';
     if (/rate_limited/.test(m)) return 'عدد كبير من الطلبات. جرّب كمان شوية.';
-    if (/consent_required/.test(m)) return 'لازم توافق على التسجيل الأول.';
+    if (/consent_required/.test(m)) return 'لازم توافق على الشروط الأول.';
     if (/bad_file/.test(m)) return 'نوع الملف مش مسموح. المسموح: PDF وصور وWord ونص.';
     if (/file_too_big/.test(m)) return 'الملف كبير. الحد الأقصى 4 ميجا.';
     if (/too_many_files/.test(m)) return 'وصلت للحد الأقصى: 10 ملفات.';
@@ -758,6 +758,8 @@
     files: (id, token) => rpc('consult_files_list', { p_id: id, p_token: token || null }),
     filePut: (id, token, name, mime, b64) => rpc('consult_file_put', { p_id: id, p_token: token || null, p_name: name, p_mime: mime, p_b64: b64 }),
     fileGet: (id, file, token) => rpc('consult_file_get', { p_id: id, p_file: file, p_token: token || null }),
+    signalSend: (id, token, payload) => rpc('consult_signal_send', { p_id: id, p_token: token || null, p_payload: payload }),
+    signalPoll: (id, token, after) => rpc('consult_signal_poll', { p_id: id, p_token: token || null, p_after: after || 0 }),
     heartbeat: () => rpc('consult_heartbeat'),
     mySettings: async () => (await call(`/rest/v1/lawyer_consult?select=enabled,price,minutes,last_seen&lawyer_id=eq.${me()}`))[0] || null,
     saveSettings: f => call('/rest/v1/lawyer_consult?on_conflict=lawyer_id', { method: 'POST', json: { lawyer_id: me(), enabled: !!f.enabled, price: Number(f.price), minutes: Number(f.minutes) }, headers: { Prefer: 'resolution=merge-duplicates,return=minimal' } }),

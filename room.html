@@ -38,9 +38,9 @@
   if (ROLE === 'client' && !TOKEN) { $('stage').innerHTML = '<div class="empty">الرابط ناقص.</div>'; return; }
 
   // نص الموافقة مبدئي، ولازم يتراجع مع المستشار القانوني قبل الإطلاق الفعلي
-  const CONSENT = 'هذه الاستشارة تُسجَّل صوتاً وصورة لضمان جودة الخدمة وحفظ حق الطرفين. لا يطّلع على التسجيل أحد إلا عند تقديم اعتراض من أحد الطرفين، ويُحذف تلقائياً بعد انتهاء مهلة الاعتراض، وتُحذف الملفات المرفوعة معه. المنصة ليست طرفاً في العلاقة بين المحامي والموكل، والاستشارة لا تُنشئ توكيلاً بأي دعوى.';
+  const CONSENT = 'تتم هذه الاستشارة عبر اتصال مباشر بين الطرفين داخل منصة ليجانو، وهي غير مسجَّلة. الاتصال المباشر يعني أن عنوان الاتصال (IP) لكل طرف قد يظهر للطرف الآخر تقنياً. تُحذف الملفات المرفوعة في الغرفة تلقائياً بعد انتهاء مهلة الاعتراض. المنصة ليست طرفاً في العلاقة بين المحامي والموكل، والاستشارة لا تُنشئ توكيلاً بأي دعوى.';
   const FINAL = ['released', 'refunded', 'cancelled', 'expired'];
-  let st = null, offset = 0, roomUrl = null, roomErr = null, joining = false, loadingRoom = false, pingTimer = null, filesSig = '', fileList = [], lastStatus = null;
+  let st = null, offset = 0, joining = false, pingTimer = null, filesSig = '', fileList = [], lastStatus = null;
   const my = k => ROLE === 'client' ? st['client_' + k] : st['lawyer_' + k];
   const other = k => ROLE === 'client' ? st['lawyer_' + k] : st['client_' + k];
   const cid = () => ROLE === 'client' ? st.id : CID;
@@ -58,7 +58,7 @@
     try { st = await (ROLE === 'client' ? C.clientGet(TOKEN) : C.lawyerGet(CID)); } catch (e) { return; }
     if (!st) { set('<div class="empty">الاستشارة دي مش موجودة أو الرابط غلط.</div>'); return; }
     offset = Date.parse(st.now) - Date.now();
-    if (st.status !== lastStatus) { lastStatus = st.status; if (st.status !== 'live') { stopPing(); } filesSig = ''; }
+    if (st.status !== lastStatus) { lastStatus = st.status; if (st.status !== 'live') { stopPing(); } if (!['accepted', 'live'].includes(st.status)) stopP2P(); filesSig = ''; }
     view();
     if (['accepted', 'live', 'awaiting_confirm'].includes(st.status)) refreshFiles();
   }
@@ -71,12 +71,89 @@
     try { await C.join(cid(), tk()); } catch (e) { S.toast(S.friendly(e)); }
     joining = false; tick();
   }
-  async function loadRoom() {
-    if (roomUrl || loadingRoom) return; loadingRoom = true;
-    try { const r = await C.room(cid(), tk()); roomUrl = r.url; roomErr = null; }
-    catch (e) { roomErr = /provider_not_configured/.test(e.message) ? 'nocfg' : 'err'; }
-    loadingRoom = false; view();
+  // ---- الغرفة: اتصال مباشر (WebRTC) بين الطرفين. الإشارات بتعدّي عن طريق قاعدة البيانات، والفيديو نفسه ما بيعدّيش على أي سيرفر ----
+  const mySid = Math.random().toString(36).slice(2, 10);
+  let pc = null, localStream = null, peerSid = null, sigAfter = 0, sigTimer = null, helloTimer = null, p2pOn = false, polling = false, pendingIce = [], iceCfg = null, connState = '', mediaErr = '', camOn = true, micOn = true;
+  const sig = p => C.signalSend(cid(), tk(), p).catch(() => {});
+  const vmsg = t => { const m = $('vmsg'); if (m) { m.textContent = t || ''; m.style.display = t ? 'flex' : 'none'; } };
+  async function getIce() {
+    if (iceCfg) return iceCfg;
+    try { const j = await (await fetch('/api/ice')).json(); if (Array.isArray(j.iceServers) && j.iceServers.length) iceCfg = j.iceServers; } catch {}
+    return iceCfg || (iceCfg = [{ urls: 'stun:stun.l.google.com:19302' }]);
   }
+  async function startMedia() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { mediaErr = 'المتصفح ده مش بيدعم الفيديو. استخدم Chrome أو Safari حديث.'; return; }
+    try { localStream = await navigator.mediaDevices.getUserMedia({ video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: 'user' }, audio: { echoCancellation: true, noiseSuppression: true } }); }
+    catch (e) {
+      try { localStream = await navigator.mediaDevices.getUserMedia({ audio: true }); camOn = false; S.toast('الكاميرا مش متاحة، الاستشارة صوت بس.'); }
+      catch (e2) { mediaErr = 'لازم تسمح للمتصفح باستخدام الميكروفون (والكاميرا) علشان تدخل الغرفة. اسمح من شريط العنوان وحدّث الصفحة.'; }
+    }
+  }
+  function attachLocal() { const lv = $('lv'); if (lv && localStream) { lv.srcObject = localStream; lv.play().catch(() => {}); } }
+  async function newPc() {
+    closePc();
+    pc = new RTCPeerConnection({ iceServers: await getIce() });
+    const me = pc;
+    if (localStream) localStream.getTracks().forEach(t => me.addTrack(t, localStream));
+    me.onicecandidate = e => { if (e.candidate && pc === me) sig({ t: 'ice', from: mySid, to: peerSid, c: e.candidate.toJSON() }); };
+    me.ontrack = e => { const rv = $('rv'); if (!rv) return; rv.srcObject = e.streams[0]; rv.play().catch(() => vmsg('اضغط هنا لتشغيل الصوت والفيديو')); };
+    me.onconnectionstatechange = () => {
+      if (pc !== me) return; connState = me.connectionState;
+      if (connState === 'connected') vmsg('');
+      else if (connState === 'connecting') vmsg('جاري الاتصال...');
+      else if (connState === 'disconnected') vmsg('الاتصال ضعيف... بيحاول يرجع');
+      else if (connState === 'failed') { vmsg('انقطع الاتصال، بنعيد المحاولة...'); if (ROLE === 'lawyer') renegotiate(true); }
+      const rs = $('room-status'); if (rs) rs.innerHTML = statusLine();
+    };
+    return me;
+  }
+  function closePc() { if (pc) { const o = pc; pc = null; o.onicecandidate = o.ontrack = o.onconnectionstatechange = null; try { o.close(); } catch {} } pendingIce = []; connState = ''; }
+  async function renegotiate(restart) {
+    if (ROLE !== 'lawyer' || !pc) return;
+    try { const o = await pc.createOffer(restart ? { iceRestart: true } : undefined); await pc.setLocalDescription(o); sig({ t: 'offer', from: mySid, to: peerSid, sdp: { type: pc.localDescription.type, sdp: pc.localDescription.sdp } }); } catch {}
+  }
+  async function makeOffer(sid) { peerSid = sid; vmsg('جاري الاتصال...'); await newPc(); await renegotiate(false); }
+  async function flushIce() { const q = pendingIce; pendingIce = []; for (const c of q) { try { await pc.addIceCandidate(c); } catch {} } }
+  async function onSignal(m) {
+    if (!m || typeof m !== 'object') return;
+    if (m.t === 'hello') {
+      if (m.sid === peerSid) return;
+      if (ROLE === 'lawyer') await makeOffer(m.sid); else sig({ t: 'hello', sid: mySid });
+    } else if (m.t === 'offer' && ROLE === 'client' && m.to === mySid && m.sdp) {
+      if (!pc || peerSid !== m.from) { peerSid = m.from; await newPc(); }
+      try { await pc.setRemoteDescription(m.sdp); await flushIce(); const a = await pc.createAnswer(); await pc.setLocalDescription(a); sig({ t: 'answer', from: mySid, to: m.from, sdp: { type: pc.localDescription.type, sdp: pc.localDescription.sdp } }); } catch {}
+    } else if (m.t === 'answer' && ROLE === 'lawyer' && m.to === mySid && m.from === peerSid && pc && m.sdp) {
+      try { await pc.setRemoteDescription(m.sdp); await flushIce(); } catch {}
+    } else if (m.t === 'ice' && m.to === mySid && m.from === peerSid && pc && m.c) {
+      if (pc.remoteDescription) { try { await pc.addIceCandidate(m.c); } catch {} } else pendingIce.push(m.c);
+    }
+  }
+  async function pollSig() {
+    if (polling || !p2pOn) return; polling = true;
+    try { const l = await C.signalPoll(cid(), tk(), sigAfter); for (const x of l) { sigAfter = Math.max(sigAfter, x.id); await onSignal(x.p); } } catch {}
+    polling = false;
+  }
+  async function startP2P() {
+    if (p2pOn) return; p2pOn = true;
+    await startMedia(); attachLocal();
+    if (mediaErr) { vmsg(mediaErr); p2pOn = false; return; }
+    if (!camOn) { const b = $('bCam'); if (b) b.disabled = true; }
+    vmsg('في انتظار الطرف التاني...');
+    sig({ t: 'hello', sid: mySid });
+    sigTimer = setInterval(pollSig, 1200); pollSig();
+    helloTimer = setInterval(() => { if (connState !== 'connected') sig({ t: 'hello', sid: mySid }); }, 6000);
+  }
+  function stopP2P() {
+    p2pOn = false; clearInterval(sigTimer); clearInterval(helloTimer); sigTimer = helloTimer = null; closePc(); peerSid = null; sigAfter = 0;
+    if (localStream) { localStream.getTracks().forEach(t => t.stop()); localStream = null; }
+  }
+  window.addEventListener('beforeunload', stopP2P);
+  document.addEventListener('click', e => {
+    if (e.target.id === 'vmsg') { const rv = $('rv'); if (rv && rv.srcObject) { rv.play().then(() => vmsg('')).catch(() => {}); } }
+    const b = e.target.closest('#bMic, #bCam'); if (!b || !localStream) return;
+    if (b.id === 'bMic') { micOn = !micOn; localStream.getAudioTracks().forEach(t => t.enabled = micOn); b.classList.toggle('off', !micOn); b.textContent = micOn ? '🎤' : '🔇'; }
+    else { camOn = !camOn; localStream.getVideoTracks().forEach(t => t.enabled = camOn); b.classList.toggle('off', !camOn); b.textContent = camOn ? '📷' : '🚫'; }
+  });
 
   function view() {
     const s = st.status;
@@ -100,37 +177,33 @@
     set(`<div class="cs-box"><h2>بعتنا طلبك لـ ${esc(st.lawyer.name)}</h2><p>في انتظار رد المحامي. لو ما ردّش خلال دقيقتين الطلب بيتلغي وما بيتسحبش منك حاجة.</p><p><b dir="ltr">${mm(left)}</b></p><button class="soc-btn" data-a="cancel" type="button">إلغاء الطلب</button></div>`);
   }
   function viewConsent() {
-    set(`<div class="cs-box"><h2>${ROLE === 'client' ? 'المحامي قبل طلبك' : 'تجهيز الاستشارة'}</h2><p>قبل ما تدخلوا الغرفة، لازم الطرفين يوافقوا على التسجيل.</p>
+    set(`<div class="cs-box"><h2>${ROLE === 'client' ? 'المحامي قبل طلبك' : 'تجهيز الاستشارة'}</h2><p>قبل ما تدخلوا الغرفة، لازم الطرفين يوافقوا على الشروط دي.</p>
       <div class="cs-consent">${esc(CONSENT)}</div>
-      <label class="cs-chk"><input type="checkbox" id="agree"><span>قرأت وأوافق على تسجيل الاستشارة بالشروط دي.</span></label>
+      <label class="cs-chk"><input type="checkbox" id="agree"><span>قرأت وأوافق على الشروط دي.</span></label>
       <button class="soc-btn primary" id="agreeGo" data-a="consent" type="button" disabled>أوافق وأكمل</button>
       <button class="soc-btn" data-a="cancel" type="button" style="margin-top:8px">رفض وإلغاء (استرداد كامل)</button></div>`);
     $('agree').onchange = e => { $('agreeGo').disabled = !e.target.checked; };
   }
-  function viewWaitConsent() { set(`<div class="cs-box"><h2>وافقت على التسجيل</h2><p>في انتظار موافقة ${who()}...</p><button class="soc-btn" data-a="cancel" type="button">إلغاء</button></div>`); }
+  function viewWaitConsent() { set(`<div class="cs-box"><h2>وافقت على الشروط</h2><p>في انتظار موافقة ${who()}...</p><button class="soc-btn" data-a="cancel" type="button">إلغاء</button></div>`); }
 
   function viewRoom() {
-    if (!roomUrl && !roomErr) loadRoom();
-    const live = st.status === 'live';
-    if (live) startPing();
-    const video = roomUrl
-      ? `<iframe src="${esc(roomUrl)}" allow="camera; microphone; fullscreen; display-capture; autoplay" title="غرفة الاستشارة"></iframe>`
-      : `<div class="cs-ov">${roomErr === 'nocfg' ? 'مزوّد الفيديو لسه مش متوصّل بالموقع. (محتاج مفتاح Daily في إعدادات Vercel)' : roomErr ? 'تعذّر فتح الغرفة. جرّب تحدّث الصفحة.' : 'جاري فتح الغرفة...'}</div>`;
-    const el = $('room-wrap');
-    if (el) { // نحافظ على الـiframe من إعادة الرسم، ونحدّث منطقة الفيديو بس لما الرابط يوصل أو الرسالة تتغيّر
-      $('room-status').innerHTML = statusLine();
-      const vid = $('vid'); if (vid && !vid.querySelector('iframe')) vid.innerHTML = video;
-      return;
-    }
-    set(`<div class="cs-room"><div><div class="cs-video" id="vid">${video}</div>
+    if (st.status === 'live') startPing();
+    if ($('room-wrap')) { $('room-status').innerHTML = statusLine(); return; }
+    set(`<div class="cs-room"><div><div class="cs-video" id="vid">
+        <video id="rv" autoplay playsinline></video>
+        <video id="lv" autoplay playsinline muted></video>
+        <div class="cs-brand">LEGANO<small>غرفة استشارة</small></div>
+        <div class="cs-ov" id="vmsg">جاري تجهيز الكاميرا...</div>
+        <div class="cs-ctl"><button type="button" id="bMic" title="الميكروفون">🎤</button><button type="button" id="bCam" title="الكاميرا">📷</button></div></div>
       <div class="cs-bar"><span id="room-status">${statusLine()}</span><button class="soc-btn" data-a="end" type="button">إنهاء الاستشارة</button></div></div>
       <aside class="cs-box" id="room-wrap"><h2>الملفات</h2><div class="cs-drop" id="drop">اسحب الملفات هنا أو اضغط للاختيار<br><small>PDF أو صور أو Word، حتى 4 ميجا</small></div><input type="file" id="pick" multiple hidden accept=".pdf,.png,.jpg,.jpeg,.webp,.txt,.doc,.docx"><div id="files"></div></aside></div>`);
-    wireDrop(); renderFiles();
+    wireDrop(); renderFiles(); startP2P();
   }
   function statusLine() {
     if (st.status === 'accepted') return `<span style="color:#7A5200;font-weight:800">في انتظار ${who()} يدخل الغرفة...</span>`;
     const el = Math.max(0, (nowMs() - Date.parse(st.started_at)) / 1000), tot = st.minutes * 60;
-    return `<b>${who()}</b> • <span dir="ltr">${mm(el)} / ${mm(tot)}</span> • <span style="color:#B91C1C;font-weight:800">● التسجيل شغّال</span>`;
+    const c = connState === 'connected' ? '<span style="color:#15803D;font-weight:800">● متصل</span>' : '<span style="color:#7A5200;font-weight:800">● بيتوصّل</span>';
+    return `<b>${who()}</b> • <span dir="ltr">${mm(el)} / ${mm(tot)}</span> • ${c}`;
   }
   setInterval(() => { if (st && st.status === 'live' && $('room-status')) $('room-status').innerHTML = statusLine(); }, 1000);
 
@@ -139,7 +212,7 @@
     if (ROLE === 'lawyer') return set(`<div class="cs-box"><h2>الاستشارة خلصت</h2><p>في انتظار تأكيد الموكل. لو ما اعترضش قبل <b>${dl}</b>، هتتحوّل ${earn()} ج لمحفظتك تلقائياً.</p></div>${filesBox()}`), renderFiles(), wireDrop();
     set(`<div class="cs-box"><h2>خدت استشارتك؟</h2><p>أكّد علشان الفلوس تروح للمحامي. لو ما ردّيتش قبل <b>${dl}</b> هتتأكد تلقائياً.</p>
       <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="soc-btn primary" data-a="confirm" type="button">أيوه، الاستشارة تمت</button><button class="soc-btn" data-a="problem" type="button">عندي مشكلة</button></div>
-      <div id="prob" hidden style="margin-top:12px"><label class="f-l" for="reason">إيه المشكلة؟</label><textarea id="reason" class="f-i" rows="3" maxlength="500" placeholder="مثال: المحامي ما ردّش على أسئلتي"></textarea><button class="soc-btn primary" data-a="dispute" type="button" style="margin-top:8px">ابعت الاعتراض</button><p style="margin-top:8px">الفلوس هتتجمّد وبنراجع التسجيل.</p></div></div>${filesBox()}`);
+      <div id="prob" hidden style="margin-top:12px"><label class="f-l" for="reason">إيه المشكلة؟</label><textarea id="reason" class="f-i" rows="3" maxlength="500" placeholder="مثال: المحامي ما ردّش على أسئلتي"></textarea><button class="soc-btn primary" data-a="dispute" type="button" style="margin-top:8px">ابعت الاعتراض</button><p style="margin-top:8px">الفلوس هتتجمّد ولحد ما فريق المنصة يراجع الموضوع.</p></div></div>${filesBox()}`);
     renderFiles(); wireDrop();
   }
   const filesBox = () => `<aside class="cs-box"><h2>الملفات</h2><div id="files"></div></aside>`;
@@ -202,7 +275,7 @@
       else if (a === 'reject') { if (confirm('ترفض الطلب؟')) await C.respond(CID, false); }
       else if (a === 'consent') await C.consent(cid(), tk());
       else if (a === 'cancel') { if (confirm('تلغي الاستشارة؟ هيتردّ المبلغ بالكامل.')) await C.end(cid(), tk()); }
-      else if (a === 'end') { if (confirm('تنهي الاستشارة؟')) { await C.end(cid(), tk()); roomUrl = null; } }
+      else if (a === 'end') { if (confirm('تنهي الاستشارة؟')) { await C.end(cid(), tk()); } }
       else if (a === 'confirm') await C.confirm(TOKEN);
       else if (a === 'problem') $('prob').hidden = false;
       else if (a === 'dispute') { const r = $('reason').value.trim(); if (r.length < 5) S.toast('اكتب المشكلة بجملة واضحة'); else await C.dispute(TOKEN, r); }
