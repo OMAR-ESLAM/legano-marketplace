@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>الاستشارات الفورية | Legano</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Syne:wght@800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="js/social.css">
+<style>
+  :root { color-scheme: light; --background:#F8FAFB; --foreground:#1E293B; --card:#FFFFFF; --border:#E2E8F0; --muted-foreground:#64748B; --secondary:#EEF2F7; --gold:#0F172A; --gold-soft:#92620C; }
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Cairo', sans-serif; background: var(--background); color: var(--foreground); line-height: 1.7; }
+  .logo-text { font-family: 'Syne', sans-serif; font-weight: 800; letter-spacing: 5px; font-size: 18px; text-decoration: none; background: linear-gradient(90deg, #0F172A, #92620C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .top { position: sticky; top: 0; z-index: 50; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; padding: 10px 20px; background: rgba(255,255,255,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  #navSlot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .back { display: inline-block; margin-bottom: 12px; font-size: 13px; font-weight: 700; color: var(--gold-soft); text-decoration: none; }
+  .warn { padding: 12px 14px; margin-bottom: 14px; background: #FFF8E6; border: 1px solid #F1D48A; color: #7A5200; border-radius: 12px; font-size: 13px; line-height: 1.9; }
+  .warn a { color: inherit; font-weight: 800; }
+</style>
+</head>
+<body>
+<header class="top"><a class="logo-text" href="index.html?browse=1">LEGANO</a><div id="navSlot"></div></header>
+<main class="cs-wrap">
+  <div class="cs-test">⚠️ وضع تجريبي: الدفع لسه مش مفعّل، والأرصدة للتجربة بس ومينفعش تتسحب فعلياً.</div>
+  <div id="gate" class="soc-card gate" hidden><h1>منطقة المحامين</h1><p>الاستشارات الفورية للمحامين الموثّقين. سجّل دخول علشان تبدأ.</p><a class="soc-btn primary" href="dashboard.html">دخول المحامين</a></div>
+  <div id="wrap" hidden>
+    <h1 class="cs-h">الاستشارات الفورية</h1>
+    <div class="feed-tabs" role="tablist"><button class="tab" data-t="cons" aria-selected="true" type="button">الاستشارات</button><button class="tab" data-t="wal" aria-selected="false" type="button">المحفظة</button></div>
+    <section id="pCons">
+      <div class="cs-box"><label class="cs-sw"><input type="checkbox" id="on"><span id="onTxt">أنا أونلاين</span></label>
+        <p id="onHint" style="margin-top:6px"></p>
+        <div class="cs-fields"><div><label class="f-l" for="price">سعر الاستشارة (جنيه)</label><input id="price" class="f-i" type="number" inputmode="numeric" min="1"></div>
+        <div><label class="f-l" for="mins">المدة (دقيقة)</label><select id="mins" class="f-i"><option>10</option><option>15</option><option>20</option><option>30</option><option>45</option><option>60</option></select></div></div>
+        <button id="save" class="soc-btn primary" type="button">حفظ</button> <small id="limits" style="color:var(--muted-foreground)"></small></div>
+      <div id="list" aria-live="polite"></div>
+    </section>
+    <section id="pWal" hidden>
+      <div class="cs-stats"><div><b id="wAv">0</b><small>متاح للسحب</small></div><div><b id="wHold">0</b><small>معلّق (في انتظار تأكيد الموكل)</small></div><div><b id="wTot">0</b><small>إجمالي الأرباح</small></div></div>
+      <div class="cs-box"><h2>طلب سحب</h2><div class="cs-fields"><div><label class="f-l" for="wAmt">المبلغ (الحد الأدنى 100 ج)</label><input id="wAmt" class="f-i" type="number" inputmode="numeric" min="100"></div>
+        <div><label class="f-l" for="wMeth">الطريقة</label><select id="wMeth" class="f-i"><option value="instapay">إنستاباي</option><option value="vodafone_cash">فودافون كاش</option><option value="bank">تحويل بنكي</option></select></div>
+        <div><label class="f-l" for="wAcc">رقم الحساب / المحفظة</label><input id="wAcc" class="f-i" dir="ltr" maxlength="80"></div></div>
+        <button id="wGo" class="soc-btn primary" type="button">اطلب السحب</button><p style="margin-top:8px">السحب بيتم يدوياً من فريق المنصة.</p></div>
+      <div id="wList"></div>
+    </section>
+  </div>
+</main>
+<script src="js/social.js"></script>
+<script>
+(async () => {
+  const $ = id => document.getElementById(id), S = window.Social, C = S.Consult, esc = S.esc;
+  S.mountNav($('navSlot'));
+  if (!S.me()) { $('gate').hidden = false; return; }
+  $('wrap').hidden = false;
+  const fmt = d => d ? new Date(d).toLocaleString('ar-EG', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' }) : '';
+  let cfg = null, hb = null, seen = new Set(), first = true, baseTitle = document.title, flash = null;
+  const METH = { instapay: 'إنستاباي', vodafone_cash: 'فودافون كاش', bank: 'تحويل بنكي' }, WST = { pending: 'قيد التنفيذ', paid: 'اتحوّل', rejected: 'مرفوض' };
+
+  async function loadCfg() {
+    const [m, lim] = await Promise.all([C.mySettings().catch(() => null), C.limits().catch(() => null)]);
+    cfg = m || { enabled: false, price: 200, minutes: 20 };
+    $('on').checked = !!cfg.enabled; $('price').value = cfg.price; $('mins').value = String(cfg.minutes);
+    if (lim) $('limits').textContent = `السعر من ${lim.min_price} لـ ${lim.max_price} ج • عمولة المنصة ${lim.fee_pct}%`;
+    presence();
+  }
+  function presence() {
+    const on = $('on').checked;
+    $('onTxt').textContent = on ? 'أنت أونلاين وبتستقبل طلبات' : 'أنت أوفلاين';
+    $('onHint').textContent = on ? 'فضّل الصفحة دي مفتوحة. لو قفلتها بتبان أوفلاين بعد حوالي دقيقة ونص.' : 'فعّل الزرار علشان تظهر للموكلين وتستقبل استشارات.';
+    if (hb) { clearInterval(hb); hb = null; }
+    if (on && cfg && cfg.enabled) { C.heartbeat().catch(() => {}); hb = setInterval(() => C.heartbeat().catch(() => {}), 30000); }
+  }
+  $('save').onclick = async () => {
+    $('save').disabled = true;
+    try { await C.saveSettings({ enabled: $('on').checked, price: $('price').value, minutes: $('mins').value }); cfg = { enabled: $('on').checked, price: Number($('price').value), minutes: Number($('mins').value) }; S.toast('اتحفظ'); presence(); }
+    catch (e) { S.toast(S.friendly(e)); $('on').checked = !!(cfg && cfg.enabled); presence(); }
+    $('save').disabled = false;
+  };
+
+  async function loadList() {
+    let rows = []; try { rows = await C.mine(); } catch { return; }
+    const fresh = rows.filter(r => r.status === 'requested' && !seen.has(r.id));
+    rows.forEach(r => { if (r.status === 'requested') seen.add(r.id); });
+    if (!first && fresh.length) { S.toast('🔔 طلب استشارة جديد!'); if (!flash) { let k = 0; flash = setInterval(() => { document.title = (k++ % 2) ? baseTitle : '🔔 طلب جديد'; if (k > 12) { clearInterval(flash); flash = null; document.title = baseTitle; } }, 800); } }
+    first = false;
+    $('list').innerHTML = rows.length ? rows.map(r => {
+      const act = r.status === 'requested' ? `<span><button class="soc-btn primary" data-a="acc" data-id="${esc(r.id)}" type="button">قبول</button> <button class="soc-btn" data-a="rej" data-id="${esc(r.id)}" type="button">رفض</button></span>`
+        : ['accepted', 'live'].includes(r.status) ? `<a class="soc-btn primary" href="room.html?c=${esc(r.id)}">ادخل الغرفة</a>`
+        : `<span style="font-weight:800">${esc(C.ST[r.status] || r.status)}</span>`;
+      return `<div class="cs-row${r.status === 'requested' ? ' new' : ''}"><div><b>${esc(r.client_name)}</b> • ${S.num(r.price)} ج<small>${esc(r.client_topic)}</small><small>${fmt(r.created_at)}</small></div>${act}</div>`;
+    }).join('') : '<div class="empty">مفيش استشارات لسه. فعّل «أنا أونلاين» علشان تظهر للموكلين.</div>';
+  }
+  $('list').addEventListener('click', async e => {
+    const b = e.target.closest('[data-a]'); if (!b) return;
+    try { await C.respond(b.dataset.id, b.dataset.a === 'acc'); if (b.dataset.a === 'acc') { location.href = 'room.html?c=' + b.dataset.id; return; } } catch (er) { S.toast(S.friendly(er)); }
+    loadList();
+  });
+
+  async function loadWallet() {
+    try { const w = await C.wallet(); $('wAv').textContent = S.num(w.available) + ' ج'; $('wHold').textContent = S.num(w.on_hold) + ' ج'; $('wTot').textContent = S.num(w.total_earned) + ' ج'; } catch {}
+    try { const l = await C.withdrawals(); $('wList').innerHTML = l.length ? l.map(x => `<div class="cs-row"><div><b>${S.num(x.amount)} ج</b> • ${esc(METH[x.method] || x.method)}<small>${fmt(x.created_at)}</small></div><span style="font-weight:800">${WST[x.status] || x.status}</span></div>`).join('') : '<div class="empty">مفيش طلبات سحب.</div>'; } catch {}
+  }
+  $('wGo').onclick = async () => {
+    $('wGo').disabled = true;
+    try { await C.withdraw($('wAmt').value, $('wMeth').value, $('wAcc').value); S.toast('اتبعت طلب السحب'); $('wAmt').value = ''; loadWallet(); } catch (e) { S.toast(S.friendly(e)); }
+    $('wGo').disabled = false;
+  };
+  document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', String(x === t)));
+    $('pCons').hidden = t.dataset.t !== 'cons'; $('pWal').hidden = t.dataset.t !== 'wal';
+    if (t.dataset.t === 'wal') loadWallet();
+  }));
+  await loadCfg(); await loadList(); loadWallet();
+  setInterval(loadList, 5000); setInterval(() => { if (!$('pWal').hidden) loadWallet(); }, 15000);
+})();
+</script>
+</body>
+</html>

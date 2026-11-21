@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>استشارة قانونية فورية | Legano</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Syne:wght@800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="js/social.css">
+<style>
+  :root { color-scheme: light; --background:#F8FAFB; --foreground:#1E293B; --card:#FFFFFF; --border:#E2E8F0; --muted-foreground:#64748B; --secondary:#EEF2F7; --gold:#0F172A; --gold-soft:#92620C; }
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Cairo', sans-serif; background: var(--background); color: var(--foreground); line-height: 1.7; }
+  .logo-text { font-family: 'Syne', sans-serif; font-weight: 800; letter-spacing: 5px; font-size: 18px; text-decoration: none; background: linear-gradient(90deg, #0F172A, #92620C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .top { position: sticky; top: 0; z-index: 50; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; padding: 10px 20px; background: rgba(255,255,255,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  #navSlot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .back { display: inline-block; margin-bottom: 12px; font-size: 13px; font-weight: 700; color: var(--gold-soft); text-decoration: none; }
+  .warn { padding: 12px 14px; margin-bottom: 14px; background: #FFF8E6; border: 1px solid #F1D48A; color: #7A5200; border-radius: 12px; font-size: 13px; line-height: 1.9; }
+  .warn a { color: inherit; font-weight: 800; }
+</style>
+</head>
+<body>
+<header class="top"><a class="logo-text" href="index.html?browse=1">LEGANO</a><div id="navSlot"></div></header>
+<main class="cs-wrap">
+  <div class="cs-test">⚠️ وضع تجريبي: الدفع لسه مش مفعّل، فمفيش أي مبلغ هيتسحب منك.</div>
+  <div id="resume" class="cs-box" hidden></div>
+  <h1 class="cs-h">استشارة قانونية فورية</h1>
+  <p class="cs-sub">اختار محامي موثّق أونلاين دلوقتي وادخل معاه استشارة فيديو. الفلوس بتفضل معلّقة ومبتروحش للمحامي إلا لما تأكّد إن الاستشارة تمت. الاستشارة بتتسجّل بموافقتك لضمان حق الطرفين.</p>
+  <div id="list" class="cs-grid" aria-live="polite"></div>
+</main>
+<div id="reqOv" class="modal-ov" hidden><div class="modal" role="dialog" aria-modal="true" aria-labelledby="rTitle">
+  <div class="modal-h"><h2 id="rTitle">طلب استشارة</h2><button type="button" class="modal-x" id="rX" aria-label="إغلاق">×</button></div>
+  <div class="modal-b">
+    <p id="rWho" style="margin:0 0 10px;font-size:13.5px;line-height:2"></p>
+    <label class="f-l" for="rName">اسمك</label><input id="rName" class="f-i" maxlength="60" placeholder="مثال: منى أحمد">
+    <label class="f-l" for="rTopic">موضوع الاستشارة (جملة أو اتنين)</label><textarea id="rTopic" class="f-i" rows="3" maxlength="300" placeholder="مثال: عايزة أعرف حقوقي في النفقة بعد الطلاق"></textarea>
+    <p style="margin:8px 0 0;font-size:12.5px;color:var(--muted-foreground);line-height:1.9">⚠️ ما تكتبش أرقام قومية أو بيانات حساسة هنا. هتحكي التفاصيل للمحامي في الغرفة.</p>
+  </div>
+  <div class="modal-f"><button id="rGo" type="button" class="soc-btn primary" disabled>ابعت الطلب</button></div>
+</div></div>
+<script src="js/social.js"></script>
+<script>
+(async () => {
+  const $ = id => document.getElementById(id), S = window.Social, C = S.Consult, esc = S.esc;
+  S.mountNav($('navSlot'));
+  const CAT = { rent: 'إيجارات وعقارات', labor: 'عمالي', criminal: 'جنائي', family: 'أحوال شخصية', contracts: 'عقود وتحكيم', commercial: 'تجاري وشركات', other: 'متنوع' };
+  let lawyers = [], target = null;
+  const LS = { get() { try { return JSON.parse(localStorage.getItem('lg_ct')); } catch { return null; } }, set(v) { try { v ? localStorage.setItem('lg_ct', JSON.stringify(v)) : localStorage.removeItem('lg_ct'); } catch {} } };
+
+  function render() {
+    $('list').innerHTML = lawyers.length ? lawyers.map(l => `<article class="cs-card" data-id="${esc(l.id)}">
+      <a class="cs-lw" href="/lawyer/${esc(l.id)}">${S.avatar(l)}<span><b><i class="cs-dot"></i>${esc(l.display_name)}${l.verified ? S.badge() : ''}</b><small>${esc(l.city || '')}${l.rating_count ? ` • ★ ${Number(l.rating_avg).toFixed(1)} (${S.num(l.rating_count)})` : ''}</small></span></a>
+      <small style="color:var(--muted-foreground)">${esc((l.specialties || []).map(k => CAT[k]).filter(Boolean).join(' • '))}</small>
+      <div class="cs-price"><span>${S.num(l.minutes)} دقيقة</span><b>${S.num(l.price)} ج</b></div>
+      <button type="button" class="soc-btn primary" data-a="ask">اطلب استشارة دلوقتي</button></article>`).join('')
+      : '<div class="empty" style="grid-column:1/-1">مفيش محامي أونلاين دلوقتي. الصفحة بتتحدّث لوحدها، ارجع بعد شوية.</div>';
+  }
+  async function load() { try { lawyers = await C.online(); } catch { lawyers = []; } render(); }
+  async function resume() {
+    const t = LS.get(); if (!t || !t.t) return;
+    try {
+      const c = await C.clientGet(t.t);
+      if (!c || ['released', 'refunded', 'cancelled', 'expired'].includes(c.status)) { LS.set(null); return; }
+      $('resume').hidden = false;
+      $('resume').innerHTML = `<h2>عندك استشارة شغّالة مع ${esc(c.lawyer.name)}</h2><p>${esc(C.ST[c.status] || '')}</p><a class="soc-btn primary" href="room.html?t=${encodeURIComponent(t.t)}">كمّل الاستشارة</a>`;
+    } catch {}
+  }
+  const valid = () => { $('rGo').disabled = !($('rName').value.trim().length >= 2 && $('rTopic').value.trim().length >= 5); };
+  ['rName', 'rTopic'].forEach(i => $(i).addEventListener('input', valid));
+  $('list').addEventListener('click', e => {
+    const b = e.target.closest('[data-a=ask]'); if (!b) return;
+    target = lawyers.find(l => l.id === b.closest('.cs-card').dataset.id); if (!target) return;
+    $('rWho').innerHTML = `هتتواصل مع <b>${esc(target.display_name)}</b>، ${S.num(target.minutes)} دقيقة بـ ${S.num(target.price)} ج (تجريبي).`;
+    $('reqOv').hidden = false; $('rName').focus();
+  });
+  $('rX').onclick = () => { $('reqOv').hidden = true; };
+  $('reqOv').addEventListener('mousedown', e => { if (e.target === $('reqOv')) $('reqOv').hidden = true; });
+  $('rGo').onclick = async () => {
+    if (!target) return; $('rGo').disabled = true;
+    try {
+      const r = await C.request(target.id, $('rName').value.trim(), $('rTopic').value.trim());
+      LS.set({ t: r.token, id: r.id });
+      location.href = 'room.html?t=' + encodeURIComponent(r.token);
+    } catch (e) { S.toast(S.friendly(e)); load(); valid(); }
+  };
+  await Promise.all([load(), resume()]);
+  setInterval(load, 15000);
+})();
+</script>
+</body>
+</html>

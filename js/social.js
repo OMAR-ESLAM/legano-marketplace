@@ -69,7 +69,17 @@
     if (/referral_limit/.test(m)) return 'عندك 10 إحالات مفتوحة. اقفل أو الغي واحدة قبل ما تضيف.';
     if (/locked/.test(m)) return 'الإحالة اتسندت، ما ينفعش تعدّل تفاصيلها.';
     if (/no_offer/.test(m)) return 'العرض ده مش موجود (يمكن اتسحب).';
-    if (/bad_status/.test(m)) return 'حالة الإحالة اتغيّرت. حدّث الصفحة.';
+    if (/bad_status/.test(m)) return 'الحالة اتغيّرت. حدّث الصفحة.';
+    if (/lawyer_offline/.test(m)) return 'المحامي مش أونلاين دلوقتي. جرّب محامي تاني.';
+    if (/lawyer_busy/.test(m)) return 'المحامي في استشارة دلوقتي. جرّب محامي تاني أو استنى شوية.';
+    if (/rate_limited/.test(m)) return 'عدد كبير من الطلبات. جرّب كمان شوية.';
+    if (/consent_required/.test(m)) return 'لازم توافق على التسجيل الأول.';
+    if (/bad_file/.test(m)) return 'نوع الملف مش مسموح. المسموح: PDF وصور وWord ونص.';
+    if (/file_too_big/.test(m)) return 'الملف كبير. الحد الأقصى 4 ميجا.';
+    if (/too_many_files/.test(m)) return 'وصلت للحد الأقصى: 10 ملفات.';
+    if (/insufficient_balance/.test(m)) return 'الرصيد المتاح أقل من المبلغ (الحد الأدنى للسحب 100 ج).';
+    if (/bad_price/.test(m)) return 'السعر خارج الحدود المسموحة.';
+    if (/not_verified/.test(m)) return 'الاستشارات الفورية للمحامين الموثّقين بس.';
     if (/case_open/.test(m)) return 'التقييم بيفتح لما المحامي يقفل القضية.';
     if (/case_too_new/.test(m)) return 'التقييم بيتاح بعد يومين من بداية القضية.';
     if (/already_rated/.test(m)) return 'القضية دي اتقيّمت قبل كده.';
@@ -77,7 +87,7 @@
     if (/not_owner/.test(m)) return 'الصلاحية دي لمؤسس الجروب بس.';
     if (/group_limit/.test(m)) return 'وصلت للحد الأقصى: 5 جروبات لكل محامي.';
     if (/not_completed/.test(m)) return 'التقييم بيتفتح بعد ما الإحالة تتقفل كمكتملة.';
-    if (/not_party/.test(m)) return 'التقييم متاح لطرفَي الإحالة بس.';
+    if (/not_party/.test(m)) return 'العملية دي متاحة لأطرافها بس.';
     if (/not_member/.test(m)) return 'لازم تنضم للجروب الأول علشان تنشر فيه.';
     if (/contact_first/.test(m)) return 'تقدر تقيّم المحامي بعد ما تتصل بيه أو تبعتله واتساب من هنا.';
     if (/lawyers_cannot_rate/.test(m)) return 'التقييم للموكلين بس.';
@@ -272,7 +282,7 @@
       + item('notifications.html', 'الإشعارات', BELL, '<span class="nav-dot" hidden></span>')
       + `<div class="nav-me"><button type="button" class="nav-av" id="navAv" aria-haspopup="menu" aria-expanded="false" aria-label="حسابي"><span class="avatar sm">${esc('؟')}</span></button>
         <div class="nav-menu" id="navMenu" role="menu" hidden>
-          <a role="menuitem" href="referrals.html">سوق الإحالات</a><a role="menuitem" href="calendar.html">مفكرة الجلسات</a><a role="menuitem" href="lawyer.html?id=${esc(me())}">بروفايلي</a><a role="menuitem" href="dashboard.html">لوحتي وإحصائياتي</a><a role="menuitem" href="index.html?browse=1">سوق المحامين</a>
+          <a role="menuitem" href="consultations.html">استشارات فورية</a><a role="menuitem" href="referrals.html">سوق الإحالات</a><a role="menuitem" href="calendar.html">مفكرة الجلسات</a><a role="menuitem" href="lawyer.html?id=${esc(me())}">بروفايلي</a><a role="menuitem" href="dashboard.html">لوحتي وإحصائياتي</a><a role="menuitem" href="index.html?browse=1">سوق المحامين</a>
           <button role="menuitem" type="button" id="navOut">تسجيل الخروج</button></div></div>`;
     const menu = el.querySelector('#navMenu'), btn = el.querySelector('#navAv');
     const close = () => { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); };
@@ -728,7 +738,47 @@
     return m.map(x => ({ ...x, a: au[x.lawyer_id] })).filter(x => x.a);
   };
 
+
+  // ---------- الاستشارات الفورية ----------
+  // الموكل ما عندوش حساب: بيتعرّف بتوكن سرّي. المحامي بحسابه. كل العمليات عن طريق دوال بتتحقق من الطرف.
+  const rpc = (fn, json) => call('/rest/v1/rpc/' + fn, { method: 'POST', json: json || {} });
+  const CONSULT_COLS = 'id,client_name,client_topic,price,minutes,fee_pct,status,pay_status,room_name,created_at,accepted_at,started_at,ended_at,confirm_deadline,released_at,client_consent_at,lawyer_consent_at,overlap_seconds,short_session,dispute_reason';
+  const Consult = {
+    online: () => call('/rest/v1/online_lawyers?select=id,display_name,city,photo_path,specialties,experience_years,rating_avg,rating_count,verified,price,minutes&order=rating_avg.desc&limit=60'),
+    request: (lawyer, name, topic) => rpc('consult_request', { p_lawyer: lawyer, p_name: name, p_topic: topic }),
+    clientGet: token => rpc('consult_client_get', { p_token: token }),
+    lawyerGet: id => rpc('consult_lawyer_get', { p_id: id }),
+    consent: (id, token) => rpc('consult_consent', { p_id: id, p_token: token || null }),
+    join: (id, token) => rpc('consult_join', { p_id: id, p_token: token || null }),
+    ping: (id, token) => rpc('consult_ping', { p_id: id, p_token: token || null }),
+    end: (id, token) => rpc('consult_end', { p_id: id, p_token: token || null }),
+    confirm: token => rpc('consult_confirm', { p_token: token }),
+    dispute: (token, reason) => rpc('consult_dispute', { p_token: token, p_reason: reason }),
+    respond: (id, ok) => rpc('consult_lawyer_respond', { p_id: id, p_accept: !!ok }),
+    files: (id, token) => rpc('consult_files_list', { p_id: id, p_token: token || null }),
+    filePut: (id, token, name, mime, b64) => rpc('consult_file_put', { p_id: id, p_token: token || null, p_name: name, p_mime: mime, p_b64: b64 }),
+    fileGet: (id, file, token) => rpc('consult_file_get', { p_id: id, p_file: file, p_token: token || null }),
+    heartbeat: () => rpc('consult_heartbeat'),
+    mySettings: async () => (await call(`/rest/v1/lawyer_consult?select=enabled,price,minutes,last_seen&lawyer_id=eq.${me()}`))[0] || null,
+    saveSettings: f => call('/rest/v1/lawyer_consult?on_conflict=lawyer_id', { method: 'POST', json: { lawyer_id: me(), enabled: !!f.enabled, price: Number(f.price), minutes: Number(f.minutes) }, headers: { Prefer: 'resolution=merge-duplicates,return=minimal' } }),
+    mine: () => call(`/rest/v1/consultations?select=${CONSULT_COLS}&order=created_at.desc&limit=60`),
+    limits: async () => (await call('/rest/v1/consult_settings?select=fee_pct,min_price,max_price,min_minutes,confirm_hours,retain_hours&id=eq.1'))[0],
+    wallet: () => rpc('wallet_summary'),
+    withdrawals: () => call('/rest/v1/withdrawal_requests?select=id,amount,method,status,created_at&order=created_at.desc&limit=20'),
+    withdraw: (amount, method, account) => rpc('request_withdrawal', { p_amount: Number(amount), p_method: method, p_account: account }),
+    // الغرفة: دالة السيرفر بتتأكد إنك طرف وإن الاتنين وافقوا، وبترجّع رابط الفيديو
+    room: async (id, token) => {
+      const tok = await freshToken();
+      const r = await fetch('/api/room', { method: 'POST', headers: { 'Content-Type': 'application/json', ...(token ? {} : { Authorization: 'Bearer ' + tok }) }, body: JSON.stringify({ id, token: token || null }) });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok) { const e = new Error(j.error || 'room_error'); e.status = r.status; throw e; }
+      return j;
+    },
+    ST: { requested: 'في انتظار رد المحامي', accepted: 'مقبولة: في انتظار الموافقة والدخول', live: 'جارية', awaiting_confirm: 'في انتظار تأكيد الموكل', released: 'تمّت وتحوّلت للمحفظة', disputed: 'قيد المراجعة', refunded: 'اتردّت للموكل', cancelled: 'اتلغت', expired: 'انتهت من غير رد' },
+  };
+
   window.Social = {
+    Consult,
     listMarket, listMyReferrals, listTaken, createReferral, setReferralStatus, deleteReferral, makeOffer, withdrawOffer, acceptOffer, referralContact, referralStats, reviewPeer, myPeerReviews, peerChip, lawyersInfo, STAGES, todayISO, nextHearing, listCases, createCase, updateCase, deleteCase, addCaseUpdate, deleteCaseUpdate, caseLink, getCaseByToken, rateCase,
     setJoinMode, requestJoin, cancelRequest, myRequests, listRequests, reviewRequest, addGroupMember, removeGroupMember, searchLawyers, listGroups, myGroups, getGroup, createGroup, joinGroup, leaveGroup, deleteGroup, groupMembers,
     me, call, esc, badge, avatar, ago, num, stars, toast, needLogin, friendly, TOPICS, AUDIENCES, REACTIONS, topicLabel, audLabel,
