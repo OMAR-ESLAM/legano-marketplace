@@ -742,7 +742,7 @@
   // ---------- الاستشارات الفورية ----------
   // الموكل ما عندوش حساب: بيتعرّف بتوكن سرّي. المحامي بحسابه. كل العمليات عن طريق دوال بتتحقق من الطرف.
   const rpc = (fn, json) => call('/rest/v1/rpc/' + fn, { method: 'POST', json: json || {} });
-  const CONSULT_COLS = 'id,client_name,client_topic,price,minutes,fee_pct,status,pay_status,room_name,created_at,accepted_at,started_at,ended_at,confirm_deadline,released_at,client_consent_at,lawyer_consent_at,overlap_seconds,short_session,dispute_reason';
+  const CONSULT_COLS = 'id,client_name,client_topic,price,minutes,fee_pct,fee_flat,status,pay_status,room_name,created_at,accepted_at,started_at,ended_at,confirm_deadline,released_at,client_consent_at,lawyer_consent_at,overlap_seconds,short_session,dispute_reason';
   const Consult = {
     online: () => call('/rest/v1/online_lawyers?select=id,display_name,city,photo_path,specialties,experience_years,rating_avg,rating_count,verified,price,minutes&order=rating_avg.desc&limit=60'),
     request: (lawyer, name, topic) => rpc('consult_request', { p_lawyer: lawyer, p_name: name, p_topic: topic }),
@@ -762,7 +762,7 @@
     mySettings: async () => (await call(`/rest/v1/lawyer_consult?select=enabled,price,minutes,last_seen&lawyer_id=eq.${me()}`))[0] || null,
     saveSettings: f => call('/rest/v1/lawyer_consult?on_conflict=lawyer_id', { method: 'POST', json: { lawyer_id: me(), enabled: !!f.enabled, price: Number(f.price), minutes: Number(f.minutes) }, headers: { Prefer: 'resolution=merge-duplicates,return=minimal' } }),
     mine: () => call(`/rest/v1/consultations?select=${CONSULT_COLS}&order=created_at.desc&limit=60`),
-    limits: async () => (await call('/rest/v1/consult_settings?select=fee_pct,min_price,max_price,min_minutes,confirm_hours,retain_hours&id=eq.1'))[0],
+    limits: async () => (await call('/rest/v1/consult_settings?select=fee_pct,fee_flat,min_price,max_price,min_minutes,confirm_hours,retain_hours&id=eq.1'))[0],
     wallet: () => rpc('wallet_summary'),
     withdrawals: () => call('/rest/v1/withdrawal_requests?select=id,amount,method,status,created_at&order=created_at.desc&limit=20'),
     withdraw: (amount, method, account) => rpc('request_withdrawal', { p_amount: Number(amount), p_method: method, p_account: account }),

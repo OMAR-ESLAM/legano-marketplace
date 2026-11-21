@@ -52,7 +52,7 @@
   let lastHtml = '';
   const set = h => { if (h === lastHtml) return; lastHtml = h; $('stage').innerHTML = h; };
   const who = () => ROLE === 'client' ? `الأستاذ/ة <b>${esc(st.lawyer.name)}</b>` : `الموكل <b>${esc(st.client_name)}</b>`;
-  const earn = () => (st.price - Math.round(st.price * (st.fee_pct || 0)) / 100).toFixed(2);
+  const earn = () => (st.price - Math.min(st.price, Math.round(st.price * (st.fee_pct || 0)) / 100 + Number(st.fee_flat || 0))).toFixed(2);
 
   async function tick() {
     try { st = await (ROLE === 'client' ? C.clientGet(TOKEN) : C.lawyerGet(CID)); } catch (e) { return; }
@@ -147,7 +147,7 @@
   function viewFinal() {
     const s = st.status;
     const M = {
-      released: ROLE === 'lawyer' ? `<h2>✅ تمّت الاستشارة</h2><p>اتضاف <b>${earn()} ج</b> لمحفظتك (بعد خصم عمولة ${S.num(st.fee_pct)}%).</p><a class="soc-btn primary" href="consultations.html">رجوع للاستشارات</a>` : `<h2>✅ شكراً ليك</h2><p>اتأكدت الاستشارة وراحت الفلوس للمحامي. ممكن تقيّم المحامي من صفحته.</p><a class="soc-btn primary" href="/lawyer/${esc(st.lawyer.id)}">صفحة المحامي</a>`,
+      released: ROLE === 'lawyer' ? `<h2>✅ تمّت الاستشارة</h2><p>اتضاف <b>${earn()} ج</b> لمحفظتك (بعد خصم عمولة المنصة).</p><a class="soc-btn primary" href="consultations.html">رجوع للاستشارات</a>` : `<h2>✅ شكراً ليك</h2><p>اتأكدت الاستشارة وراحت الفلوس للمحامي. ممكن تقيّم المحامي من صفحته.</p><a class="soc-btn primary" href="/lawyer/${esc(st.lawyer.id)}">صفحة المحامي</a>`,
       disputed: `<h2>قيد المراجعة</h2><p>${st.short_session ? 'الجلسة كانت أقصر من الحد الأدنى، ' : ''}الفلوس متجمّدة لحد ما فريق المنصة يراجع الاستشارة ويبلّغ الطرفين.</p>`,
       refunded: `<h2>اتردّت</h2><p>الاستشارة اتردّت بالكامل للموكل.</p>`,
       cancelled: `<h2>الاستشارة اتلغت</h2><p>مفيش أي مبلغ اتسحب.</p>`,

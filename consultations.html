@@ -61,7 +61,7 @@
     const [m, lim] = await Promise.all([C.mySettings().catch(() => null), C.limits().catch(() => null)]);
     cfg = m || { enabled: false, price: 200, minutes: 20 };
     $('on').checked = !!cfg.enabled; $('price').value = cfg.price; $('mins').value = String(cfg.minutes);
-    if (lim) $('limits').textContent = `السعر من ${lim.min_price} لـ ${lim.max_price} ج • عمولة المنصة ${lim.fee_pct}%`;
+    if (lim) $('limits').textContent = `السعر من ${lim.min_price} لـ ${lim.max_price} ج • عمولة المنصة ${lim.fee_pct}%${Number(lim.fee_flat) ? ' + ' + lim.fee_flat + ' ج' : ''}`;
     presence();
   }
   function presence() {
