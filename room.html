@@ -19,6 +19,7 @@
   .warn { padding: 12px 14px; margin-bottom: 14px; background: #FFF8E6; border: 1px solid #F1D48A; color: #7A5200; border-radius: 12px; font-size: 13px; line-height: 1.9; }
   .warn a { color: inherit; font-weight: 800; }
   .cs-wrap { max-width: 1240px; }
+  .cs-consent { white-space: pre-line; }
   .cs-fa { display: flex; gap: 10px; flex-shrink: 0; }
   .cs-docbody { position: relative; }
   .cs-ptr { position: absolute; z-index: 5; width: 0; height: 0; pointer-events: none; display: none; }
@@ -82,8 +83,7 @@
   if (ROLE === 'client' && !TOKEN) { $('stage').innerHTML = '<div class="empty">الرابط ناقص.</div>'; return; }
 
   // نص الموافقة مبدئي، ولازم يتراجع مع المستشار القانوني قبل الإطلاق الفعلي
-  const CONSENT = 'تتم هذه الاستشارة عبر اتصال مباشر بين الطرفين داخل منصة ليجانو، ولا يتم تسجيل الصوت ولا الفيديو. الاتصال المباشر يعني أن عنوان الاتصال (IP) لكل طرف قد يظهر للطرف الآخر تقنياً. تُحذف الملفات والرسائل والملخص تلقائياً بعد انتهاء مهلة الاعتراض. المنصة ليست طرفاً في العلاقة بين المحامي والموكل، والاستشارة لا تُنشئ توكيلاً بأي دعوى.';
-  const TXCONSENT = 'اختياري: تحويل الكلام إلى نص مكتوب أثناء الاستشارة. لا يتم إلا بموافقة الطرفين معاً. يحوّل متصفح كل طرف كلامه هو فقط إلى نص، وقد يُرسَل الصوت لهذا الغرض إلى خدمة التعرف على الكلام التابعة لمتصفحك (مثل Google في Chrome). يُحفظ النص دون الصوت، ويراجعه فريق المنصة فقط عند وجود اعتراض، ويُحذف مع باقي البيانات بعد انتهاء مهلة الاعتراض. قد لا يكون النص دقيقاً.';
+  const CONSENT = 'تتم هذه الاستشارة عبر اتصال مباشر بين الطرفين داخل منصة ليجانو، ولا يتم تسجيل الصوت ولا الفيديو. الاتصال المباشر يعني أن عنوان الاتصال (IP) لكل طرف قد يظهر للطرف الآخر تقنياً.\n\nيتم تحويل الكلام إلى نص مكتوب أثناء الاستشارة: يحوّل متصفح كل طرف كلامه هو فقط إلى نص، وقد يُرسَل الصوت لهذا الغرض إلى خدمة التعرف على الكلام التابعة لمتصفحك (مثل Google في Chrome). يُحفظ النص دون الصوت، ويراجعه فريق المنصة فقط عند وجود اعتراض. قد لا يكون النص دقيقاً.\n\nتُحذف الملفات والرسائل والملخص والنص تلقائياً بعد انتهاء مهلة الاعتراض. المنصة ليست طرفاً في العلاقة بين المحامي والموكل، والاستشارة لا تُنشئ توكيلاً بأي دعوى.';
   const FINAL = ['released', 'refunded', 'cancelled', 'expired'];
   let st = null, offset = 0, joining = false, pingTimer = null, filesSig = '', fileList = [], lastStatus = null;
   const my = k => ROLE === 'client' ? st['client_' + k] : st['lawyer_' + k];
@@ -257,9 +257,7 @@
   function viewConsent() {
     set(`<div class="cs-box"><h2>${ROLE === 'client' ? 'المحامي قبل طلبك' : 'تجهيز الاستشارة'}</h2><p>قبل ما تدخلوا الغرفة، لازم الطرفين يوافقوا على الشروط دي.</p>
       <div class="cs-consent">${esc(CONSENT)}</div>
-      <label class="cs-chk"><input type="checkbox" id="agree"><span>قرأت وأوافق على الشروط دي.</span></label>
-      <div class="cs-consent" style="margin-top:12px">${esc(TXCONSENT)}</div>
-      <label class="cs-chk"><input type="checkbox" id="txok"><span>أوافق على تحويل كلامي لنص مكتوب (اختياري، ومش هيتفعّل غير لو الطرفين وافقوا).</span></label>
+      <label class="cs-chk"><input type="checkbox" id="agree"><span>قرأت وأوافق على كل الشروط دي، وتشمل تحويل كلامي لنص مكتوب.</span></label>
       <button class="soc-btn primary" id="agreeGo" data-a="consent" type="button" disabled>أوافق وأكمل</button>
       <button class="soc-btn" data-a="cancel" type="button" style="margin-top:8px">رفض وإلغاء (استرداد كامل)</button></div>`);
     $('agree').onchange = e => { $('agreeGo').disabled = !e.target.checked; };
@@ -560,7 +558,7 @@
     try {
       if (a === 'accept') await C.respond(CID, true);
       else if (a === 'reject') { if (confirm('ترفض الطلب؟')) await C.respond(CID, false); }
-      else if (a === 'consent') await C.consent(cid(), tk(), $('txok') && $('txok').checked);
+      else if (a === 'consent') await C.consent(cid(), tk(), true);
       else if (a === 'cancel') { if (confirm('تلغي الاستشارة؟ هيتردّ المبلغ بالكامل.')) await C.end(cid(), tk()); }
       else if (a === 'end') { if (confirm('تنهي الاستشارة؟' + (ROLE === 'lawyer' && !summarySent ? '\n(لسه ما بعتش ملخص للموكل، هتقدر تكتبه بعد الإنهاء.)' : ''))) { await C.end(cid(), tk()); } }
       else if (a === 'confirm') await C.confirm(TOKEN);
