@@ -478,7 +478,15 @@ async function loadDisputes() {
   try {
     const rows = await rpc('consult_admin_list', { p_status: 'disputed' });
     $('csBadge').textContent = rows.length ? `(${rows.length})` : '';
-    $('csDisputes').innerHTML = rows.length ? rows.map(c => csCard(c, `<button class="pbtn approve" data-rel="${c.id}">حوّل للمحامي</button><button class="pbtn reject" data-ref="${c.id}">رجّع للموكل</button>`)).join('') : '<div class="empty-state">مفيش اعتراضات</div>';
+    $('csDisputes').innerHTML = rows.length ? rows.map(c => csCard(c, `<button class="pbtn" data-chat="${c.id}">المحادثة والملخص</button><button class="pbtn approve" data-rel="${c.id}">حوّل للمحامي</button><button class="pbtn reject" data-ref="${c.id}">رجّع للموكل</button>`)).join('') : '<div class="empty-state">مفيش اعتراضات</div>';
+    $('csDisputes').querySelectorAll('[data-chat]').forEach(b => b.onclick = async () => {
+      const card = b.closest('.user-card'); let box = card.nextElementSibling; if (box && box.classList.contains('cs-chatbox')) { box.remove(); return; }
+      try {
+        const r = await rpc('consult_admin_chat', { p_id: b.dataset.chat }); box = document.createElement('div'); box.className = 'user-card cs-chatbox'; box.style.cssText = 'display:block;background:#F8FAFC';
+        box.innerHTML = `<div style="font-weight:800;margin-bottom:6px">ملخص المحامي للموكل</div><div style="white-space:pre-wrap;font-size:13px;margin-bottom:12px">${r.summary ? esc(r.summary) : '<i>المحامي ما بعتش ملخص.</i>'}</div><div style="font-weight:800;margin-bottom:6px">المحادثة (${r.messages.length})</div>` + (r.messages.length ? r.messages.map(m => `<div style="font-size:13px;margin:3px 0"><b>${m.from === 'lawyer' ? 'المحامي' : 'الموكل'}:</b> ${esc(m.body)} <small style="color:#94A3B8">${dt(m.at)}</small></div>`).join('') : '<i style="font-size:13px">مفيش رسائل.</i>');
+        card.after(box);
+      } catch (e) { toast('خطأ: ' + e.message); }
+    });
     $('csDisputes').querySelectorAll('[data-rel],[data-ref]').forEach(b => b.onclick = async () => {
       const rel = !!b.dataset.rel; if (!confirm(rel ? 'الفلوس هتتحوّل لمحفظة المحامي، والقرار نهائي. متأكد؟' : 'الفلوس هتترجّع للموكل، والقرار نهائي. متأكد؟')) return;
       try { await rpc('consult_admin_resolve', { p_id: b.dataset.rel || b.dataset.ref, p_release: rel }); toast('تم'); loadDisputes(); loadAllConsults(); } catch (e) { toast('خطأ: ' + e.message); }
