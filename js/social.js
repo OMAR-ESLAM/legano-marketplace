@@ -73,6 +73,9 @@
     if (/lawyer_offline/.test(m)) return 'المحامي مش أونلاين دلوقتي. جرّب محامي تاني.';
     if (/lawyer_busy/.test(m)) return 'المحامي في استشارة دلوقتي. جرّب محامي تاني أو استنى شوية.';
     if (/rate_limited/.test(m)) return 'عدد كبير من الطلبات. جرّب كمان شوية.';
+    if (/bad_message/.test(m)) return 'الرسالة فاضية أو أطول من 1000 حرف.';
+    if (/bad_summary/.test(m)) return 'الملخص لازم يكون من 20 لـ 4000 حرف.';
+    if (/already_sent/.test(m)) return 'الملخص اتبعت قبل كده ومينفعش يتعدّل.';
     if (/consent_required/.test(m)) return 'لازم توافق على الشروط الأول.';
     if (/bad_file/.test(m)) return 'نوع الملف مش مسموح. المسموح: PDF وصور وWord ونص.';
     if (/file_too_big/.test(m)) return 'الملف كبير. الحد الأقصى 4 ميجا.';
@@ -760,6 +763,12 @@
     fileGet: (id, file, token) => rpc('consult_file_get', { p_id: id, p_file: file, p_token: token || null }),
     signalSend: (id, token, payload) => rpc('consult_signal_send', { p_id: id, p_token: token || null, p_payload: payload }),
     signalPoll: (id, token, after) => rpc('consult_signal_poll', { p_id: id, p_token: token || null, p_after: after || 0 }),
+    msgSend: (id, token, body, mid) => rpc('consult_msg_send', { p_id: id, p_token: token || null, p_body: body, p_mid: mid }),
+    msgs: (id, token) => rpc('consult_msgs_list', { p_id: id, p_token: token || null }),
+    notesGet: id => rpc('consult_notes_get', { p_id: id }),
+    notesSave: (id, notes, summary) => rpc('consult_notes_save', { p_id: id, p_notes: notes, p_summary: summary }),
+    summarySend: (id, summary) => rpc('consult_summary_send', { p_id: id, p_summary: summary }),
+    summaryGet: (id, token) => rpc('consult_summary_get', { p_id: id, p_token: token || null }),
     heartbeat: () => rpc('consult_heartbeat'),
     mySettings: async () => (await call(`/rest/v1/lawyer_consult?select=enabled,price,minutes,last_seen&lawyer_id=eq.${me()}`))[0] || null,
     saveSettings: f => rpc('consult_save_settings', { p_enabled: !!f.enabled, p_price: Number(f.price), p_minutes: Number(f.minutes) }),

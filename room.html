@@ -20,6 +20,31 @@
   .warn a { color: inherit; font-weight: 800; }
   .cs-wrap { max-width: 1240px; }
   .cs-fa { display: flex; gap: 10px; flex-shrink: 0; }
+  .cs-docbody { position: relative; }
+  .cs-ptr { position: absolute; z-index: 5; width: 0; height: 0; pointer-events: none; display: none; }
+  .cs-ptr i { position: absolute; left: -9px; top: -9px; width: 18px; height: 18px; border-radius: 50%; background: rgba(220,38,38,.85); box-shadow: 0 0 0 4px rgba(220,38,38,.25); }
+  .cs-ptr span { position: absolute; left: 12px; top: 8px; background: #DC2626; color: #fff; font-size: 11px; padding: 1px 7px; border-radius: 8px; white-space: nowrap; }
+  .cs-docx { background: #fff; text-align: start; padding: 18px; border-radius: 10px; line-height: 1.9; font-size: 15px; color: #1E293B; }
+  .cs-docx img { max-width: 100%; height: auto; } .cs-docx table { border-collapse: collapse; max-width: 100%; } .cs-docx td, .cs-docx th { border: 1px solid #cbd5e1; padding: 4px 8px; }
+  .cs-follow[hidden] { display: none; }
+  .cs-follow { font-size: 12px; display: flex; align-items: center; gap: 4px; cursor: pointer; }
+  .cs-tabs { display: flex; gap: 4px; margin-bottom: 10px; border-bottom: 1px solid var(--border); }
+  .cs-tabs button { flex: 1; font-family: inherit; font-size: 13px; font-weight: 700; padding: 8px 4px; border: 0; border-bottom: 3px solid transparent; background: none; color: var(--muted-foreground); cursor: pointer; position: relative; }
+  .cs-tabs button.on { color: var(--foreground, #0F172A); border-bottom-color: var(--gold-soft, #92620C); }
+  .cs-tabs i { display: inline-block; min-width: 18px; padding: 0 5px; margin-inline-start: 4px; border-radius: 9px; background: #DC2626; color: #fff; font-size: 11px; font-style: normal; line-height: 18px; }
+  .cs-pane[hidden] { display: none; }
+  .cs-chat { height: 260px; overflow: auto; display: flex; flex-direction: column; gap: 6px; padding: 8px; background: var(--secondary); border-radius: 12px; margin-bottom: 8px; }
+  .cs-msg { max-width: 85%; padding: 6px 10px; border-radius: 12px; font-size: 13.5px; line-height: 1.7; word-break: break-word; }
+  .cs-msg.me { align-self: flex-start; background: var(--primary, #0F172A); color: #fff; }
+  .cs-msg.them { align-self: flex-end; background: #fff; border: 1px solid var(--border); }
+  .cs-msg a { color: inherit; text-decoration: underline; }
+  .cs-chatform { display: flex; gap: 6px; } .cs-chatform input { flex: 1; min-width: 0; font-family: inherit; font-size: 14px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 10px; }
+  .cs-chatform button, .cs-notes button { font-family: inherit; font-weight: 700; font-size: 13px; padding: 8px 14px; border-radius: 10px; border: 0; background: var(--primary, #0F172A); color: #fff; cursor: pointer; }
+  .cs-notes label { display: block; font-size: 12.5px; font-weight: 700; margin: 6px 0 4px; } .cs-notes textarea { width: 100%; box-sizing: border-box; font-family: inherit; font-size: 13.5px; padding: 8px 10px; border: 1px solid var(--border); border-radius: 10px; resize: vertical; line-height: 1.8; }
+  .cs-notes small { color: var(--muted-foreground); display: block; margin-bottom: 4px; line-height: 1.7; }
+  .cs-sum { margin-top: 10px; padding: 12px 14px; background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 12px; font-size: 14px; line-height: 1.9; }
+  .cs-sum pre { white-space: pre-wrap; word-break: break-word; font-family: inherit; margin: 6px 0 8px; }
+  .cs-sum button { font-family: inherit; font-size: 12.5px; padding: 5px 12px; border-radius: 9px; border: 1px solid var(--border); background: #fff; cursor: pointer; margin-inline-end: 6px; }
   .cs-room { grid-template-columns: 1fr 320px; grid-template-areas: "v a"; }
   .cs-vbox { grid-area: v; } .cs-doc { grid-area: d; } .cs-room > aside { grid-area: a; }
   .cs-room.withdoc { grid-template-columns: 1fr clamp(360px, 38%, 560px); grid-template-areas: "d v" "d a"; }
@@ -80,6 +105,7 @@
     if (st.status !== lastStatus) { lastStatus = st.status; if (st.status !== 'live') { stopPing(); } if (!['accepted', 'live'].includes(st.status)) stopP2P(); filesSig = ''; }
     view();
     if (['accepted', 'live', 'awaiting_confirm'].includes(st.status)) refreshFiles();
+    refreshExtras();
   }
 
   function stopPing() { if (pingTimer) { clearInterval(pingTimer); pingTimer = null; } }
@@ -92,7 +118,7 @@
   }
   // ---- الغرفة: اتصال مباشر (WebRTC) بين الطرفين. الإشارات بتعدّي عن طريق قاعدة البيانات، والفيديو نفسه ما بيعدّيش على أي سيرفر ----
   const mySid = Math.random().toString(36).slice(2, 10);
-  let remoteStream = null, camNote = '', pc = null, localStream = null, peerSid = null, sigAfter = 0, sigTimer = null, helloTimer = null, p2pOn = false, polling = false, pendingIce = [], iceCfg = null, connState = '', mediaErr = '', camOn = true, micOn = true;
+  let dc = null, remoteStream = null, camNote = '', pc = null, localStream = null, peerSid = null, sigAfter = 0, sigTimer = null, helloTimer = null, p2pOn = false, polling = false, pendingIce = [], iceCfg = null, connState = '', mediaErr = '', camOn = true, micOn = true;
   const sig = p => C.signalSend(cid(), tk(), p).catch(() => {});
   const vmsg = t => { const m = $('vmsg'); if (m) { m.textContent = t || ''; m.style.display = t ? 'flex' : 'none'; } };
   async function getIce() {
@@ -135,6 +161,7 @@
       if (vt) me.addTrack(vt, localStream); else me.addTransceiver('video', { direction: 'recvonly' });
     }
     me.onicecandidate = e => { if (e.candidate && pc === me) sig({ t: 'ice', from: mySid, to: peerSid, c: e.candidate.toJSON() }); };
+    if (ROLE === 'lawyer') setupDc(me.createDataChannel('app')); else me.ondatachannel = e => setupDc(e.channel);
     me.ontrack = e => { const rv = $('rv'); if (!rv) return; if (!remoteStream) remoteStream = new MediaStream(); remoteStream.addTrack(e.track); rv.srcObject = remoteStream; e.track.onunmute = () => { rv.play().catch(() => {}); }; rv.play().catch(() => vmsg('اضغط هنا لتشغيل الصوت والفيديو')); };
     me.onconnectionstatechange = () => {
       if (pc !== me) return; connState = me.connectionState;
@@ -146,7 +173,7 @@
     };
     return me;
   }
-  function closePc() { remoteStream = null; if (pc) { const o = pc; pc = null; o.onicecandidate = o.ontrack = o.onconnectionstatechange = null; try { o.close(); } catch {} } pendingIce = []; connState = ''; }
+  function closePc() { remoteStream = null; dc = null; if (pc) { const o = pc; pc = null; o.onicecandidate = o.ontrack = o.onconnectionstatechange = null; try { o.close(); } catch {} } pendingIce = []; connState = ''; }
   async function renegotiate(restart) {
     if (ROLE !== 'lawyer' || !pc) return;
     try { const o = await pc.createOffer(restart ? { iceRestart: true } : undefined); await pc.setLocalDescription(o); sig({ t: 'offer', from: mySid, to: peerSid, sdp: { type: pc.localDescription.type, sdp: pc.localDescription.sdp } }); } catch {}
@@ -171,6 +198,7 @@
       try { await pc.setRemoteDescription(m.sdp); if (fresh) await attachMine(); await flushIce(); const a = await pc.createAnswer(); await pc.setLocalDescription(a); sig({ t: 'answer', from: mySid, to: m.from, sdp: { type: pc.localDescription.type, sdp: pc.localDescription.sdp } }); } catch {}
     } else if (m.t === 'answer' && ROLE === 'lawyer' && m.to === mySid && m.from === peerSid && pc && m.sdp) {
       try { await pc.setRemoteDescription(m.sdp); await flushIce(); } catch {}
+    } else if (m.t === 'app' && m.to === mySid && m.from === peerSid) { onApp(m.d);
     } else if (m.t === 'ice' && m.to === mySid && m.from === peerSid && pc && m.c) {
       if (pc.remoteDescription) { try { await pc.addIceCandidate(m.c); } catch {} } else pendingIce.push(m.c);
     }
@@ -244,10 +272,15 @@
         <div class="cs-brand">LEGANO<small>غرفة استشارة</small></div>
         <div class="cs-ov" id="vmsg">جاري تجهيز الكاميرا...</div>
         <div class="cs-ctl"><button type="button" id="bMic" title="الميكروفون">🎤</button><button type="button" id="bCam" title="الكاميرا">📷</button><button type="button" id="bFs" title="ملء الشاشة">⛶</button></div></div>
-      <div class="cs-bar"><span id="room-status">${statusLine()}</span><button class="soc-btn" data-a="end" type="button">إنهاء الاستشارة</button></div>${DEBUG ? '<pre id="dbg" dir="ltr" style="font-size:11px;white-space:pre-wrap;background:#0F172A;color:#A7F3D0;padding:8px;border-radius:10px;margin:0"></pre>' : ''}</div>
-      <section class="cs-doc" id="docv" hidden><div class="cs-dochd"><b id="docname"></b><select id="docsel" aria-label="اختار المستند"></select><button type="button" data-a="dldoc">تحميل</button><button type="button" data-a="closedoc" aria-label="إغلاق">✕</button></div><div class="cs-docbody" id="docbody"></div></section>
-      <aside class="cs-box" id="room-wrap"><h2>الملفات</h2><div class="cs-drop" id="drop">اسحب الملفات هنا أو اضغط للاختيار<br><small>PDF أو صور أو Word، حتى 4 ميجا</small></div><input type="file" id="pick" multiple hidden accept=".pdf,.png,.jpg,.jpeg,.webp,.txt,.doc,.docx"><div id="files"></div></aside></div>`);
-    wireDrop(); renderFiles(); $('docsel').onchange = e => openDoc(e.target.value); startP2P();
+      <div class="cs-bar"><span id="room-status">${statusLine()}</span><button class="soc-btn" data-a="end" type="button">إنهاء الاستشارة</button></div><div id="sumBox"></div>${DEBUG ? '<pre id="dbg" dir="ltr" style="font-size:11px;white-space:pre-wrap;background:#0F172A;color:#A7F3D0;padding:8px;border-radius:10px;margin:0"></pre>' : ''}</div>
+      <section class="cs-doc" id="docv" hidden><div class="cs-dochd"><b id="docname"></b><select id="docsel" aria-label="اختار المستند"></select><label class="cs-follow" id="followLbl"><input type="checkbox" id="follow" checked> اتبع المحامي</label><button type="button" data-a="dldoc">تحميل</button><button type="button" data-a="closedoc" aria-label="إغلاق">✕</button></div><div class="cs-docbody" id="docbody"></div></section>
+      <aside class="cs-box" id="room-wrap">
+        <div class="cs-tabs"><button type="button" data-tab="files" class="on">الملفات</button><button type="button" data-tab="chat">المحادثة<i id="chatBadge" hidden></i></button>${ROLE === 'lawyer' ? '<button type="button" data-tab="notes">ملاحظاتي</button>' : ''}</div>
+        <div class="cs-pane" id="pane-files"><div class="cs-drop" id="drop">اسحب الملفات هنا أو اضغط للاختيار<br><small>PDF أو صور أو Word، حتى 4 ميجا</small></div><input type="file" id="pick" multiple hidden accept=".pdf,.png,.jpg,.jpeg,.webp,.txt,.doc,.docx"><div id="files"></div></div>
+        <div class="cs-pane" id="pane-chat" hidden><div class="cs-chat" id="chatlog"></div><form class="cs-chatform" id="chatform" autocomplete="off"><input id="chatin" maxlength="1000" placeholder="اكتب رسالة..." aria-label="رسالة"><button type="submit">إرسال</button></form></div>
+        ${ROLE === 'lawyer' ? `<div class="cs-pane cs-notes" id="pane-notes" hidden>${notesHtml()}</div>` : ''}
+      </aside></div>`);
+    wireDrop(); renderFiles(); renderChat(); wireDoc(); if (ROLE === 'lawyer') wireNotes(); updateSum(); startP2P();
   }
   function statusLine() {
     if (st.status === 'accepted') return `<span style="color:#7A5200;font-weight:800">في انتظار ${who()} يدخل الغرفة...</span>`;
@@ -259,10 +292,10 @@
 
   function viewConfirm() {
     const dl = fmt(st.confirm_deadline);
-    if (ROLE === 'lawyer') return set(`<div class="cs-box"><h2>الاستشارة خلصت</h2><p>في انتظار تأكيد الموكل. لو ما اعترضش قبل <b>${dl}</b>، هتتحوّل ${earn()} ج لمحفظتك تلقائياً.</p></div>${filesBox()}`), renderFiles(), wireDrop();
+    if (ROLE === 'lawyer') return set(`<div class="cs-box"><h2>الاستشارة خلصت</h2><p>في انتظار تأكيد الموكل. لو ما اعترضش قبل <b>${dl}</b>، هتتحوّل ${earn()} ج لمحفظتك تلقائياً.</p></div><aside class="cs-box cs-notes"><h2>ملخص للموكل</h2>${notesHtml()}</aside>${sumHtml()}${filesBox()}`), renderFiles(), wireDrop(), wireNotes();
     set(`<div class="cs-box"><h2>خدت استشارتك؟</h2><p>أكّد علشان الفلوس تروح للمحامي. لو ما ردّيتش قبل <b>${dl}</b> هتتأكد تلقائياً.</p>
       <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="soc-btn primary" data-a="confirm" type="button">أيوه، الاستشارة تمت</button><button class="soc-btn" data-a="problem" type="button">عندي مشكلة</button></div>
-      <div id="prob" hidden style="margin-top:12px"><label class="f-l" for="reason">إيه المشكلة؟</label><textarea id="reason" class="f-i" rows="3" maxlength="500" placeholder="مثال: المحامي ما ردّش على أسئلتي"></textarea><button class="soc-btn primary" data-a="dispute" type="button" style="margin-top:8px">ابعت الاعتراض</button><p style="margin-top:8px">الفلوس هتتجمّد ولحد ما فريق المنصة يراجع الموضوع.</p></div></div>${filesBox()}`);
+      <div id="prob" hidden style="margin-top:12px"><label class="f-l" for="reason">إيه المشكلة؟</label><textarea id="reason" class="f-i" rows="3" maxlength="500" placeholder="مثال: المحامي ما ردّش على أسئلتي"></textarea><button class="soc-btn primary" data-a="dispute" type="button" style="margin-top:8px">ابعت الاعتراض</button><p style="margin-top:8px">الفلوس هتتجمّد ولحد ما فريق المنصة يراجع الموضوع.</p></div></div>${sumHtml()}${filesBox()}`);
     renderFiles(); wireDrop();
   }
   const filesBox = () => `<aside class="cs-box"><h2>الملفات</h2><div id="files"></div></aside>`;
@@ -276,7 +309,7 @@
       cancelled: `<h2>الاستشارة اتلغت</h2><p>مفيش أي مبلغ اتسحب.</p>`,
       expired: `<h2>انتهى الوقت</h2><p>الطلب انتهى من غير ما تتم الاستشارة. مفيش أي مبلغ اتسحب.</p>`,
     };
-    set(`<div class="cs-box">${M[s] || ''}</div>`);
+    set(`<div class="cs-box">${M[s] || ''}</div>${sumHtml()}`);
     if (FINAL.includes(s)) { stopPing(); try { if (ROLE === 'client') localStorage.removeItem('lg_ct'); } catch {} }
   }
 
@@ -315,6 +348,110 @@
     } catch (e) { S.toast(S.friendly(e)); }
   }
 
+  // ---- طبقة التطبيق: قناة بيانات مباشرة بين الطرفين (سريعة)، وبديلها الإشارات عبر قاعدة البيانات ----
+  const PEER = ROLE === 'client' ? 'lawyer' : 'client';
+  function setupDc(ch) { dc = ch; ch.onmessage = e => { try { if (typeof e.data === 'string' && e.data.length < 6000) onApp(JSON.parse(e.data)); } catch {} }; ch.onclose = () => { if (dc === ch) dc = null; }; }
+  const dcOpen = () => !!dc && dc.readyState === 'open';
+  function appSend(o, opt) {
+    if (dcOpen()) { try { dc.send(JSON.stringify(o)); return true; } catch {} }
+    if (!(opt && opt.dcOnly) && peerSid) sig({ t: 'app', from: mySid, to: peerSid, d: o });
+    return false;
+  }
+  function onApp(o) {
+    if (!o || typeof o !== 'object') return;
+    if (o.k === 'chat' && typeof o.body === 'string' && typeof o.mid === 'string') addMsg({ mid: o.mid.slice(0, 40), from: PEER, body: o.body.slice(0, 1000) });
+    else if (o.k === 'open' && typeof o.id === 'string') openDoc(o.id, 'remote');
+    else if (o.k === 'closedoc') closeDoc('remote');
+    else if (o.k === 'scroll' && ROLE === 'client' && typeof o.y === 'number') { lastScrollY = Math.max(0, Math.min(1, o.y)); applyScroll(); }
+    else if (o.k === 'ptr' && typeof o.x === 'number' && typeof o.y === 'number') showPtr(Math.max(0, Math.min(1, o.x)), Math.max(0, Math.min(1, o.y)));
+    else if (o.k === 'hide') { const p = document.querySelector('#docbody .cs-ptr'); if (p) p.style.display = 'none'; }
+  }
+
+  // ---- عرض مشترك: مؤشر وتمرير ----
+  let lastScrollY = null, ptrT = null, scrT = null, lastPtr = 0, lastScr = 0, syncing = false;
+  function applyScroll() {
+    const b = $('docbody'), f = $('follow'); if (!b || lastScrollY === null || ROLE !== 'client' || (f && !f.checked)) return;
+    syncing = true; b.scrollTop = lastScrollY * Math.max(0, b.scrollHeight - b.clientHeight); setTimeout(() => { syncing = false; }, 60);
+  }
+  function showPtr(x, y) {
+    const b = $('docbody'), d = $('docv'); if (!b || !d || d.hidden) return;
+    let p = b.querySelector('.cs-ptr'); if (!p) { p = document.createElement('div'); p.className = 'cs-ptr'; p.innerHTML = '<i></i><span></span>'; b.appendChild(p); }
+    p.querySelector('span').textContent = ROLE === 'client' ? 'المحامي' : 'الموكل';
+    p.style.left = (x * b.scrollWidth) + 'px'; p.style.top = (y * b.scrollHeight) + 'px'; p.style.display = 'block';
+    clearTimeout(ptrT); ptrT = setTimeout(() => { p.style.display = 'none'; }, 2500);
+  }
+  function sendScroll() { const b = $('docbody'); if (!b) return; const max = b.scrollHeight - b.clientHeight; appSend({ k: 'scroll', y: max > 0 ? b.scrollTop / max : 0 }); }
+  function wireDoc() {
+    const b = $('docbody'); if (!b) return;
+    $('docsel').onchange = e => openDoc(e.target.value);
+    if (ROLE === 'lawyer') $('followLbl').hidden = true; else $('follow').onchange = () => { if ($('follow').checked) applyScroll(); };
+    b.addEventListener('pointermove', e => { const t = Date.now(); if (t - lastPtr < 40) return; lastPtr = t; const r = b.getBoundingClientRect(); appSend({ k: 'ptr', x: (e.clientX - r.left + b.scrollLeft) / Math.max(1, b.scrollWidth), y: (e.clientY - r.top + b.scrollTop) / Math.max(1, b.scrollHeight) }, { dcOnly: true }); });
+    b.addEventListener('pointerleave', () => appSend({ k: 'hide' }, { dcOnly: true }));
+    b.addEventListener('scroll', () => { if (ROLE !== 'lawyer' || syncing) return; const gap = dcOpen() ? 80 : 1500, t = Date.now(); clearTimeout(scrT); if (t - lastScr >= gap) { lastScr = t; sendScroll(); } else scrT = setTimeout(() => { lastScr = Date.now(); sendScroll(); }, gap); });
+  }
+
+  // ---- المحادثة ----
+  const msgs = [], msgIds = new Set(); let tab = 'files', unread = 0, msgsLoaded = false;
+  const linkify = h => h.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
+  function beep() { try { const A = window.AudioContext || window.webkitAudioContext, c = new A(), o = c.createOscillator(), g = c.createGain(); o.frequency.value = 880; g.gain.value = 0.04; o.connect(g); g.connect(c.destination); o.start(); o.stop(c.currentTime + 0.12); setTimeout(() => c.close(), 400); } catch {} }
+  function updBadge() { const b = $('chatBadge'); if (b) { b.hidden = !unread; b.textContent = unread; } }
+  function addMsg(m, quiet) {
+    if (msgIds.has(m.mid)) return; msgIds.add(m.mid); msgs.push(m); renderChat();
+    if (m.from !== ROLE && !quiet) { if (tab !== 'chat') { unread++; updBadge(); } beep(); }
+  }
+  function renderChat() {
+    const l = $('chatlog'); if (!l) return; const atEnd = l.scrollHeight - l.scrollTop - l.clientHeight < 50;
+    l.innerHTML = msgs.length ? msgs.map(m => `<div class="cs-msg ${m.from === ROLE ? 'me' : 'them'}" dir="auto">${linkify(esc(m.body))}</div>`).join('') : '<small style="color:var(--muted-foreground);margin:auto">ابدأ المحادثة هنا. الرسائل بتتحفظ لحد انتهاء مهلة الاعتراض.</small>';
+    if (atEnd) l.scrollTop = l.scrollHeight;
+  }
+  function setTab(t) {
+    tab = t; ['files', 'chat', 'notes'].forEach(k => { const p = $('pane-' + k); if (p) p.hidden = k !== t; const b = document.querySelector('[data-tab="' + k + '"]'); if (b) b.classList.toggle('on', k === t); });
+    if (t === 'chat') { unread = 0; updBadge(); const l = $('chatlog'); if (l) l.scrollTop = l.scrollHeight; const i = $('chatin'); if (i) i.focus(); }
+  }
+  document.addEventListener('click', e => { const b = e.target.closest('[data-tab]'); if (b) setTab(b.dataset.tab); });
+  document.addEventListener('submit', async e => {
+    if (e.target.id !== 'chatform') return; e.preventDefault();
+    const i = $('chatin'), body = i.value.trim(); if (!body || !st) return; i.value = '';
+    const mid = 'm' + Math.random().toString(36).slice(2, 12) + Date.now().toString(36).slice(-4);
+    addMsg({ mid, from: ROLE, body }); appSend({ k: 'chat', mid, body }, { dcOnly: true });
+    try { await C.msgSend(cid(), tk(), body, mid); } catch (er) { S.toast(S.friendly(er)); }
+  });
+
+  // ---- ملاحظات المحامي وملخص الموكل ----
+  let summaryText = '', summarySent = false, notesLoaded = false, notesT = null, sumTried = false;
+  const notesHtml = () => `<small>الملاحظات دي ليك لوحدك، الموكل ما بيشوفهاش.</small><label for="notes">ملاحظاتي (بتتحفظ لوحدها)</label><textarea id="notes" rows="5" maxlength="6000" placeholder="نقاط تفتكرها من الاستشارة..."></textarea>
+    <label for="summary">ملخص للموكل</label><small>اكتب ملخص واضح للاستشارة (التوصية والخطوات الجاية). بيتبعت للموكل ومش بيتعدّل بعد الإرسال، وفريق المنصة بيرجعله لو حصل اعتراض.</small>
+    <textarea id="summary" rows="6" maxlength="4000" placeholder="مثال: راجعنا عقد الإيجار، والبند الخامس محتاج تعديل..."></textarea>
+    <div style="display:flex;align-items:center;gap:10px;margin-top:6px"><button type="button" id="sumSend">ابعت الملخص للموكل</button><span id="sumState" style="font-size:12.5px;color:#15803D;font-weight:700"></span></div>`;
+  function lockSummary() { const t = $('summary'), b = $('sumSend'), s = $('sumState'); if (t) { t.value = summaryText; t.disabled = true; } if (b) b.hidden = true; if (s) s.textContent = '✓ اتبعت للموكل'; }
+  async function loadNotes() {
+    try { const n = await C.notesGet(cid()); notesLoaded = true; if ($('notes')) $('notes').value = n.notes; if ($('summary')) $('summary').value = n.summary; if (n.summary_sent_at) { summarySent = true; summaryText = n.summary; lockSummary(); updateSum(); } } catch {}
+  }
+  async function saveNotesNow() { if (!notesLoaded || !$('notes')) return; try { await C.notesSave(cid(), $('notes').value, summarySent ? '' : $('summary').value); } catch {} }
+  function wireNotes() {
+    notesLoaded = false; summarySent = !!summaryText && ROLE === 'lawyer'; loadNotes();
+    const soon = () => { clearTimeout(notesT); notesT = setTimeout(saveNotesNow, 1200); };
+    $('notes').oninput = soon; $('summary').oninput = soon;
+    $('sumSend').onclick = async () => {
+      const t = $('summary').value.trim(); if (t.length < 20) return S.toast('الملخص لازم يكون 20 حرف على الأقل');
+      if (!confirm('الملخص هيتبعت للموكل ومش هتقدر تعدّله بعد كده. تبعت؟')) return;
+      try { await C.notesSave(cid(), $('notes').value, t); await C.summarySend(cid(), t); summarySent = true; summaryText = t; lockSummary(); updateSum(); S.toast('الملخص اتبعت للموكل'); } catch (er) { S.toast(S.friendly(er)); }
+    };
+  }
+  function sumHtml() {
+    if (!summaryText) return '';
+    return `<div class="cs-sum"><b>${ROLE === 'client' ? 'ملخص الاستشارة من المحامي' : 'الملخص اللي اتبعت للموكل'}</b><pre dir="auto">${esc(summaryText)}</pre><button type="button" data-a="sumdl">تحميل</button><button type="button" data-a="sumprint">طباعة</button></div>`;
+  }
+  function updateSum() { const b = $('sumBox'); if (b) b.innerHTML = sumHtml(); }
+  async function refreshExtras() {
+    const s = st.status; if (!['accepted', 'live', 'awaiting_confirm', 'disputed', 'released'].includes(s)) return;
+    if (['accepted', 'live', 'awaiting_confirm'].includes(s) && $('chatlog')) { try { const l = await C.msgs(cid(), tk()), first = !msgsLoaded; msgsLoaded = true; l.forEach(m => addMsg({ mid: m.mid, from: m.from, body: m.body }, first)); } catch {} }
+    if (ROLE === 'client' && !summaryText && !(FINAL.includes(s) && sumTried)) {
+      sumTried = FINAL.includes(s);
+      try { const x = await C.summaryGet(cid(), tk()); if (x && x.summary) { summaryText = x.summary; S.toast('المحامي بعتلك ملخص الاستشارة'); updateSum(); } } catch {}
+    }
+  }
+
   // ---- ساحة عرض المستندات: أي مستند يتضاف بيتفتح عند الطرفين من غير تحميل ----
   let viewerId = null, viewTok = 0, knownIds = null, curUrl = null; const docCache = {}, libs = {};
   const PDFJS = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js', PDFW = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js', MAMMOTH = 'https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js';
@@ -323,14 +460,17 @@
     const ids = l.map(f => f.id);
     if (knownIds === null) { knownIds = new Set(ids); return; }
     const fresh = l.filter(f => !knownIds.has(f.id)); ids.forEach(i => knownIds.add(i));
-    if (fresh.length && $('docv')) { const f = fresh[fresh.length - 1]; if (f.uploader !== ROLE) S.toast('الطرف التاني بعت مستند: ' + f.name); openDoc(f.id); }
+    if (fresh.length && $('docv')) { const f = fresh[fresh.length - 1]; if (f.uploader !== ROLE) { S.toast('الطرف التاني بعت مستند: ' + f.name); beep(); } openDoc(f.id, 'auto'); }
     else if (viewerId && !ids.includes(viewerId)) closeDoc();
     if (viewerId) fillSel();
   }
   function fillSel() { const sel = $('docsel'); if (!sel) return; sel.innerHTML = fileList.map(f => `<option value="${esc(f.id)}"${f.id === viewerId ? ' selected' : ''}>${esc(f.name)}</option>`).join(''); sel.style.display = fileList.length > 1 ? '' : 'none'; }
-  function closeDoc() { viewerId = null; viewTok++; if (curUrl) { URL.revokeObjectURL(curUrl); curUrl = null; } const g = $('roomgrid'); if (g) g.classList.remove('withdoc'); const d = $('docv'); if (d) d.hidden = true; const b = $('docbody'); if (b) b.innerHTML = ''; }
-  async function openDoc(id) {
-    const meta = fileList.find(f => f.id === id); if (!meta || !$('docv')) return;
+  function closeDoc(mode) { if (!mode) appSend({ k: 'closedoc' }); viewerId = null; viewTok++; if (curUrl) { URL.revokeObjectURL(curUrl); curUrl = null; } const g = $('roomgrid'); if (g) g.classList.remove('withdoc'); const d = $('docv'); if (d) d.hidden = true; const b = $('docbody'); if (b) b.innerHTML = ''; }
+  async function openDoc(id, mode) {
+    let meta = fileList.find(f => f.id === id);
+    if (!meta && mode === 'remote') { await refreshFiles(); meta = fileList.find(f => f.id === id); }
+    if (!meta || !$('docv')) return;
+    if (!mode) appSend({ k: 'open', id });
     viewerId = id; const tok = ++viewTok;
     $('roomgrid').classList.add('withdoc'); $('docv').hidden = false; $('docname').textContent = meta.name; fillSel();
     const body = $('docbody'); body.className = 'cs-docbody'; body.innerHTML = '<div class="cs-dmsg">جاري فتح المستند...</div>';
@@ -338,9 +478,26 @@
       let d = docCache[id];
       if (!d) { const f = await C.fileGet(cid(), id, tk()); if (!f) throw new Error('x'); const bin = atob(f.b64), u8 = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i); d = docCache[id] = { name: f.name, mime: f.mime, u8 }; }
       if (tok !== viewTok) return;
-      await renderDoc(d, tok, body);
+      await renderDoc(d, tok, body); applyScroll();
     } catch { if (tok === viewTok) body.innerHTML = `<div class="cs-dmsg">تعذّر عرض المستند هنا.<br><button type="button" data-a="dldoc">تحميل المستند</button></div>`; }
   }
+  // تنظيف ناتج Word: بنبني عناصر آمنة بس ونتجاهل أي سكريبت أو خاصية، علشان مستند الموكل ما يقدرش ينفّذ كود عند المحامي
+  const SAFE = new Set(['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'STRONG', 'B', 'EM', 'I', 'U', 'S', 'BR', 'HR', 'UL', 'OL', 'LI', 'TABLE', 'THEAD', 'TBODY', 'TR', 'TD', 'TH', 'SPAN', 'DIV', 'BLOCKQUOTE', 'SUP', 'SUB', 'IMG']), DROP = new Set(['SCRIPT', 'STYLE', 'IFRAME', 'OBJECT', 'EMBED', 'LINK', 'META', 'FORM', 'SVG', 'MATH', 'TEMPLATE', 'NOSCRIPT', 'TITLE', 'HEAD']);
+  function cleanInto(src, dst) {
+    for (const n of Array.from(src.childNodes)) {
+      if (n.nodeType === 3) dst.appendChild(document.createTextNode(n.nodeValue));
+      else if (n.nodeType === 1) {
+        const t = n.tagName; if (DROP.has(t)) continue;
+        if (!SAFE.has(t)) { cleanInto(n, dst); continue; }
+        const e = document.createElement(t);
+        if (t === 'IMG') { const u = n.getAttribute('src') || ''; if (!/^data:image\/(png|jpeg|gif|webp);base64,[A-Za-z0-9+\/=]+$/i.test(u)) continue; e.src = u; e.alt = ''; }
+        if (t === 'TD' || t === 'TH') ['colspan', 'rowspan'].forEach(k => { const v = parseInt(n.getAttribute(k), 10); if (v > 0 && v < 50) e.setAttribute(k, String(v)); });
+        if (/^(P|H[1-6]|LI)$/.test(t)) e.setAttribute('dir', 'auto');
+        cleanInto(n, e); dst.appendChild(e);
+      }
+    }
+  }
+  if (q.get('debug') === '1') window.__t = { clean: h => { const d = document.createElement('div'); cleanInto(new DOMParser().parseFromString(h, 'text/html').body, d); return d.innerHTML; } };
   async function renderDoc(d, tok, body) {
     if (curUrl) { URL.revokeObjectURL(curUrl); curUrl = null; }
     if (d.mime === 'application/pdf') {
@@ -361,9 +518,7 @@
     } else if (d.mime.includes('wordprocessingml')) {
       await loadLib('mammoth', MAMMOTH);
       const r = await window.mammoth.convertToHtml({ arrayBuffer: d.u8.buffer.slice(d.u8.byteOffset, d.u8.byteOffset + d.u8.byteLength) }); if (tok !== viewTok) return;
-      body.className = 'cs-docbody flush'; body.innerHTML = ''; const fr = document.createElement('iframe'); fr.setAttribute('sandbox', ''); fr.title = d.name;
-      fr.srcdoc = '<meta charset="utf-8"><style>body{font-family:Cairo,Tahoma,sans-serif;padding:18px;line-height:1.9;color:#1E293B}img{max-width:100%;height:auto}table{border-collapse:collapse}td,th{border:1px solid #cbd5e1;padding:4px 8px}</style><body dir="auto">' + r.value + '</body>';
-      body.appendChild(fr);
+      body.innerHTML = ''; const box = document.createElement('div'); box.className = 'cs-docx'; cleanInto(new DOMParser().parseFromString(r.value, 'text/html').body, box); body.appendChild(box);
     } else {
       body.innerHTML = `<div class="cs-dmsg">المعاينة مش متاحة لنوع الملف ده (Word القديم).<br><button type="button" data-a="dldoc">تحميل المستند</button></div>`;
     }
@@ -379,7 +534,7 @@
       else if (a === 'reject') { if (confirm('ترفض الطلب؟')) await C.respond(CID, false); }
       else if (a === 'consent') await C.consent(cid(), tk());
       else if (a === 'cancel') { if (confirm('تلغي الاستشارة؟ هيتردّ المبلغ بالكامل.')) await C.end(cid(), tk()); }
-      else if (a === 'end') { if (confirm('تنهي الاستشارة؟')) { await C.end(cid(), tk()); } }
+      else if (a === 'end') { if (confirm('تنهي الاستشارة؟' + (ROLE === 'lawyer' && !summarySent ? '\n(لسه ما بعتش ملخص للموكل، هتقدر تكتبه بعد الإنهاء.)' : ''))) { await C.end(cid(), tk()); } }
       else if (a === 'confirm') await C.confirm(TOKEN);
       else if (a === 'problem') $('prob').hidden = false;
       else if (a === 'dispute') { const r = $('reason').value.trim(); if (r.length < 5) S.toast('اكتب المشكلة بجملة واضحة'); else await C.dispute(TOKEN, r); }
@@ -387,6 +542,8 @@
       else if (a === 'view') await openDoc(b.dataset.f);
       else if (a === 'dldoc') { if (viewerId) await download(viewerId); }
       else if (a === 'closedoc') closeDoc();
+      else if (a === 'sumdl') { const head = 'ملخص استشارة - ليجانو\n' + (ROLE === 'client' && st.lawyer ? 'المحامي: ' + st.lawyer.name + '\n' : '') + new Date().toLocaleDateString('ar-EG') + '\n\n'; const u = URL.createObjectURL(new Blob(['\ufeff' + head + summaryText], { type: 'text/plain;charset=utf-8' })); const l = document.createElement('a'); l.href = u; l.download = 'legano-consultation-summary.txt'; document.body.appendChild(l); l.click(); l.remove(); setTimeout(() => URL.revokeObjectURL(u), 3000); }
+      else if (a === 'sumprint') { const w = window.open('', '_blank'); if (!w) S.toast('اسمح بالنوافذ المنبثقة علشان تطبع'); else { w.document.write('<!doctype html><meta charset="utf-8"><title>ملخص الاستشارة</title><body dir="rtl" style="font-family:Tahoma,sans-serif;padding:24px;line-height:2"><h2>ملخص الاستشارة - ليجانو</h2><pre style="white-space:pre-wrap;font-family:inherit">' + esc(summaryText) + '</pre>'); w.document.close(); w.focus(); w.print(); } }
     } catch (er) { S.toast(S.friendly(er)); }
     busy = false; tick();
   });
