@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>حسابي | Legano</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Syne:wght@800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="js/social.css">
+<style>
+  :root { color-scheme: light; --background:#F8FAFB; --foreground:#1E293B; --card:#FFFFFF; --border:#E2E8F0; --muted-foreground:#64748B; --secondary:#EEF2F7; --gold:#0F172A; --gold-soft:#92620C; }
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Cairo', sans-serif; background: var(--background); color: var(--foreground); line-height: 1.7; }
+  .top { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; gap: 8px 12px; padding: 10px 20px; background: rgba(255,255,255,.92); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
+  .logo-text { font-family: 'Syne', sans-serif; font-weight: 800; letter-spacing: 5px; font-size: 18px; text-decoration: none; background: linear-gradient(90deg, #0F172A, #92620C); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  main { max-width: 720px; margin: 0 auto; padding: 20px 16px 60px; }
+  .hello { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; } .hello img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; } .hello h1 { margin: 0; font-size: 20px; }
+  .gbtn { display: inline-flex; align-items: center; gap: 10px; padding: 12px 22px; border-radius: 14px; border: 1px solid #DADCE0; background: #fff; font: inherit; font-weight: 800; font-size: 15px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+  .wc { position: relative; overflow: hidden; border-radius: 22px; padding: 22px; margin-bottom: 14px; color: #fff; background: radial-gradient(circle at 90% 0, rgba(252,211,77,.55), transparent 45%), radial-gradient(circle at 0 100%, rgba(34,197,94,.25), transparent 50%), linear-gradient(135deg, #0B1220, #1a1405 60%, #3B2A0B); border: 1px solid rgba(252,211,77,.5); box-shadow: 0 14px 40px rgba(183,121,31,.35); }
+  .wc small { color: #CBD5E1; } .wc .bal { font-size: 44px; font-weight: 900; color: #FCD34D; text-shadow: 0 0 30px rgba(252,211,77,.5); line-height: 1.3; }
+  .wc-top { display: flex; justify-content: space-between; font-weight: 900; letter-spacing: .12em; font-size: 13px; color: #FCD34D; }
+  .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 12px 14px; background: #fff; border: 1px solid var(--border); border-radius: 14px; margin-bottom: 8px; font-size: 13.5px; } .row small { display: block; color: var(--muted-foreground); }
+  .pos { color: #15803D; font-weight: 900; } .neg { color: #B91C1C; font-weight: 900; }
+  h2 { font-size: 15px; margin: 18px 0 8px; }
+  .login { text-align: center; padding: 40px 16px; } .login p { color: var(--muted-foreground); max-width: 420px; margin: 8px auto 18px; line-height: 2; }
+  .warn { padding: 12px 14px; margin-bottom: 14px; background: #FFF8E6; border: 1px solid #F1D48A; color: #7A5200; border-radius: 12px; font-size: 13px; line-height: 1.9; }
+</style>
+</head>
+<body>
+<header class="top"><a class="logo-text" href="index.html">LEGANO</a><a class="soc-btn" href="consult.html">استشارة فورية</a></header>
+<main id="m"><div class="empty" style="border:0">جاري التحميل...</div></main>
+<script src="js/social.js"></script>
+<script src="js/client.js"></script>
+<script>
+(async () => {
+  const $ = id => document.getElementById(id), S = window.Social, A = window.ClientAuth, esc = S.esc;
+  const G = '<svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.6 5.9c4.4-4.1 7-10.1 7-17.6z"/><path fill="#FBBC05" d="M10.5 28.7a14.5 14.5 0 010-9.4l-7.9-6.1a24 24 0 000 21.6l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 12-2.1 16-5.8l-7.6-5.9c-2.1 1.4-4.9 2.3-8.4 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>';
+  const KIND = { refund: 'استرداد استشارة', spend: 'دفع استشارة', adjust: 'تعديل من المنصة' }, ST = { requested: 'في انتظار المحامي', accepted: 'اتقبلت', live: 'شغّالة', awaiting_confirm: 'في انتظار تأكيدك', released: 'تمت', refunded: 'اترجّعت', cancelled: 'اتلغت', expired: 'انتهت', disputed: 'قيد المراجعة' };
+  const fmt = d => new Date(d).toLocaleString('ar-EG', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' });
+  await A.handleHash();
+  const back = new URLSearchParams(location.search).get('back');
+  function login(msg) {
+    $('m').innerHTML = `<div class="login"><h1 style="margin:0 0 6px">حسابك في ليجانو</h1><p>${msg || 'سجّل بحساب جوجل علشان تتابع استشاراتك، وفلوسك لو اتردّت بتنزل في محفظتك وتستخدمها في أي استشارة جاية.'}</p><button class="gbtn" id="g" type="button">${G} سجّل بجوجل</button><p style="font-size:12px;margin-top:16px">ده حساب الموكلين. لو إنت محامي، <a href="dashboard.html">سجّل دخول من هنا</a>.</p></div>`;
+    $('g').onclick = () => A.signIn(back);
+  }
+  if (!A.get()) return login();
+  if (back && /^(consult\.html|room\.html)/.test(back)) { location.replace(back); return; }
+  try {
+    const d = await A.me();
+    $('m').innerHTML = `<div class="warn">⚠️ وضع تجريبي: الدفع لسه مش مفعّل، والرصيد للتجربة بس.</div>
+      <div class="hello">${d.avatar ? `<img src="${esc(d.avatar)}" alt="" referrerpolicy="no-referrer">` : ''}<div><h1>أهلاً ${esc(d.name || '')} 👋</h1><small style="color:#64748B">${esc(A.get().user.email || '')}</small></div><button class="soc-btn" id="out" type="button" style="margin-inline-start:auto">خروج</button></div>
+      <div class="wc"><div class="wc-top"><span>LEGANO WALLET</span><span>👛</span></div><small style="display:block;margin-top:12px">رصيدك</small><div class="bal">${S.num(Math.round(d.balance * 100) / 100)} ج</div><small>أي استشارة اتلغت أو اتردّت فلوسها بترجعلك هنا، وتقدر تدفع بيها في أي استشارة جاية.</small></div>
+      <a class="soc-btn primary" href="consult.html" style="display:block;text-align:center;margin-bottom:6px">🎥 اطلب استشارة دلوقتي</a>
+      <h2>حركات المحفظة</h2>${d.ledger.length ? d.ledger.map(x => `<div class="row"><div>${KIND[x.kind] || x.kind}<small>${fmt(x.at)}</small></div><span dir="ltr" class="${x.amount >= 0 ? 'pos' : 'neg'}">${x.amount >= 0 ? '+' : ''}${S.num(Math.round(x.amount * 100) / 100)} ج</span></div>`).join('') : '<div class="empty">مفيش حركات لسه.</div>'}
+      <h2>استشاراتي</h2>${d.consults.length ? d.consults.map(c => `<div class="row"><div><b>${esc(c.lawyer || 'محامي')}</b> • ${S.num(c.price)} ج<small>${esc(c.topic)}</small><small>${fmt(c.at)}</small></div>${['requested', 'accepted', 'live', 'awaiting_confirm'].includes(c.status) ? `<a class="soc-btn primary" href="room.html?t=${encodeURIComponent(c.token)}">ادخل</a>` : `<b>${ST[c.status] || c.status}</b>`}</div>`).join('') : '<div class="empty">لسه ما طلبتش استشارة بحسابك.</div>'}`;
+    $('out').onclick = () => { A.signOut(); location.reload(); };
+  } catch (e) {
+    if (/not_client/.test(e.message)) { A.signOut(); login('الحساب ده مش حساب موكل. لو إنت محامي ادخل من صفحة دخول المحامين.'); }
+    else if (e.status === 401) { A.signOut(); login(); }
+    else $('m').innerHTML = '<div class="empty">حصلت مشكلة في التحميل. جرّب تحدّث الصفحة.</div>';
+  }
+})();
+</script>
+</body>
+</html>

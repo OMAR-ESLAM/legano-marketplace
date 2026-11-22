@@ -24,6 +24,7 @@
 <header class="top"><a class="logo-text" href="index.html?browse=1">LEGANO</a><div id="navSlot"></div></header>
 <main class="cs-wrap">
   <div class="cs-test">⚠️ وضع تجريبي: الدفع لسه مش مفعّل، فمفيش أي مبلغ هيتسحب منك.</div>
+  <div id="acct" class="cs-box" hidden></div>
   <div id="resume" class="cs-box" hidden></div>
   <h1 class="cs-h">استشارة قانونية فورية</h1>
   <p class="cs-sub">اختار محامي موثّق أونلاين دلوقتي وادخل معاه استشارة فيديو. الفلوس بتفضل معلّقة ومبتروحش للمحامي إلا لما تأكّد إن الاستشارة تمت. الاستشارة بتتسجّل بموافقتك لضمان حق الطرفين.</p>
@@ -35,11 +36,13 @@
     <p id="rWho" style="margin:0 0 10px;font-size:13.5px;line-height:2"></p>
     <label class="f-l" for="rName">اسمك</label><input id="rName" class="f-i" maxlength="60" placeholder="مثال: منى أحمد">
     <label class="f-l" for="rTopic">موضوع الاستشارة (جملة أو اتنين)</label><textarea id="rTopic" class="f-i" rows="3" maxlength="300" placeholder="مثال: عايزة أعرف حقوقي في النفقة بعد الطلاق"></textarea>
+    <label id="wUse" class="cs-sw" style="margin-top:10px;font-size:13.5px;font-weight:800" hidden><input type="checkbox" id="wChk"> <span id="wTxt"></span></label>
     <p style="margin:8px 0 0;font-size:12.5px;color:var(--muted-foreground);line-height:1.9">⚠️ ما تكتبش أرقام قومية أو بيانات حساسة هنا. هتحكي التفاصيل للمحامي في الغرفة.</p>
   </div>
   <div class="modal-f"><button id="rGo" type="button" class="soc-btn primary" disabled>ابعت الطلب</button></div>
 </div></div>
 <script src="js/social.js"></script>
+<script src="js/client.js"></script>
 <script>
 (async () => {
   const $ = id => document.getElementById(id), S = window.Social, C = S.Consult, esc = S.esc;
@@ -67,12 +70,19 @@
       $('resume').innerHTML = `<h2>عندك استشارة شغّالة مع ${esc(c.lawyer.name)}</h2><p>${esc(C.ST[c.status] || '')}</p><a class="soc-btn primary" href="room.html?t=${encodeURIComponent(t.t)}">كمّل الاستشارة</a>`;
     } catch {}
   }
+  const CA = window.ClientAuth; let bal = null;
+  async function acct() {
+    await CA.handleHash();
+    if (!CA.get()) { $('acct').hidden = false; $('acct').innerHTML = '<b>🔐 سجّل بجوجل (اختياري)</b><p style="margin:4px 0 10px;font-size:13px;color:var(--muted-foreground)">فلوسك لو اتردّت بتنزل في محفظتك وتستخدمها في استشارتك الجاية، وتتابع كل استشاراتك من مكان واحد.</p><button class="soc-btn primary" id="gIn" type="button">سجّل بجوجل</button>'; $('gIn').onclick = () => CA.signIn('consult.html'); return; }
+    try { const d = await CA.me(); bal = Number(d.balance) || 0; $('acct').hidden = false; $('acct').innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><span>👛 محفظتك: <b>${S.num(bal)} ج</b></span><a class="soc-btn" href="account.html">حسابي</a></div>`; if (!CA.get().name) {} } catch (e) { if (/not_client/.test(e.message) || e.status === 401) CA.signOut(); }
+  }
   const valid = () => { $('rGo').disabled = !($('rName').value.trim().length >= 2 && $('rTopic').value.trim().length >= 5); };
   ['rName', 'rTopic'].forEach(i => $(i).addEventListener('input', valid));
   $('list').addEventListener('click', e => {
     const b = e.target.closest('[data-a=ask]'); if (!b) return;
     target = lawyers.find(l => l.id === b.closest('.cs-card').dataset.id); if (!target) return;
     $('rWho').innerHTML = `هتتواصل مع <b>${esc(target.display_name)}</b>، ${S.num(target.minutes)} دقيقة بـ ${S.num(target.price)} ج (تجريبي).`;
+    const can = bal !== null && bal >= Number(target.price); $('wUse').hidden = !can; $('wChk').checked = can; if (can) $('wTxt').textContent = `ادفع من محفظتي (رصيدي ${S.num(bal)} ج)`;
     $('reqOv').hidden = false; $('rName').focus();
   });
   $('rX').onclick = () => { $('reqOv').hidden = true; };
@@ -80,12 +90,12 @@
   $('rGo').onclick = async () => {
     if (!target) return; $('rGo').disabled = true;
     try {
-      const r = await C.request(target.id, $('rName').value.trim(), $('rTopic').value.trim());
+      const r = CA.get() ? await CA.rpc('consult_request', { p_lawyer: target.id, p_name: $('rName').value.trim(), p_topic: $('rTopic').value.trim(), p_use_wallet: !$('wUse').hidden && $('wChk').checked }) : await C.request(target.id, $('rName').value.trim(), $('rTopic').value.trim());
       LS.set({ t: r.token, id: r.id });
       location.href = 'room.html?t=' + encodeURIComponent(r.token);
     } catch (e) { S.toast(S.friendly(e)); load(); valid(); }
   };
-  await Promise.all([load(), resume()]);
+  await Promise.all([load(), resume(), acct()]);
   setInterval(load, 15000);
 })();
 </script>
