@@ -71,7 +71,7 @@ function render(l, similar) {
     </section>` : '';
 
   const actions = isMe
-    ? `<a href="dashboard.html" class="btn-main btn-ghost fb-act">تعديل بياناتي</a><a href="feed.html" class="btn-main btn-call fb-act">المنشورات</a>`
+    ? `<a href="dashboard.html?panel=1" class="btn-main btn-ghost fb-act">تعديل بياناتي</a><a href="feed.html" class="btn-main btn-call fb-act">المنشورات</a>`
     : `<a id="btnCall" href="#" class="btn-main btn-call fb-act"><i data-lucide="phone"></i>اتصل الآن</a>
        <a id="btnWa" href="#" class="btn-main btn-wa fb-act"><i data-lucide="message-circle"></i>واتساب</a>
        ${S.me() ? '<button id="fBtn" type="button" class="btn-main btn-ghost fb-act" hidden></button>' : ''}`;

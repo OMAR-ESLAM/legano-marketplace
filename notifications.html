@@ -50,8 +50,8 @@
       else if (n.type === 'ref_done') { const t = d.refs[n.referral_id]; txt = `${who} قفل الإحالة${t ? ' «' + esc(t) + '»' : ''} كمكتملة. تقدر تقيّمه.`; href = 'referrals.html?tab=taken'; }
       else if (n.type === 'group_request') { const g = d.groups[n.group_id]; txt = `${who} طلب الانضمام لجروب${g ? ' «' + esc(g) + '»' : ' بتاعك'}.`; href = `group.html?id=${esc(n.group_id)}`; }
       else if (n.type === 'group_approved') { const g = d.groups[n.group_id]; txt = `طلب انضمامك لجروب${g ? ' «' + esc(g) + '»' : ''} اتقبل.`; href = `group.html?id=${esc(n.group_id)}`; lead = `<span class="n-ico">${ICON}</span>`; }
-      else if (n.type === 'verified') { txt = 'تم توثيق حسابك. العلامة الزرقاء ظهرت جنب اسمك.'; href = 'dashboard.html'; lead = `<span class="n-ico">${ICON}</span>`; }
-      else { txt = 'طلب التوثيق اتراجع واترفض. تقدر تبعته تاني من لوحتك.'; href = 'dashboard.html'; lead = `<span class="n-ico">${ICON}</span>`; }
+      else if (n.type === 'verified') { txt = 'تم توثيق حسابك. العلامة الزرقاء ظهرت جنب اسمك.'; href = 'dashboard.html?panel=1'; lead = `<span class="n-ico">${ICON}</span>`; }
+      else { txt = 'طلب التوثيق اتراجع واترفض. تقدر تبعته تاني من لوحتك.'; href = 'dashboard.html?panel=1'; lead = `<span class="n-ico">${ICON}</span>`; }
       const snip = n.post_id && d.posts[n.post_id] ? `<span class="n-snip">${esc(d.posts[n.post_id].slice(0, 90))}</span>` : '';
       return `<a class="n-item ${n.read ? '' : 'unread'}" href="${href}">${lead}<div class="n-txt">${txt}${snip}<span class="n-time">${S.ago(n.created_at)}</span></div></a>`;
     }).join('');

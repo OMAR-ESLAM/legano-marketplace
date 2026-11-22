@@ -290,7 +290,7 @@
       + item('notifications.html', 'الإشعارات', BELL, '<span class="nav-dot" hidden></span>')
       + `<div class="nav-me"><button type="button" class="nav-av" id="navAv" aria-haspopup="menu" aria-expanded="false" aria-label="حسابي"><span class="avatar sm">${esc('؟')}</span></button>
         <div class="nav-menu" id="navMenu" role="menu" hidden>
-          <a role="menuitem" href="lawyer.html?id=${esc(me())}">بروفايلي</a><a role="menuitem" href="dashboard.html">لوحتي وإحصائياتي</a><a role="menuitem" href="index.html?browse=1">سوق المحامين</a>
+          <a role="menuitem" href="lawyer.html?id=${esc(me())}">بروفايلي</a><a role="menuitem" href="dashboard.html?panel=1">لوحتي وإحصائياتي</a><a role="menuitem" href="index.html?browse=1">سوق المحامين</a>
           <button role="menuitem" type="button" id="navOut">تسجيل الخروج</button></div></div>`;
     const menu = el.querySelector('#navMenu'), btn = el.querySelector('#navAv');
     const close = () => { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); };

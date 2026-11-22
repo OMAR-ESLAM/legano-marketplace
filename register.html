@@ -73,7 +73,7 @@ $('bReg').onclick = async () => {
     await api('/rest/v1/lawyer_contacts', { method: 'POST', json: { lawyer_id: j.user.id, phone } }, j.access_token);
     await api(`/rest/v1/lawyers?id=eq.${j.user.id}`, { method: 'PATCH', json: { display_name: name, city, served: [city], specialties: spec } }, j.access_token);
     try { localStorage.setItem('lg_s', JSON.stringify(j)); } catch {}
-    location.href = 'dashboard.html';
+    location.href = 'feed.html?welcome=1';
   } catch (e) {
     say(/already registered|already been registered/i.test(e.message) ? 'البريد ده مسجّل قبل كده، سجّل دخول' : e.message, 1); $('bReg').disabled = false;
   }

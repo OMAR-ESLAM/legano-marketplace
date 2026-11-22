@@ -32,7 +32,7 @@
 <div id="layout" class="feed-layout" hidden>
   <main>
     <div id="single" hidden><a class="back" href="feed.html">كل المنشورات</a></div>
-    <div id="hiddenWarn" class="warn" hidden>بروفايلك مخفي عن الزوار، وعلشان كده مش هتقدر تنشر ولا تتفاعل. فعّل «إظهار بروفايلي للزوار» من <a href="dashboard.html">لوحتك</a>.</div>
+    <div id="hiddenWarn" class="warn" hidden>بروفايلك مخفي عن الزوار، وعلشان كده مش هتقدر تنشر ولا تتفاعل. فعّل «إظهار بروفايلي للزوار» من <a href="dashboard.html?panel=1">لوحتك</a>.</div>
     <div id="list">
       <section id="today" class="soc-card today-card" aria-label="شغلي النهارده"><div class="today-h"><div><h1 id="hello" class="today-hello"></h1><p id="activeN" class="today-sub"></p></div><button id="focusBtn" type="button" class="soc-btn focus-btn" aria-pressed="false" title="إخفاء الأعمدة الجانبية">⛶ تركيز</button></div><div id="todayItems" class="today-items"></div></section>
       <div id="composer" class="soc-card composer-card"></div>
@@ -221,6 +221,8 @@
   if (new URLSearchParams(location.search).get('compose')) setTimeout(() => document.querySelector('.comp-input')?.click(), 400);
   load(true);
 })();
+
+  try { if (/[?&]welcome=1/.test(location.search) && window.Social) { setTimeout(() => window.Social.toast('أهلاً بيك في ليجانو 👋 كمّل بياناتك من «لوحتي» علشان حسابك يتوثّق ويظهر للموكلين.'), 800); history.replaceState(null, '', 'feed.html'); } } catch {}
 </script>
 </body>
 </html>

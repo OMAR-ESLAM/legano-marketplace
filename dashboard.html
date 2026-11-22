@@ -103,7 +103,7 @@ async function auth(kind){
       ? await api('/auth/v1/signup', { method:'POST', json:{ email, password, data:{ display_name: $('aName').value.trim() } } })
       : await api('/auth/v1/token?grant_type=password', { method:'POST', json:{ email, password } });
     if (!j.access_token) return say('اتبعتلك إيميل تأكيد، افتحه وبعدين سجّل دخول.');
-    S = j; store.set(j); load();
+    S = j; store.set(j); location.href = 'feed.html'; return;
   } catch(e){ say(/Invalid login/i.test(e.message) ? 'البريد أو كلمة السر غلط' : e.message, 1); }
 }
 async function load(){
@@ -182,5 +182,5 @@ if (hp.get('type') === 'recovery' && hp.get('access_token')) {
       $('resetBox').classList.add('hide'); document.querySelector('#authBox > .login-box:not(#resetBox)').classList.remove('hide');
     } catch (e) { say(/expired|invalid|JWT/i.test(e.message) ? 'الرابط انتهت صلاحيته، اطلب رابط جديد' : e.message, 1); }
   };
-} else { S = store.get(); if (S) load(); }
+} else { S = store.get(); if (S) { if (/[?&]panel=1/.test(location.search)) load(); else location.replace('feed.html'); } }
 </script></body></html>
