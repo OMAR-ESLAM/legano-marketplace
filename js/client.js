@@ -32,7 +32,11 @@
     } catch {}
     history.replaceState(null, '', location.pathname + location.search); return !!S;
   }
-  function signIn(back) {
+  async function signIn(back) {
+    try {
+      const r = await fetch(SB + '/auth/v1/settings', { headers: { apikey: KEY } }), j = await r.json();
+      if (j && j.external && j.external.google === false) { alert('تسجيل الدخول بجوجل لسه متفعّلش. جرّب تاني بعد شوية.'); return; }
+    } catch {}
     const to = location.origin + '/account.html' + (back ? '?back=' + encodeURIComponent(back) : '');
     location.href = SB + '/auth/v1/authorize?provider=google&redirect_to=' + encodeURIComponent(to);
   }
