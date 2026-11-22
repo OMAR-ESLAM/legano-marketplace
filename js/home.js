@@ -182,6 +182,7 @@ function renderGrid(lawyers) {
           <i data-lucide="star" class="text-gold-c" style="width:13px;height:13px;"></i>
           <h3 class="text-sm font-bold text-fg">${esc(p.displayName || l.name || 'محامي')}${l.verified ? window.Social.badge() : ''}</h3>
         </div>
+        <div class="flex flex-wrap justify-center gap-1">${window.Social.badges(l)}</div>
         <div class="text-[11px]">${window.Social.stars(l.rating.avg, l.rating.count)}</div>
         <p class="text-xs leading-relaxed text-muted-c">${esc(line)}</p>
         ${p.city ? `<div class="flex items-center justify-center gap-1 text-xs text-muted-c"><i data-lucide="map-pin" style="width:12px;height:12px;"></i><span>${esc(p.city)}</span></div>` : ''}

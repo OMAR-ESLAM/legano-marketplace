@@ -27,7 +27,7 @@
   <div id="gate" class="soc-card gate" hidden><h1>منطقة المحامين</h1><p>الاستشارات الفورية للمحامين الموثّقين. سجّل دخول علشان تبدأ.</p><a class="soc-btn primary" href="dashboard.html">دخول المحامين</a></div>
   <div id="wrap" hidden>
     <h1 class="cs-h">الاستشارات الفورية</h1>
-    <div class="feed-tabs" role="tablist"><button class="tab" data-t="cons" aria-selected="true" type="button">الاستشارات</button><button class="tab" data-t="wal" aria-selected="false" type="button">المحفظة</button></div>
+    <div class="feed-tabs" role="tablist"><button class="tab" data-t="cons" aria-selected="true" type="button">الاستشارات</button><button class="tab" data-t="wal" aria-selected="false" type="button">المحفظة</button><button class="tab" data-t="inv" aria-selected="false" type="button">ادعُ زميل</button></div>
     <section id="pCons">
       <div class="cs-box"><label class="cs-sw"><input type="checkbox" id="on"><span id="onTxt">أنا أونلاين</span></label>
         <p id="onHint" style="margin-top:6px"></p>
@@ -35,6 +35,13 @@
         <div><label class="f-l" for="mins">المدة (دقيقة)</label><select id="mins" class="f-i"><option>10</option><option>15</option><option>20</option><option>30</option><option>45</option><option>60</option></select></div></div>
         <button id="save" class="soc-btn primary" type="button">حفظ</button> <small id="limits" style="color:var(--muted-foreground)"></small></div>
       <div id="list" aria-live="polite"></div>
+    </section>
+    <section id="pInv" hidden>
+      <div class="cs-row" style="display:block"><b>ادعُ زميل محامي واخد خصم على عمولتك</b>
+        <small id="iRule">...</small>
+        <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><input id="iLink" readonly style="flex:1;min-width:200px;direction:ltr" class="soc-input"><button id="iCopy" class="soc-btn primary" type="button">نسخ</button><a id="iWa" class="soc-btn" target="_blank" rel="noopener">واتساب</a></div>
+        <div id="iNow" style="margin-top:10px;font-weight:800"></div></div>
+      <h3 style="margin:14px 0 6px;font-size:14px">اللي دعيتهم</h3><div id="iList"></div>
     </section>
     <section id="pWal" hidden>
       <div class="cs-stats"><div><b id="wAv">0</b><small>متاح للسحب</small></div><div><b id="wHold">0</b><small>معلّق (في انتظار تأكيد الموكل)</small></div><div><b id="wTot">0</b><small>إجمالي الأرباح</small></div></div>
@@ -101,6 +108,17 @@
     try { const w = await C.wallet(); $('wAv').textContent = S.num(w.available) + ' ج'; $('wHold').textContent = S.num(w.on_hold) + ' ج'; $('wTot').textContent = S.num(w.total_earned) + ' ج'; } catch {}
     try { const l = await C.withdrawals(); $('wList').innerHTML = l.length ? l.map(x => `<div class="cs-row"><div><b>${S.num(x.amount)} ج</b> • ${esc(METH[x.method] || x.method)}<small>${fmt(x.created_at)}</small></div><span style="font-weight:800">${WST[x.status] || x.status}</span></div>`).join('') : '<div class="empty">مفيش طلبات سحب.</div>'; } catch {}
   }
+  async function loadInv() {
+    try {
+      const d = await C.inviteInfo(); const link = location.origin + '/register.html?ref=' + d.code;
+      $('iLink').value = link; $('iWa').href = 'https://wa.me/?text=' + encodeURIComponent('انضم لمنصة ليجانو للمحامين: ' + link);
+      $('iRule').textContent = `كل زميل تدعوه ويتوثّق حسابه بينزّل عمولتك ${S.num(d.per_invite)}% (لحد ${S.num(d.max)}%). الرسم الثابت ما بيتغيرش.`;
+      $('iNow').textContent = `عمولتك دلوقتي: ${S.num(d.effective_pct)}% + ${S.num(d.flat)} ج (الأساسية ${S.num(d.base_pct)}%) — خصم ${S.num(d.discount)}%`;
+      $('iList').innerHTML = d.invitees.length ? d.invitees.map(x => `<div class="cs-row"><div>${esc(x.name || 'محامي')}</div><span style="font-weight:800">${x.verified ? '✅ موثّق' : '⏳ في انتظار التوثيق'}</span></div>`).join('') : '<div class="empty">لسه محدش سجّل بالرابط بتاعك.</div>';
+    } catch (e) { S.toast(S.friendly(e)); }
+  }
+  $('iCopy').onclick = () => { try { navigator.clipboard.writeText($('iLink').value); S.toast('اتنسخ'); } catch { $('iLink').select(); } };
+  if (new URLSearchParams(location.search).get('tab') === 'inv') document.querySelector('.tab[data-t=inv]').click();
   $('wGo').onclick = async () => {
     $('wGo').disabled = true;
     try { await C.withdraw($('wAmt').value, $('wMeth').value, $('wAcc').value); S.toast('اتبعت طلب السحب'); $('wAmt').value = ''; loadWallet(); } catch (e) { S.toast(S.friendly(e)); }
@@ -108,7 +126,8 @@
   };
   document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
     document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', String(x === t)));
-    $('pCons').hidden = t.dataset.t !== 'cons'; $('pWal').hidden = t.dataset.t !== 'wal';
+    $('pCons').hidden = t.dataset.t !== 'cons'; $('pWal').hidden = t.dataset.t !== 'wal'; $('pInv').hidden = t.dataset.t !== 'inv';
+    if (t.dataset.t === 'inv') loadInv();
     if (t.dataset.t === 'wal') loadWallet();
   }));
   await loadCfg(); await loadList(); loadWallet();

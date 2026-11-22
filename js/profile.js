@@ -84,6 +84,7 @@ function render(l, similar) {
       <div class="fb-main">
         <h1 class="fb-name">${esc(p.displayName)}${l.verified ? S.badge('lg') : ''}</h1>
         <div class="fb-sub"><i data-lucide="map-pin" style="width:14px;height:14px;"></i><span>${esc(p.city || '')}</span>${p.experienceYears ? `<span>•</span><span>خبرة ${esc(p.experienceYears)} سنة</span>` : ''}</div>
+        <div class="fb-badges">${S.badges(l)}</div>
         <div class="fb-rate" id="fbRate">${S.stars(l.rating.avg, l.rating.count, true)}</div>
         <div class="fb-counts" id="fbCounts"></div>
       </div>

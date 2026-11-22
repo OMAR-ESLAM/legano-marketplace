@@ -68,7 +68,7 @@ $('bReg').onclick = async () => {
   if (password.length < 8) return say('كلمة السر لازم 8 حروف على الأقل', 1);
   $('bReg').disabled = true;
   try {
-    const j = await api('/auth/v1/signup', { method: 'POST', json: { email, password, data: { display_name: name } } });
+    const j = await api('/auth/v1/signup', { method: 'POST', json: { email, password, data: { display_name: name, ref: (()=>{try{return new URLSearchParams(location.search).get('ref')||localStorage.getItem('lg_ref')||''}catch{return ''}})() } } });
     if (!j.access_token) { say('اتبعتلك إيميل تأكيد. افتحه وبعدين سجّل دخول من صفحة الدخول وكمّل بياناتك.'); $('bReg').disabled = false; return; }
     await api('/rest/v1/lawyer_contacts', { method: 'POST', json: { lawyer_id: j.user.id, phone } }, j.access_token);
     await api(`/rest/v1/lawyers?id=eq.${j.user.id}`, { method: 'PATCH', json: { display_name: name, city, served: [city], specialties: spec } }, j.access_token);

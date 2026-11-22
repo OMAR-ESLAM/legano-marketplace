@@ -52,6 +52,7 @@
     $('list').innerHTML = lawyers.length ? lawyers.map(l => `<article class="cs-card" data-id="${esc(l.id)}">
       <a class="cs-lw" href="/lawyer/${esc(l.id)}">${S.avatar(l)}<span><b><i class="cs-dot"></i>${esc(l.display_name)}${l.verified ? S.badge() : ''}</b><small>${esc(l.city || '')}${l.rating_count ? ` • ★ ${Number(l.rating_avg).toFixed(1)} (${S.num(l.rating_count)})` : ''}</small></span></a>
       <small style="color:var(--muted-foreground)">${esc((l.specialties || []).map(k => CAT[k]).filter(Boolean).join(' • '))}</small>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">${S.badges(l)}</div>
       <div class="cs-price"><span>${S.num(l.minutes)} دقيقة</span><b>${S.num(l.price)} ج</b></div>
       <button type="button" class="soc-btn primary" data-a="ask">اطلب استشارة دلوقتي</button></article>`).join('')
       : '<div class="empty" style="grid-column:1/-1">مفيش محامي أونلاين دلوقتي. الصفحة بتتحدّث لوحدها، ارجع بعد شوية.</div>';

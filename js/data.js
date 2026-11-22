@@ -38,7 +38,7 @@ async function sb(path, opts = {}) {
 // صف قاعدة البيانات -> نفس الشكل اللي الواجهة متعودة عليه (من غير رقم التليفون)
 function mapRow(r) {
   return {
-    id: r.id, name: r.display_name, verified: !!r.verified, featured: !!r.featured,
+    id: r.id, name: r.display_name, verified: !!r.verified, featured: !!r.featured, top_rated: !!r.top_rated, fast: !!r.fast,
     rating: { avg: Number(r.rating_avg || 0), count: Number(r.rating_count || 0), score: Number(r.rating_score ?? 3.5) },
     publicProfile: {
       displayName: r.display_name, specialties: r.specialties || [], city: r.city, served: (r.served && r.served.length) ? r.served : [r.city].filter(Boolean),

@@ -127,6 +127,7 @@
     const dd = h / 24; if (dd < 30) return `من ${Math.floor(dd)} يوم`;
     return new Date(d).toLocaleDateString('ar-EG');
   }
+  const badges = o => o ? `${o.top_rated ? '<span class="bdg bdg-top" title="تقييم 4.5+ من 5 تقييمات أو أكتر">🏆 الأعلى تقييماً</span>' : ''}${o.fast ? '<span class="bdg bdg-fast" title="بيرد على الطلبات في أقل من 90 ثانية">⚡ الأسرع ردّاً</span>' : ''}` : '';
   const nameHTML = a => `<a class="who" href="lawyer.html?id=${esc(a.id)}">${esc(a.display_name || 'محامي')}${a.verified ? badge() : ''}</a>`;
   const num = n => Number(n || 0).toLocaleString('ar-EG');
 
@@ -747,7 +748,7 @@
   const rpc = (fn, json) => call('/rest/v1/rpc/' + fn, { method: 'POST', json: json || {} });
   const CONSULT_COLS = 'id,client_name,client_topic,price,minutes,fee_pct,fee_flat,status,pay_status,room_name,created_at,accepted_at,started_at,ended_at,confirm_deadline,released_at,client_consent_at,lawyer_consent_at,overlap_seconds,short_session,dispute_reason';
   const Consult = {
-    online: () => call('/rest/v1/online_lawyers?select=id,display_name,city,photo_path,specialties,experience_years,rating_avg,rating_count,verified,price,minutes&order=rating_avg.desc&limit=60'),
+    online: () => call('/rest/v1/online_lawyers?select=id,display_name,city,photo_path,specialties,experience_years,rating_avg,rating_count,verified,price,minutes,top_rated,fast&order=rating_avg.desc&limit=60'),
     request: (lawyer, name, topic) => rpc('consult_request', { p_lawyer: lawyer, p_name: name, p_topic: topic }),
     clientGet: token => rpc('consult_client_get', { p_token: token }),
     lawyerGet: id => rpc('consult_lawyer_get', { p_id: id }),
@@ -776,6 +777,7 @@
     mine: () => call(`/rest/v1/consultations?select=${CONSULT_COLS}&order=created_at.desc&limit=60`),
     limits: async () => (await call('/rest/v1/consult_settings?select=fee_pct,fee_flat,min_price,max_price,min_minutes,confirm_hours,retain_hours&id=eq.1'))[0],
     wallet: () => rpc('wallet_summary'),
+    inviteInfo: () => rpc('my_invite_info', {}),
     withdrawals: () => call('/rest/v1/withdrawal_requests?select=id,amount,method,status,created_at&order=created_at.desc&limit=20'),
     withdraw: (amount, method, account) => rpc('request_withdrawal', { p_amount: Number(amount), p_method: method, p_account: account }),
     // الغرفة: دالة السيرفر بتتأكد إنك طرف وإن الاتنين وافقوا، وبترجّع رابط الفيديو
@@ -789,11 +791,12 @@
     ST: { requested: 'في انتظار رد المحامي', accepted: 'مقبولة: في انتظار الموافقة والدخول', live: 'جارية', awaiting_confirm: 'في انتظار تأكيد الموكل', released: 'تمّت وتحوّلت للمحفظة', disputed: 'قيد المراجعة', refunded: 'اتردّت للموكل', cancelled: 'اتلغت', expired: 'انتهت من غير رد' },
   };
 
+  try { const r = new URLSearchParams(location.search).get('ref'); if (r && /^[0-9a-f]{8}$/i.test(r)) localStorage.setItem('lg_ref', r.toLowerCase()); } catch {}
   window.Social = {
     Consult,
     listMarket, listMyReferrals, listTaken, createReferral, setReferralStatus, deleteReferral, makeOffer, withdrawOffer, acceptOffer, referralContact, referralStats, reviewPeer, myPeerReviews, peerChip, lawyersInfo, STAGES, todayISO, nextHearing, listCases, createCase, updateCase, deleteCase, addCaseUpdate, deleteCaseUpdate, caseLink, getCaseByToken, rateCase,
     setJoinMode, requestJoin, cancelRequest, myRequests, listRequests, reviewRequest, addGroupMember, removeGroupMember, searchLawyers, listGroups, myGroups, getGroup, createGroup, joinGroup, leaveGroup, deleteGroup, groupMembers,
-    me, call, esc, badge, avatar, ago, num, stars, toast, needLogin, friendly, TOPICS, AUDIENCES, REACTIONS, topicLabel, audLabel,
+    me, call, esc, badge, badges, avatar, ago, num, stars, toast, needLogin, friendly, TOPICS, AUDIENCES, REACTIONS, topicLabel, audLabel,
     listPosts, mount, mountComposer, mountNav, mountProfilePosts, profileSocial, follow, unfollow,
     unreadCount, listNotifications, markAllRead, nameHTML, ratingStatus, rate, deviceId, photoUrl,
   };
