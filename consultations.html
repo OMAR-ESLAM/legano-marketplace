@@ -30,6 +30,18 @@
   .bar{height:8px;border-radius:99px;background:rgba(255,255,255,.14);margin-top:10px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#F59E0B,#FCD34D);transition:width 1.2s}
   .mh .go{margin-top:14px;border:0;border-radius:12px;padding:10px 18px;font:inherit;font-weight:900;color:#1E293B;background:linear-gradient(90deg,#FCD34D,#F59E0B);cursor:pointer;box-shadow:0 6px 18px rgba(245,158,11,.4)}
   @media (prefers-reduced-motion:reduce){.mh .coin{animation:none}}
+  .lg{position:relative;overflow:hidden;border-radius:20px;padding:18px;margin:0 0 14px;color:#fff;background:linear-gradient(135deg,#052e1b,#0B1220 70%);border:1px solid #14532D}
+  .lg[hidden]{display:none}.lg-top{display:flex;align-items:center;gap:16px}
+  .radar{position:relative;flex:none;width:84px;height:84px;border-radius:50%;background:radial-gradient(circle,#22C55E 0 5px,transparent 6px),repeating-radial-gradient(circle,rgba(34,197,94,.35) 0 1px,transparent 1px 14px);overflow:hidden}
+  .radar::before{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,rgba(34,197,94,.6),transparent 28%);animation:sw 2.6s linear infinite}
+  .radar::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid #22C55E;animation:rp 2s ease-out infinite}
+  @keyframes sw{to{transform:rotate(360deg)}}@keyframes rp{from{transform:scale(.3);opacity:.9}to{transform:scale(1.2);opacity:0}}
+  .lg h3{margin:0;font-size:18px;font-weight:900}.lg-st{font-size:13px;color:#86EFAC;min-height:22px;transition:opacity .3s}
+  .lg-clock{font-variant-numeric:tabular-nums;font-weight:900;color:#FCD34D;font-size:15px}
+  .lg-g{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}.lg-g div{background:rgba(255,255,255,.07);border-radius:12px;padding:8px;text-align:center}.lg-g b{display:block;font-size:20px;font-weight:900;color:#fff}.lg-g small{font-size:11px;color:#A7F3D0}
+  .lg-tip{margin-top:12px;padding:10px 12px;border-radius:12px;background:rgba(252,211,77,.1);border:1px dashed rgba(252,211,77,.4);font-size:13px;min-height:44px}
+  .lg-act{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}.lg-act a{padding:6px 12px;border-radius:99px;background:rgba(255,255,255,.1);color:#fff;text-decoration:none;font-size:12.5px;font-weight:800}.lg-act label{margin-inline-start:auto;font-size:12.5px;font-weight:700;cursor:pointer}
+  @media (prefers-reduced-motion:reduce){.radar::before,.radar::after{animation:none}}
   .warn a { color: inherit; font-weight: 800; }
 </style>
 </head>
@@ -58,6 +70,12 @@
         <div class="cs-fields"><div><label class="f-l" for="price">سعر الاستشارة (جنيه)</label><input id="price" class="f-i" type="number" inputmode="numeric" min="1"></div>
         <div><label class="f-l" for="mins">المدة (دقيقة)</label><select id="mins" class="f-i"><option>10</option><option>15</option><option>20</option><option>30</option><option>45</option><option>60</option></select></div></div>
         <button id="save" class="soc-btn primary" type="button">حفظ</button> <small id="limits" style="color:var(--muted-foreground)"></small></div>
+      <div class="lg" id="lg" hidden>
+        <div class="lg-top"><div class="radar" aria-hidden="true"></div><div><h3>أنت على الهواء 🟢</h3><div class="lg-st" id="lgSt"></div><div>أونلاين من <span class="lg-clock" id="lgClk">00:00:00</span></div></div></div>
+        <div class="lg-g"><div><b id="lgOn">–</b><small>محامين أونلاين معاك</small></div><div><b id="lgPos">–</b><small>ترتيبك في القايمة</small></div><div><b id="lgTd">0</b><small>طلبات النهارده</small></div></div>
+        <div class="lg-tip" id="lgTip"></div>
+        <div class="lg-act"><a href="referrals.html">🔁 اتفرج على سوق الإحالات</a><a href="feed.html">📰 المنشورات</a><a href="calendar.html">📅 مفكرتك</a><label><input type="checkbox" id="lgSnd" checked> 🔔 تنبيه صوتي</label></div>
+      </div>
       <div id="list" aria-live="polite"></div>
     </section>
     <section id="pInv" hidden>
@@ -118,8 +136,27 @@
     if (lim) $('limits').textContent = `السعر من ${lim.min_price} لـ ${lim.max_price} ج • عمولة المنصة ${lim.fee_pct}%${Number(lim.fee_flat) ? ' + ' + lim.fee_flat + ' ج' : ''}`;
     presence();
   }
+  const STS = ['بندوّر لك على موكل محتاج محامي دلوقتي…', 'ظاهر لكل الموكلين اللي فاتحين صفحة الاستشارات 👀', 'أول ما حد يطلبك هتسمع تنبيه 🔔', 'سيبك مرتاح، إحنا بنراقب لك الطلبات', 'ردّك السريع بيزوّد فرصتك في شارة «الأسرع ردّاً» ⚡'];
+  const TIPS = ['💡 اكتب في بروفايلك نبذة وتخصصاتك: الموكل بيختار المحامي اللي ملفه مكتمل.', '💡 الرد على الطلب في أقل من 90 ثانية بيجيبلك شارة «الأسرع ردّاً» ⚡', '💡 4.5 نجمة فما فوق بعد 5 تقييمات بتجيبلك شارة «الأعلى تقييماً» 🏆', '💡 ادعُ زميل وحسابه يتوثّق: عمولتك بتقل 1% عن كل زميل.', '💡 اقعد جاهز: الصفحة لازم تفضل مفتوحة علشان تفضل ظاهر للموكلين.', '💡 استغل الانتظار: اعمل منشور أو شوف إحالات في سوق الإحالات.'];
+  let lgT = null, lgS = null, lgK = 0, t0 = 0, wl = null, ctx = null;
+  const chime = () => { try { if (!$('lgSnd').checked) return; ctx = ctx || new (window.AudioContext || window.webkitAudioContext)(); [660, 880, 1100].forEach((f, i) => { const o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.value = f; o.connect(g); g.connect(ctx.destination); const s = ctx.currentTime + i * .16; g.gain.setValueAtTime(.2, s); g.gain.exponentialRampToValueAtTime(.001, s + .3); o.start(s); o.stop(s + .32); }); } catch {} };
+  async function lgStats() {
+    try { const o = await C.online(); $('lgOn').textContent = S.num(Math.max(0, o.length - 1)); const i = o.findIndex(x => x.id === S.me()); $('lgPos').textContent = i >= 0 ? '#' + S.num(i + 1) : '–'; } catch {}
+  }
+  setInterval(() => { if (!$('lg').hidden) lgStats(); }, 15000);
+  function lounge(show) {
+    $('lg').hidden = !show;
+    [lgT, lgS].forEach(x => x && clearInterval(x)); lgT = lgS = null;
+    if (wl) { try { wl.release(); } catch {} wl = null; }
+    if (!show) return;
+    t0 = t0 || Date.now(); const tick = () => { const s = Math.floor((Date.now() - t0) / 1000), p = n => String(n).padStart(2, '0'); $('lgClk').textContent = `${p(Math.floor(s / 3600))}:${p(Math.floor(s / 60) % 60)}:${p(s % 60)}`; };
+    tick(); lgT = setInterval(tick, 1000);
+    const rot = () => { $('lgSt').textContent = STS[lgK % STS.length]; $('lgTip').textContent = TIPS[lgK % TIPS.length]; lgK++; };
+    rot(); lgS = setInterval(rot, 6000); lgStats();
+    try { navigator.wakeLock && navigator.wakeLock.request('screen').then(l => { wl = l; }).catch(() => {}); } catch {}
+  }
   function presence() {
-    const on = $('on').checked;
+    const on = $('on').checked; lounge(on && cfg && cfg.enabled); if (!(on && cfg && cfg.enabled)) t0 = 0;
     $('onTxt').textContent = on ? 'أنت أونلاين وبتستقبل طلبات' : 'أنت أوفلاين';
     $('onHint').textContent = on ? 'فضّل الصفحة دي مفتوحة. لو قفلتها بتبان أوفلاين بعد حوالي دقيقة ونص.' : 'فعّل الزرار علشان تظهر للموكلين وتستقبل استشارات.';
     if (hb) { clearInterval(hb); hb = null; }
@@ -137,6 +174,8 @@
     const fresh = rows.filter(r => r.status === 'requested' && !seen.has(r.id));
     rows.forEach(r => { if (r.status === 'requested') seen.add(r.id); });
     if (!first && fresh.length) { S.toast('🔔 طلب استشارة جديد!'); if (!flash) { let k = 0; flash = setInterval(() => { document.title = (k++ % 2) ? baseTitle : '🔔 طلب جديد'; if (k > 12) { clearInterval(flash); flash = null; document.title = baseTitle; } }, 800); } }
+    if (!first && fresh.length) chime();
+    const td = new Date().toDateString(); $('lgTd').textContent = S.num(rows.filter(r => new Date(r.created_at).toDateString() === td).length);
     first = false;
     $('list').innerHTML = rows.length ? rows.map(r => {
       const act = r.status === 'requested' ? `<span><button class="soc-btn primary" data-a="acc" data-id="${esc(r.id)}" type="button">قبول</button> <button class="soc-btn" data-a="rej" data-id="${esc(r.id)}" type="button">رفض</button></span>`
