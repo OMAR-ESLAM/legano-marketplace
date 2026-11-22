@@ -779,7 +779,7 @@
     mySettings: async () => (await call(`/rest/v1/lawyer_consult?select=enabled,price,minutes,last_seen&lawyer_id=eq.${me()}`))[0] || null,
     saveSettings: f => rpc('consult_save_settings', { p_enabled: !!f.enabled, p_price: Number(f.price), p_minutes: Number(f.minutes) }),
     mine: () => call(`/rest/v1/consultations?select=${CONSULT_COLS}&order=created_at.desc&limit=60`),
-    limits: async () => (await call('/rest/v1/consult_settings?select=fee_pct,fee_flat,min_price,max_price,min_minutes,confirm_hours,retain_hours&id=eq.1'))[0],
+    limits: async () => (await call('/rest/v1/consult_settings?select=fee_pct,fee_flat,min_price,max_price,min_minutes,confirm_hours,retain_hours,request_secs&id=eq.1'))[0],
     wallet: () => rpc('wallet_summary'),
     inviteInfo: () => rpc('my_invite_info', {}),
     withdrawals: () => call('/rest/v1/withdrawal_requests?select=id,amount,method,status,created_at&order=created_at.desc&limit=20'),

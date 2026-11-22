@@ -42,6 +42,25 @@
   .lg-tip{margin-top:12px;padding:10px 12px;border-radius:12px;background:rgba(252,211,77,.1);border:1px dashed rgba(252,211,77,.4);font-size:13px;min-height:44px}
   .lg-act{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}.lg-act a{padding:6px 12px;border-radius:99px;background:rgba(255,255,255,.1);color:#fff;text-decoration:none;font-size:12.5px;font-weight:800}.lg-act label{margin-inline-start:auto;font-size:12.5px;font-weight:700;cursor:pointer}
   @media (prefers-reduced-motion:reduce){.radar::before,.radar::after{animation:none}}
+  .cs-box.vip{position:relative;color:#fff;border:1px solid rgba(252,211,77,.35);background:radial-gradient(circle at 100% 0,rgba(183,121,31,.45),transparent 50%),radial-gradient(circle at 0 100%,rgba(34,197,94,.22),transparent 50%),linear-gradient(135deg,#0B1220,#12261c 60%,#2a1d07);box-shadow:0 10px 30px rgba(11,18,32,.25)}
+  .vip .cs-sw{font-size:17px;font-weight:900}.vip .cs-sw input{appearance:none;-webkit-appearance:none;width:54px;height:30px;border-radius:99px;background:#475569;position:relative;cursor:pointer;transition:background .25s;flex:none}
+  .vip .cs-sw input::after{content:"";position:absolute;top:3px;inset-inline-start:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .25s}
+  .vip .cs-sw input:checked{background:#22C55E;box-shadow:0 0 0 0 rgba(34,197,94,.6);animation:livePulse 1.8s infinite}
+  .vip .cs-sw input:checked::after{transform:translateX(-24px)}
+  .vip p,.vip small,.vip #limits{color:#CBD5E1!important}.vip .f-l{color:#FDE68A}
+  .vip .f-i{background:rgba(255,255,255,.08);border:1px solid rgba(252,211,77,.3);color:#fff;font-weight:800}.vip .f-i:focus{outline:0;border-color:#FCD34D;box-shadow:0 0 0 3px rgba(252,211,77,.2)}.vip .f-i option{color:#111}
+  .vip #save{background:linear-gradient(90deg,#FCD34D,#F59E0B);color:#1E293B;border:0;font-weight:900;box-shadow:0 6px 16px rgba(245,158,11,.35)}
+  .vip .net{margin-top:10px;padding:8px 12px;border-radius:12px;background:rgba(252,211,77,.1);border:1px dashed rgba(252,211,77,.4);font-size:13.5px;font-weight:800;color:#FDE68A}
+  .req{position:relative;overflow:hidden;margin-bottom:12px;padding:16px;border-radius:18px;color:#fff;border:2px solid #FCD34D;background:radial-gradient(circle at 100% 0,rgba(245,158,11,.5),transparent 55%),linear-gradient(135deg,#0B1220,#1a2a22 55%,#3B2A0B);animation:reqGlow 1.4s ease-in-out infinite}
+  @keyframes reqGlow{0%,100%{box-shadow:0 0 0 0 rgba(252,211,77,.6),0 8px 28px rgba(245,158,11,.25)}50%{box-shadow:0 0 0 9px rgba(252,211,77,0),0 8px 36px rgba(245,158,11,.55)}}
+  .req-h{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;font-weight:900;font-size:14px;color:#FCD34D}.req-h .bell{display:inline-block;animation:ring 1s ease-in-out infinite;transform-origin:top center}
+  @keyframes ring{0%,60%,100%{transform:rotate(0)}10%,30%,50%{transform:rotate(18deg)}20%,40%{transform:rotate(-18deg)}}
+  .req-cd{font-variant-numeric:tabular-nums;padding:2px 10px;border-radius:99px;background:#DC2626;color:#fff;font-size:12.5px}.req-cd.ok{background:#16A34A}
+  .req-n{font-size:22px;font-weight:900;margin:8px 0 2px}.req-t{color:#E2E8F0;font-size:14px;background:rgba(255,255,255,.07);padding:8px 12px;border-radius:12px;margin:6px 0}
+  .req-c{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.req-c span{padding:3px 11px;border-radius:99px;background:rgba(255,255,255,.12);font-size:12.5px;font-weight:800}.req-c .earn{background:#F59E0B;color:#1E293B}
+  .req-a{display:flex;gap:10px;align-items:center;margin-top:10px}.req .acc{flex:1;padding:14px;border:0;border-radius:14px;font:inherit;font-size:18px;font-weight:900;color:#1E293B;background:linear-gradient(90deg,#FCD34D,#F59E0B);cursor:pointer;animation:pop 1.2s ease-in-out infinite}
+  @keyframes pop{50%{transform:scale(1.03)}}.req .rej{border:0;background:none;color:#94A3B8;font:inherit;font-size:12.5px;cursor:pointer;text-decoration:underline}
+  @media (prefers-reduced-motion:reduce){.req,.req .acc,.req-h .bell,.vip .cs-sw input:checked{animation:none}}
   .warn a { color: inherit; font-weight: 800; }
 </style>
 </head>
@@ -65,11 +84,11 @@
             <p id="mhNet" style="margin-top:6px"></p></div></div>
         <button class="go" id="mhGo" type="button">ابدأ استقبل استشارات دلوقتي 🚀</button>
         <small class="dis">الرقم ده حساب افتراضي من سعرك الحالي بعد عمولة المنصة، مش ضمان دخل. الطلب الفعلي بيعتمد على عدد الموكلين المتاحين.</small></div>
-      <div class="cs-box"><label class="cs-sw"><input type="checkbox" id="on"><span id="onTxt">أنا أونلاين</span></label>
+      <div class="cs-box vip"><label class="cs-sw"><input type="checkbox" id="on"><span id="onTxt">أنا أونلاين</span></label>
         <p id="onHint" style="margin-top:6px"></p>
         <div class="cs-fields"><div><label class="f-l" for="price">سعر الاستشارة (جنيه)</label><input id="price" class="f-i" type="number" inputmode="numeric" min="1"></div>
         <div><label class="f-l" for="mins">المدة (دقيقة)</label><select id="mins" class="f-i"><option>10</option><option>15</option><option>20</option><option>30</option><option>45</option><option>60</option></select></div></div>
-        <button id="save" class="soc-btn primary" type="button">حفظ</button> <small id="limits" style="color:var(--muted-foreground)"></small></div>
+        <button id="save" class="soc-btn primary" type="button">حفظ</button> <small id="limits"></small><div class="net" id="netNow"></div></div>
       <div class="lg" id="lg" hidden>
         <div class="lg-top"><div class="radar" aria-hidden="true"></div><div><h3>أنت على الهواء 🟢</h3><div class="lg-st" id="lgSt"></div><div>أونلاين من <span class="lg-clock" id="lgClk">00:00:00</span></div></div></div>
         <div class="lg-g"><div><b id="lgOn">–</b><small>محامين أونلاين معاك</small></div><div><b id="lgPos">–</b><small>ترتيبك في القايمة</small></div><div><b id="lgTd">0</b><small>طلبات النهارده</small></div></div>
@@ -113,6 +132,7 @@
   function sim() {
     const d = +$('mhD').value, m = +$('mhM').value; $('mhDv').textContent = d; $('mhMv').textContent = m;
     const price = Number($('price').value) || (cfg && cfg.price) || 200, net = Math.max(0, price - fee(price));
+    $('netNow').textContent = `💰 صافيك من كل استشارة بالسعر ده: ${S.num(Math.round(net))} ج (بعد عمولة المنصة)`;
     anim($('mhSim'), Math.round(net * d * m)); $('mhNet').textContent = `صافيك للاستشارة ${S.num(Math.round(net))} ج × ${d} × ${m} يوم`;
   }
   function ladder() {
@@ -132,14 +152,22 @@
     const [m, lim] = await Promise.all([C.mySettings().catch(() => null), C.limits().catch(() => null)]);
     cfg = m || { enabled: false, price: 200, minutes: 20 };
     $('on').checked = !!cfg.enabled; $('price').value = cfg.price; $('mins').value = String(cfg.minutes);
-    lim0 = lim;
+    lim0 = lim; if (lim && lim.request_secs) reqSecs = Number(lim.request_secs);
     if (lim) $('limits').textContent = `السعر من ${lim.min_price} لـ ${lim.max_price} ج • عمولة المنصة ${lim.fee_pct}%${Number(lim.fee_flat) ? ' + ' + lim.fee_flat + ' ج' : ''}`;
     presence();
   }
   const STS = ['بندوّر لك على موكل محتاج محامي دلوقتي…', 'ظاهر لكل الموكلين اللي فاتحين صفحة الاستشارات 👀', 'أول ما حد يطلبك هتسمع تنبيه 🔔', 'سيبك مرتاح، إحنا بنراقب لك الطلبات', 'ردّك السريع بيزوّد فرصتك في شارة «الأسرع ردّاً» ⚡'];
   const TIPS = ['💡 اكتب في بروفايلك نبذة وتخصصاتك: الموكل بيختار المحامي اللي ملفه مكتمل.', '💡 الرد على الطلب في أقل من 90 ثانية بيجيبلك شارة «الأسرع ردّاً» ⚡', '💡 4.5 نجمة فما فوق بعد 5 تقييمات بتجيبلك شارة «الأعلى تقييماً» 🏆', '💡 ادعُ زميل وحسابه يتوثّق: عمولتك بتقل 1% عن كل زميل.', '💡 اقعد جاهز: الصفحة لازم تفضل مفتوحة علشان تفضل ظاهر للموكلين.', '💡 استغل الانتظار: اعمل منشور أو شوف إحالات في سوق الإحالات.'];
   let lgT = null, lgS = null, lgK = 0, t0 = 0, wl = null, ctx = null;
-  const chime = () => { try { if (!$('lgSnd').checked) return; ctx = ctx || new (window.AudioContext || window.webkitAudioContext)(); [660, 880, 1100].forEach((f, i) => { const o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.value = f; o.connect(g); g.connect(ctx.destination); const s = ctx.currentTime + i * .16; g.gain.setValueAtTime(.2, s); g.gain.exponentialRampToValueAtTime(.001, s + .3); o.start(s); o.stop(s + .32); }); } catch {} };
+  let ringT = null, reqSecs = 120;
+  const ringOn = on => { if (on && !ringT) { const go = () => { chime(); try { navigator.vibrate && navigator.vibrate([300, 150, 300]); } catch {} }; go(); ringT = setInterval(go, 3000); } else if (!on && ringT) { clearInterval(ringT); ringT = null; } };
+  setInterval(() => { document.querySelectorAll('[data-exp]').forEach(el => { const s = Math.max(0, Math.round((+el.dataset.exp - Date.now()) / 1000)); el.textContent = `ينتهي بعد ${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`; el.classList.toggle('ok', s > 30); }); }, 1000);
+  const netOf = r => Math.max(0, Number(r.price) - Math.min(Number(r.price), Math.round(Number(r.price) * Number(r.fee_pct ?? 15)) / 100 + Number(r.fee_flat || 0)));
+  const reqCard = r => `<div class="req"><div class="req-h"><span><span class="bell">🔔</span> طلب استشارة جديد — موكل مستنيك دلوقتي!</span><span class="req-cd" data-exp="${new Date(r.created_at).getTime() + reqSecs * 1000}"></span></div>
+    <div class="req-n">${esc(r.client_name)}</div><div class="req-t">«${esc(r.client_topic)}»</div>
+    <div class="req-c"><span class="earn">💰 هتكسب صافي ${S.num(Math.round(netOf(r)))} ج</span><span>⏱ ${S.num(r.minutes)} دقيقة</span><span>📹 فيديو مباشر</span></div>
+    <div class="req-a"><button class="acc" data-a="acc" data-id="${esc(r.id)}" type="button">اقبل واكسب دلوقتي ⚡</button><button class="rej" data-a="rej" data-id="${esc(r.id)}" type="button">رفض</button></div></div>`;
+  const chime = () => { try { if (!$('lgSnd').checked) return; ctx = ctx || new (window.AudioContext || window.webkitAudioContext)(); if (ctx.state === 'suspended') ctx.resume(); [880, 660, 880, 660, 1175].forEach((f, i) => { const o = ctx.createOscillator(), g = ctx.createGain(); o.type = 'triangle'; o.frequency.value = f; o.connect(g); g.connect(ctx.destination); const t = ctx.currentTime + i * .14; g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.4, t + .02); g.gain.exponentialRampToValueAtTime(.001, t + .22); o.start(t); o.stop(t + .24); }); } catch {} };
   async function lgStats() {
     try { const o = await C.online(); $('lgOn').textContent = S.num(Math.max(0, o.length - 1)); const i = o.findIndex(x => x.id === S.me()); $('lgPos').textContent = i >= 0 ? '#' + S.num(i + 1) : '–'; } catch {}
   }
@@ -174,10 +202,11 @@
     const fresh = rows.filter(r => r.status === 'requested' && !seen.has(r.id));
     rows.forEach(r => { if (r.status === 'requested') seen.add(r.id); });
     if (!first && fresh.length) { S.toast('🔔 طلب استشارة جديد!'); if (!flash) { let k = 0; flash = setInterval(() => { document.title = (k++ % 2) ? baseTitle : '🔔 طلب جديد'; if (k > 12) { clearInterval(flash); flash = null; document.title = baseTitle; } }, 800); } }
-    if (!first && fresh.length) chime();
     const td = new Date().toDateString(); $('lgTd').textContent = S.num(rows.filter(r => new Date(r.created_at).toDateString() === td).length);
     first = false;
+    const pend = rows.filter(r => r.status === 'requested' && new Date(r.created_at).getTime() + reqSecs * 1000 > Date.now()); ringOn(pend.length > 0);
     $('list').innerHTML = rows.length ? rows.map(r => {
+      if (r.status === 'requested') return reqCard(r);
       const act = r.status === 'requested' ? `<span><button class="soc-btn primary" data-a="acc" data-id="${esc(r.id)}" type="button">قبول</button> <button class="soc-btn" data-a="rej" data-id="${esc(r.id)}" type="button">رفض</button></span>`
         : ['accepted', 'live'].includes(r.status) ? `<a class="soc-btn primary" href="room.html?c=${esc(r.id)}">ادخل الغرفة</a>`
         : `<span style="font-weight:800">${esc(C.ST[r.status] || r.status)}</span>`;
