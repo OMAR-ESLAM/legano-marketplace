@@ -73,6 +73,23 @@
   .wq{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 2px}.wq button{border:1px solid rgba(252,211,77,.5);background:rgba(252,211,77,.12);color:#FDE68A;border-radius:99px;padding:4px 12px;font:inherit;font-size:12.5px;font-weight:800;cursor:pointer}
   #pWal .cs-row{border-inline-start:4px solid #F59E0B}
   @media(max-width:520px){.wc .bal{font-size:36px}}@media (prefers-reduced-motion:reduce){.wc::after{animation:none}}
+  .iv{position:relative;overflow:hidden;border-radius:20px;padding:20px;color:#fff;margin-bottom:12px;background:radial-gradient(circle at 0 0,rgba(34,197,94,.3),transparent 45%),radial-gradient(circle at 100% 0,rgba(183,121,31,.55),transparent 50%),linear-gradient(135deg,#0B1220,#12261c 60%,#2a1d07);border:1px solid rgba(252,211,77,.4)}
+  .iv .coin{position:absolute;font-size:22px;opacity:.5;animation:fl 6s ease-in infinite}
+  .iv h2{margin:0 0 4px;font-size:20px;font-weight:900;line-height:1.6}.iv p{margin:0;color:#CBD5E1;font-size:13px;line-height:1.9}
+  .iv-now{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}.iv-now div{background:rgba(255,255,255,.08);border-radius:12px;padding:8px;text-align:center}.iv-now small{display:block;font-size:11px;color:#A7F3D0}.iv-now b{font-size:19px;font-weight:900;color:#FCD34D}
+  .iv-slots{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:6px 0 8px}
+  .sl{aspect-ratio:1;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;font-weight:800;border:2px dashed rgba(255,255,255,.25);color:#94A3B8;text-align:center;line-height:1.3;padding:2px}
+  .sl i{font-style:normal;font-size:20px}.sl.ok{border:2px solid #FCD34D;background:linear-gradient(135deg,#F59E0B,#B7791F);color:#1E293B;box-shadow:0 0 14px rgba(252,211,77,.5)}
+  .sl.wait{border:2px solid #22C55E;color:#86EFAC;animation:livePulse 2s infinite}
+  .sl.nx{border-color:#FCD34D;color:#FDE68A;animation:hotGlow 2s infinite}
+  .iv-next{margin-bottom:12px!important;color:#FDE68A!important;font-weight:800}
+  .iv-link{margin:8px 0}.iv-link code{display:block;direction:ltr;text-align:left;padding:10px 12px;border-radius:12px;background:rgba(0,0,0,.35);border:1px dashed rgba(252,211,77,.5);color:#FDE68A;font-size:13px;overflow-x:auto;white-space:nowrap}
+  .iv-act{display:flex;gap:8px;flex-wrap:wrap}.iv-act>*{border:0;border-radius:12px;padding:12px 16px;font:inherit;font-weight:900;cursor:pointer;text-decoration:none;text-align:center;background:rgba(255,255,255,.12);color:#fff}
+  .iv-act .iv-wa{flex:1 1 100%;font-size:17px;background:linear-gradient(90deg,#22C55E,#16A34A);box-shadow:0 8px 22px rgba(34,197,94,.45);animation:pop 1.4s ease-in-out infinite}
+  .iv-act button{flex:1}.iv small.dis{display:block;margin-top:10px;color:#94A3B8;font-size:11px}
+  .tab .tdot{display:inline-block;margin-inline-start:6px;padding:0 7px;border-radius:99px;background:#F59E0B;color:#1E293B;font-size:11px;font-weight:900;animation:livePulse 1.8s infinite}
+  .invstrip{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:12px 14px;border-radius:14px;margin-bottom:12px;background:linear-gradient(90deg,#052e1b,#2a1d07);border:1px solid rgba(252,211,77,.4);color:#fff;font-weight:800;font-size:13.5px}.invstrip button{border:0;border-radius:99px;padding:7px 16px;font:inherit;font-weight:900;background:linear-gradient(90deg,#FCD34D,#F59E0B);color:#1E293B;cursor:pointer}
+  @media (prefers-reduced-motion:reduce){.iv .coin,.iv-wa,.sl.wait,.sl.nx,.tab .tdot{animation:none}}
   .warn a { color: inherit; font-weight: 800; }
 </style>
 </head>
@@ -85,6 +102,7 @@
     <h1 class="cs-h">الاستشارات الفورية</h1>
     <div class="feed-tabs" role="tablist"><button class="tab" data-t="cons" aria-selected="true" type="button">الاستشارات</button><button class="tab" data-t="wal" aria-selected="false" type="button">المحفظة</button><button class="tab" data-t="inv" aria-selected="false" type="button">ادعُ زميل</button></div>
     <section id="pCons">
+      <div class="invstrip" id="invStrip"></div>
       <div class="mh" id="mh"><span class="coin" style="inset-inline-end:8%;bottom:0">🪙</span><span class="coin" style="inset-inline-end:22%;bottom:0;animation-delay:2s">💰</span><span class="coin" style="inset-inline-end:40%;bottom:0;animation-delay:4s">🪙</span>
         <h2>كل دقيقة من وقتك ليها تمن 💰</h2><p>افتح الأونلاين، وموكلين بيدوّروا على محامي دلوقتي هيوصلولك. من مكتبك أو من موبايلك.</p>
         <div class="mh-grid">
@@ -110,10 +128,16 @@
       <div id="list" aria-live="polite"></div>
     </section>
     <section id="pInv" hidden>
-      <div class="cs-row" style="display:block"><b>ادعُ زميل محامي واخد خصم على عمولتك</b>
-        <small id="iRule">...</small>
-        <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><input id="iLink" readonly style="flex:1;min-width:200px;direction:ltr" class="soc-input"><button id="iCopy" class="soc-btn primary" type="button">نسخ</button><a id="iWa" class="soc-btn" target="_blank" rel="noopener">واتساب</a></div>
-        <div id="iNow" style="margin-top:10px;font-weight:800"></div></div>
+      <div class="iv"><span class="coin" style="inset-inline-end:8%;bottom:0">🪙</span><span class="coin" style="inset-inline-end:30%;bottom:0;animation-delay:2.5s">💰</span>
+        <h2>كل زميل تدعوه = فلوس زيادة في جيبك 🤝💰</h2>
+        <p>عمولتك بتنزل مع كل زميل محامي يسجّل بلينكك ويتوثّق حسابه. الفريق الأكبر = ربح أكبر لكل استشارة.</p>
+        <div class="iv-now"><div><small>عمولتك دلوقتي</small><b id="iEff">–</b></div><div><small>الخصم اللي خدته</small><b id="iDis">–</b></div><div><small>وفّرت على كل 10,000 ج</small><b id="iSave">–</b></div></div>
+        <div class="iv-slots" id="iSlots"></div>
+        <p class="iv-next" id="iNext"></p>
+        <div class="iv-link"><code id="iLink"></code></div>
+        <div class="iv-act"><a id="iWa" class="iv-wa" target="_blank" rel="noopener">📲 ابعت لزميل على واتساب</a><button id="iCopy" type="button">نسخ اللينك</button><button id="iShare" type="button">مشاركة</button></div>
+        <small class="dis">الخصم بيتحسب لما الزميل يتوثّق حسابه فقط، وبيتطبق على الاستشارات الجديدة. الرسم الثابت ما بيتغيرش.</small>
+      </div>
       <h3 style="margin:14px 0 6px;font-size:14px">اللي دعيتهم</h3><div id="iList"></div>
     </section>
     <section id="pWal" hidden>
@@ -242,14 +266,21 @@
   }
   async function loadInv() {
     try {
-      const d = await C.inviteInfo(); const link = location.origin + '/register.html?ref=' + d.code;
-      $('iLink').value = link; $('iWa').href = 'https://wa.me/?text=' + encodeURIComponent('انضم لمنصة ليجانو للمحامين: ' + link);
-      $('iRule').textContent = `كل زميل تدعوه ويتوثّق حسابه بينزّل عمولتك ${S.num(d.per_invite)}% (لحد ${S.num(d.max)}%). الرسم الثابت ما بيتغيرش.`;
-      $('iNow').textContent = `عمولتك دلوقتي: ${S.num(d.effective_pct)}% + ${S.num(d.flat)} ج (الأساسية ${S.num(d.base_pct)}%) — خصم ${S.num(d.discount)}%`;
-      $('iList').innerHTML = d.invitees.length ? d.invitees.map(x => `<div class="cs-row"><div>${esc(x.name || 'محامي')}</div><span style="font-weight:800">${x.verified ? '✅ موثّق' : '⏳ في انتظار التوثيق'}</span></div>`).join('') : '<div class="empty">لسه محدش سجّل بالرابط بتاعك.</div>';
+      const d = await C.inviteInfo(), link = location.origin + '/register.html?ref=' + d.code, n = Number(d.verified_count) || 0, per = Number(d.per_invite) || 1, mx = Number(d.max) || 10, slots = Math.max(1, Math.round(mx / per)), base = Number(d.base_pct);
+      $('iLink').textContent = link; const msg = 'أنا بشتغل على ليجانو وبكسب من الاستشارات الفورية أونلاين. سجّل بلينكي وهتاخد ملفك وتبدأ تستقبل موكلين: ' + link;
+      $('iWa').href = 'https://wa.me/?text=' + encodeURIComponent(msg);
+      $('iEff').textContent = S.num(d.effective_pct) + '%'; $('iDis').textContent = '−' + S.num(d.discount) + '%'; $('iSave').textContent = S.num(Math.round(d.discount * 100)) + ' ج';
+      const inv = d.invitees || [], ver = inv.filter(x => x.verified), pend = inv.filter(x => !x.verified);
+      $('iSlots').innerHTML = Array.from({ length: slots }, (_, k) => k < ver.length ? `<div class="sl ok" title="${esc(ver[k].name || '')}"><i>✓</i>${S.num(Math.max(0, base - per * (k + 1)))}%</div>` : k < ver.length + pend.length ? `<div class="sl wait"><i>⏳</i>${S.num(Math.max(0, base - per * (k + 1)))}%</div>` : k === ver.length + pend.length ? `<div class="sl nx"><i>＋</i>${S.num(Math.max(0, base - per * (k + 1)))}%</div>` : `<div class="sl"><i>＋</i>${S.num(Math.max(0, base - per * (k + 1)))}%</div>`).join('');
+      $('iNext').textContent = n >= slots ? '🏆 وصلت لأقصى خصم! عمولتك أقل ما يمكن.' : `🎯 زميل واحد كمان ويتوثّق، وعمولتك تبقى ${S.num(Math.max(0, base - per * (n + 1)))}% بدل ${S.num(d.effective_pct)}%.`;
+      $('iList').innerHTML = inv.length ? inv.map(x => `<div class="cs-row"><div>${esc(x.name || 'محامي')}</div><span style="font-weight:800">${x.verified ? '✅ موثّق — خصم اتضاف' : '⏳ في انتظار التوثيق'}</span></div>`).join('') : '<div class="empty">لسه محدش سجّل بلينكك. ابعته لأول زميل دلوقتي 👆</div>';
+      $('iShare').onclick = () => { if (navigator.share) navigator.share({ title: 'ليجانو', text: msg }).catch(() => {}); else { try { navigator.clipboard.writeText(msg); S.toast('اتنسخت الرسالة'); } catch {} } };
+      const t = document.querySelector('.tab[data-t=inv]'); t.innerHTML = 'ادعُ زميل' + (n < slots ? ` <span class="tdot">−${S.num(per)}%</span>` : '');
+      $('invStrip').innerHTML = n < slots ? `<span>🤝 كل زميل تدعوه يوفّر لك ${S.num(per)}% من عمولتك${n ? ` (وفّرت ${S.num(d.discount)}% لحد دلوقتي)` : ''}</span><button type="button" id="invGo">ادعُ زميل دلوقتي</button>` : '<span>🏆 وصلت لأقصى خصم على العمولة</span>';
+      const g = $('invGo'); if (g) g.onclick = () => document.querySelector('.tab[data-t=inv]').click();
     } catch (e) { S.toast(S.friendly(e)); }
   }
-  $('iCopy').onclick = () => { try { navigator.clipboard.writeText($('iLink').value); S.toast('اتنسخ'); } catch { $('iLink').select(); } };
+  $('iCopy').onclick = () => { try { navigator.clipboard.writeText($('iLink').textContent); S.toast('اتنسخ اللينك ✅'); } catch {} };
   if (new URLSearchParams(location.search).get('tab') === 'inv') document.querySelector('.tab[data-t=inv]').click();
   $('wGo').onclick = async () => {
     $('wGo').disabled = true;
@@ -262,7 +293,7 @@
     if (t.dataset.t === 'inv') loadInv();
     if (t.dataset.t === 'wal') loadWallet();
   }));
-  await loadCfg(); hero(); await loadList(); loadWallet();
+  await loadCfg(); hero(); loadInv(); await loadList(); loadWallet();
   setInterval(loadList, 5000); setInterval(() => { if (!$('pWal').hidden) loadWallet(); }, 15000);
 })();
 </script>
