@@ -75,6 +75,9 @@
   body.inroom .cs-brand { z-index: 4; display: flex; align-items: center; gap: 8px; padding: 5px 14px; border-radius: 99px; background: rgba(7,11,20,.6); border: 1px solid rgba(252,211,77,.5); backdrop-filter: blur(8px); color: #FDE68A; }
   body.inroom .cs-brand::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #EF4444; box-shadow: 0 0 0 0 rgba(239,68,68,.7); animation: livePulse 1.6s infinite; }
   @keyframes livePulse { 70% { box-shadow: 0 0 0 8px rgba(239,68,68,0); } 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); } }
+  .cs-box textarea.f-i { display: block; width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 12px; font: inherit; font-size: 14px; background: #fff; color: var(--foreground); resize: vertical; margin-top: 4px; }
+  body.inroom .cs-box textarea.f-i { background: rgba(255,255,255,.08); color: #fff; border-color: rgba(252,211,77,.3); }
+  .cs-stars { display: flex; align-items: center; gap: 4px; margin: 8px 0; } .cs-stars button { border: 0; background: none; font-size: 30px; color: #F59E0B; cursor: pointer; line-height: 1; padding: 0 2px; transition: transform .12s; } .cs-stars button:hover { transform: scale(1.2); } .cs-stars small { margin-inline-start: 8px; color: var(--muted-foreground); font-size: 12px; }
   .cs-sec { position: absolute; z-index: 4; bottom: 10px; right: 12px; font-size: 11px; color: #A7F3D0; background: rgba(7,11,20,.6); padding: 2px 10px; border-radius: 99px; border: 1px solid rgba(34,197,94,.4); }
   body.inroom .cs-ctl { z-index: 4; gap: 14px; padding: 8px 16px; border-radius: 99px; background: rgba(7,11,20,.55); border: 1px solid rgba(255,255,255,.15); backdrop-filter: blur(10px); }
   body.inroom .cs-ctl button { width: 46px; height: 46px; background: rgba(255,255,255,.12); transition: transform .15s, background .15s; }
@@ -346,18 +349,23 @@
   function viewConfirm() {
     const dl = fmt(st.confirm_deadline);
     if (ROLE === 'lawyer') return set(`<div class="cs-box"><h2>الاستشارة خلصت</h2><p>في انتظار تأكيد الموكل. لو ما اعترضش قبل <b>${dl}</b>، هتتحوّل ${earn()} ج لمحفظتك تلقائياً.</p></div><aside class="cs-box cs-notes"><h2>ملخص للموكل</h2>${notesHtml()}</aside>${sumHtml()}${filesBox()}`), renderFiles(), wireDrop(), wireNotes();
-    set(`<div class="cs-box"><h2>خدت استشارتك؟</h2><p>أكّد علشان الفلوس تروح للمحامي. لو ما ردّيتش قبل <b>${dl}</b> هتتأكد تلقائياً.</p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="soc-btn primary" data-a="confirm" type="button">أيوه، الاستشارة تمت</button><button class="soc-btn" data-a="problem" type="button">عندي مشكلة</button></div>
-      <div id="prob" hidden style="margin-top:12px"><label class="f-l" for="reason">إيه المشكلة؟</label><textarea id="reason" class="f-i" rows="3" maxlength="500" placeholder="مثال: المحامي ما ردّش على أسئلتي"></textarea><button class="soc-btn primary" data-a="dispute" type="button" style="margin-top:8px">ابعت الاعتراض</button><p style="margin-top:8px">الفلوس هتتجمّد ولحد ما فريق المنصة يراجع الموضوع.</p></div></div>${sumHtml()}${filesBox()}`);
+    set(`<div class="cs-box"><h2>الاستشارة تمت؟</h2><p>لو تمّت، الفلوس بتروح للمحامي فوراً. لو ما ردّيتش قبل <b>${dl}</b> هتتأكد تلقائياً.</p>
+      <div class="cs-stars" id="stars" role="radiogroup" aria-label="تقييم المحامي (اختياري)">${[1, 2, 3, 4, 5].map(n => `<button type="button" data-star="${n}" aria-label="${n} نجوم">☆</button>`).join('')}<small>تقييم المحامي (اختياري)</small></div>
+      <label class="f-l" for="fbnote">ملاحظات (اختياري)</label><textarea id="fbnote" class="f-i" rows="2" maxlength="500" placeholder="رأيك في الاستشارة أو أي ملاحظة للمحامي"></textarea>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="soc-btn primary" data-a="confirm" type="button">✅ أيوه، تمّت</button><button class="soc-btn" data-a="problem" type="button">لا، ما تمّتش</button></div>
+      <div id="prob" hidden style="margin-top:12px"><label class="f-l" for="reason">السبب (اختياري)</label><textarea id="reason" class="f-i" rows="3" maxlength="500" placeholder="مثال: المحامي ما ردّش على أسئلتي"></textarea><button class="soc-btn primary" data-a="dispute" type="button" style="margin-top:8px">ابعت لفريق المنصة</button><p style="margin-top:8px">الفلوس هتتجمّد لحد ما فريق المنصة يراجع الموضوع.</p></div></div>${sumHtml()}${filesBox()}`);
     renderFiles(); wireDrop();
   }
+  let starSel = 0;
+  const paintStars = () => document.querySelectorAll('.cs-stars [data-star]').forEach(x => { x.textContent = +x.dataset.star <= starSel ? '★' : '☆'; x.classList.toggle('on', +x.dataset.star <= starSel); });
+  document.addEventListener('click', e => { const b = e.target.closest('.cs-stars [data-star]'); if (b) { starSel = +b.dataset.star; paintStars(); } });
   const filesBox = () => `<aside class="cs-box"><h2>الملفات</h2><div id="files"></div></aside>`;
 
   function viewFinal() {
     const s = st.status;
     const M = {
-      released: ROLE === 'lawyer' ? `<h2>✅ تمّت الاستشارة</h2><p>اتضاف <b>${earn()} ج</b> لمحفظتك (بعد خصم عمولة المنصة).</p><a class="soc-btn primary" href="consultations.html">رجوع للاستشارات</a>` : `<h2>✅ شكراً ليك</h2><p>اتأكدت الاستشارة وراحت الفلوس للمحامي. ممكن تقيّم المحامي من صفحته.</p><a class="soc-btn primary" href="/lawyer/${esc(st.lawyer.id)}">صفحة المحامي</a>`,
-      disputed: `<h2>قيد المراجعة</h2><p>${st.short_session ? 'الجلسة كانت أقصر من الحد الأدنى، ' : ''}الفلوس متجمّدة لحد ما فريق المنصة يراجع الاستشارة ويبلّغ الطرفين.</p>`,
+      released: ROLE === 'lawyer' ? `<h2>✅ تمّت الاستشارة</h2><p>اتضاف <b>${earn()} ج</b> لمحفظتك (بعد خصم عمولة المنصة).</p>${st.client_stars ? `<p>تقييم الموكل: <b>${'★'.repeat(st.client_stars)}${'☆'.repeat(5 - st.client_stars)}</b></p>` : ''}${st.client_note ? `<p>ملاحظة الموكل: «${esc(st.client_note)}»</p>` : ''}<a class="soc-btn primary" href="consultations.html">رجوع للاستشارات</a>` : `<h2>✅ شكراً ليك</h2><p>اتأكدت الاستشارة وراحت الفلوس للمحامي.</p>${st.my_stars ? `<p>تقييمك: <b>${'★'.repeat(st.my_stars)}${'☆'.repeat(5 - st.my_stars)}</b></p>` : `<div class="cs-stars" id="stars">${[1, 2, 3, 4, 5].map(n => `<button type="button" data-star="${n}" aria-label="${n} نجوم">☆</button>`).join('')}<small>قيّم المحامي (اختياري)</small></div><textarea id="rnote" class="f-i" rows="2" maxlength="500" placeholder="ملاحظات (اختياري)" style="margin:8px 0"></textarea><button class="soc-btn primary" data-a="rate" type="button">ابعت التقييم</button> `}<a class="soc-btn" href="/lawyer/${esc(st.lawyer.id)}">صفحة المحامي</a>`,
+      disputed: `<h2>قيد المراجعة</h2><p>الفلوس متجمّدة لحد ما فريق المنصة يراجع الاستشارة ويبلّغ الطرفين.</p>`,
       refunded: `<h2>اتردّت</h2><p>الاستشارة اتردّت بالكامل للموكل.</p>`,
       cancelled: `<h2>الاستشارة اتلغت</h2><p>مفيش أي مبلغ اتسحب.</p>`,
       expired: `<h2>انتهى الوقت</h2><p>الطلب انتهى من غير ما تتم الاستشارة. مفيش أي مبلغ اتسحب.</p>`,
@@ -612,9 +620,11 @@
       else if (a === 'consent') await C.consent(cid(), tk(), true);
       else if (a === 'cancel') { if (confirm('تلغي الاستشارة؟ هيتردّ المبلغ بالكامل.')) await C.end(cid(), tk()); }
       else if (a === 'end') { if (confirm('تنهي الاستشارة؟' + (ROLE === 'lawyer' && !summarySent ? '\n(لسه ما بعتش ملخص للموكل، هتقدر تكتبه بعد الإنهاء.)' : ''))) { await C.end(cid(), tk()); } }
-      else if (a === 'confirm') await C.confirm(TOKEN);
+      else if (a === 'confirm') await C.confirm(TOKEN, starSel || null, ($('fbnote') && $('fbnote').value.trim()) || null);
       else if (a === 'problem') $('prob').hidden = false;
-      else if (a === 'dispute') { const r = $('reason').value.trim(); if (r.length < 5) S.toast('اكتب المشكلة بجملة واضحة'); else await C.dispute(TOKEN, r); }
+      else if (a === 'dispute') await C.dispute(TOKEN, $('reason').value.trim() || null);
+      else if (a === 'rate') { if (!starSel) S.toast('اختار عدد النجوم'); else { await C.rate(TOKEN, starSel, ($('rnote') && $('rnote').value.trim()) || null); st.my_stars = starSel; viewFinal(); S.toast('شكراً على تقييمك 🌟'); } }
+      else if (a === 'star') { starSel = +b.dataset.star; paintStars(); }
       else if (a === 'dl') await download(b.dataset.f);
       else if (a === 'view') await openDoc(b.dataset.f);
       else if (a === 'dldoc') { if (viewerId) await download(viewerId); }
