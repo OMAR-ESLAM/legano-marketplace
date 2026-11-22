@@ -17,6 +17,19 @@
   #navSlot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
   .back { display: inline-block; margin-bottom: 12px; font-size: 13px; font-weight: 700; color: var(--gold-soft); text-decoration: none; }
   .warn { padding: 12px 14px; margin-bottom: 14px; background: #FFF8E6; border: 1px solid #F1D48A; color: #7A5200; border-radius: 12px; font-size: 13px; line-height: 1.9; }
+  .mh{position:relative;overflow:hidden;border-radius:20px;padding:22px 20px;margin-bottom:16px;color:#fff;background:radial-gradient(circle at 15% 0%,#B7791F 0,transparent 45%),linear-gradient(135deg,#0B1220,#1E293B 60%,#3B2A0B)}
+  .mh h2{margin:0 0 4px;font-size:22px;font-weight:900;line-height:1.5}.mh p{margin:0;color:#CBD5E1;font-size:13px}
+  .mh .big{font-size:40px;font-weight:900;color:#FCD34D;line-height:1.2;text-shadow:0 0 24px rgba(252,211,77,.45)}
+  .mh .coin{position:absolute;font-size:22px;opacity:.5;animation:fl 6s ease-in infinite}
+  @keyframes fl{0%{transform:translateY(40px) rotate(0);opacity:0}20%{opacity:.6}100%{transform:translateY(-120px) rotate(40deg);opacity:0}}
+  .mh-grid{display:grid;gap:12px;grid-template-columns:1fr 1fr;margin-top:14px}@media(max-width:640px){.mh-grid{grid-template-columns:1fr}.mh .big{font-size:32px}}
+  .mh-c{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:12px 14px}
+  .mh-c label{display:flex;justify-content:space-between;font-size:12.5px;font-weight:700;margin-top:6px}.mh-c input[type=range]{width:100%;accent-color:#F59E0B}
+  .mh small.dis{display:block;margin-top:8px;color:#94A3B8;font-size:11px}
+  .lad{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}.lad span{font-size:11.5px;font-weight:800;padding:3px 10px;border-radius:99px;background:rgba(255,255,255,.1);color:#CBD5E1}.lad span.ok{background:#F59E0B;color:#1E293B}
+  .bar{height:8px;border-radius:99px;background:rgba(255,255,255,.14);margin-top:10px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#F59E0B,#FCD34D);transition:width 1.2s}
+  .mh .go{margin-top:14px;border:0;border-radius:12px;padding:10px 18px;font:inherit;font-weight:900;color:#1E293B;background:linear-gradient(90deg,#FCD34D,#F59E0B);cursor:pointer;box-shadow:0 6px 18px rgba(245,158,11,.4)}
+  @media (prefers-reduced-motion:reduce){.mh .coin{animation:none}}
   .warn a { color: inherit; font-weight: 800; }
 </style>
 </head>
@@ -29,6 +42,17 @@
     <h1 class="cs-h">الاستشارات الفورية</h1>
     <div class="feed-tabs" role="tablist"><button class="tab" data-t="cons" aria-selected="true" type="button">الاستشارات</button><button class="tab" data-t="wal" aria-selected="false" type="button">المحفظة</button><button class="tab" data-t="inv" aria-selected="false" type="button">ادعُ زميل</button></div>
     <section id="pCons">
+      <div class="mh" id="mh"><span class="coin" style="inset-inline-end:8%;bottom:0">🪙</span><span class="coin" style="inset-inline-end:22%;bottom:0;animation-delay:2s">💰</span><span class="coin" style="inset-inline-end:40%;bottom:0;animation-delay:4s">🪙</span>
+        <h2>كل دقيقة من وقتك ليها تمن 💰</h2><p>افتح الأونلاين، وموكلين بيدوّروا على محامي دلوقتي هيوصلولك. من مكتبك أو من موبايلك.</p>
+        <div class="mh-grid">
+          <div class="mh-c"><p>أرباحك لحد دلوقتي</p><div class="big" id="mhTot">0 ج</div>
+            <div class="bar"><i id="mhBar"></i></div><p id="mhNext" style="margin-top:6px"></p><div class="lad" id="mhLad"></div></div>
+          <div class="mh-c"><p>احسبها: هتكسب كام في الشهر؟</p><div class="big" id="mhSim">0 ج</div>
+            <label><span>استشارات في اليوم</span><b id="mhDv">4</b></label><input id="mhD" type="range" min="1" max="15" value="4">
+            <label><span>أيام شغل في الشهر</span><b id="mhMv">20</b></label><input id="mhM" type="range" min="4" max="30" value="20">
+            <p id="mhNet" style="margin-top:6px"></p></div></div>
+        <button class="go" id="mhGo" type="button">ابدأ استقبل استشارات دلوقتي 🚀</button>
+        <small class="dis">الرقم ده حساب افتراضي من سعرك الحالي بعد عمولة المنصة، مش ضمان دخل. الطلب الفعلي بيعتمد على عدد الموكلين المتاحين.</small></div>
       <div class="cs-box"><label class="cs-sw"><input type="checkbox" id="on"><span id="onTxt">أنا أونلاين</span></label>
         <p id="onHint" style="margin-top:6px"></p>
         <div class="cs-fields"><div><label class="f-l" for="price">سعر الاستشارة (جنيه)</label><input id="price" class="f-i" type="number" inputmode="numeric" min="1"></div>
@@ -64,10 +88,33 @@
   let cfg = null, hb = null, seen = new Set(), first = true, baseTitle = document.title, flash = null;
   const METH = { instapay: 'إنستاباي', vodafone_cash: 'فودافون كاش', bank: 'تحويل بنكي' }, WST = { pending: 'قيد التنفيذ', paid: 'اتحوّل', rejected: 'مرفوض' };
 
+  const MS = [1000, 10000, 100000, 1000000], MN = ['1,000 ج', '10 آلاف', '100 ألف', 'مليونير 🏆'];
+  let lim0 = null, effPct = null, earned = 0;
+  const fee = p => Math.min(p, Math.round(p * (effPct ?? (lim0 ? Number(lim0.fee_pct) : 15))) / 100 + (lim0 ? Number(lim0.fee_flat) || 0 : 0));
+  const anim = (el, to, suf = ' ج') => { const t0 = performance.now(), d = 900; (function f(t) { const k = Math.min(1, (t - t0) / d), v = Math.round(to * (1 - Math.pow(1 - k, 3))); el.textContent = S.num(v) + suf; if (k < 1) requestAnimationFrame(f); })(t0); };
+  function sim() {
+    const d = +$('mhD').value, m = +$('mhM').value; $('mhDv').textContent = d; $('mhMv').textContent = m;
+    const price = Number($('price').value) || (cfg && cfg.price) || 200, net = Math.max(0, price - fee(price));
+    anim($('mhSim'), Math.round(net * d * m)); $('mhNet').textContent = `صافيك للاستشارة ${S.num(Math.round(net))} ج × ${d} × ${m} يوم`;
+  }
+  function ladder() {
+    const nx = MS.find(x => earned < x), pv = MS[MS.indexOf(nx) - 1] || 0;
+    $('mhLad').innerHTML = MS.map((x, i) => `<span class="${earned >= x ? 'ok' : ''}">${earned >= x ? '✓ ' : ''}${MN[i]}</span>`).join('');
+    $('mhBar').style.width = nx ? Math.max(3, Math.round((earned - pv) / (nx - pv) * 100)) + '%' : '100%';
+    $('mhNext').textContent = nx ? `فاضل ${S.num(nx - earned)} ج على «${MN[MS.indexOf(nx)]}»` : 'وصلت للمليون! 🎉';
+  }
+  async function hero() {
+    try { const w = await C.wallet(); earned = Number(w.total_earned) || 0; } catch {}
+    try { const i = await C.inviteInfo(); effPct = Number(i.effective_pct); } catch {}
+    anim($('mhTot'), earned); ladder(); sim();
+  }
+  $('mhD').oninput = $('mhM').oninput = sim; $('price').addEventListener('input', sim);
+  $('mhGo').onclick = () => { if (!$('on').checked) { $('on').checked = true; $('save').click(); } $('on').scrollIntoView({ behavior: 'smooth', block: 'center' }); };
   async function loadCfg() {
     const [m, lim] = await Promise.all([C.mySettings().catch(() => null), C.limits().catch(() => null)]);
     cfg = m || { enabled: false, price: 200, minutes: 20 };
     $('on').checked = !!cfg.enabled; $('price').value = cfg.price; $('mins').value = String(cfg.minutes);
+    lim0 = lim;
     if (lim) $('limits').textContent = `السعر من ${lim.min_price} لـ ${lim.max_price} ج • عمولة المنصة ${lim.fee_pct}%${Number(lim.fee_flat) ? ' + ' + lim.fee_flat + ' ج' : ''}`;
     presence();
   }
@@ -130,7 +177,7 @@
     if (t.dataset.t === 'inv') loadInv();
     if (t.dataset.t === 'wal') loadWallet();
   }));
-  await loadCfg(); await loadList(); loadWallet();
+  await loadCfg(); hero(); await loadList(); loadWallet();
   setInterval(loadList, 5000); setInterval(() => { if (!$('pWal').hidden) loadWallet(); }, 15000);
 })();
 </script>
