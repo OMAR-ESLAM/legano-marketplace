@@ -273,6 +273,9 @@
     home: '<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg>',
     groups: '<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M2.8 20c.4-3.6 3-5.6 6.2-5.6s5.8 2 6.2 5.6"/><circle cx="17.2" cy="9" r="2.5"/><path d="M17 14.3c2.6.1 4.1 1.8 4.4 4.7"/></svg>',
     cases: '<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7"/><path d="M3 13h18"/></svg>',
+    ref: '<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h12"/><path d="M12 7l5 5-5 5"/><path d="M20 5v14"/></svg>',
+    cal: '<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>',
+    cons: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="6" width="13" height="12" rx="2.5"/><path d="M15.5 10.5l6-3.5v10l-6-3.5"/></svg>',
     plus: '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
   };
   // الزائر (الموكل) مفيش له منشورات ولا إشعارات. المحامي: 4 أيقونات + قايمة حسابه، وعلى الموبايل شريط سفلي.
@@ -282,11 +285,12 @@
     const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
     const act = h => (h === here || (h === 'groups.html' && here === 'group.html')) ? ' on' : '';
     const item = (h, label, icon, extra = '') => `<a href="${h}" class="nav-ic${act(h)}" aria-label="${label}" title="${label}"${act(h) ? ' aria-current="page"' : ''}>${icon}<span class="nav-lb">${label}</span>${extra}</a>`;
-    el.innerHTML = item('feed.html', 'المنشورات', IC.home) + item('groups.html', 'الجروبات', IC.groups) + item('cases.html', 'قضاياي', IC.cases)
+    el.innerHTML = item('feed.html', 'المنشورات', IC.home) + item('groups.html', 'الجروبات', IC.groups) + item('cases.html', 'قضاياي', IC.cases) + item('referrals.html', 'الإحالات', IC.ref) + item('calendar.html', 'المفكرة', IC.cal)
+      + item('consultations.html', 'استشارات', IC.cons, '<span class="nav-live" aria-hidden="true"></span><span class="nav-earn">اكسب 💰</span>').replace('class="nav-ic','class="nav-ic nav-hot')
       + item('notifications.html', 'الإشعارات', BELL, '<span class="nav-dot" hidden></span>')
       + `<div class="nav-me"><button type="button" class="nav-av" id="navAv" aria-haspopup="menu" aria-expanded="false" aria-label="حسابي"><span class="avatar sm">${esc('؟')}</span></button>
         <div class="nav-menu" id="navMenu" role="menu" hidden>
-          <a role="menuitem" href="consultations.html">استشارات فورية</a><a role="menuitem" href="referrals.html">سوق الإحالات</a><a role="menuitem" href="calendar.html">مفكرة الجلسات</a><a role="menuitem" href="lawyer.html?id=${esc(me())}">بروفايلي</a><a role="menuitem" href="dashboard.html">لوحتي وإحصائياتي</a><a role="menuitem" href="index.html?browse=1">سوق المحامين</a>
+          <a role="menuitem" href="lawyer.html?id=${esc(me())}">بروفايلي</a><a role="menuitem" href="dashboard.html">لوحتي وإحصائياتي</a><a role="menuitem" href="index.html?browse=1">سوق المحامين</a>
           <button role="menuitem" type="button" id="navOut">تسجيل الخروج</button></div></div>`;
     const menu = el.querySelector('#navMenu'), btn = el.querySelector('#navAv');
     const close = () => { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); };
@@ -302,7 +306,7 @@
       const t = (h, label, icon, extra = '') => `<a href="${h}" class="tb-i${act(h)}" aria-label="${label}">${icon}<span>${label}</span>${extra}</a>`;
       tb.innerHTML = t('feed.html', 'الرئيسية', IC.home) + t('groups.html', 'الجروبات', IC.groups)
         + `<a href="feed.html?compose=1" class="tb-plus" id="tbPlus" aria-label="منشور جديد">${IC.plus}</a>`
-        + t('cases.html', 'قضاياي', IC.cases) + t('notifications.html', 'الإشعارات', BELL, '<span class="nav-dot tb-dot" hidden></span>');
+        + t('consultations.html', 'استشارات', IC.cons, '<span class="nav-live"></span>').replace('class="tb-i','class="tb-i nav-hot') + t('cases.html', 'قضاياي', IC.cases) + t('notifications.html', 'الإشعارات', BELL, '<span class="nav-dot tb-dot" hidden></span>') + t('referrals.html', 'الإحالات', IC.ref) + t('calendar.html', 'المفكرة', IC.cal);
       document.body.appendChild(tb); document.body.classList.add('has-tabbar');
       tb.querySelector('#tbPlus').addEventListener('click', e => { const c = document.querySelector('.comp-input'); if (c) { e.preventDefault(); c.click(); } });
     }
