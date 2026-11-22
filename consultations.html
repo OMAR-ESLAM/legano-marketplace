@@ -49,6 +49,7 @@
   .vip .cs-sw input:checked::after{transform:translateX(-24px)}
   .vip p,.vip small,.vip #limits{color:#CBD5E1!important}.vip .f-l{color:#FDE68A}
   .vip .f-i{background:rgba(255,255,255,.08);border:1px solid rgba(252,211,77,.3);color:#fff;font-weight:800}.vip .f-i:focus{outline:0;border-color:#FCD34D;box-shadow:0 0 0 3px rgba(252,211,77,.2)}.vip .f-i option{color:#111}
+  .vip #wGo{background:linear-gradient(90deg,#FCD34D,#F59E0B);color:#1E293B;border:0;font-weight:900;box-shadow:0 6px 16px rgba(245,158,11,.35)}
   .vip #save{background:linear-gradient(90deg,#FCD34D,#F59E0B);color:#1E293B;border:0;font-weight:900;box-shadow:0 6px 16px rgba(245,158,11,.35)}
   .vip .net{margin-top:10px;padding:8px 12px;border-radius:12px;background:rgba(252,211,77,.1);border:1px dashed rgba(252,211,77,.4);font-size:13.5px;font-weight:800;color:#FDE68A}
   .req{position:relative;overflow:hidden;margin-bottom:12px;padding:16px;border-radius:18px;color:#fff;border:2px solid #FCD34D;background:radial-gradient(circle at 100% 0,rgba(245,158,11,.5),transparent 55%),linear-gradient(135deg,#0B1220,#1a2a22 55%,#3B2A0B);animation:reqGlow 1.4s ease-in-out infinite}
@@ -61,6 +62,17 @@
   .req-a{display:flex;gap:10px;align-items:center;margin-top:10px}.req .acc{flex:1;padding:14px;border:0;border-radius:14px;font:inherit;font-size:18px;font-weight:900;color:#1E293B;background:linear-gradient(90deg,#FCD34D,#F59E0B);cursor:pointer;animation:pop 1.2s ease-in-out infinite}
   @keyframes pop{50%{transform:scale(1.03)}}.req .rej{border:0;background:none;color:#94A3B8;font:inherit;font-size:12.5px;cursor:pointer;text-decoration:underline}
   @media (prefers-reduced-motion:reduce){.req,.req .acc,.req-h .bell,.vip .cs-sw input:checked{animation:none}}
+  .wc{position:relative;overflow:hidden;border-radius:22px;padding:22px;margin-bottom:12px;color:#fff;min-height:190px;background:radial-gradient(circle at 90% 0,rgba(252,211,77,.55),transparent 45%),radial-gradient(circle at 0 100%,rgba(34,197,94,.25),transparent 50%),linear-gradient(135deg,#0B1220,#1a1405 60%,#3B2A0B);border:1px solid rgba(252,211,77,.5);box-shadow:0 14px 40px rgba(183,121,31,.35)}
+  .wc::after{content:"";position:absolute;top:0;bottom:0;width:60px;left:-80px;background:linear-gradient(100deg,transparent,rgba(255,255,255,.18),transparent);transform:skewX(-20deg);animation:shine 5s ease-in-out infinite}
+  @keyframes shine{0%,60%{left:-80px}100%{left:120%}}
+  .wc-top{display:flex;justify-content:space-between;align-items:center;font-weight:900;letter-spacing:.12em;font-size:13px;color:#FCD34D}
+  .chip{width:40px;height:30px;border-radius:7px;background:linear-gradient(135deg,#FDE68A,#B7791F);position:relative}.chip::before{content:"";position:absolute;inset:6px 0;border-top:1px solid rgba(0,0,0,.35);border-bottom:1px solid rgba(0,0,0,.35)}
+  .wc small{color:#CBD5E1;font-size:12px}.wc .bal{font-size:46px;font-weight:900;line-height:1.3;color:#FCD34D;text-shadow:0 0 30px rgba(252,211,77,.5);margin-top:14px}
+  .wc-foot{display:flex;gap:16px;margin-top:6px;flex-wrap:wrap;font-size:13px;font-weight:800}.wc-foot b{color:#fff}.wc-foot span{background:rgba(255,255,255,.1);padding:4px 12px;border-radius:99px}
+  .wc-ms{margin-top:12px;font-size:12px;color:#FDE68A;font-weight:800}
+  .wq{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 2px}.wq button{border:1px solid rgba(252,211,77,.5);background:rgba(252,211,77,.12);color:#FDE68A;border-radius:99px;padding:4px 12px;font:inherit;font-size:12.5px;font-weight:800;cursor:pointer}
+  #pWal .cs-row{border-inline-start:4px solid #F59E0B}
+  @media(max-width:520px){.wc .bal{font-size:36px}}@media (prefers-reduced-motion:reduce){.wc::after{animation:none}}
   .warn a { color: inherit; font-weight: 800; }
 </style>
 </head>
@@ -105,8 +117,11 @@
       <h3 style="margin:14px 0 6px;font-size:14px">اللي دعيتهم</h3><div id="iList"></div>
     </section>
     <section id="pWal" hidden>
-      <div class="cs-stats"><div><b id="wAv">0</b><small>متاح للسحب</small></div><div><b id="wHold">0</b><small>معلّق (في انتظار تأكيد الموكل)</small></div><div><b id="wTot">0</b><small>إجمالي الأرباح</small></div></div>
-      <div class="cs-box"><h2>طلب سحب</h2><div class="cs-fields"><div><label class="f-l" for="wAmt">المبلغ (الحد الأدنى 100 ج)</label><input id="wAmt" class="f-i" type="number" inputmode="numeric" min="100"></div>
+      <div class="wc"><div class="wc-top"><span>LEGANO WALLET</span><span class="chip"></span></div>
+        <small style="display:block;margin-top:14px">رصيدك المتاح للسحب</small><div class="bal" id="wAv">0 ج</div>
+        <div class="wc-foot"><span>⏳ معلّق <b id="wHold">0 ج</b></span><span>🏆 إجمالي أرباحك <b id="wTot">0 ج</b></span></div>
+        <div class="wc-ms" id="wMs"></div></div>
+      <div class="cs-box vip"><h2>💸 اسحب أرباحك</h2><div class="wq"><button type="button" data-q="all">اسحب الكل</button><button type="button" data-q="500">500</button><button type="button" data-q="1000">1000</button><button type="button" data-q="5000">5000</button></div><div class="cs-fields"><div><label class="f-l" for="wAmt">المبلغ (الحد الأدنى 100 ج)</label><input id="wAmt" class="f-i" type="number" inputmode="numeric" min="100"></div>
         <div><label class="f-l" for="wMeth">الطريقة</label><select id="wMeth" class="f-i"><option value="instapay">إنستاباي</option><option value="vodafone_cash">فودافون كاش</option><option value="bank">تحويل بنكي</option></select></div>
         <div><label class="f-l" for="wAcc">رقم الحساب / المحفظة</label><input id="wAcc" class="f-i" dir="ltr" maxlength="80"></div></div>
         <button id="wGo" class="soc-btn primary" type="button">اطلب السحب</button><p style="margin-top:8px">السحب بيتم يدوياً من فريق المنصة.</p></div>
@@ -219,8 +234,10 @@
     loadList();
   });
 
+  let av = 0;
+  document.querySelector('.wq').addEventListener('click', e => { const b = e.target.closest('[data-q]'); if (!b) return; $('wAmt').value = b.dataset.q === 'all' ? Math.floor(av) : Math.min(+b.dataset.q, Math.floor(av)) || b.dataset.q; });
   async function loadWallet() {
-    try { const w = await C.wallet(); $('wAv').textContent = S.num(w.available) + ' ج'; $('wHold').textContent = S.num(w.on_hold) + ' ج'; $('wTot').textContent = S.num(w.total_earned) + ' ج'; } catch {}
+    try { const w = await C.wallet(); av = Number(w.available) || 0; anim($('wAv'), av); const nx = MS.find(x => (Number(w.total_earned) || 0) < x); $('wMs').textContent = nx ? `🎯 فاضل ${S.num(nx - (Number(w.total_earned) || 0))} ج على «${MN[MS.indexOf(nx)]}»` : '🎉 وصلت للمليون!'; $('wHold').textContent = S.num(w.on_hold) + ' ج'; $('wTot').textContent = S.num(w.total_earned) + ' ج'; } catch {}
     try { const l = await C.withdrawals(); $('wList').innerHTML = l.length ? l.map(x => `<div class="cs-row"><div><b>${S.num(x.amount)} ج</b> • ${esc(METH[x.method] || x.method)}<small>${fmt(x.created_at)}</small></div><span style="font-weight:800">${WST[x.status] || x.status}</span></div>`).join('') : '<div class="empty">مفيش طلبات سحب.</div>'; } catch {}
   }
   async function loadInv() {
