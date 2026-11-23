@@ -48,9 +48,9 @@
       } else if (perm === 'denied') {
         h = `<h3>🔕 الإشعارات متقفلة</h3><small>اضغط على القفل 🔒 جنب عنوان الموقع واسمح بالإشعارات، وبعدين حدّث الصفحة.</small>`;
       } else if (sub && perm === 'granted') {
-        h = `<h3>🔔 الإشعارات شغّالة على الجهاز ده</h3><small>هيجيلك إشعار فوري مع كل طلب استشارة، حتى لو المتصفح مقفول.</small><div class="pu-a"><button type="button" class="soc-btn" data-a="test">جرّب إشعار</button><button type="button" class="soc-btn" data-a="off">إيقاف</button></div>`;
+        h = `<h3>🔔 الإشعارات شغّالة على الجهاز ده</h3><small>هيجيلك إشعار فوري مع كل طلب استشارة، وإشعار بالأسئلة الجديدة في تخصصك، حتى لو المتصفح مقفول.</small><div class="pu-a"><button type="button" class="soc-btn" data-a="test">جرّب إشعار</button><button type="button" class="soc-btn" data-a="off">إيقاف</button></div>`;
       } else {
-        h = `<h3>🔔 فعّل الإشعارات واستقبل الطلبات فوراً</h3><small>الطلب بيخلص في دقيقتين. الإشعار بيوصلك حتى والموقع مقفول.</small><div class="pu-a"><button type="button" class="soc-btn primary" data-a="on">فعّل الإشعارات</button></div>`;
+        h = `<h3>🔔 فعّل الإشعارات واستقبل الطلبات فوراً</h3><small>طلبات الاستشارة بتخلص في دقيقتين، وكمان هيجيلك إشعار بأي سؤال جديد في تخصصك (مرة كل 3 ساعات على الأكتر). بيوصلك حتى والموقع مقفول.</small><div class="pu-a"><button type="button" class="soc-btn primary" data-a="on">فعّل الإشعارات</button></div>`;
       }
       if (!standalone() && !iosNeeds && deferred) h += `<div class="pu-a"><button type="button" class="soc-btn" data-a="inst">📲 ثبّت التطبيق</button></div>`;
       el.innerHTML = h + '<div class="pu-msg" id="puMsg" role="status"></div>';

@@ -1,10 +1,11 @@
-// بيبعت إشعار دفع (Web Push) للمحامي لما يجيله طلب استشارة.
+// بيبعت إشعار دفع (Web Push) للمحامي: طلب استشارة جديد ({consultation}) أو سؤال جديد في تخصصه ({question}).
 // بيتنده من قاعدة البيانات (trigger + pg_net) وبيحتاج سر مشترك PUSH_SECRET.
 // متغيرات Vercel المطلوبة: PUSH_SECRET و VAPID_PUBLIC_KEY و VAPID_PRIVATE_KEY (و VAPID_SUBJECT اختياري).
 const crypto = require('crypto');
 const SU = 'https://qlboprdqnjvsmcwfpjwl.supabase.co';
 const SK = 'sb_publishable_i-9FiXSNKe5xf_mEawmEfQ_PjSjf2_i';
 
+const CATS = { rent: 'إيجارات وعقارات', labor: 'عمالي', criminal: 'جنائي', family: 'أحوال شخصية', contracts: 'عقود وتحكيم', commercial: 'تجاري وشركات', other: 'قضايا متنوعة' };
 function same(a, b) {
   const x = Buffer.from(String(a || '')), y = Buffer.from(String(b || ''));
   return x.length === y.length && x.length > 0 && crypto.timingSafeEqual(x, y);
@@ -17,17 +18,21 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'method' });
   if (!secret || !pub || !priv) return res.status(500).json({ error: 'not_configured' });
   if (!same(req.headers['x-push-secret'], secret)) return res.status(403).json({ error: 'forbidden' });
-  const id = req.body && req.body.consultation;
+  const b = req.body || {}, isQ = typeof b.question === 'string', id = isQ ? b.question : b.consultation;
   if (typeof id !== 'string' || !/^[0-9a-f-]{36}$/i.test(id)) return res.status(400).json({ error: 'bad_id' });
   const webpush = require('web-push');
   webpush.setVapidDetails(process.env.VAPID_SUBJECT || 'mailto:admin@legano.site', pub, priv);
   try {
-    const r = await rpc('push_targets', { p_secret: secret, p_consultation: id });
+    const r = isQ ? await rpc('push_targets_q', { p_secret: secret, p_question: id }) : await rpc('push_targets', { p_secret: secret, p_consultation: id });
     if (!r.ok) return res.status(502).json({ error: 'targets' });
     const subs = await r.json();
     let sent = 0, dropped = 0;
     await Promise.all((Array.isArray(subs) ? subs : []).map(async s => {
-      const payload = JSON.stringify({
+      const payload = JSON.stringify(isQ ? {
+        title: '❓ سؤال جديد في تخصصك',
+        body: `${CATS[s.category] || ''}: ${String(s.title || '').slice(0, 90)}`,
+        url: '/qa/' + s.id, tag: 'qa-' + s.id, urgent: false
+      } : {
         title: '⚖️ طلب استشارة جديد',
         body: `${String(s.name || 'موكل').slice(0, 40)} مستنيك دلوقتي، اضغط وردّ قبل ما الطلب يخلص`,
         url: '/consultations.html', tag: 'req-' + s.id, urgent: true

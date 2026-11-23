@@ -195,6 +195,7 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--white);
       <button class="tab-btn" data-view="reports">البلاغات</button>
       <button class="tab-btn" data-view="ratings">التقييمات</button>
       <button class="tab-btn" data-view="consults">الاستشارات <span id="csBadge"></span></button>
+      <button class="tab-btn" data-view="qa">الأسئلة <span id="qaBadge"></span></button>
       <button class="tab-btn" data-view="files">ملفات الموقع</button>
     </div>
     <button class="logout-btn" id="bOut">خروج</button>
@@ -222,6 +223,11 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--white);
       <div class="section-title">تقييمات الموكلين</div>
       <div style="font-size:12px;color:var(--gray);margin-bottom:12px">آخر 100 تقييم. لو لقيت تقييم مشبوه (تقييمات كتير من نفس الشخص أو تلاعب) امسحه والمتوسط بيتحدث لوحده.</div>
       <div id="ratingsWrap"><div class="loading-msg">جارٍ التحميل...</div></div>
+    </div>
+    <div class="view" id="view-qa">
+      <div class="section-title">أسئلة «اسأل محامي»</div>
+      <div style="font-size:12px;color:var(--gray);margin-bottom:10px">المبلّغ عنه بيظهر الأول. الإخفاء بيشيل السؤال أو الإجابة من الموقع فوراً، وتقدر ترجّعه.</div>
+      <div id="qaWrap"><div class="loading-msg">جارٍ التحميل...</div></div>
     </div>
     <div class="view" id="view-consults">
       <div class="section-title">إعدادات العمولة</div>
@@ -305,6 +311,7 @@ document.querySelectorAll('.tab-btn').forEach(b => b.onclick = () => {
   if (b.dataset.view === 'reports') loadReports();
   if (b.dataset.view === 'ratings') loadRatings();
   if (b.dataset.view === 'consults') loadConsults();
+  if (b.dataset.view === 'qa') loadQa();
 });
 $('lightbox').onclick = () => $('lightbox').classList.remove('show');
 const lightbox = src => { $('lightboxImg').src = src; $('lightbox').classList.add('show'); };
@@ -447,6 +454,22 @@ function renderLawyers() {
 }
 $('lSearch').oninput = renderLawyers;
 
+
+/* اسأل محامي: إخفاء/إظهار */
+async function loadQa() {
+  try {
+    const rows = await rpc('qa_admin_list', { p_status: null, p_limit: 100 });
+    const rep = rows.filter(q => q.report_count > 0 || q.answers.some(a => a.report_count > 0)).length;
+    $('qaBadge').textContent = rep ? `(${rep})` : '';
+    const btn = (k, id, st) => `<button class="pbtn ${st === 'hidden' ? 'approve' : 'reject'}" data-qk="${k}" data-qi="${id}" data-qs="${st === 'hidden' ? 'published' : 'hidden'}">${st === 'hidden' ? 'إظهار' : 'إخفاء'}</button>`;
+    $('qaWrap').innerHTML = rows.length ? rows.map(q => `<div class="user-card" style="display:block"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><div class="info"><b>${esc(q.title)}</b> <span class="status-tag ${q.status === 'hidden' ? 'rejected' : 'approved'}">${q.status === 'hidden' ? 'مخفي' : 'ظاهر'}</span>${q.report_count ? ` <span class="status-tag rejected">بلاغات ${q.report_count}</span>` : ''}<br><small>${esc(q.category)} • ${dt(q.created_at)} • ${q.answers_count} إجابة</small><div style="white-space:pre-wrap;font-size:13px;margin-top:6px">${esc(q.body)}</div></div><div class="payment-actions">${btn('q', q.id, q.status)}<a class="pbtn" href="/qa/${esc(q.id)}" target="_blank" rel="noopener">فتح</a></div></div>
+      ${q.answers.map(a => `<div style="margin-top:10px;padding:10px;border-radius:10px;background:#F8FAFC;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><div style="flex:1;min-width:200px"><b>${esc(a.lawyer_name || '—')}</b> <span class="status-tag ${a.status === 'hidden' ? 'rejected' : 'approved'}">${a.status === 'hidden' ? 'مخفية' : 'ظاهرة'}</span>${a.report_count ? ` <span class="status-tag rejected">بلاغات ${a.report_count}</span>` : ''}<div style="white-space:pre-wrap;font-size:13px;margin-top:4px">${esc(a.body)}</div></div><div class="payment-actions">${btn('a', a.id, a.status)}</div></div>`).join('')}</div>`).join('') : '<div class="empty-state">مفيش أسئلة لسه</div>';
+    $('qaWrap').querySelectorAll('[data-qk]').forEach(b => b.onclick = async () => {
+      if (b.dataset.qs === 'hidden' && !confirm('تخفي ده من الموقع؟')) return;
+      try { await rpc('qa_admin_set', { p_kind: b.dataset.qk, p_id: b.dataset.qi, p_status: b.dataset.qs }); toast('تم'); loadQa(); } catch (e) { toast('خطأ: ' + e.message); }
+    });
+  } catch (e) { $('qaWrap').innerHTML = `<div class="empty-state">${esc(e.message)}</div>`; }
+}
 
 /* الاستشارات الفورية: عمولة + اعتراضات + سحب */
 const STL = { requested: 'طلب', accepted: 'اتقبلت', live: 'جارية', awaiting_confirm: 'مستنية تأكيد', disputed: 'اعتراض', released: 'اتحوّلت', refunded: 'اتردّت', cancelled: 'ملغية', expired: 'انتهت' };
