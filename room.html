@@ -77,6 +77,28 @@
   @keyframes livePulse { 70% { box-shadow: 0 0 0 8px rgba(239,68,68,0); } 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); } }
   .cs-box textarea.f-i { display: block; width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 12px; font: inherit; font-size: 14px; background: #fff; color: var(--foreground); resize: vertical; margin-top: 4px; }
   body.inroom .cs-box textarea.f-i { background: rgba(255,255,255,.08); color: #fff; border-color: rgba(252,211,77,.3); }
+  body.ingate { background: radial-gradient(circle at 85% -10%, rgba(183,121,31,.35), transparent 45%), radial-gradient(circle at 5% 110%, rgba(34,197,94,.14), transparent 45%), #070B14; color: #E2E8F0; }
+  body.ingate .logo-text { background: linear-gradient(90deg, #FDE68A, #F59E0B); -webkit-background-clip: text; background-clip: text; }
+  body.ingate .top { background: rgba(7,11,20,.8); border-bottom: 1px solid rgba(252,211,77,.2); } body.ingate .cs-test { background: rgba(252,211,77,.08); border-color: rgba(252,211,77,.3); color: #FDE68A; }
+  .cg { position: relative; overflow: hidden; max-width: 640px; margin: 0 auto; padding: 22px; border-radius: 22px; color: #fff; background: radial-gradient(circle at 90% 0, rgba(252,211,77,.45), transparent 45%), radial-gradient(circle at 0 100%, rgba(34,197,94,.2), transparent 50%), linear-gradient(135deg, #0B1220, #1a1405 60%, #3B2A0B); border: 1px solid rgba(252,211,77,.5); box-shadow: 0 14px 40px rgba(183,121,31,.35); }
+  .cg::after { content: ""; position: absolute; top: 0; bottom: 0; width: 60px; left: -80px; background: linear-gradient(100deg, transparent, rgba(255,255,255,.14), transparent); transform: skewX(-20deg); animation: shine 6s ease-in-out infinite; pointer-events: none; }
+  @keyframes shine { 0%, 60% { left: -80px; } 100% { left: 120%; } }
+  .cg-top { display: flex; justify-content: space-between; align-items: center; font-weight: 900; letter-spacing: .12em; font-size: 13px; color: #FCD34D; }
+  .cg h2 { margin: 12px 0 4px; font-size: 22px; font-weight: 900; } .cg > p { margin: 0; color: #CBD5E1; font-size: 13.5px; }
+  .cg-p { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 16px 0; }
+  .cg-p div { padding: 10px; border-radius: 14px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12); text-align: center; font-size: 13px; font-weight: 800; }
+  .cg-p small { display: block; font-size: 11.5px; margin-top: 2px; color: #94A3B8; font-weight: 700; } .cg-p .ok { border-color: #22C55E; background: rgba(34,197,94,.14); } .cg-p .ok small { color: #86EFAC; }
+  .cg-p .wait small { color: #FDE68A; animation: blink 1.6s ease-in-out infinite; } @keyframes blink { 50% { opacity: .35; } }
+  .cg ul { list-style: none; margin: 0 0 14px; padding: 0; display: grid; gap: 8px; }
+  .cg li { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 14px; background: rgba(255,255,255,.06); font-size: 13.5px; line-height: 1.9; }
+  .cg li i { font-style: normal; font-size: 20px; flex: none; } .cg li b { color: #FCD34D; }
+  .cg details { margin-bottom: 14px; font-size: 12.5px; color: #CBD5E1; } .cg summary { cursor: pointer; color: #FDE68A; font-weight: 800; } .cg details div { white-space: pre-wrap; margin-top: 8px; padding: 10px 12px; border-radius: 12px; background: rgba(0,0,0,.3); line-height: 1.9; }
+  .cg .cs-chk { display: flex; gap: 10px; align-items: center; padding: 12px 14px; border-radius: 14px; border: 1px dashed rgba(252,211,77,.55); background: rgba(252,211,77,.08); font-weight: 800; cursor: pointer; margin-bottom: 12px; }
+  .cg .cs-chk input { width: 22px; height: 22px; accent-color: #F59E0B; flex: none; }
+  .cg .go { display: block; width: 100%; padding: 14px; border: 0; border-radius: 14px; font: inherit; font-size: 17px; font-weight: 900; color: #1E293B; background: linear-gradient(90deg, #FCD34D, #F59E0B); cursor: pointer; box-shadow: 0 8px 22px rgba(245,158,11,.4); } .cg .go:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; }
+  .cg .lnk { display: block; margin: 12px auto 0; background: none; border: 0; color: #94A3B8; font: inherit; font-size: 12.5px; text-decoration: underline; cursor: pointer; }
+  .cg .spin { width: 44px; height: 44px; margin: 8px auto 4px; border-radius: 50%; border: 3px solid rgba(252,211,77,.25); border-top-color: #FCD34D; animation: spin 1s linear infinite; } @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .cg::after, .cg .spin, .cg-p .wait small { animation: none; } }
   .cs-stars { display: flex; align-items: center; gap: 4px; margin: 8px 0; } .cs-stars button { border: 0; background: none; font-size: 30px; color: #F59E0B; cursor: pointer; line-height: 1; padding: 0 2px; transition: transform .12s; } .cs-stars button:hover { transform: scale(1.2); } .cs-stars small { margin-inline-start: 8px; color: var(--muted-foreground); font-size: 12px; }
   .cs-sec { position: absolute; z-index: 4; bottom: 10px; right: 12px; font-size: 11px; color: #A7F3D0; background: rgba(7,11,20,.6); padding: 2px 10px; border-radius: 99px; border: 1px solid rgba(34,197,94,.4); }
   body.inroom .cs-ctl { z-index: 4; gap: 14px; padding: 8px 16px; border-radius: 99px; background: rgba(7,11,20,.55); border: 1px solid rgba(255,255,255,.15); backdrop-filter: blur(10px); }
@@ -148,7 +170,7 @@
   const fmt = d => d ? new Date(d).toLocaleString('ar-EG', { day: 'numeric', month: 'long', hour: 'numeric', minute: '2-digit' }) : '';
   // ما نعيدش الرسم لو الشكل ما اتغيّرش، علشان علامة الموافقة وكلام الموكل في خانة الاعتراض ما يتمسحوش كل 3 ثواني
   let lastHtml = '';
-  const set = h => { if (h === lastHtml) return; lastHtml = h; $('stage').innerHTML = h; document.body.classList.toggle('inroom', h.includes('id="roomgrid"')); };
+  const set = h => { if (h === lastHtml) return; lastHtml = h; $('stage').innerHTML = h; document.body.classList.toggle('inroom', h.includes('id="roomgrid"')); document.body.classList.toggle('ingate', h.includes('class="cg"')); };
   const who = () => ROLE === 'client' ? `الأستاذ/ة <b>${esc(st.lawyer.name)}</b>` : `الموكل <b>${esc(st.client_name)}</b>`;
   const earn = () => (st.price - Math.min(st.price, Math.round(st.price * (st.fee_pct || 0)) / 100 + Number(st.fee_flat || 0))).toFixed(2);
 
@@ -307,15 +329,23 @@
     const left = Math.max(0, 120 - Math.floor((nowMs() - Date.parse(st.created_at)) / 1000));
     set(`<div class="cs-box"><h2>بعتنا طلبك لـ ${esc(st.lawyer.name)}</h2><p>في انتظار رد المحامي. لو ما ردّش خلال دقيقتين الطلب بيتلغي وما بيتسحبش منك حاجة.</p><p><b dir="ltr">${mm(left)}</b></p><button class="soc-btn" data-a="cancel" type="button">إلغاء الطلب</button></div>`);
   }
+  const parties = () => { const me = !!my('consent'), ot = !!other('consent'); const mine = ROLE === 'client' ? 'الموكل' : 'المحامي', theirs = ROLE === 'client' ? 'المحامي' : 'الموكل'; const P = (n, ok, who) => `<div class="${ok ? 'ok' : 'wait'}">${n}${who ? ' (إنت)' : ''}<small>${ok ? '✅ وافق' : '⏳ في انتظار الموافقة'}</small></div>`; return `<div class="cg-p">${ROLE === 'client' ? P('المحامي', ot, false) + P('الموكل', me, true) : P('المحامي', me, true) + P('الموكل', ot, false)}</div>`; };
+  const cgPoints = `<ul>
+    <li><i>🎥</i><span>الاستشارة <b>اتصال مباشر</b> بينكم داخل ليجانو، و<b>مفيش تسجيل لا للصوت ولا للفيديو</b>.</span></li>
+    <li><i>🌐</i><span>الاتصال المباشر معناه إن <b>عنوان الاتصال (IP)</b> لكل طرف ممكن يظهر للطرف التاني تقنياً.</span></li>
+    <li><i>📝</i><span>الكلام بيتحوّل <b>لنص مكتوب</b> أثناء الاستشارة: متصفح كل طرف بيحوّل كلامه هو بس، وممكن الصوت يتبعت لخدمة التعرف على الكلام التابعة للمتصفح (زي Google في Chrome). بيتحفظ <b>النص من غير الصوت</b>، وفريق المنصة بيراجعه بس <b>لو حصل اعتراض</b>، وممكن النص يبقى مش دقيق.</span></li>
+    <li><i>🗑️</i><span>الملفات والرسايل والملخص والنص <b>بتتمسح أوتوماتيك</b> بعد انتهاء مهلة الاعتراض.</span></li>
+    <li><i>⚖️</i><span>ليجانو <b>مش طرف</b> في العلاقة بين المحامي والموكل، والاستشارة <b>مش توكيل</b> بأي دعوى.</span></li></ul>
+    <details><summary>عرض النص الكامل للموافقة</summary><div>${esc(CONSENT)}</div></details>`;
   function viewConsent() {
-    set(`<div class="cs-box"><h2>${ROLE === 'client' ? 'المحامي قبل طلبك' : 'تجهيز الاستشارة'}</h2><p>قبل ما تدخلوا الغرفة، لازم الطرفين يوافقوا على الشروط دي.</p>
-      <div class="cs-consent">${esc(CONSENT)}</div>
+    set(`<div class="cg"><div class="cg-top"><span>LEGANO</span><span>🔒 اتفاق الاستشارة</span></div>
+      <h2>${ROLE === 'client' ? 'المحامي قبل طلبك 🎉' : 'جهّز استشارتك'}</h2><p>قبل ما تدخلوا الغرفة، لازم الطرفين يوافقوا على الشروط دي.</p>${parties()}${cgPoints}
       <label class="cs-chk"><input type="checkbox" id="agree"><span>قرأت وأوافق على كل الشروط دي.</span></label>
-      <button class="soc-btn primary" id="agreeGo" data-a="consent" type="button" disabled>أوافق وأكمل</button>
-      <button class="soc-btn" data-a="cancel" type="button" style="margin-top:8px">رفض وإلغاء (استرداد كامل)</button></div>`);
+      <button class="go" id="agreeGo" data-a="consent" type="button" disabled>أوافق وأدخل الغرفة ✅</button>
+      <button class="lnk" data-a="cancel" type="button">رفض وإلغاء (استرداد كامل)</button></div>`);
     $('agree').onchange = e => { $('agreeGo').disabled = !e.target.checked; };
   }
-  function viewWaitConsent() { set(`<div class="cs-box"><h2>وافقت على الشروط</h2><p>في انتظار موافقة ${who()}...</p><button class="soc-btn" data-a="cancel" type="button">إلغاء</button></div>`); }
+  function viewWaitConsent() { set(`<div class="cg"><div class="cg-top"><span>LEGANO</span><span>🔒 اتفاق الاستشارة</span></div><h2>وافقت على الشروط ✅</h2><p>في انتظار موافقة ${who()}، أول ما يوافق هتدخلوا الغرفة على طول.</p>${parties()}<div class="spin" aria-hidden="true"></div><button class="lnk" data-a="cancel" type="button">إلغاء</button></div>`); }
 
   function viewRoom() {
     if (st.status === 'live') startPing();
