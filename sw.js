@@ -1,6 +1,8 @@
 // Service worker لليجانو: بيستقبل إشعارات الدفع (طلبات الاستشارة) ويفتح الصفحة لما المحامي يدوس عليها.
 // مقصود إنه مايعملش تخزين مؤقت (cache) للصفحات، عشان أي تحديث ينزل فوراً.
 self.addEventListener('install', () => self.skipWaiting());
+// معالج fetch فاضي: بعض نسخ كروم على أندرويد بتشترطه عشان تعتبر الموقع قابل للتثبيت. مابيعملش تخزين ولا بيغيّر أي طلب.
+self.addEventListener('fetch', () => {});
 self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
 
 self.addEventListener('push', e => {
