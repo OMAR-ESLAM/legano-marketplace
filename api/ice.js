@@ -1,11 +1,13 @@
 // خوادم الاتصال (ICE) للغرفة.
 // 1) STUN مجاني دايماً.
 // 2) لو متغيرات Cloudflare TURN مضبوطة في Vercel (CF_TURN_KEY_ID و CF_TURN_API_TOKEN) بنطلب بيانات دخول مؤقتة من Cloudflare.
+// 2ب) أو Metered (METERED_APP و METERED_API_KEY) وده مجاني 20GB.
 // 3) لو عندك TURN تاني، حطّه في ICE_SERVERS بصيغة JSON.
 // الـTURN بيحلّ حالات الشبكات المقفولة (موبايل/شركات) اللي الاتصال المباشر ما بينجحش فيها.
 const STUN = { urls: ['stun:stun.l.google.com:19302', 'stun:stun.cloudflare.com:3478'] };
 const TTL = 4 * 3600;            // عمر بيانات الدخول (ثواني): كفاية لأي استشارة
 const REUSE_MS = 30 * 60 * 1000; // نعيد استخدام نفس البيانات 30 دقيقة عشان ما نكلّمش Cloudflare كل مرة
+let mcache = null;
 let cache = null;                // { at, servers }
 const hits = new Map();          // حدّ بسيط للطلبات لكل IP (على مستوى النسخة)
 
@@ -14,6 +16,21 @@ function limited(ip) {
   arr.push(now); hits.set(ip, arr);
   if (hits.size > 5000) hits.clear();
   return arr.length > 20;
+}
+
+// Metered Open Relay: متغيرات METERED_APP (اسم التطبيق) و METERED_API_KEY
+async function meteredTurn() {
+  const app = process.env.METERED_APP, key = process.env.METERED_API_KEY;
+  if (!app || !key || !/^[a-z0-9-]+$/i.test(app)) return [];
+  if (mcache && Date.now() - mcache.at < REUSE_MS) return mcache.servers;
+  try {
+    const r = await fetch(`https://${app}.metered.live/api/v1/turn/credentials?apiKey=${encodeURIComponent(key)}`, { signal: AbortSignal.timeout(5000) });
+    if (!r.ok) return mcache ? mcache.servers : [];
+    const j = await r.json();
+    const list = (Array.isArray(j) ? j : []).filter(s => s && s.credential && s.username);
+    if (list.length) mcache = { at: Date.now(), servers: list };
+    return list;
+  } catch { return mcache ? mcache.servers : []; }
 }
 
 async function cfTurn() {
@@ -42,7 +59,7 @@ module.exports = async (req, res) => {
   if (limited(ip)) { res.statusCode = 429; return res.end(JSON.stringify({ iceServers: [STUN] })); }
   let extra = [];
   try { if (process.env.ICE_SERVERS) { const j = JSON.parse(process.env.ICE_SERVERS); if (Array.isArray(j)) extra = j; } } catch {}
-  const cf = await cfTurn();
+  const cf = [...(await cfTurn()), ...(await meteredTurn())];
   res.statusCode = 200;
   res.end(JSON.stringify({ iceServers: [STUN, ...cf, ...extra] }));
 };
