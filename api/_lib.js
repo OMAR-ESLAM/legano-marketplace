@@ -28,6 +28,8 @@ function safePath(p) {
   p = String(p || '').replace(/^\/+/, '');
   if (!p || p.length > 200 || p.includes('..') || p.includes('\\') || p.includes('\0')) return null;
   if (/^(api\/|\.github\/|vercel\.json$|package(-lock)?\.json$)/i.test(p)) return null;
+  // ممنوع رفع أو تعديل أكواد قابلة للتنفيذ من اللوحة: لو حساب الأدمن اتسرق ما ينفعش يتحقن الموقع بسكريبت. الأكواد بتتعدّل من GitHub بس.
+  if (/\.(html?|m?js|css|svg|xml|map|wasm|xhtml)$/i.test(p)) return null;
   return p;
 }
 async function sha(p) { const r = await gh(`contents/${enc(p)}?ref=${BRANCH}`); return r.ok ? (await r.json()).sha : null; }
