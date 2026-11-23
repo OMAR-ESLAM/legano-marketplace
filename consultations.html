@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#0a1226"><link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex">
 <title>الاستشارات الفورية | Legano</title>
@@ -42,6 +42,10 @@
   .lg-tip{margin-top:12px;padding:10px 12px;border-radius:12px;background:rgba(252,211,77,.1);border:1px dashed rgba(252,211,77,.4);font-size:13px;min-height:44px}
   .lg-act{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}.lg-act a{padding:6px 12px;border-radius:99px;background:rgba(255,255,255,.1);color:#fff;text-decoration:none;font-size:12.5px;font-weight:800}.lg-act label{margin-inline-start:auto;font-size:12.5px;font-weight:700;cursor:pointer}
   @media (prefers-reduced-motion:reduce){.radar::before,.radar::after{animation:none}}
+  .pu{border-radius:16px;padding:16px 18px;margin-bottom:14px;color:#fff;border:1px solid rgba(252,211,77,.35);background:linear-gradient(135deg,#0B1220,#1b2a4a 70%,#2a1d07)}
+  .pu h3{font-size:1rem;font-weight:800;margin:0 0 6px}.pu small{color:#cbd5e1;display:block;line-height:1.7}
+  .pu-a{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.pu-st{margin:8px 0;padding-inline-start:20px;line-height:2;color:#e2e8f0}
+  .pu-msg{margin-top:8px;font-size:.85rem;color:#fcd34d}.pu .soc-btn{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.25)}.pu .soc-btn.primary{background:linear-gradient(135deg,#fcd34d,#b7791f);color:#1a1205;border:0;font-weight:800}
   .cs-box.vip{position:relative;color:#fff;border:1px solid rgba(252,211,77,.35);background:radial-gradient(circle at 100% 0,rgba(183,121,31,.45),transparent 50%),radial-gradient(circle at 0 100%,rgba(34,197,94,.22),transparent 50%),linear-gradient(135deg,#0B1220,#12261c 60%,#2a1d07);box-shadow:0 10px 30px rgba(11,18,32,.25)}
   .vip .cs-sw{font-size:17px;font-weight:900}.vip .cs-sw input{appearance:none;-webkit-appearance:none;width:54px;height:30px;border-radius:99px;background:#475569;position:relative;cursor:pointer;transition:background .25s;flex:none}
   .vip .cs-sw input::after{content:"";position:absolute;top:3px;inset-inline-start:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .25s}
@@ -103,6 +107,7 @@
     <div class="feed-tabs" role="tablist"><button class="tab" data-t="cons" aria-selected="true" type="button">الاستشارات</button><button class="tab" data-t="wal" aria-selected="false" type="button">المحفظة</button><button class="tab" data-t="inv" aria-selected="false" type="button">ادعُ زميل</button></div>
     <section id="pCons">
       <div class="invstrip" id="invStrip"></div>
+      <div class="pu" id="pushBox"></div>
       <div class="mh" id="mh"><span class="coin" style="inset-inline-end:8%;bottom:0">🪙</span><span class="coin" style="inset-inline-end:22%;bottom:0;animation-delay:2s">💰</span><span class="coin" style="inset-inline-end:40%;bottom:0;animation-delay:4s">🪙</span>
         <h2>كل دقيقة من وقتك ليها تمن 💰</h2><p>افتح الأونلاين، وموكلين بيدوّروا على محامي دلوقتي هيوصلولك. من مكتبك أو من موبايلك.</p>
         <div class="mh-grid">
@@ -154,6 +159,7 @@
   </div>
 </main>
 <script src="js/social.js"></script>
+<script src="js/push.js"></script>
 <script>
 (async () => {
   const $ = id => document.getElementById(id), S = window.Social, C = S.Consult, esc = S.esc;
@@ -293,6 +299,7 @@
     if (t.dataset.t === 'inv') loadInv();
     if (t.dataset.t === 'wal') loadWallet();
   }));
+  try { window.Push && Push.mount($('pushBox')); } catch {}
   await loadCfg(); hero(); loadInv(); await loadList(); loadWallet();
   setInterval(loadList, 5000); setInterval(() => { if (!$('pWal').hidden) loadWallet(); }, 15000);
 })();
