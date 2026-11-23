@@ -25,6 +25,11 @@ async function sb(path) {
   if (!r.ok) throw new Error('supabase ' + r.status);
   return r.json();
 }
+async function rpcSb(fn, body) {
+  const r = await fetch(`${SU}/rest/v1/rpc/${fn}`, { method: 'POST', headers: { apikey: SK, Authorization: `Bearer ${SK}`, 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) });
+  if (!r.ok) throw new Error('supabase rpc ' + r.status);
+  return r.json();
+}
 async function page(base, file) {
   const r = await fetch(`${base}/${file}`, { headers: { 'x-seo-internal': '1' } });
   if (!r.ok) throw new Error('static ' + r.status);
@@ -73,6 +78,9 @@ async function sitemap(req, res, base) {
     }
   }
   for (const k of combos) { const [c, g] = k.split('|'); urls.add(base + listUrl(c, g)); }
+  urls.add(base + '/qa');
+  for (const k of Object.keys(CATS)) urls.add(base + '/qa/c/' + k);
+  try { for (const q of await rpcSb('qa_sitemap')) urls.add(base + '/qa/' + q.id); } catch {}
   const xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
     + [...urls].slice(0, 45000).map(u => `<url><loc>${esc(u)}</loc></url>`).join('\n') + '\n</urlset>\n';
   send(res, 200, 'application/xml; charset=utf-8', xml);
@@ -120,6 +128,38 @@ async function list(req, res, base, cat, city) {
   send(res, 200, 'text/html; charset=utf-8', inject(html, { title, desc, canonical, jsonld: rows.length ? [items, crumbs] : [crumbs], ssr, anchor: /<div id="lawyerGrid"[^>]*>/, preset: { cat: cat || 'all', city: city || '' }, robots: rows.length ? undefined : 'noindex,follow' }));
 }
 
+// ---------- اسأل محامي ----------
+const qaTemplate = async base => (await page(base, 'qa.html')).replace(/<meta name="robots"[^>]*>\s*/i, '').replace(/(<div id="qaApp">)<p[^>]*>[\s\S]*?<\/p>/i, '$1');
+const qaUrl = id => '/qa/' + id;
+
+async function qaList(req, res, base, cat) {
+  if (cat && !CATS[cat]) return send(res, 404, 'text/plain; charset=utf-8', 'غير موجود', 'public, s-maxage=60');
+  const [rows, html] = await Promise.all([rpcSb('qa_list', { p_category: cat || null, p_q: null, p_unanswered: false, p_limit: 30, p_offset: 0 }), qaTemplate(base)]);
+  const what = cat ? CATS[cat] : '';
+  const title = `اسأل محامي${what ? ' - ' + what : ''} مجاناً | ${SITE_NAME}`;
+  const desc = cut(`اكتب سؤالك القانوني${what ? ' في ' + what : ''} مجاناً وتلاقي إجابة من محامين موثّقين. ${rows.slice(0, 2).map(r => r.title).join(' • ')}`, 158);
+  const canonical = base + '/qa' + (cat ? '/c/' + cat : '');
+  const crumbs = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: SITE_NAME, item: base + '/' }, { '@type': 'ListItem', position: 2, name: 'اسأل محامي', item: base + '/qa' }, ...(cat ? [{ '@type': 'ListItem', position: 3, name: what, item: canonical }] : [])] };
+  const ssr = `<section id="ssr"><h1>اسأل محامي${what ? ' - ' + esc(what) : ''}</h1><ul>${rows.map(r => `<li><a href="${qaUrl(r.id)}">${esc(r.title)}</a> — ${esc(CATS[r.category] || '')}${r.answers_count ? ` • ${r.answers_count} إجابة` : ''}</li>`).join('')}</ul></section>`;
+  send(res, 200, 'text/html; charset=utf-8', inject(html, { title, desc, canonical, jsonld: [crumbs], ssr, anchor: /<div id="qaApp">/, preset: { cat: cat || '' } }), 'public, s-maxage=120, stale-while-revalidate=600');
+}
+
+async function question(req, res, base, id) {
+  if (!UUID.test(id || '')) return send(res, 404, 'text/plain; charset=utf-8', 'غير موجود', 'public, s-maxage=60');
+  const [q, html] = await Promise.all([rpcSb('qa_get', { p_id: id }), qaTemplate(base)]);
+  if (!q) return send(res, 404, 'text/html; charset=utf-8', inject(html, { title: 'السؤال غير متاح | ' + SITE_NAME, desc: 'السؤال ده مش متاح.', canonical: base + '/qa', robots: 'noindex,follow', preset: { q: '' } }), 'public, s-maxage=60');
+  const answers = q.answers || [];
+  const title = cut(q.title, 70) + ' | اسأل محامي - ' + SITE_NAME;
+  const desc = cut(answers.length ? `${answers[0].lawyer.display_name}: ${answers[0].body}` : q.body, 158);
+  const canonical = base + qaUrl(q.id);
+  const qa = { '@context': 'https://schema.org', '@type': 'QAPage', mainEntity: { '@type': 'Question', name: q.title, text: q.body, answerCount: answers.length, dateCreated: q.created_at, author: { '@type': 'Person', name: q.asker_name || 'زائر' },
+    suggestedAnswer: answers.map(a => ({ '@type': 'Answer', text: a.body, dateCreated: a.created_at, url: canonical + '#a-' + a.id, author: { '@type': 'Person', name: a.lawyer.display_name, url: base + lawyerUrl(a.lawyer.id) } })) } };
+  const crumbs = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: SITE_NAME, item: base + '/' }, { '@type': 'ListItem', position: 2, name: 'اسأل محامي', item: base + '/qa' }, { '@type': 'ListItem', position: 3, name: CATS[q.category] || 'سؤال', item: base + '/qa/c/' + q.category }] };
+  const ssr = `<article id="ssr"><h1>${esc(q.title)}</h1><p>${esc(q.body)}</p>${answers.map(a => `<section id="a-${esc(a.id)}"><h2>إجابة ${esc(a.lawyer.display_name)}</h2><p>${esc(a.body)}</p><a href="${lawyerUrl(a.lawyer.id)}">${esc(a.lawyer.display_name)}</a></section>`).join('')}</article>`;
+  // سؤال من غير إجابات = محتوى رفيع، ما نفهرسوش لحد ما محامي يجاوب
+  send(res, 200, 'text/html; charset=utf-8', inject(html, { title, desc, canonical, jsonld: answers.length ? [qa, crumbs] : [crumbs], ssr, anchor: /<div id="qaApp">/, preset: { q: q.id }, robots: answers.length ? undefined : 'noindex,follow' }), 'public, s-maxage=300, stale-while-revalidate=1800');
+}
+
 module.exports = async (req, res) => {
   try {
     const base = origin(req);
@@ -130,6 +170,8 @@ module.exports = async (req, res) => {
     if (r === 'sitemap') return await sitemap(req, res, base);
     if (r === 'lawyer') return await lawyer(req, res, base, String(q.id || ''));
     if (r === 'list') return await list(req, res, base, String(q.cat || ''), (() => { const c = String(q.city || ''); try { return decodeURIComponent(c); } catch { return c; } })());
+    if (r === 'qa_list') return await qaList(req, res, base, String(q.cat || ''));
+    if (r === 'question') return await question(req, res, base, String(q.id || ''));
     return send(res, 404, 'text/plain', 'not found', 'no-store');
   } catch (e) {
     send(res, 502, 'text/plain; charset=utf-8', 'خطأ مؤقت، جرّب تاني', 'no-store');

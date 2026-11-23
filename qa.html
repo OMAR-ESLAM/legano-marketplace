@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#ffffff"><link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>اسأل محامي | Legano</title>
+<meta name="description" content="اسأل محامي مجاناً: اكتب سؤالك القانوني وتلاقي إجابة من محامين موثّقين على Legano.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Syne:wght@800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="js/social.css">
+<style>
+  :root { color-scheme: light; --background:#F8FAFB; --foreground:#1E293B; --card:#FFFFFF; --border:#E2E8F0; --muted-foreground:#64748B; --secondary:#EEF2F7; --gold:#0F172A; --gold-soft:#92620C; }
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Cairo', sans-serif; background: var(--background); color: var(--foreground); line-height: 1.8; }
+  a { color: inherit; }
+  .logo-text { font-family: 'Syne', sans-serif; font-weight: 800; letter-spacing: 5px; font-size: 18px; text-decoration: none; background: linear-gradient(90deg, #0F172A, #92620C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .top { position: sticky; top: 0; z-index: 50; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; padding: 10px 20px; background: rgba(255,255,255,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  #navSlot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  main { max-width: 820px; margin: 0 auto; padding: 18px 16px 90px; }
+  .qa-hero { border-radius: 20px; padding: 22px 20px; color: #fff; background: radial-gradient(circle at 100% 0, rgba(183,121,31,.5), transparent 55%), linear-gradient(135deg, #0B1220, #1b2a4a); }
+  .qa-hero h1 { margin: 0 0 6px; font-size: 1.6rem; font-weight: 900; }
+  .qa-hero p { margin: 0 0 14px; color: #cbd5e1; font-size: .95rem; }
+  .qa-go { background: linear-gradient(135deg, #fcd34d, #b7791f); color: #1a1205; border: 0; font-weight: 900; padding: 11px 20px; border-radius: 12px; font-family: inherit; font-size: 1rem; cursor: pointer; }
+  .qa-chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0 10px; }
+  .qa-chips a { padding: 6px 13px; border-radius: 999px; border: 1px solid var(--border); background: #fff; text-decoration: none; font-size: 13px; font-weight: 700; }
+  .qa-chips a.on { background: var(--gold); color: #fff; border-color: var(--gold); }
+  .qa-tools { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+  .qa-tools input[type=search] { flex: 1; min-width: 180px; padding: 9px 12px; border: 1px solid var(--border); border-radius: 12px; font-family: inherit; font-size: 14px; }
+  .qa-tools label { font-size: 13px; color: var(--muted-foreground); display: flex; gap: 6px; align-items: center; }
+  .qa-card { display: block; text-decoration: none; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 14px 16px; margin-bottom: 10px; transition: box-shadow .15s, transform .15s; }
+  .qa-card:hover { box-shadow: 0 8px 22px rgba(15,23,42,.08); transform: translateY(-1px); }
+  .qa-card h2 { margin: 0 0 4px; font-size: 1.02rem; font-weight: 800; line-height: 1.6; }
+  .qa-card p { margin: 0; color: var(--muted-foreground); font-size: .88rem; }
+  .qa-meta { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 8px; font-size: 12px; color: var(--muted-foreground); }
+  .qa-tag { background: var(--secondary); border-radius: 999px; padding: 2px 10px; font-weight: 700; color: var(--foreground); }
+  .qa-ans { color: #15803d; font-weight: 800; } .qa-ans.zero { color: #b45309; }
+  .qa-q { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 18px; }
+  .qa-q h1 { margin: 0 0 10px; font-size: 1.35rem; font-weight: 900; line-height: 1.6; }
+  .qa-body { white-space: pre-wrap; word-break: break-word; font-size: .98rem; }
+  .qa-h2 { margin: 22px 0 10px; font-size: 1.1rem; font-weight: 900; }
+  .qa-a { background: var(--card); border: 1px solid var(--border); border-inline-start: 4px solid #15803d; border-radius: 16px; padding: 16px; margin-bottom: 12px; }
+  .qa-lw { display: flex; gap: 10px; align-items: center; text-decoration: none; margin-bottom: 10px; }
+  .qa-lw b { display: block; font-size: .98rem; } .qa-lw small { color: var(--muted-foreground); }
+  .qa-cta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .qa-rep { background: none; border: 0; color: var(--muted-foreground); font-size: 12px; cursor: pointer; font-family: inherit; text-decoration: underline; padding: 0; margin-top: 8px; }
+  .qa-empty { text-align: center; padding: 26px 14px; background: #FFF8E6; border: 1px solid #F1D48A; color: #7A5200; border-radius: 16px; }
+  .qa-note { margin-top: 18px; padding: 12px 14px; border-radius: 12px; background: var(--secondary); font-size: 12.5px; color: var(--muted-foreground); line-height: 1.9; }
+  .qa-err { color: #b91c1c; font-size: 13px; min-height: 18px; margin-top: 6px; }
+  .qa-cnt { font-size: 11.5px; color: var(--muted-foreground); text-align: end; }
+  .qa-crumb { font-size: 13px; margin-bottom: 10px; } .qa-crumb a { color: var(--gold-soft); font-weight: 700; text-decoration: none; }
+  #ssr { color: inherit; }
+</style>
+</head>
+<body>
+<header class="top"><a class="logo-text" href="/index.html?browse=1">LEGANO</a><div id="navSlot"></div></header>
+<main><div id="qaApp"><p style="text-align:center;color:var(--muted-foreground);padding:40px 0">جاري التحميل…</p></div></main>
+
+<div id="askOv" class="modal-ov" hidden><div class="modal" role="dialog" aria-modal="true" aria-labelledby="aTitle">
+  <div class="modal-h"><h2 id="aTitle">اسأل محامي مجاناً</h2><button type="button" class="modal-x" id="aX" aria-label="إغلاق">×</button></div>
+  <div class="modal-b">
+    <label class="f-l" for="aT">عنوان السؤال</label><input id="aT" class="f-i" maxlength="140" placeholder="مثال: هل يحق للمالك إخلائي من شقة الإيجار؟">
+    <label class="f-l" for="aB">تفاصيل السؤال</label><textarea id="aB" class="f-i" rows="5" maxlength="1500" placeholder="اشرح الموقف باختصار: إيه اللي حصل، ومين الأطراف، وعايز تعرف إيه بالظبط؟"></textarea>
+    <div class="qa-cnt"><span id="aN">0</span>/1500</div>
+    <div class="cs-fields" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div><label class="f-l" for="aC">نوع المسألة</label><select id="aC" class="f-i"></select></div>
+      <div><label class="f-l" for="aG">المحافظة (اختياري)</label><select id="aG" class="f-i"><option value="">—</option></select></div>
+    </div>
+    <label class="f-l" for="aNm">اسمك الأول (اختياري)</label><input id="aNm" class="f-i" maxlength="30" placeholder="ممكن تسيبه فاضي">
+    <label style="display:flex;gap:8px;align-items:flex-start;margin-top:12px;font-size:12.5px;line-height:1.8"><input type="checkbox" id="aOk" style="margin-top:6px"><span>فاهم إن السؤال هيظهر للعامة على الموقع، وإن إجابات المحامين هنا معلومات قانونية عامة وليست استشارة خاصة بحالتي. ومش هكتب أسماء حقيقية ولا أرقام تليفون.</span></label>
+    <div class="qa-err" id="aE" role="alert"></div>
+  </div>
+  <div class="modal-f"><button id="aGo" type="button" class="soc-btn primary" disabled>انشر السؤال</button></div>
+</div></div>
+
+<script src="js/social.js"></script>
+<script>
+(async () => {
+  const $ = id => document.getElementById(id), S = window.Social, esc = S.esc;
+  S.mountNav($('navSlot'));
+  const CATS = { rent: 'إيجارات وعقارات', labor: 'عمالي', criminal: 'جنائي', family: 'أحوال شخصية', contracts: 'عقود وتحكيم', commercial: 'تجاري وشركات', other: 'قضايا متنوعة' };
+  const GOVS = ['القاهرة','الجيزة','الإسكندرية','القليوبية','الشرقية','الدقهلية','الغربية','المنوفية','البحيرة','كفر الشيخ','دمياط','بورسعيد','الإسماعيلية','السويس','الفيوم','بني سويف','المنيا','أسيوط','سوهاج','قنا','الأقصر','أسوان','البحر الأحمر','الوادي الجديد','مطروح','شمال سيناء','جنوب سيناء'];
+  const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  const rpc = (fn, json) => S.call('/rest/v1/rpc/' + fn, { method: 'POST', json: json || {} });
+  const pre = window.__SEO || {}, qs = new URLSearchParams(location.search);
+  const qid = [pre.q, qs.get('id')].find(v => v && UUID.test(v)) || null;
+  let cat = [pre.cat, qs.get('c')].find(v => v && CATS[v]) || '';
+  const html = s => esc(s);
+  const nl = s => esc(s).replace(/\n/g, '<br>');
+  const ERR = { qa_contact_info: 'ممنوع كتابة أرقام تليفون أو روابط أو حسابات تواصل. اوصف المشكلة بس.', qa_rate: 'وصلت للحد المسموح حالياً. جرّب كمان شوية (الحد 3 أسئلة في اليوم).', qa_bad_title: 'العنوان لازم يكون من 10 لـ 140 حرف.', qa_bad_body: 'التفاصيل لازم تكون من 20 لـ 1500 حرف.', qa_bad_category: 'اختار نوع المسألة.', qa_not_verified: 'الإجابة متاحة للمحامين الموثّقين بس.', qa_already: 'أنت جاوبت على السؤال ده قبل كده.', qa_bad_answer: 'الإجابة لازم تكون من 30 لـ 3000 حرف.', qa_gone: 'السؤال ده مش متاح.' };
+  const errMsg = e => { const m = String((e && e.message) || ''); const k = Object.keys(ERR).find(x => m.includes(x)); return k ? ERR[k] : S.friendly(e); };
+
+  // ---------- الأسئلة ----------
+  const card = q => `<a class="qa-card" href="/qa/${esc(q.id)}"><h2>${html(q.title)}</h2><p>${html(q.excerpt)}${q.excerpt && q.excerpt.length >= 180 ? '…' : ''}</p>
+    <div class="qa-meta"><span class="qa-tag">${html(CATS[q.category] || '')}</span>${q.city ? `<span>${html(q.city)}</span>` : ''}<span class="qa-ans${q.answers_count ? '' : ' zero'}">${q.answers_count ? q.answers_count + ' إجابة' : 'مستني إجابة'}</span><span>${html(S.ago(q.created_at))}</span></div></a>`;
+
+  async function viewList() {
+    let off = 0, term = '', unans = false, busy = false;
+    const chips = [`<a href="/qa"${cat ? '' : ' class="on"'}>الكل</a>`].concat(Object.keys(CATS).map(k => `<a href="/qa/c/${k}"${cat === k ? ' class="on"' : ''}>${esc(CATS[k])}</a>`)).join('');
+    $('qaApp').innerHTML = `<section class="qa-hero"><h1>اسأل محامي ⚖️</h1><p>اكتب سؤالك القانوني مجاناً ومن غير تسجيل، وهتلاقي إجابة من محامين موثّقين.</p><button type="button" class="qa-go" id="qaGo">+ اسأل سؤالك</button></section>
+      <nav class="qa-chips" aria-label="التصنيفات">${chips}</nav>
+      <div class="qa-tools"><input id="qaS" type="search" maxlength="60" placeholder="دوّر في الأسئلة…" aria-label="بحث"><label><input type="checkbox" id="qaU"> مستنية إجابة بس</label></div>
+      <div id="qaList" aria-live="polite"></div><div style="text-align:center"><button type="button" class="soc-btn" id="qaMore" hidden>عرض المزيد</button></div>
+      <div class="qa-note">الإجابات هنا معلومات قانونية عامة من محامين، ومش بتغني عن استشارة متخصصة في حالتك. لو محتاج رد مفصّل، <a href="/consult.html"><b>استشر محامي أونلاين دلوقتي</b></a>.</div>`;
+    const load = async reset => {
+      if (busy) return; busy = true;
+      if (reset) { off = 0; $('qaList').innerHTML = ''; }
+      try {
+        const rows = await rpc('qa_list', { p_category: cat || null, p_q: term || null, p_unanswered: unans, p_limit: 20, p_offset: off });
+        if (reset && !rows.length) $('qaList').innerHTML = `<div class="qa-empty">مفيش أسئلة هنا لسه. <b>كن أول واحد يسأل!</b></div>`;
+        else $('qaList').insertAdjacentHTML('beforeend', rows.map(card).join(''));
+        off += rows.length; $('qaMore').hidden = rows.length < 20;
+      } catch (e) { $('qaList').innerHTML = `<div class="qa-empty">حصل خطأ في التحميل. حدّث الصفحة.</div>`; }
+      busy = false;
+    };
+    let t; $('qaS').addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => { term = $('qaS').value.trim(); load(true); }, 350); });
+    $('qaU').addEventListener('change', () => { unans = $('qaU').checked; load(true); });
+    $('qaMore').onclick = () => load(false);
+    $('qaGo').onclick = openAsk;
+    await load(true);
+    if (qs.get('ask') === '1') openAsk();
+  }
+
+  // ---------- سؤال واحد ----------
+  async function viewQuestion(id) {
+    let q = null;
+    try { q = await rpc('qa_get', { p_id: id }); } catch {}
+    if (!q) { $('qaApp').innerHTML = `<div class="qa-empty"><b>السؤال ده مش متاح.</b><p><a href="/qa">شوف باقي الأسئلة</a></p></div>`; return; }
+    document.title = q.title + ' | Legano';
+    const ans = (q.answers || []).map(a => {
+      const l = a.lawyer || {};
+      return `<article class="qa-a" id="a-${esc(a.id)}"><a class="qa-lw" href="/lawyer/${esc(l.id)}">${S.avatar(l)}<span><b>${html(l.display_name)}${l.verified ? S.badge() : ''}</b><small>${html(l.city || '')}${l.rating_count ? ` • ★ ${Number(l.rating_avg).toFixed(1)} (${l.rating_count})` : ''}${a.created_at ? ' • ' + html(S.ago(a.created_at)) : ''}</small></span></a>
+        <div class="qa-body">${nl(a.body)}</div>
+        <div class="qa-cta">${l.online ? `<a class="soc-btn primary" href="/consult.html?l=${esc(l.id)}">⚡ استشير الأستاذ دلوقتي (${S.num(l.minutes)} د - ${S.num(l.price)} ج)</a>` : ''}<a class="soc-btn" href="/lawyer/${esc(l.id)}">شوف البروفايل</a></div>
+        <button type="button" class="qa-rep" data-rep="a" data-id="${esc(a.id)}">إبلاغ عن الإجابة</button></article>`;
+    }).join('');
+    const canAnswer = !!S.me();
+    $('qaApp').innerHTML = `<div class="qa-crumb"><a href="/qa">اسأل محامي</a> › <a href="/qa/c/${esc(q.category)}">${html(CATS[q.category] || '')}</a></div>
+      <article class="qa-q"><h1>${html(q.title)}</h1><div class="qa-body">${nl(q.body)}</div>
+        <div class="qa-meta"><span class="qa-tag">${html(CATS[q.category] || '')}</span>${q.city ? `<span>${html(q.city)}</span>` : ''}<span>${html(q.asker_name || 'زائر')}</span><span>${html(S.ago(q.created_at))}</span></div>
+        <button type="button" class="qa-rep" data-rep="q" data-id="${esc(q.id)}">إبلاغ عن السؤال</button></article>
+      <h2 class="qa-h2">${q.answers_count ? q.answers_count + ' إجابة من محامين' : 'لسه مفيش إجابات'}</h2>
+      ${ans || `<div class="qa-empty">السؤال ده مستني إجابة محامي. تقدر كمان <a href="/consult.html"><b>تستشير محامي أونلاين دلوقتي</b></a> وتاخد رد مباشر.</div>`}
+      ${canAnswer ? `<section class="qa-q" style="margin-top:16px"><h2 class="qa-h2" style="margin-top:0">جاوب على السؤال (للمحامين الموثّقين)</h2><textarea id="rA" class="f-i" rows="6" maxlength="3000" placeholder="اكتب معلومة قانونية عامة ومفيدة. ممنوع أرقام تليفون أو روابط."></textarea><div class="qa-cnt"><span id="rN">0</span>/3000</div><div class="qa-err" id="rE" role="alert"></div><button type="button" class="soc-btn primary" id="rGo" disabled>انشر إجابتي</button></section>`
+        : `<div class="qa-note">أنت محامي؟ <a href="/dashboard.html"><b>سجّل دخول</b></a> وجاوب على الأسئلة، وده بيبني سمعتك ويجيبلك عملاء.</div>`}
+      <div class="qa-note">الإجابات هنا معلومات قانونية عامة، مش استشارة خاصة بحالتك ولا بتنشئ علاقة محامي وموكل. <a href="/qa?ask=1"><b>اسأل سؤالك أنت كمان</b></a>.</div>`;
+    const ra = $('rA');
+    if (ra) {
+      const chk = () => { $('rN').textContent = ra.value.length; $('rGo').disabled = ra.value.trim().length < 30; };
+      ra.addEventListener('input', chk);
+      $('rGo').onclick = async () => {
+        $('rGo').disabled = true; $('rE').textContent = '';
+        try { await rpc('qa_answer', { p_question: id, p_body: ra.value.trim() }); S.toast('اتنشرت إجابتك ✅'); await viewQuestion(id); }
+        catch (e) { $('rE').textContent = errMsg(e); chk(); }
+      };
+    }
+  }
+
+  document.addEventListener('click', async e => {
+    const b = e.target.closest('[data-rep]'); if (!b) return;
+    if (!confirm('تبلّغ عن المحتوى ده كمحتوى مخالف أو سبام؟')) return;
+    try { await rpc('qa_report', { p_kind: b.dataset.rep, p_id: b.dataset.id, p_device: S.deviceId(), p_reason: null }); b.textContent = 'تم الإبلاغ، شكراً'; b.disabled = true; } catch { S.toast('حصل خطأ، جرّب تاني'); }
+  });
+
+  // ---------- نموذج السؤال ----------
+  $('aC').innerHTML = Object.keys(CATS).map(k => `<option value="${k}">${esc(CATS[k])}</option>`).join('');
+  $('aG').insertAdjacentHTML('beforeend', GOVS.map(g => `<option>${esc(g)}</option>`).join(''));
+  const aChk = () => { $('aN').textContent = $('aB').value.length; $('aGo').disabled = !($('aT').value.trim().length >= 10 && $('aB').value.trim().length >= 20 && $('aOk').checked); };
+  ['aT', 'aB', 'aOk'].forEach(i => $(i).addEventListener('input', aChk)); $('aOk').addEventListener('change', aChk);
+  function openAsk() { $('askOv').hidden = false; if (cat) $('aC').value = cat; $('aT').focus(); }
+  $('aX').onclick = () => { $('askOv').hidden = true; };
+  $('askOv').addEventListener('mousedown', e => { if (e.target === $('askOv')) $('askOv').hidden = true; });
+  $('aGo').onclick = async () => {
+    $('aGo').disabled = true; $('aE').textContent = '';
+    try {
+      const id = await rpc('qa_ask', { p_title: $('aT').value.trim(), p_body: $('aB').value.trim(), p_category: $('aC').value, p_city: $('aG').value || null, p_name: $('aNm').value.trim() || null, p_device: S.deviceId() });
+      location.href = '/qa/' + (typeof id === 'string' ? id : '');
+    } catch (e) { $('aE').textContent = errMsg(e); aChk(); }
+  };
+
+  if (qid) await viewQuestion(qid); else await viewList();
+})();
+</script>
+</body>
+</html>

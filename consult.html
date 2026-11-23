@@ -60,7 +60,12 @@
       <button type="button" class="soc-btn primary" data-a="ask">اطلب استشارة دلوقتي</button></article>`).join('')
       : '<div class="empty" style="grid-column:1/-1">مفيش محامي أونلاين دلوقتي. الصفحة بتتحدّث لوحدها، ارجع بعد شوية.</div>';
   }
-  async function load() { try { lawyers = await C.online(); } catch { lawyers = []; } render(); }
+  async function load() {
+    try { lawyers = await C.online(); } catch { lawyers = []; } render();
+    // فتح طلب الاستشارة مباشرة لمحامي معيّن (من صفحات «اسأل محامي»)
+    const pl = new URLSearchParams(location.search).get('l');
+    if (pl && /^[0-9a-f-]{36}$/i.test(pl)) { const b = document.querySelector('.cs-card[data-id="' + pl + '"] [data-a=ask]'); if (b) b.click(); }
+  }
   async function resume() {
     const t = LS.get(); if (!t || !t.t) return;
     try {

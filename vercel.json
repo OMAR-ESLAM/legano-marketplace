@@ -27,6 +27,18 @@
       "destination": "/api/seo?r=lawyer&id=:id"
     },
     {
+      "source": "/qa",
+      "destination": "/api/seo?r=qa_list"
+    },
+    {
+      "source": "/qa/c/:cat",
+      "destination": "/api/seo?r=qa_list&cat=:cat"
+    },
+    {
+      "source": "/qa/:id",
+      "destination": "/api/seo?r=question&id=:id"
+    },
+    {
       "source": "/lawyers",
       "destination": "/api/seo?r=list"
     },
