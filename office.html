@@ -47,6 +47,23 @@
   #door.open .plate { opacity: 0; transform: scale(.9); }
   #door.gone { display: none; }
   .skip { position: absolute; z-index: 3; bottom: 26px; left: 0; right: 0; text-align: center; font-size: 12.5px; color: #94a3b8; font-weight: 700; }
+  .pill { fill: rgba(11,18,32,.72); stroke: rgba(252,211,77,.35); stroke-width: .8; pointer-events: none; }
+  .lbl { stroke: none !important; font-size: 11px; }
+  #sheet { position: fixed; inset: 0; z-index: 90; visibility: hidden; } #sheet.on { visibility: visible; }
+  #sheet .ov { position: absolute; inset: 0; background: rgba(5,9,18,.6); opacity: 0; transition: opacity .25s; } #sheet.on .ov { opacity: 1; }
+  #sheet .pn { position: absolute; left: 0; right: 0; bottom: 0; margin: 0 auto; max-width: 560px; max-height: 82vh; display: flex; flex-direction: column; border-radius: 22px 22px 0 0; background: #fff; color: #1E293B; transform: translateY(105%); transition: transform .32s cubic-bezier(.2,.9,.3,1); box-shadow: 0 -12px 40px rgba(0,0,0,.4); }
+  #sheet.on .pn { transform: none; }
+  .sh-h { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 18px 10px; border-bottom: 1px solid #E2E8F0; } .sh-h h2 { margin: 0; font-size: 1.1rem; font-weight: 900; }
+  .sh-x { border: 0; background: #EEF2F7; width: 34px; height: 34px; border-radius: 50%; font-size: 20px; line-height: 1; cursor: pointer; color: #334155; }
+  #sBody { padding: 12px 18px 8px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  .sh-f { padding: 10px 18px calc(14px + env(safe-area-inset-bottom)); border-top: 1px solid #E2E8F0; } .sh-f a { display: block; text-align: center; padding: 11px; border-radius: 12px; background: #0F172A; color: #fff; font-weight: 800; text-decoration: none; font-size: 14px; }
+  .sh-r { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #EEF2F7; } .sh-r:last-child { border: 0; }
+  .sh-r b { display: block; font-size: 14px; font-weight: 800; } .sh-r small { display: block; color: #64748B; font-size: 12px; line-height: 1.6; } .sh-r .am { font-weight: 900; color: #166534; white-space: nowrap; font-size: 13px; }
+  .sh-e { padding: 24px 6px; text-align: center; color: #64748B; font-size: 13.5px; line-height: 1.9; }
+  .sh-n { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 4px 0 10px; } .sh-n div { background: #F1F5F9; border-radius: 12px; padding: 10px 12px; } .sh-n small { display: block; color: #64748B; font-size: 12px; } .sh-n b { font-size: 1.25rem; font-weight: 900; }
+  .sh-b { border: 0; border-radius: 10px; padding: 8px 14px; font: inherit; font-size: 13px; font-weight: 800; cursor: pointer; background: #0F172A; color: #fff; } .sh-b.g { background: #EEF2F7; color: #334155; } .sh-b.ok { background: #16a34a; }
+  .sh-sw { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; margin-bottom: 8px; border-radius: 12px; background: #F1F5F9; font-weight: 800; font-size: 13.5px; }
+  .sh-sw input { width: 22px; height: 22px; accent-color: #16a34a; }
   @media (prefers-reduced-motion: reduce) { #door .pn, #door .plate { transition-duration: .01s; } .ring-phone.on, .glow, .dust circle, .chip.on i { animation: none; } }
 </style>
 </head>
@@ -99,16 +116,15 @@
         <rect x="124" y="494" width="12" height="42" fill="#4c2d14"/><rect x="348" y="494" width="12" height="42" fill="#4c2d14"/>
         <rect x="266" y="440" width="70" height="20" rx="4" fill="#fcd34d" opacity=".9"/><text id="plaque" x="301" y="454.5" text-anchor="middle" font-family="Cairo" font-weight="900" font-size="10.5" fill="#3a2203">أ. محامي</text>
 
-        <ellipse cx="170" cy="372" rx="70" ry="46" fill="url(#gLamp)" class="glow" id="lampGlow" opacity="0"/>
-        <g><rect x="128" y="372" width="4" height="14" fill="#1e293b"/><rect x="120" y="383" width="20" height="4" rx="2" fill="#1e293b"/><path d="M104 360 L140 358 L132 372 L112 372 Z" fill="#14532d"/></g>
+        <ellipse cx="225" cy="372" rx="110" ry="50" fill="url(#gLamp)" class="glow" id="lampGlow" opacity="0"/>
 
-        <a class="hs" href="doc-orders.html" id="hDocs" aria-label="طلبات المستندات"><g class="lift"><rect x="140" y="366" width="52" height="20" rx="3" fill="#475569"/><rect x="144" y="354" width="44" height="14" rx="1" fill="#fffbeb" transform="rotate(-3 166 361)"/><rect x="146" y="346" width="42" height="14" rx="1" fill="#e0f2fe" transform="rotate(2 167 353)"/><rect x="150" y="338" width="38" height="12" rx="1" fill="#fffbeb"/></g><rect class="ring" x="136" y="332" width="60" height="58" rx="6"/><text class="lbl" x="166" y="410">الطلبات</text><g transform="translate(190 340)"><g class="bd" id="bDocs"><circle r="11"/><text y="4"></text></g></g></a>
+        <a class="hs" transform="translate(-16 0)" href="doc-orders.html" id="hDocs" aria-label="طلبات المستندات"><g class="lift"><rect x="140" y="366" width="52" height="20" rx="3" fill="#475569"/><rect x="144" y="354" width="44" height="14" rx="1" fill="#fffbeb" transform="rotate(-3 166 361)"/><rect x="146" y="346" width="42" height="14" rx="1" fill="#e0f2fe" transform="rotate(2 167 353)"/><rect x="150" y="338" width="38" height="12" rx="1" fill="#fffbeb"/></g><rect class="ring" x="136" y="332" width="60" height="58" rx="6"/><text class="lbl" x="166" y="410">الطلبات</text><g transform="translate(190 340)"><g class="bd" id="bDocs"><circle r="11"/><text y="4"></text></g></g></a>
 
-        <a class="hs" href="feed.html" id="hFeed" aria-label="المنشورات"><g class="lift"><path d="M206 386 L206 356 Q206 350 212 350 L262 350 Q268 350 268 356 L268 386 Z" fill="#cbd5e1"/><rect x="211" y="355" width="52" height="27" rx="2" fill="#0f172a"/><rect x="216" y="361" width="30" height="3" rx="1.5" fill="#38bdf8"/><rect x="216" y="368" width="42" height="3" rx="1.5" fill="#64748b"/><rect x="216" y="374" width="24" height="3" rx="1.5" fill="#64748b"/><rect x="198" y="386" width="78" height="5" rx="2" fill="#94a3b8"/></g><rect class="ring" x="194" y="344" width="86" height="52" rx="6"/><text class="lbl" x="237" y="410">المنشورات</text></a>
+        <a class="hs" transform="translate(-28 0)" href="feed.html" id="hFeed" aria-label="المنشورات"><g class="lift"><path d="M206 386 L206 356 Q206 350 212 350 L262 350 Q268 350 268 356 L268 386 Z" fill="#cbd5e1"/><rect x="211" y="355" width="52" height="27" rx="2" fill="#0f172a"/><rect x="216" y="361" width="30" height="3" rx="1.5" fill="#38bdf8"/><rect x="216" y="368" width="42" height="3" rx="1.5" fill="#64748b"/><rect x="216" y="374" width="24" height="3" rx="1.5" fill="#64748b"/><rect x="198" y="386" width="78" height="5" rx="2" fill="#94a3b8"/></g><rect class="ring" x="194" y="344" width="86" height="52" rx="6"/><text class="lbl" x="237" y="410">المنشورات</text></a>
 
-        <a class="hs" href="calendar.html" id="hCal" aria-label="المفكرة"><g class="lift"><rect x="284" y="352" width="34" height="34" rx="3" fill="#fffbeb"/><rect x="284" y="352" width="34" height="10" rx="3" fill="#ef4444"/><text id="calD" x="301" y="379" text-anchor="middle" font-family="Cairo" font-weight="900" font-size="15" fill="#1e293b">1</text></g><rect class="ring" x="279" y="347" width="44" height="44" rx="6"/><text class="lbl" x="291" y="410">المفكرة</text><g transform="translate(318 354)"><g class="bd" id="bCal"><circle r="11"/><text y="4"></text></g></g></a>
+        <a class="hs" transform="translate(-27 0)" href="calendar.html" id="hCal" aria-label="المفكرة"><g class="lift"><rect x="284" y="352" width="34" height="34" rx="3" fill="#fffbeb"/><rect x="284" y="352" width="34" height="10" rx="3" fill="#ef4444"/><text id="calD" x="301" y="379" text-anchor="middle" font-family="Cairo" font-weight="900" font-size="15" fill="#1e293b">1</text></g><rect class="ring" x="279" y="347" width="44" height="44" rx="6"/><text class="lbl" x="301" y="410">المفكرة</text><g transform="translate(318 354)"><g class="bd" id="bCal"><circle r="11"/><text y="4"></text></g></g></a>
 
-        <a class="hs" href="consultations.html" id="hPhone" aria-label="الاستشارات"><g class="lift"><g class="ring-phone" id="phone"><rect x="326" y="362" width="34" height="24" rx="6" fill="#0f172a"/><rect x="320" y="356" width="46" height="9" rx="4.5" fill="#1e293b"/><circle cx="343" cy="376" r="5" fill="#334155"/><circle id="phLed" cx="357" cy="369" r="2.4" fill="#64748b"/></g></g><rect class="ring" x="316" y="350" width="54" height="42" rx="6"/><text class="lbl" x="349" y="410">الاستشارات</text><g transform="translate(364 352)"><g class="bd" id="bPhone"><circle r="11"/><text y="4"></text></g></g></a>
+        <a class="hs" transform="translate(-4 0)" href="consultations.html" id="hPhone" aria-label="الاستشارات"><g class="lift"><g class="ring-phone" id="phone"><rect x="326" y="362" width="34" height="24" rx="6" fill="#0f172a"/><rect x="320" y="356" width="46" height="9" rx="4.5" fill="#1e293b"/><circle cx="343" cy="376" r="5" fill="#334155"/><circle id="phLed" cx="357" cy="369" r="2.4" fill="#64748b"/></g></g><rect class="ring" x="316" y="350" width="54" height="42" rx="6"/><text class="lbl" x="343" y="410">الاستشارات</text><g transform="translate(364 352)"><g class="bd" id="bPhone"><circle r="11"/><text y="4"></text></g></g></a>
 
         <a class="hs" href="notifications.html" id="hBell" aria-label="الإشعارات"><g class="lift"><ellipse cx="236" cy="470" rx="16" ry="4" fill="#00000040"/><path d="M222 468 Q222 452 236 452 Q250 452 250 468 Z" fill="#fcd34d" stroke="#b7791f" stroke-width="1.2"/><circle cx="236" cy="449" r="3" fill="#b7791f"/></g><rect class="ring" x="216" y="440" width="40" height="36" rx="6"/><text class="lbl" x="236" y="492">الجرس</text><g transform="translate(252 444)"><g class="bd" id="bBell"><circle r="11"/><text y="4"></text></g></g></a>
 
@@ -123,6 +139,7 @@
     <div class="status" id="status"></div>
   </div>
 </main>
+<div id="sheet" role="dialog" aria-modal="true" aria-labelledby="sTitle"><div class="ov" id="sOv"></div><div class="pn"><div class="sh-h"><h2 id="sTitle"></h2><button class="sh-x" id="sX" type="button" aria-label="إغلاق">×</button></div><div id="sBody"></div><div class="sh-f" id="sF"><a id="sLink" href="#">افتح الصفحة كاملة</a></div></div></div>
 <div id="door" aria-live="polite"><div class="pn l"></div><div class="pn r"></div><div class="plate"><small>مكتب</small><b id="doorName">الأستاذ</b></div><div class="skip">اضغط في أي مكان للدخول</div></div>
 <script src="js/social.js"></script>
 <script>
@@ -145,7 +162,7 @@
   $('calD').textContent = S.num(new Date().getDate());
 
   const setBadge = (id, n) => { const g = $(id); if (!g) return; g.querySelector('text').textContent = n > 99 ? '99+' : S.num(n); g.classList.toggle('on', n > 0); };
-  const status = [];
+  const D = {}, status = [];
   const chip = (txt, on, href) => `<${href ? 'a href="' + href + '"' : 'span'} class="chip${on ? ' on' : ''}"><i></i>${esc(txt)}</${href ? 'a' : 'span'}>`;
 
   // الاسم
@@ -153,7 +170,7 @@
   try {
     const a = (await S.call(`/rest/v1/public_lawyers?select=id,display_name,verified&id=eq.${S.me()}`))[0];
     if (a) {
-      const nm = (a.display_name || '').trim(), f = nm.replace(/^(أ\.?|د\.?|المستشار)\s*/, '').trim().split(/\s+/)[0] || '';
+      D.me = a; const nm = (a.display_name || '').trim(), f = nm.replace(/^(أ\.?|د\.?|المستشار)\s*/, '').trim().split(/\s+/)[0] || '';
       first = f; $('certName').textContent = nm.length > 20 ? nm.slice(0, 19) + '…' : nm; $('certSub').textContent = a.verified ? 'محامي موثّق ✓' : 'Legano';
       $('plaque').textContent = 'أ. ' + (f || 'محامي'); $('hProfile').setAttribute('href', '/lawyer/' + a.id);
     }
@@ -168,20 +185,60 @@
 
   // البيانات الحية (كل واحدة لوحدها علشان لو فشلت ما توقفش الباقي)
   const todayISO = (() => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); })();
+
+  // ---------- الأدراج: كل حاجة بتتفتح هنا في المكتب من غير ما تسيبه ----------
+  const sheet = $('sheet'), sBody = $('sBody'), when = d => d ? new Date(d + (d.length === 10 ? 'T00:00:00' : '')).toLocaleDateString('ar-EG', { weekday: 'long', day: 'numeric', month: 'long' }) : '';
+  const rpcc = (fn, json) => S.call('/rest/v1/rpc/' + fn, { method: 'POST', json: json || {} });
+  const empty = t => `<div class="sh-e">${t}</div>`;
+  const netOf = r => { const p = Number(r.price) || 0; return p - Math.min(p, p * (Number(r.fee_pct) || 0) / 100 + (Number(r.fee_flat) || 0)); };
+  const NT = (n, d) => { const a = d.authors[n.actor_id], who = a ? esc(a.display_name) : 'محامي', t = id => d.refs[id] ? ' «' + esc(d.refs[id]) + '»' : '', g = id => d.groups[id] ? ' «' + esc(d.groups[id]) + '»' : '';
+    return ({ follow: `${who} بدأ يتابعك.`, like: `${who} تفاعل مع منشورك.`, reply: `${who} رد على تعليقك.`, comment: `${who} علّق على منشورك.`, ref_offer: `${who} قدّم عرض على إنابتك${t(n.referral_id)}.`, invite_verified: `${who} اللي دعيته اتوثّق حسابه.`, ref_accepted: `${who} اختارك تاخد إنابة${t(n.referral_id)}.`, ref_done: `${who} قفل الإنابة${t(n.referral_id)} كمكتملة.`, group_request: `${who} طلب الانضمام لجروب${g(n.group_id) || ' بتاعك'}.`, group_approved: `طلب انضمامك لجروب${g(n.group_id)} اتقبل.`, verified: 'تم توثيق حسابك.' })[n.type] || 'إشعار جديد.'; };
+  const R = {
+    profile: { t: 'شهادتي وبروفايلي', href: () => D.me ? '/lawyer/' + D.me.id : 'dashboard.html?panel=1', f: async () => D.me ? `<div class="sh-n"><div><small>الاسم</small><b style="font-size:1rem">${esc(D.me.display_name)}</b></div><div><small>الحالة</small><b style="font-size:1rem">${D.me.verified ? 'موثّق ✓' : 'لسه ما اتوثّقش'}</b></div></div><p class="sh-e" style="padding-top:4px">ده اللي الموكل بيشوفه لما يفتح بروفايلك. عدّل نبذتك وتخصصاتك من لوحتك علشان تاخد استشارات أكتر.</p>` : empty('مش لاقي بيانات بروفايلك.') },
+    refs: { t: 'لوحة الإنابات', href: () => 'referrals.html', f: async () => { const rs = D.refs || await S.referralStats(); const rows = rs.tasks.map(t => `<div class="sh-r"><div><b>${esc(t.title)}</b><small>اتسندت ليك</small></div></div>`).join(''); return `<div class="sh-n"><div><small>عروض على إناباتك</small><b>${S.num(rs.offers)}</b></div><div><small>إنابات اتسندت ليك</small><b>${S.num(rs.tasks.length)}</b></div></div>${rows || empty('مفيش حاجة جديدة على اللوحة دلوقتي.')}`; } },
+    cases: { t: 'دولاب القضايا', href: () => 'cases.html', f: async () => { const cs = D.cases || (await S.listCases()).filter(c => c.status === 'active'); return cs.length ? cs.slice(0, 10).map(c => { const h = S.nextHearing(c); return `<div class="sh-r"><div><b>${esc(c.title)}</b><small>${esc([c.case_type, c.court, c.client_label].filter(Boolean).join(' • '))}${h ? ' • جلسة ' + esc(when(h)) : ''}</small></div></div>`; }).join('') + (cs.length > 10 ? empty('وفي ' + S.num(cs.length - 10) + ' قضية تانية.') : '') : empty('مفيش قضايا شغّالة. ضيف أول قضية من صفحة القضايا.'); } },
+    cal: { t: 'المفكرة', href: () => 'calendar.html', f: async () => { const cs = D.cases || (await S.listCases()).filter(c => c.status === 'active'), now = todayISO; const L = cs.map(c => ({ c, d: S.nextHearing(c) })).filter(x => x.d && x.d >= now).sort((a, b) => a.d.localeCompare(b.d)).slice(0, 8); return L.length ? L.map(x => `<div class="sh-r"><div><b>${esc(x.c.title)}</b><small>${x.d === now ? 'النهارده' : esc(when(x.d))}</small></div></div>`).join('') : empty('مفيش جلسات جاية متسجّلة.'); } },
+    phone: { t: 'التليفون: الاستشارات', href: () => 'consultations.html', f: async () => {
+      const [cfg, rows] = await Promise.all([C.mySettings().catch(() => D.cfg), C.mine().catch(() => D.rows || [])]); D.cfg = cfg; D.rows = rows;
+      const pend = rows.filter(r => r.status === 'requested' && Date.now() - new Date(r.created_at).getTime() < 15 * 60000), rec = rows.filter(r => !pend.includes(r)).slice(0, 4);
+      return `<label class="sh-sw"><span>${cfg && cfg.enabled ? 'أنت أونلاين وبتستقبل استشارات' : 'أنت أوفلاين'}</span><input type="checkbox" id="phOn" ${cfg && cfg.enabled ? 'checked' : ''} ${cfg ? '' : 'disabled'}></label>` +
+        (pend.length ? pend.map(r => `<div class="sh-r"><div><b>🔔 ${esc(r.client_name)}</b><small>«${esc(r.client_topic)}» • ${S.num(r.minutes)} دقيقة</small><span class="am">صافيك ${S.num(Math.round(netOf(r)))} ج</span></div><div style="display:flex;gap:6px"><button class="sh-b ok" data-acc="${esc(r.id)}" type="button">اقبل</button><button class="sh-b g" data-rej="${esc(r.id)}" type="button">رفض</button></div></div>`).join('') : empty('مفيش موكل بيرنّ عليك دلوقتي.')) +
+        (rec.length ? '<p style="margin:12px 0 2px;font-size:12px;color:#64748B;font-weight:800">آخر استشاراتك</p>' + rec.map(r => `<div class="sh-r"><div><b>${esc(r.client_name)}</b><small>${esc(C.ST[r.status] || r.status)}</small></div></div>`).join('') : ''); },
+      b: () => { const on = $('phOn'); if (on) on.onchange = async () => { on.disabled = true; try { await C.saveSettings({ enabled: on.checked, price: D.cfg.price, minutes: D.cfg.minutes }); D.cfg.enabled = on.checked; $('phLed').setAttribute('fill', on.checked ? '#22c55e' : '#64748b'); S.toast(on.checked ? 'أنت دلوقتي أونلاين' : 'بقيت أوفلاين'); open('phone'); } catch (e) { on.checked = !on.checked; S.toast(S.friendly(e)); } on.disabled = false; };
+        sBody.querySelectorAll('[data-acc]').forEach(b => b.onclick = async () => { b.disabled = true; try { await C.respond(b.dataset.acc, true); location.href = 'room.html?c=' + b.dataset.acc; } catch (e) { S.toast(S.friendly(e)); b.disabled = false; } });
+        sBody.querySelectorAll('[data-rej]').forEach(b => b.onclick = async () => { b.disabled = true; try { await C.respond(b.dataset.rej, false); S.toast('اترفض الطلب'); open('phone'); } catch (e) { S.toast(S.friendly(e)); b.disabled = false; } }); } },
+    docs: { t: 'صينية طلبات المستندات', href: () => 'doc-orders.html', f: async () => { const d = await rpcc('doc_board'), o = d.orders || []; return `<p class="sh-e" style="padding:0 0 6px;text-align:start">شغّال عليك ${S.num(d.active)} من ${S.num(d.max_active)}.</p>` + (o.length ? o.map(x => `<div class="sh-r"><div><b>${esc(x.title)}</b><small>تسليم خلال ${S.num(x.due_hours)} ساعة</small><span class="am">صافيك ${S.num(x.net)} ج</span></div><button class="sh-b ok" data-doc="${esc(x.id)}" type="button">اقبل</button></div>`).join('') : empty('مفيش طلبات متاحة دلوقتي.')); },
+      b: () => sBody.querySelectorAll('[data-doc]').forEach(b => b.onclick = async () => { b.disabled = true; try { await rpcc('doc_accept', { p_id: b.dataset.doc }); S.toast('اتقبل الطلب. كمّله من صفحة الطلبات'); open('docs'); } catch (e) { S.toast(/doc_taken/.test(e.message) ? 'حد تاني سبقك' : /doc_limit/.test(e.message) ? 'عندك طلبات شغّالة كتير' : S.friendly(e)); b.disabled = false; } }) },
+    feed: { t: 'اللابتوب: المنشورات', href: () => 'feed.html', f: async () => { const d = await S.listPosts({ mode: 'all', limit: 4 }); return d.posts.length ? d.posts.map(p => { const a = d.authors[p.author_id]; return `<div class="sh-r"><div><b>${esc(a ? a.display_name : 'محامي')}</b><small>${esc(String(p.body || '').slice(0, 110))}</small></div></div>`; }).join('') : empty('مفيش منشورات جديدة.'); } },
+    bell: { t: 'الجرس: الإشعارات', href: () => 'notifications.html', f: async () => { const d = await S.listNotifications(), r = d.rows.slice(0, 8); return r.length ? r.map(n => `<div class="sh-r"><div><b style="${n.read ? 'font-weight:600' : ''}">${NT(n, d)}</b><small>${esc(S.ago(n.created_at))}</small></div></div>`).join('') + (r.some(n => !n.read) ? '<div style="padding-top:8px"><button class="sh-b g" id="allRd" type="button">علّم الكل مقروء</button></div>' : '') : empty('مفيش إشعارات لسه.'); },
+      b: () => { const b = $('allRd'); if (b) b.onclick = async () => { try { await S.markAllRead(); setBadge('bBell', 0); S.toast('تم'); open('bell'); } catch (e) { S.toast(S.friendly(e)); } }; } },
+    wallet: { t: 'الخزنة: محفظتك', href: () => 'consultations.html#wallet', f: async () => { const w = await C.wallet(), n = x => S.num(Number(x) || 0); return `<div class="sh-n"><div><small>المتاح للسحب</small><b>${n(w.available)} ج</b></div><div><small>إجمالي أرباحك</small><b>${n(w.total_earned)} ج</b></div></div>${w.on_hold != null ? `<div class="sh-n" style="grid-template-columns:1fr"><div><small>معلّق لحد تأكيد الموكل</small><b>${n(w.on_hold)} ج</b></div></div>` : ''}<p class="sh-e" style="padding-top:4px;text-align:start">طلب السحب من صفحة المحفظة.</p>`; } }
+  };
+  let curK = null;
+  function open(k) { const r = R[k]; if (!r) return; curK = k; $('sTitle').textContent = r.t; $('sLink').href = r.href(); sBody.innerHTML = empty('بحمّل…'); sheet.classList.add('on'); document.body.style.overflow = 'hidden'; const kk = k;
+    Promise.resolve(r.f()).then(h => { if (curK !== kk) return; sBody.innerHTML = h; if (r.b) r.b(); }).catch(e => { if (curK === kk) sBody.innerHTML = empty(esc(S.friendly(e))); }); }
+  const close = () => { sheet.classList.remove('on'); document.body.style.overflow = ''; curK = null; };
+  $('sX').onclick = close; $('sOv').onclick = close; document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+  const MAP = { hProfile: 'profile', hRef: 'refs', hCases: 'cases', hDocs: 'docs', hFeed: 'feed', hCal: 'cal', hPhone: 'phone', hBell: 'bell', hWallet: 'wallet' };
+  Object.keys(MAP).forEach(id => { const a = $(id); a.addEventListener('click', e => { if (e.metaKey || e.ctrlKey || e.shiftKey || e.button) return; e.preventDefault(); open(MAP[id]); }); });
+  // لوحات الأسماء (pills) خلف كل عنوان
+  const pills = () => document.querySelectorAll('#sv .lbl').forEach(t => { if (t.previousSibling && t.previousSibling.classList && t.previousSibling.classList.contains('pill')) t.previousSibling.remove(); if (!t.textContent.trim()) return; const b = t.getBBox(), r = document.createElementNS(NS, 'rect'); r.setAttribute('class', 'pill'); r.setAttribute('x', b.x - 6); r.setAttribute('y', b.y - 1); r.setAttribute('width', b.width + 12); r.setAttribute('height', b.height + 2); r.setAttribute('rx', (b.height + 2) / 2); t.parentNode.insertBefore(r, t); });
+  (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(() => { pills(); setTimeout(pills, 1500); });
+
   const jobs = [
-    async () => { const n = await S.unreadCount(); setBadge('bBell', n); },
-    async () => { const cs = await S.listCases(), act = cs.filter(c => c.status === 'active'); setBadge('bCases', act.length); const td = act.filter(c => S.nextHearing(c) === todayISO).length; setBadge('bCal', td); if (td) status.push(chip(`${S.num(td)} جلسة النهارده`, true, 'calendar.html')); },
-    async () => { const rs = await S.referralStats(), n = rs.offers + rs.tasks.length; setBadge('bRef', n); if (n) status.push(chip(`${S.num(n)} جديد في الإنابات`, true, 'referrals.html')); },
+    async () => { const n = await S.unreadCount(); D.unread = n; setBadge('bBell', n); },
+    async () => { const cs = await S.listCases(), act = cs.filter(c => c.status === 'active'); D.cases = act; setBadge('bCases', act.length); const td = act.filter(c => S.nextHearing(c) === todayISO).length; setBadge('bCal', td); if (td) status.push(chip(`${S.num(td)} جلسة النهارده`, true, 'calendar.html')); },
+    async () => { const rs = await S.referralStats(), n = rs.offers + rs.tasks.length; D.refs = rs; setBadge('bRef', n); if (n) status.push(chip(`${S.num(n)} جديد في الإنابات`, true, 'referrals.html')); },
     async () => { const d = await S.call('/rest/v1/rpc/doc_board', { method: 'POST', json: {} }); const n = (d.orders || []).length; setBadge('bDocs', n); if (n) status.push(chip(`${S.num(n)} طلب مستند متاح`, true, 'doc-orders.html')); },
     async () => {
-      const [cfg, rows] = await Promise.all([C.mySettings().catch(() => null), C.mine().catch(() => [])]);
+      const [cfg, rows] = await Promise.all([C.mySettings().catch(() => null), C.mine().catch(() => [])]); D.cfg = cfg; D.rows = rows;
       const pend = rows.filter(r => r.status === 'requested' && Date.now() - new Date(r.created_at).getTime() < 15 * 60000).length;
       setBadge('bPhone', pend); $('phone').classList.toggle('on', pend > 0);
       $('phLed').setAttribute('fill', cfg && cfg.enabled ? '#22c55e' : '#64748b');
       status.unshift(chip(cfg && cfg.enabled ? 'أونلاين للاستشارات' : 'أوفلاين: فعّل الاستشارات', !!(cfg && cfg.enabled), 'consultations.html'));
       if (pend) status.unshift(chip(`${S.num(pend)} موكل بيرنّ عليك`, true, 'consultations.html'));
     },
-    async () => { const w = await C.wallet(), av = Number(w.available) || 0; $('walletAmt').textContent = S.num(av) + ' ج'; }
+    async () => { const w = await C.wallet(), av = Number(w.available) || 0; $('walletAmt').textContent = S.num(av) + ' ج'; D.wallet = w; setTimeout(pills, 50); }
   ];
   await Promise.allSettled(jobs.map(j => j()));
   $('status').innerHTML = status.join('');
