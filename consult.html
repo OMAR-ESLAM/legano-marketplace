@@ -18,16 +18,37 @@
   .back { display: inline-block; margin-bottom: 12px; font-size: 13px; font-weight: 700; color: var(--gold-soft); text-decoration: none; }
   .warn { padding: 12px 14px; margin-bottom: 14px; background: #FFF8E6; border: 1px solid #F1D48A; color: #7A5200; border-radius: 12px; font-size: 13px; line-height: 1.9; }
   .warn a { color: inherit; font-weight: 800; }
+  .ch { position: relative; overflow: hidden; border-radius: 22px; padding: 22px 18px 18px; margin-bottom: 14px; color: #fff; background: radial-gradient(circle at 100% 0, rgba(183,121,31,.55), transparent 55%), radial-gradient(circle at 0 100%, rgba(37,99,235,.28), transparent 50%), linear-gradient(140deg, #0B1220, #1b2a4a); box-shadow: 0 14px 36px rgba(15,23,42,.18); }
+  .ch-live { display: inline-flex; align-items: center; gap: 8px; padding: 5px 13px; border-radius: 999px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); font-size: 12.5px; font-weight: 800; }
+  .ch-live i { width: 9px; height: 9px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 0 0 rgba(34,197,94,.7); animation: chp 1.8s infinite; } .ch-live.off i { background: #94a3b8; animation: none; }
+  @keyframes chp { 70% { box-shadow: 0 0 0 9px rgba(34,197,94,0); } 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); } }
+  .ch h1 { margin: 12px 0 6px; font-size: 1.65rem; line-height: 1.5; font-weight: 900; } .ch h1 em { font-style: normal; background: linear-gradient(90deg, #fcd34d, #f59e0b); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .ch p { margin: 0; color: #cbd5e1; font-size: .93rem; line-height: 1.9; }
+  .ch-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 16px; }
+  .ch-steps div { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14); border-radius: 14px; padding: 10px 6px; text-align: center; font-size: 12px; font-weight: 800; line-height: 1.5; }
+  .ch-steps b { display: grid; place-items: center; width: 26px; height: 26px; margin: 0 auto 5px; border-radius: 50%; background: linear-gradient(135deg, #fcd34d, #b7791f); color: #1a1205; font-size: 13px; }
+  .tr { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
+  .tr div { display: flex; flex-direction: column; text-align: center; gap: 4px; align-items: center; background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 10px 6px; font-size: 11.5px; font-weight: 800; line-height: 1.5; }
+  .tr span { font-size: 20px; flex: none; }
+  .alt { grid-column: 1 / -1; text-align: center; padding: 26px 16px; background: #fff; border: 1px dashed #cbd5e1; border-radius: 18px; }
+  .alt h3 { margin: 6px 0 4px; font-size: 1.05rem; font-weight: 900; } .alt p { margin: 0 0 14px; color: var(--muted-foreground); font-size: 13.5px; line-height: 1.9; }
+  .alt .row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  @media (prefers-reduced-motion: reduce) { .ch-live i { animation: none; } }
 </style>
 </head>
 <body>
 <header class="top"><a class="logo-text" href="index.html?browse=1">LEGANO</a><div id="navSlot"></div></header>
 <main class="cs-wrap">
-  <div class="cs-test">⚠️ وضع تجريبي: الدفع لسه مش مفعّل، فمفيش أي مبلغ هيتسحب منك.</div>
+  <section class="ch">
+    <span class="ch-live off" id="chLive"><i></i><span id="chLiveT">بندوّر على محامين أونلاين…</span></span>
+    <h1>كلّم محامي <em>دلوقتي</em> وخد رد على حالتك</h1>
+    <p>اختار محامي موثّق من الأونلاين وادخل معاه استشارة فيديو في دقايق، من غير مواعيد ولا مشوار.</p>
+    <div class="ch-steps"><div><b>1</b>اختار المحامي</div><div><b>2</b>اكتب مشكلتك</div><div><b>3</b>ادخل الغرفة</div></div>
+  </section>
+  <div class="tr"><div><span>🔒</span>فلوسك في أمان لحد ما تأكّد</div><div><span>✅</span>محامين موثّقين</div><div><span>↩️</span>فلوسك بترجع لو مردّش</div></div>
+  <div class="cs-test" style="font-size:12.5px">⚠️ وضع تجريبي: الدفع لسه مش مفعّل، فمفيش أي مبلغ هيتسحب منك.</div>
   <div id="acct" class="cs-box" hidden></div>
   <div id="resume" class="cs-box" hidden></div>
-  <h1 class="cs-h">استشارة قانونية فورية</h1>
-  <p class="cs-sub">اختار محامي موثّق أونلاين دلوقتي وادخل معاه استشارة فيديو. الفلوس بتفضل معلّقة ومبتروحش للمحامي إلا لما تأكّد إن الاستشارة تمت. الاستشارة بتتسجّل بموافقتك لضمان حق الطرفين.</p>
   <div id="list" class="cs-grid" aria-live="polite"></div>
 </main>
 <div id="reqOv" class="modal-ov" hidden><div class="modal" role="dialog" aria-modal="true" aria-labelledby="rTitle">
@@ -58,7 +79,8 @@
       <div style="display:flex;gap:6px;flex-wrap:wrap">${S.badges(l)}</div>
       <div class="cs-price"><span>${S.num(l.minutes)} دقيقة</span><b>${S.num(l.price)} ج</b></div>
       <button type="button" class="soc-btn primary" data-a="ask">اطلب استشارة دلوقتي</button></article>`).join('')
-      : '<div class="empty" style="grid-column:1/-1">مفيش محامي أونلاين دلوقتي. الصفحة بتتحدّث لوحدها، ارجع بعد شوية.</div>';
+      : '<div class="alt"><div style="font-size:34px">⏳</div><h3>مفيش محامي أونلاين الدقيقة دي</h3><p>الصفحة بتتحدّث لوحدها وأول ما محامي يفتح هيظهر هنا. في الأثناء تقدر تاخد إجابة مجانية أو تطلب مستند جاهز.</p><div class="row"><a class="soc-btn primary" href="/qa">اسأل محامي مجاناً</a><a class="soc-btn" href="docs.html">مستندات جاهزة</a></div></div>';
+    const lv = $('chLive'); if (lv) { lv.classList.toggle('off', !lawyers.length); $('chLiveT').textContent = lawyers.length ? lawyers.length + (lawyers.length === 1 ? ' محامي أونلاين دلوقتي' : ' محامين أونلاين دلوقتي') : 'مفيش محامي أونلاين حالياً'; }
   }
   async function load() {
     try { lawyers = await C.online(); } catch { lawyers = []; } render();
