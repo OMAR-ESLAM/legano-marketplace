@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#ffffff"><link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>مستندات قانونية جاهزة | Legano</title>
+<meta name="description" content="اطلب عقد أو مستند قانوني جاهز من محامٍ موثّق، وتستلمه PDF خلال 24 ساعة.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Syne:wght@800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="js/social.css">
+<style>
+  :root { color-scheme: light; --background:#F8FAFB; --foreground:#1E293B; --card:#FFFFFF; --border:#E2E8F0; --muted-foreground:#64748B; --secondary:#EEF2F7; --gold:#0F172A; --gold-soft:#92620C; }
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Cairo', sans-serif; background: var(--background); color: var(--foreground); line-height: 1.8; }
+  a { color: inherit; }
+  .logo-text { font-family: 'Syne', sans-serif; font-weight: 800; letter-spacing: 5px; font-size: 18px; text-decoration: none; color: #0F172A; }
+  .top { position: sticky; top: 0; z-index: 50; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; padding: 10px 20px; background: rgba(255,255,255,.92); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
+  #navSlot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  main { max-width: 860px; margin: 0 auto; padding: 18px 16px 90px; }
+  .hero { border-radius: 20px; padding: 22px 20px; color: #fff; background: radial-gradient(circle at 100% 0, rgba(183,121,31,.5), transparent 55%), linear-gradient(135deg, #0B1220, #1b2a4a); }
+  .hero h1 { margin: 0 0 6px; font-size: 1.6rem; font-weight: 900; } .hero p { margin: 0; color: #cbd5e1; font-size: .95rem; }
+  .grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); margin-top: 16px; }
+  .dc { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+  .dc h2 { margin: 0; font-size: 1.05rem; font-weight: 800; } .dc p { margin: 0; color: var(--muted-foreground); font-size: .86rem; flex: 1; }
+  .dc .pr { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--muted-foreground); } .dc .pr b { color: var(--foreground); font-size: 1.15rem; }
+  .box { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-top: 14px; }
+  .box h2 { margin: 0 0 10px; font-size: 1.05rem; font-weight: 900; }
+  .f { margin-bottom: 12px; } .f label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px; } .f label i { color: #b91c1c; font-style: normal; }
+  .f input, .f textarea, .f select { width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 10px; font: inherit; font-size: 14px; background: #fff; }
+  .f textarea { min-height: 84px; resize: vertical; }
+  .err { color: #b91c1c; font-size: 13px; min-height: 20px; font-weight: 700; }
+  .note { font-size: 12.5px; color: var(--muted-foreground); line-height: 1.9; margin-top: 12px; }
+  .tl { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0 2px; } .tl span { padding: 3px 11px; border-radius: 999px; background: var(--secondary); font-size: 12px; font-weight: 700; color: var(--muted-foreground); } .tl span.on { background: var(--gold); color: #fff; } .tl span.done { background: #dcfce7; color: #166534; }
+  .ans { display: grid; grid-template-columns: 1fr 1.6fr; gap: 4px 12px; font-size: 13.5px; } .ans dt { color: var(--muted-foreground); } .ans dd { margin: 0; font-weight: 700; white-space: pre-wrap; word-break: break-word; }
+  .stars button { background: none; border: 0; font-size: 28px; cursor: pointer; color: #cbd5e1; padding: 0 2px; } .stars button.on { color: #f59e0b; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .bad { background: #fef3c7; border: 1px solid #fde68a; border-radius: 12px; padding: 10px 14px; font-size: 13.5px; margin-top: 12px; }
+  .soc-btn.lg { padding: 11px 20px; font-size: 1rem; }
+</style>
+</head>
+<body>
+<header class="top"><a class="logo-text" href="/">LEGANO</a><div id="navSlot"></div></header>
+<main id="app" aria-live="polite"></main>
+
+<script src="js/social.js"></script>
+<script src="js/client.js"></script>
+<script>
+(async () => {
+  const $ = id => document.getElementById(id), S = window.Social, esc = S.esc, CA = window.ClientAuth;
+  S.mountNav($('navSlot'));
+  const rpc = (fn, json) => S.call('/rest/v1/rpc/' + fn, { method: 'POST', json: json || {} });
+  const ERR = { doc_rate: 'وصلت للحد المسموح (5 طلبات في اليوم). جرّب بكرة.', wallet_login: 'سجّل بجوجل الأول علشان تدفع من المحفظة.', wallet_low: 'رصيد المحفظة مش كفاية.', doc_down: 'الخدمة دي مش متاحة حالياً.' };
+  const errMsg = e => { const m = String((e && e.message) || ''); const mm = m.match(/doc_(missing|bad_value|too_long):?(\w+)?/); if (mm) return mm[1] === 'missing' ? 'في بيان مطلوب ناقص: ' + (lab[mm[2]] || mm[2]) : 'القيمة مش صحيحة في خانة: ' + (lab[mm[2]] || mm[2]); const k = Object.keys(ERR).find(x => m.includes(x)); return k ? ERR[k] : S.friendly(e); };
+  let svcs = [], lab = {}, cur = null, bal = null;
+  async function wallet() { if (!CA) return; try { await CA.handleHash(); if (CA.get()) bal = Number((await CA.me()).balance) || 0; } catch {} }
+  function list() {
+    $('app').innerHTML = `<section class="hero"><h1>مستندات قانونية جاهزة 📄</h1><p>اختار المستند، املا البيانات، وادفع. محامٍ موثّق بيجهّزه ويبعتهولك PDF خلال المدة المحددة. لو ما اتسلّمش، فلوسك بترجع.</p></section>
+    <div class="grid">${svcs.map(s => `<article class="dc"><h2>${esc(s.title)}</h2><p>${esc(s.blurb || '')}</p><div class="pr"><span>خلال ${S.num(s.due_hours)} ساعة</span><b>${S.num(s.price)} ج</b></div><button type="button" class="soc-btn primary" data-id="${esc(s.id)}">اطلب المستند</button></article>`).join('') || '<div class="empty" style="grid-column:1/-1">مفيش خدمات متاحة حالياً.</div>'}</div>
+    <p class="note">⚠️ المستندات بتتجهّز من محامٍ حسب البيانات اللي بتدخلها وبتتراجع قبل التسليم. الدفع تجريبي حالياً. لو حالتك معقّدة، <a href="/consult.html"><b>استشر محامي أونلاين</b></a>.</p>`;
+    $('app').querySelectorAll('[data-id]').forEach(b => b.onclick = () => form(svcs.find(s => s.id === b.dataset.id)));
+    history.replaceState(null, '', location.pathname);
+  }
+  function input(f) {
+    const id = 'f_' + f.k, req = f.r ? ' required' : '';
+    if (f.t === 'area') return `<textarea id="${id}" maxlength="1500"${req}></textarea>`;
+    if (f.t === 'num') return `<input id="${id}" inputmode="decimal" maxlength="14"${req}>`;
+    if (f.t === 'date') return `<input id="${id}" type="date"${req}>`;
+    if (f.t === 'sel') return `<select id="${id}"${req}><option value="">اختار…</option>${(f.o || []).map(o => `<option>${esc(o)}</option>`).join('')}</select>`;
+    return `<input id="${id}" maxlength="200"${req}>`;
+  }
+  function form(s) {
+    cur = s; lab = {}; (s.fields || []).forEach(f => lab[f.k] = f.l); window.scrollTo(0, 0);
+    const can = bal !== null && bal >= Number(s.price);
+    $('app').innerHTML = `<a href="#" id="back" class="soc-btn">← كل المستندات</a>
+    <div class="box"><h2>${esc(s.title)} — ${S.num(s.price)} ج</h2><p class="note" style="margin-top:0">${esc(s.blurb || '')} التسليم خلال ${S.num(s.due_hours)} ساعة من قبول المحامي.</p>
+    <div class="f"><label>اسمك <i>*</i></label><input id="cName" maxlength="80"></div>
+    ${(s.fields || []).map(f => `<div class="f"><label for="f_${esc(f.k)}">${esc(f.l)}${f.r ? ' <i>*</i>' : ''}</label>${input(f)}</div>`).join('')}
+    <p class="note">⚠️ ما تكتبش رقم قومي أو بيانات حساسة غير المطلوبة. المحامي ممكن يسألك لو محتاج توضيح.</p>
+    <label class="f" style="display:${can ? 'flex' : 'none'};gap:8px;align-items:center"><input type="checkbox" id="wChk" checked style="width:auto"> ادفع من محفظتي (رصيدي ${S.num(bal)} ج)</label>
+    <label style="display:flex;gap:8px;align-items:flex-start;font-size:12.5px"><input type="checkbox" id="ok" style="margin-top:6px"><span>فاهم إن المستند بيتجهّز من محامٍ حسب بياناتي، وإن الفلوس بتتحوّل للمحامي بعد ما أستلم وأأكّد، وبترجع لو ما اتسلّمش في الميعاد.</span></label>
+    <div class="err" id="err" role="alert"></div>
+    <button type="button" class="soc-btn primary lg" id="go" disabled>ادفع ${S.num(s.price)} ج (تجريبي) وابعت الطلب</button></div>`;
+    $('back').onclick = e => { e.preventDefault(); list(); };
+    $('ok').onchange = () => { $('go').disabled = !$('ok').checked; };
+    $('go').onclick = submit;
+  }
+  async function submit() {
+    const s = cur, name = $('cName').value.trim(), ans = {}; $('err').textContent = '';
+    if (name.length < 2) { $('err').textContent = 'اكتب اسمك.'; return; }
+    for (const f of s.fields || []) { const v = $('f_' + f.k).value.trim(); if (f.r && !v) { $('err').textContent = 'البيان ده مطلوب: ' + f.l; $('f_' + f.k).focus(); return; } if (v) ans[f.k] = v; }
+    $('go').disabled = true;
+    try {
+      const useW = $('wChk').parentElement.style.display !== 'none' && $('wChk').checked;
+      const args = { p_service: s.id, p_name: name, p_answers: ans, p_use_wallet: useW, p_device: S.deviceId() };
+      const r = useW ? await CA.rpc('doc_create', args) : await rpc('doc_create', args);
+      try { const a = JSON.parse(localStorage.getItem('lg_docs') || '[]'); a.unshift({ t: r.token, s: s.title, at: Date.now() }); localStorage.setItem('lg_docs', JSON.stringify(a.slice(0, 20))); } catch {}
+      location.href = '/doc-order.html?t=' + encodeURIComponent(r.token);
+    } catch (e) { $('err').textContent = errMsg(e); $('go').disabled = false; }
+  }
+  try { svcs = (await rpc('doc_services_public')) || []; } catch { svcs = []; }
+  await wallet(); list();
+  try { const a = JSON.parse(localStorage.getItem('lg_docs') || '[]'); if (a.length) $('app').insertAdjacentHTML('beforeend', `<div class="box"><h2>طلباتي السابقة على الجهاز ده</h2>${a.map(x => `<p style="margin:4px 0"><a href="/doc-order.html?t=${encodeURIComponent(x.t)}">${esc(x.s)}</a> <small style="color:var(--muted-foreground)">${new Date(x.at).toLocaleDateString('ar-EG')}</small></p>`).join('')}</div>`); } catch {}
+})();
+</script>
+</body></html>

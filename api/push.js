@@ -1,4 +1,4 @@
-// بيبعت إشعار دفع (Web Push) للمحامي: طلب استشارة جديد ({consultation}) أو سؤال جديد في تخصصه ({question}).
+// بيبعت إشعار دفع (Web Push) للمحامي: طلب استشارة جديد ({consultation}) أو طلب مستند ({doc}) أو سؤال جديد في تخصصه ({question}).
 // بيتنده من قاعدة البيانات (trigger + pg_net) وبيحتاج سر مشترك PUSH_SECRET.
 // متغيرات Vercel المطلوبة: PUSH_SECRET و VAPID_PUBLIC_KEY و VAPID_PRIVATE_KEY (و VAPID_SUBJECT اختياري).
 const crypto = require('crypto');
@@ -18,17 +18,21 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'method' });
   if (!secret || !pub || !priv) return res.status(500).json({ error: 'not_configured' });
   if (!same(req.headers['x-push-secret'], secret)) return res.status(403).json({ error: 'forbidden' });
-  const b = req.body || {}, isQ = typeof b.question === 'string', id = isQ ? b.question : b.consultation;
+  const b = req.body || {}, isQ = typeof b.question === 'string', isD = typeof b.doc === 'string', id = isD ? b.doc : isQ ? b.question : b.consultation;
   if (typeof id !== 'string' || !/^[0-9a-f-]{36}$/i.test(id)) return res.status(400).json({ error: 'bad_id' });
   const webpush = require('web-push');
   webpush.setVapidDetails(process.env.VAPID_SUBJECT || 'mailto:admin@legano.site', pub, priv);
   try {
-    const r = isQ ? await rpc('push_targets_q', { p_secret: secret, p_question: id }) : await rpc('push_targets', { p_secret: secret, p_consultation: id });
+    const r = isD ? await rpc('doc_push_targets', { p_secret: secret, p_order: id }) : isQ ? await rpc('push_targets_q', { p_secret: secret, p_question: id }) : await rpc('push_targets', { p_secret: secret, p_consultation: id });
     if (!r.ok) return res.status(502).json({ error: 'targets' });
     const subs = await r.json();
     let sent = 0, dropped = 0;
     await Promise.all((Array.isArray(subs) ? subs : []).map(async s => {
-      const payload = JSON.stringify(isQ ? {
+      const payload = JSON.stringify(isD ? {
+        title: '📄 طلب مستند جديد: ' + String(s.title || '').slice(0, 50),
+        body: `${Number(s.price) || 0} ج، صافي ربحك ${Number(s.net) || 0} ج. اقبل الطلب الأول`,
+        url: '/doc-orders.html', tag: 'doc-' + s.id, urgent: false
+      } : isQ ? {
         title: '❓ سؤال جديد في تخصصك',
         body: `${CATS[s.category] || ''}: ${String(s.title || '').slice(0, 90)}`,
         url: '/qa/' + s.id, tag: 'qa-' + s.id, urgent: false

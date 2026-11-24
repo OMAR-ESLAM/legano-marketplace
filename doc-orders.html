@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#ffffff"><link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>طلبات المستندات | Legano</title>
+<meta name="description" content="اطلب عقد أو مستند قانوني جاهز من محامٍ موثّق، وتستلمه PDF خلال 24 ساعة.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Syne:wght@800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="js/social.css">
+<style>
+  :root { color-scheme: light; --background:#F8FAFB; --foreground:#1E293B; --card:#FFFFFF; --border:#E2E8F0; --muted-foreground:#64748B; --secondary:#EEF2F7; --gold:#0F172A; --gold-soft:#92620C; }
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Cairo', sans-serif; background: var(--background); color: var(--foreground); line-height: 1.8; }
+  a { color: inherit; }
+  .logo-text { font-family: 'Syne', sans-serif; font-weight: 800; letter-spacing: 5px; font-size: 18px; text-decoration: none; color: #0F172A; }
+  .top { position: sticky; top: 0; z-index: 50; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; padding: 10px 20px; background: rgba(255,255,255,.92); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
+  #navSlot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  main { max-width: 860px; margin: 0 auto; padding: 18px 16px 90px; }
+  .hero { border-radius: 20px; padding: 22px 20px; color: #fff; background: radial-gradient(circle at 100% 0, rgba(183,121,31,.5), transparent 55%), linear-gradient(135deg, #0B1220, #1b2a4a); }
+  .hero h1 { margin: 0 0 6px; font-size: 1.6rem; font-weight: 900; } .hero p { margin: 0; color: #cbd5e1; font-size: .95rem; }
+  .grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); margin-top: 16px; }
+  .dc { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+  .dc h2 { margin: 0; font-size: 1.05rem; font-weight: 800; } .dc p { margin: 0; color: var(--muted-foreground); font-size: .86rem; flex: 1; }
+  .dc .pr { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--muted-foreground); } .dc .pr b { color: var(--foreground); font-size: 1.15rem; }
+  .box { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-top: 14px; }
+  .box h2 { margin: 0 0 10px; font-size: 1.05rem; font-weight: 900; }
+  .f { margin-bottom: 12px; } .f label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px; } .f label i { color: #b91c1c; font-style: normal; }
+  .f input, .f textarea, .f select { width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 10px; font: inherit; font-size: 14px; background: #fff; }
+  .f textarea { min-height: 84px; resize: vertical; }
+  .err { color: #b91c1c; font-size: 13px; min-height: 20px; font-weight: 700; }
+  .note { font-size: 12.5px; color: var(--muted-foreground); line-height: 1.9; margin-top: 12px; }
+  .tl { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0 2px; } .tl span { padding: 3px 11px; border-radius: 999px; background: var(--secondary); font-size: 12px; font-weight: 700; color: var(--muted-foreground); } .tl span.on { background: var(--gold); color: #fff; } .tl span.done { background: #dcfce7; color: #166534; }
+  .ans { display: grid; grid-template-columns: 1fr 1.6fr; gap: 4px 12px; font-size: 13.5px; } .ans dt { color: var(--muted-foreground); } .ans dd { margin: 0; font-weight: 700; white-space: pre-wrap; word-break: break-word; }
+  .stars button { background: none; border: 0; font-size: 28px; cursor: pointer; color: #cbd5e1; padding: 0 2px; } .stars button.on { color: #f59e0b; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .bad { background: #fef3c7; border: 1px solid #fde68a; border-radius: 12px; padding: 10px 14px; font-size: 13.5px; margin-top: 12px; }
+  .soc-btn.lg { padding: 11px 20px; font-size: 1rem; }
+  .pu{border-radius:16px;padding:16px 18px;margin-bottom:14px;color:#fff;border:1px solid rgba(252,211,77,.35);background:linear-gradient(135deg,#0B1220,#1b2a4a 70%,#2a1d07)}
+  .pu h3{font-size:1rem;font-weight:800;margin:0 0 6px}.pu small{color:#cbd5e1;display:block;line-height:1.7}
+  .pu-a{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.pu-st{margin:8px 0;padding-inline-start:20px;line-height:2;color:#e2e8f0}
+  .pu-msg{margin-top:8px;font-size:.85rem;color:#fcd34d}.pu .soc-btn{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.25)}.pu .soc-btn.primary{background:linear-gradient(135deg,#fcd34d,#b7791f);color:#1a1205;border:0;font-weight:800}
+</style>
+</head>
+<body>
+<header class="top"><a class="logo-text" href="/">LEGANO</a><div id="navSlot"></div></header>
+<main id="app" aria-live="polite"></main>
+
+<script src="js/social.js"></script>
+<script src="js/push.js"></script>
+<script>
+(async () => {
+  const $ = id => document.getElementById(id), S = window.Social, esc = S.esc;
+  S.mountNav($('navSlot'));
+  const rpc = (fn, json) => S.call('/rest/v1/rpc/' + fn, { method: 'POST', json: json || {} });
+  const ST = { pending: 'مستني', accepted: 'شغّال عليه', needs_info: 'مستني رد الموكل', delivered: 'اتسلّم، مستني تأكيد', revision: 'مطلوب تعديل', disputed: 'شكوى عند الإدارة', completed: 'تم ✅', refunded: 'اتردّت', expired: 'منتهي', cancelled: 'ملغي' };
+  const ERR = { doc_taken: 'حد تاني سبقك وقبل الطلب.', doc_limit: 'عندك طلبات شغّالة كتير، سلّم واحد الأول.', bad_file: 'الملف لازم يكون PDF وحجمه أقل من 4 ميجا.', bad_status: 'الطلب مش في الحالة دي دلوقتي.', not_verified: 'الخدمة دي للمحامين الموثّقين بس.' };
+  const errMsg = e => { const m = String((e && e.message) || ''); const k = Object.keys(ERR).find(x => m.includes(x)); return k ? ERR[k] : S.friendly(e); };
+  const fmt = d => d ? new Date(d).toLocaleString('ar-EG', { dateStyle: 'medium', timeStyle: 'short' }) : '';
+  if (!S.me()) { $('app').innerHTML = '<div class="empty">الصفحة دي للمحامين. <a href="dashboard.html"><b>سجّل دخول</b></a></div>'; return; }
+  let tab = 'board';
+  async function draw() {
+    $('app').innerHTML = `<section class="hero"><h1>طلبات المستندات 📄</h1><p>اقبل طلب، جهّز المستند، وارفعه PDF. المبلغ بيتحوّل لمحفظتك بعد تأكيد الموكل.</p></section>
+    <div id="pushBox" style="margin-top:14px"></div>
+    <div class="row" style="margin:14px 0"><button class="soc-btn${tab === 'board' ? ' primary' : ''}" data-t="board">طلبات متاحة</button><button class="soc-btn${tab === 'mine' ? ' primary' : ''}" data-t="mine">طلباتي</button></div><div id="body"><div class="empty">بحمّل…</div></div>`;
+    try { if (window.Push) window.Push.mount($('pushBox')); } catch {}
+    $('app').querySelectorAll('[data-t]').forEach(b => b.onclick = () => { tab = b.dataset.t; draw(); });
+    try { tab === 'board' ? await board() : await mine(); } catch (e) { $('body').innerHTML = `<div class="empty">${esc(errMsg(e))}</div>`; }
+  }
+  async function board() {
+    const d = await rpc('doc_board'), o = d.orders || [];
+    $('body').innerHTML = `<p class="note" style="margin:0 0 8px">شغّال عليك دلوقتي ${S.num(d.active)} من ${S.num(d.max_active)}.</p>` + (o.length ? o.map(x => `<article class="dc" style="margin-bottom:10px"><h2>${esc(x.title)}</h2><div class="pr"><span>تسليم خلال ${S.num(x.due_hours)} ساعة • ${esc(S.ago(x.created_at))}</span><b>صافيك ${S.num(x.net)} ج</b></div><button class="soc-btn primary" data-acc="${esc(x.id)}">اقبل الطلب</button></article>`).join('') : '<div class="empty">مفيش طلبات متاحة دلوقتي. فعّل الإشعارات فوق وهنبلغك أول ما يوصل طلب.</div>');
+    $('body').querySelectorAll('[data-acc]').forEach(b => b.onclick = async () => { b.disabled = true; try { await rpc('doc_accept', { p_id: b.dataset.acc }); S.toast('اتقبل الطلب ✅'); detail(b.dataset.acc); } catch (e) { S.toast(errMsg(e)); await board(); } });
+  }
+  async function mine() {
+    const o = await rpc('doc_my_orders');
+    $('body').innerHTML = o.length ? o.map(x => `<article class="dc" style="margin-bottom:10px"><h2>${esc(x.title)} <small style="font-weight:600;color:var(--muted-foreground)">• ${esc(x.client_name)}</small></h2><div class="pr"><span>${esc(ST[x.status] || x.status)}${x.due_at && ['accepted', 'revision', 'needs_info'].includes(x.status) ? ' • الميعاد ' + esc(fmt(x.due_at)) : ''}</span><b>${S.num(x.net)} ج</b></div><button class="soc-btn" data-o="${esc(x.id)}">فتح</button></article>`).join('') : '<div class="empty">مالكش طلبات لسه.</div>';
+    $('body').querySelectorAll('[data-o]').forEach(b => b.onclick = () => detail(b.dataset.o));
+  }
+  async function detail(id) {
+    let o; try { o = await rpc('doc_lawyer_get', { p_id: id }); } catch (e) { S.toast(errMsg(e)); return draw(); }
+    window.scrollTo(0, 0);
+    const ans = (o.fields || []).filter(f => o.answers && o.answers[f.k]).map(f => `<dt>${esc(f.l)}</dt><dd>${esc(o.answers[f.k])}</dd>`).join('');
+    const work = ['accepted', 'revision'].includes(o.status);
+    $('app').innerHTML = `<a href="#" id="bk" class="soc-btn">← رجوع</a><div class="box"><h2>${esc(o.title)} — صافيك ${S.num(o.net)} ج</h2><p style="margin:0 0 8px;font-weight:800">${esc(ST[o.status] || '')}${o.due_at && ['accepted', 'revision', 'needs_info'].includes(o.status) ? ' • سلّم قبل ' + esc(fmt(o.due_at)) : ''}</p>
+      ${o.revision_note ? `<div class="bad">الموكل طلب تعديل: ${esc(o.revision_note)}</div>` : ''}${o.info_request ? `<p class="note">سؤالك للموكل: ${esc(o.info_request)}${o.info_reply ? '<br>رد الموكل: <b>' + esc(o.info_reply) + '</b>' : ''}</p>` : ''}
+      ${o.dispute_reason ? `<div class="bad">شكوى الموكل: ${esc(o.dispute_reason)}</div>` : ''}
+      <dl class="ans"><dt>اسم الموكل</dt><dd>${esc(o.client_name)}</dd>${ans}</dl></div>
+    ${work ? `<div class="box"><h2>سلّم المستند</h2><div class="f"><label>ملف PDF (أقل من 4 ميجا)</label><input type="file" id="fl" accept="application/pdf"></div><div class="f"><label>ملاحظة للموكل (اختياري)</label><textarea id="nt" maxlength="500"></textarea></div><div class="err" id="er" role="alert"></div><button class="soc-btn primary lg" id="dl" type="button">ارفع وسلّم</button>
+      <hr style="border:0;border-top:1px solid var(--border);margin:16px 0"><div class="f"><label>محتاج توضيح من الموكل؟</label><textarea id="q" maxlength="500" placeholder="اكتب سؤالك"></textarea></div><button class="soc-btn" id="ask" type="button">ابعت السؤال</button></div>` : ''}
+    ${(o.files || []).length ? `<div class="box"><h2>اللي اتسلّم</h2>${o.files.map(f => `<p style="margin:2px 0">${esc(f.name)} <small>v${S.num(f.version)} • ${esc(fmt(f.created_at))}</small></p>`).join('')}</div>` : ''}`;
+    const g = i => document.getElementById(i);
+    g('bk').onclick = e => { e.preventDefault(); tab = 'mine'; draw(); };
+    if (g('dl')) g('dl').onclick = async () => {
+      const f = g('fl').files[0]; g('er').textContent = '';
+      if (!f) { g('er').textContent = 'اختار ملف PDF.'; return; }
+      if (f.size > 3 * 1024 * 1024) { g('er').textContent = 'الملف أكبر من 3 ميجا.'; return; }
+      g('dl').disabled = true;
+      try {
+        const b64 = await new Promise((ok, no) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(',')[1]); r.onerror = no; r.readAsDataURL(f); });
+        await rpc('doc_deliver', { p_id: id, p_name: f.name.slice(0, 120), p_b64: b64, p_note: g('nt').value.trim() || null });
+        S.toast('اتسلّم المستند ✅'); tab = 'mine'; draw();
+      } catch (e) { g('er').textContent = errMsg(e); g('dl').disabled = false; }
+    };
+    if (g('ask')) g('ask').onclick = async () => { const v = g('q').value.trim(); if (v.length < 3) return S.toast('اكتب السؤال'); try { await rpc('doc_lawyer_ask', { p_id: id, p_text: v }); S.toast('اتبعت للموكل'); detail(id); } catch (e) { S.toast(errMsg(e)); } };
+  }
+  draw();
+})();
+</script>
+</body></html>

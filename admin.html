@@ -195,6 +195,7 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--white);
       <button class="tab-btn" data-view="reports">البلاغات</button>
       <button class="tab-btn" data-view="ratings">التقييمات</button>
       <button class="tab-btn" data-view="consults">الاستشارات <span id="csBadge"></span></button>
+      <button class="tab-btn" data-view="docs">المستندات <span id="docBadge"></span></button>
       <button class="tab-btn" data-view="qa">الأسئلة <span id="qaBadge"></span></button>
       <button class="tab-btn" data-view="files">ملفات الموقع</button>
     </div>
@@ -223,6 +224,13 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--white);
       <div class="section-title">تقييمات الموكلين</div>
       <div style="font-size:12px;color:var(--gray);margin-bottom:12px">آخر 100 تقييم. لو لقيت تقييم مشبوه (تقييمات كتير من نفس الشخص أو تلاعب) امسحه والمتوسط بيتحدث لوحده.</div>
       <div id="ratingsWrap"><div class="loading-msg">جارٍ التحميل...</div></div>
+    </div>
+    <div class="view" id="view-docs">
+      <div class="section-title">المستندات القانونية</div>
+      <div id="docSet"></div>
+      <div class="section-title" style="margin-top:18px">الطلبات</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px" id="docFlt"></div>
+      <div id="docWrap"><div class="loading-msg">جارٍ التحميل...</div></div>
     </div>
     <div class="view" id="view-qa">
       <div class="section-title">أسئلة «اسأل محامي»</div>
@@ -312,6 +320,7 @@ document.querySelectorAll('.tab-btn').forEach(b => b.onclick = () => {
   if (b.dataset.view === 'ratings') loadRatings();
   if (b.dataset.view === 'consults') loadConsults();
   if (b.dataset.view === 'qa') loadQa();
+  if (b.dataset.view === 'docs') loadDocs();
 });
 $('lightbox').onclick = () => $('lightbox').classList.remove('show');
 const lightbox = src => { $('lightboxImg').src = src; $('lightbox').classList.add('show'); };
@@ -454,6 +463,32 @@ function renderLawyers() {
 }
 $('lSearch').oninput = renderLawyers;
 
+
+
+/* المستندات القانونية: خدمات، إعدادات، طلبات، حل الشكاوى */
+let docStatus = 'disputed';
+async function loadDocs() {
+  try {
+    const ov = await rpc('doc_admin_overview'), st = ov.settings || {};
+    const inp = (id, v, l) => `<label style="font-size:12px;display:block">${l}<input id="${id}" type="number" step="any" value="${esc(v)}" style="width:100%;padding:6px;border:1px solid #E2E8F0;border-radius:8px"></label>`;
+    $('docSet').innerHTML = `<div class="user-card" style="display:block"><b>الإعدادات</b><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin:8px 0">${inp('dsPct', st.fee_pct, 'العمولة %')}${inp('dsFlat', st.fee_flat, 'عمولة ثابتة (ج)')}${inp('dsPick', st.pickup_hours, 'مهلة القبول (ساعة)')}${inp('dsConf', st.confirm_hours, 'مهلة تأكيد الموكل (ساعة)')}${inp('dsRev', st.revision_hours, 'مهلة التعديل (ساعة)')}${inp('dsRet', st.retain_days, 'مدة حفظ الملفات (يوم)')}${inp('dsMax', st.max_active, 'أقصى طلبات شغّالة للمحامي')}</div><button class="pbtn approve" id="dsSave">حفظ الإعدادات</button></div>
+    ${ov.services.map(v => `<div class="user-card" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><b style="flex:1;min-width:150px">${esc(v.title)}</b><label style="font-size:12px">السعر <input type="number" data-sp="${v.id}" value="${v.price}" style="width:80px"></label><label style="font-size:12px">ساعات <input type="number" data-sd="${v.id}" value="${v.due_hours}" style="width:60px"></label><label style="font-size:12px"><input type="checkbox" data-sa="${v.id}" ${v.active ? 'checked' : ''}> مفعّل</label><button class="pbtn approve" data-ss="${v.id}">حفظ</button></div>`).join('')}`;
+    $('dsSave').onclick = async () => { const n = i => Number($(i).value); try { await rpc('doc_admin_save_settings', { p_fee_pct: n('dsPct'), p_fee_flat: n('dsFlat'), p_pickup_hours: n('dsPick'), p_confirm_hours: n('dsConf'), p_revision_hours: n('dsRev'), p_retain_days: n('dsRet'), p_max_active: n('dsMax') }); toast('اتحفظت'); } catch (e) { toast('خطأ: ' + e.message); } };
+    $('docSet').querySelectorAll('[data-ss]').forEach(b => b.onclick = async () => { const id = b.dataset.ss, q = a => $('docSet').querySelector(`[${a}="${id}"]`); try { await rpc('doc_admin_save_service', { p_id: id, p_price: Math.round(Number(q('data-sp').value)), p_active: q('data-sa').checked, p_due_hours: Math.round(Number(q('data-sd').value)) }); toast('اتحفظ'); } catch (e) { toast('خطأ: ' + e.message); } });
+    const F = [['disputed', 'شكاوى'], ['pending', 'مستنية'], ['accepted', 'شغّالة'], ['delivered', 'اتسلّمت'], ['completed', 'تمّت'], ['refunded', 'مردودة'], [null, 'الكل']];
+    $('docFlt').innerHTML = F.map(f => `<button class="pbtn ${docStatus === f[0] ? 'approve' : ''}" data-fs="${f[0] || ''}">${f[1]}</button>`).join('');
+    $('docFlt').querySelectorAll('[data-fs]').forEach(b => b.onclick = () => { docStatus = b.dataset.fs || null; loadDocs(); });
+    const rows = await rpc('doc_admin_list', { p_status: docStatus });
+    const dis = (await rpc('doc_admin_list', { p_status: 'disputed' })).length; $('docBadge').textContent = dis ? `(${dis})` : '';
+    $('docWrap').innerHTML = rows.length ? rows.map(o => `<div class="user-card" style="display:block"><b>${esc(o.service_title)}</b> <span class="status-tag ${o.status === 'disputed' ? 'rejected' : 'approved'}">${esc(o.status)}</span> • ${esc(o.price)} ج<br><small>${esc(o.client_name)} ← ${esc(o.lawyer_name || 'بدون محامي')} • ${dt(o.created_at)}</small>
+      ${o.dispute_reason ? `<div style="margin-top:6px;color:#b91c1c;font-size:13px">شكوى: ${esc(o.dispute_reason)}</div>` : ''}${o.client_stars ? `<div style="font-size:13px">تقييم: ${'★'.repeat(o.client_stars)} ${esc(o.client_note || '')}</div>` : ''}
+      <details style="margin-top:6px"><summary style="cursor:pointer;font-size:13px">بيانات الطلب</summary><pre style="white-space:pre-wrap;font-size:12px;margin:6px 0">${esc(JSON.stringify(o.answers, null, 1))}</pre></details>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">${o.files.map(f => `<button class="pbtn" data-df="${f.id}" data-do="${o.id}">تحميل ${esc(f.name)} (v${f.version})</button>`).join('')}
+      ${o.status === 'disputed' ? `<button class="pbtn approve" data-dr="1" data-do="${o.id}">حوّل للمحامي</button><button class="pbtn reject" data-dr="0" data-do="${o.id}">رجّع للموكل</button>` : ''}</div></div>`).join('') : '<div class="empty-state">مفيش طلبات هنا.</div>';
+    $('docWrap').querySelectorAll('[data-dr]').forEach(b => b.onclick = async () => { if (!confirm(b.dataset.dr === '1' ? 'تحوّل المبلغ للمحامي؟' : 'ترجّع المبلغ للموكل؟')) return; try { await rpc('doc_admin_resolve', { p_id: b.dataset.do, p_release: b.dataset.dr === '1' }); toast('تم'); loadDocs(); } catch (e) { toast('خطأ: ' + e.message); } });
+    $('docWrap').querySelectorAll('[data-df]').forEach(b => b.onclick = async () => { try { const f = await rpc('doc_admin_file', { p_id: b.dataset.do, p_file: b.dataset.df }); const bin = atob(f.b64), a = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) a[i] = bin.charCodeAt(i); const u = URL.createObjectURL(new Blob([a], { type: 'application/pdf' })); window.open(u, '_blank'); setTimeout(() => URL.revokeObjectURL(u), 60000); } catch (e) { toast('خطأ: ' + e.message); } });
+  } catch (e) { $('docWrap').innerHTML = `<div class="empty-state">${esc(e.message)}</div>`; }
+}
 
 /* اسأل محامي: إخفاء/إظهار */
 async function loadQa() {

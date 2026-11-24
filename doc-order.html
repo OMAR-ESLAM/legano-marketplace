@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#ffffff"><link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>طلب مستند | Legano</title>
+<meta name="description" content="اطلب عقد أو مستند قانوني جاهز من محامٍ موثّق، وتستلمه PDF خلال 24 ساعة.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Syne:wght@800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="js/social.css">
+<style>
+  :root { color-scheme: light; --background:#F8FAFB; --foreground:#1E293B; --card:#FFFFFF; --border:#E2E8F0; --muted-foreground:#64748B; --secondary:#EEF2F7; --gold:#0F172A; --gold-soft:#92620C; }
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Cairo', sans-serif; background: var(--background); color: var(--foreground); line-height: 1.8; }
+  a { color: inherit; }
+  .logo-text { font-family: 'Syne', sans-serif; font-weight: 800; letter-spacing: 5px; font-size: 18px; text-decoration: none; color: #0F172A; }
+  .top { position: sticky; top: 0; z-index: 50; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; padding: 10px 20px; background: rgba(255,255,255,.92); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
+  #navSlot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  main { max-width: 860px; margin: 0 auto; padding: 18px 16px 90px; }
+  .hero { border-radius: 20px; padding: 22px 20px; color: #fff; background: radial-gradient(circle at 100% 0, rgba(183,121,31,.5), transparent 55%), linear-gradient(135deg, #0B1220, #1b2a4a); }
+  .hero h1 { margin: 0 0 6px; font-size: 1.6rem; font-weight: 900; } .hero p { margin: 0; color: #cbd5e1; font-size: .95rem; }
+  .grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); margin-top: 16px; }
+  .dc { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+  .dc h2 { margin: 0; font-size: 1.05rem; font-weight: 800; } .dc p { margin: 0; color: var(--muted-foreground); font-size: .86rem; flex: 1; }
+  .dc .pr { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--muted-foreground); } .dc .pr b { color: var(--foreground); font-size: 1.15rem; }
+  .box { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-top: 14px; }
+  .box h2 { margin: 0 0 10px; font-size: 1.05rem; font-weight: 900; }
+  .f { margin-bottom: 12px; } .f label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px; } .f label i { color: #b91c1c; font-style: normal; }
+  .f input, .f textarea, .f select { width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 10px; font: inherit; font-size: 14px; background: #fff; }
+  .f textarea { min-height: 84px; resize: vertical; }
+  .err { color: #b91c1c; font-size: 13px; min-height: 20px; font-weight: 700; }
+  .note { font-size: 12.5px; color: var(--muted-foreground); line-height: 1.9; margin-top: 12px; }
+  .tl { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0 2px; } .tl span { padding: 3px 11px; border-radius: 999px; background: var(--secondary); font-size: 12px; font-weight: 700; color: var(--muted-foreground); } .tl span.on { background: var(--gold); color: #fff; } .tl span.done { background: #dcfce7; color: #166534; }
+  .ans { display: grid; grid-template-columns: 1fr 1.6fr; gap: 4px 12px; font-size: 13.5px; } .ans dt { color: var(--muted-foreground); } .ans dd { margin: 0; font-weight: 700; white-space: pre-wrap; word-break: break-word; }
+  .stars button { background: none; border: 0; font-size: 28px; cursor: pointer; color: #cbd5e1; padding: 0 2px; } .stars button.on { color: #f59e0b; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .bad { background: #fef3c7; border: 1px solid #fde68a; border-radius: 12px; padding: 10px 14px; font-size: 13.5px; margin-top: 12px; }
+  .soc-btn.lg { padding: 11px 20px; font-size: 1rem; }
+</style>
+</head>
+<body>
+<header class="top"><a class="logo-text" href="/">LEGANO</a><div id="navSlot"></div></header>
+<main id="app" aria-live="polite"></main>
+
+<script src="js/social.js"></script>
+<script>
+(async () => {
+  const $ = id => document.getElementById(id), S = window.Social, esc = S.esc;
+  S.mountNav($('navSlot'));
+  const rpc = (fn, json) => S.call('/rest/v1/rpc/' + fn, { method: 'POST', json: json || {} });
+  const tok = new URLSearchParams(location.search).get('t') || '';
+  const ST = { pending: 'مستني محامٍ يقبل الطلب', accepted: 'المحامي بيجهّز المستند', needs_info: 'المحامي محتاج توضيح منك', delivered: 'المستند جاهز، راجعه وأكّد', revision: 'التعديل عند المحامي', disputed: 'تحت مراجعة الإدارة', completed: 'تم ✅', refunded: 'اتردّت الفلوس', expired: 'انتهت المهلة واتردّت الفلوس', cancelled: 'اتلغى واتردّت الفلوس' };
+  const STEPS = [['pending', 'اتبعت'], ['accepted', 'اتقبل'], ['delivered', 'اتسلّم'], ['completed', 'تم']];
+  const rank = { pending: 0, accepted: 1, needs_info: 1, revision: 1, delivered: 2, disputed: 2, completed: 3 };
+  const fmt = d => d ? new Date(d).toLocaleString('ar-EG', { dateStyle: 'medium', timeStyle: 'short' }) : '';
+  let o = null, stars = 0;
+  if (!/^[0-9a-f]{64}$/i.test(tok)) { $('app').innerHTML = '<div class="empty">الرابط مش صحيح.</div>'; return; }
+  const blob = b64 => { const bin = atob(b64), a = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) a[i] = bin.charCodeAt(i); return new Blob([a], { type: 'application/pdf' }); };
+  async function load() {
+    try { o = await rpc('doc_client_get', { p_token: tok }); } catch { o = null; }
+    if (!o) { $('app').innerHTML = '<div class="empty">الطلب مش موجود أو اتمسح.</div>'; return; }
+    draw();
+  }
+  const act = async (fn, args, msg) => { try { await rpc(fn, Object.assign({ p_token: tok }, args || {})); if (msg) S.toast(msg); await load(); } catch (e) { S.toast(S.friendly(e)); } };
+  function draw() {
+    const r = rank[o.status], dead = ['refunded', 'expired', 'cancelled'].includes(o.status);
+    const lab = {}; (o.fields || []).forEach(f => lab[f.k] = f.l);
+    const ansHtml = (o.fields || []).filter(f => o.answers && o.answers[f.k]).map(f => `<dt>${esc(f.l)}</dt><dd>${esc(o.answers[f.k])}</dd>`).join('');
+    let h = `<h1 style="margin:0 0 4px;font-size:1.4rem;font-weight:900">${esc(o.service_title)}</h1>
+    <div class="tl">${dead ? `<span class="on">${esc(ST[o.status])}</span>` : STEPS.map((s, i) => `<span class="${i < r || o.status === 'completed' ? 'done' : i === r ? 'on' : ''}">${s[1]}</span>`).join('')}</div>
+    <p style="margin:6px 0;font-weight:800">${esc(ST[o.status] || '')}</p>`;
+    if (o.lawyer) h += `<p style="margin:4px 0"><a href="/lawyer/${esc(o.lawyer.id)}">⚖️ ${esc(o.lawyer.display_name)}</a></p>`;
+    if (o.status === 'pending') h += `<p class="note">لو ما حدّش قبل الطلب لحد ${esc(fmt(o.expires_at))} فلوسك بترجع لوحدها.</p>`;
+    if (o.due_at && ['accepted', 'needs_info', 'revision'].includes(o.status)) h += `<p class="note">ميعاد التسليم: ${esc(fmt(o.due_at))}. لو اتأخر، الطلب بيتحوّل لمحامي تاني أو فلوسك بترجع.</p>`;
+    if (o.status === 'needs_info') h += `<div class="box"><h2>المحامي بيسأل</h2><p style="white-space:pre-wrap;margin:0 0 10px">${esc(o.info_request || '')}</p><div class="f"><textarea id="rep" maxlength="1000" placeholder="اكتب ردّك هنا"></textarea></div><button class="soc-btn primary" id="repGo" type="button">ابعت الرد</button></div>`;
+    if (o.info_reply && o.status !== 'needs_info') h += `<p class="note">ردّك: ${esc(o.info_reply)}</p>`;
+    if (['delivered', 'revision', 'disputed', 'completed'].includes(o.status) && (o.files || []).length) h += `<div class="box"><h2>المستند 📄</h2>${o.files.map(f => `<div class="row" style="margin-bottom:6px"><span>${esc(f.name)} <small style="color:var(--muted-foreground)">v${S.num(f.version)}</small></span><button class="soc-btn" type="button" data-f="${esc(f.id)}" data-n="${esc(f.name)}">تحميل PDF</button></div>${f.note ? `<p class="note" style="margin:0">ملاحظة المحامي: ${esc(f.note)}</p>` : ''}`).join('')}</div>`;
+    if (o.status === 'delivered') h += `<div class="box"><h2>أكّد الاستلام</h2><p class="note" style="margin-top:0">راجع المستند. لو تمام أكّد، وهيتحوّل المبلغ للمحامي. لو محتاج تعديل ${o.revision_count ? '(استخدمت التعديل المسموح)' : 'عندك تعديل واحد مجاني'}. تأكيد تلقائي بعد ${esc(fmt(o.confirm_deadline))}.</p>
+      <div class="stars" id="st" aria-label="التقييم">${[1,2,3,4,5].map(i => `<button type="button" data-s="${i}" aria-label="${i} نجوم">★</button>`).join('')}</div>
+      <div class="f"><textarea id="nt" maxlength="300" placeholder="رأيك في الخدمة (اختياري)"></textarea></div>
+      <div class="row"><button class="soc-btn primary" id="cf" type="button">تمام، أكّد الاستلام</button>
+      ${o.revision_count ? '' : '<button class="soc-btn" id="rv" type="button">اطلب تعديل</button>'}<button class="soc-btn" id="dp" type="button">في مشكلة</button></div></div>`;
+    if (o.status === 'revision') h += `<p class="note">طلبت تعديل: ${esc(o.revision_note || '')}</p>`;
+    if (o.status === 'disputed') h += `<div class="bad">الإدارة بتراجع الطلب وهتقرر رد الفلوس أو تحويلها. ${o.dispute_reason ? 'سبب الشكوى: ' + esc(o.dispute_reason) : ''}</div>`;
+    if (o.status === 'completed' && o.my_stars) h += `<p class="note">تقييمك: ${'★'.repeat(o.my_stars)}</p>`;
+    if (o.status === 'pending') h += `<div style="margin-top:12px"><button class="soc-btn" id="cx" type="button">إلغاء الطلب واسترداد الفلوس</button></div>`;
+    h += `<div class="box"><h2>بياناتك اللي اتبعتت</h2><dl class="ans"><dt>الاسم</dt><dd>${esc(o.client_name)}</dd>${ansHtml}</dl><p class="note">المبلغ: ${S.num(o.price)} ج (تجريبي). احفظ رابط الصفحة دي، هو طريقك الوحيد للطلب.</p></div><p style="margin-top:12px"><a href="/docs.html" class="soc-btn">← طلب مستند تاني</a></p>`;
+    $('app').innerHTML = h;
+    const g = id => document.getElementById(id);
+    if (g('repGo')) g('repGo').onclick = () => { const v = g('rep').value.trim(); if (v.length < 2) return S.toast('اكتب الرد'); act('doc_client_reply', { p_text: v }, 'اتبعت الرد'); };
+    document.querySelectorAll('[data-f]').forEach(b => b.onclick = async () => { b.disabled = true; try { const f = await rpc('doc_client_file', { p_token: tok, p_file: b.dataset.f }); const u = URL.createObjectURL(blob(f.b64)); const a = document.createElement('a'); a.href = u; a.download = b.dataset.n || 'document.pdf'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 4000); } catch (e) { S.toast(S.friendly(e)); } b.disabled = false; });
+    if (g('st')) g('st').onclick = e => { const b = e.target.closest('[data-s]'); if (!b) return; stars = +b.dataset.s; g('st').querySelectorAll('button').forEach(x => x.classList.toggle('on', +x.dataset.s <= stars)); };
+    if (g('cf')) g('cf').onclick = () => act('doc_client_confirm', { p_stars: stars || null, p_note: g('nt').value.trim() || null }, 'شكراً! اتأكّد الاستلام');
+    if (g('rv')) g('rv').onclick = () => { const v = prompt('عايز يتعدّل إيه بالظبط؟'); if (v && v.trim().length >= 3) act('doc_client_revision', { p_note: v.trim() }, 'اتبعت طلب التعديل'); };
+    if (g('dp')) g('dp').onclick = () => { const v = prompt('إيه المشكلة؟ (اختياري)'); if (v !== null) act('doc_client_dispute', { p_reason: v.trim() || null }, 'اتبعت الشكوى للإدارة'); };
+    if (g('cx')) g('cx').onclick = () => { if (confirm('تلغي الطلب؟')) act('doc_client_cancel', {}, 'اتلغى الطلب'); };
+  }
+  await load();
+  setInterval(() => { if (!document.hidden && o && !['completed', 'refunded', 'expired', 'cancelled'].includes(o.status) && !document.activeElement.matches('textarea,input')) load(); }, 20000);
+})();
+</script>
+</body></html>
