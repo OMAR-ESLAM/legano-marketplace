@@ -27,6 +27,22 @@
   .ch-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 16px; }
   .ch-steps div { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14); border-radius: 14px; padding: 10px 6px; text-align: center; font-size: 12px; font-weight: 800; line-height: 1.5; }
   .ch-steps b { display: grid; place-items: center; width: 26px; height: 26px; margin: 0 auto 5px; border-radius: 50%; background: linear-gradient(135deg, #fcd34d, #b7791f); color: #1a1205; font-size: 13px; }
+  .rd { position: relative; width: min(280px, 78vw); aspect-ratio: 1; margin: 16px auto 4px; }
+  .rd-bg { position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle, rgba(34,197,94,.14), rgba(34,197,94,.03) 62%, transparent 70%); box-shadow: inset 0 0 0 1px rgba(34,197,94,.35), 0 0 40px rgba(34,197,94,.12); }
+  .rd-sweep { position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(from 0deg, rgba(34,197,94,0) 0deg, rgba(34,197,94,0) 270deg, rgba(34,197,94,.5) 358deg, rgba(190,255,210,.9) 360deg); will-change: transform; -webkit-mask: radial-gradient(circle, #000 0 69%, transparent 70%); mask: radial-gradient(circle, #000 0 69%, transparent 70%); }
+  .rd svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .rd-ring { fill: none; stroke: rgba(134,239,172,.28); stroke-width: .8; } .rd-ax { stroke: rgba(134,239,172,.2); stroke-width: .8; }
+  .rd-me { fill: #fcd34d; } .rd-me-ring { fill: none; stroke: #fcd34d; stroke-width: 1.2; opacity: .6; transform-box: fill-box; transform-origin: center; animation: rdme 2.2s ease-out infinite; }
+  @keyframes rdme { from { transform: scale(1); opacity: .7; } to { transform: scale(3.2); opacity: 0; } }
+  .rd-b { fill: #86efac; } .rd-bp { fill: none; stroke: #4ade80; stroke-width: 1.4; }
+  .rd-line { fill: none; stroke: #fcd34d; stroke-width: 1.6; stroke-dasharray: 4 4; stroke-linecap: round; filter: drop-shadow(0 0 4px rgba(252,211,77,.8)); }
+  .rd-pk { fill: #fff; filter: drop-shadow(0 0 5px #fcd34d); }
+  .rd-cap { min-height: 74px; margin-top: 12px; display: flex; justify-content: center; }
+  .rd-txt { font-size: 13px; font-weight: 700; color: #bbf7d0; align-self: center; }
+  .rd-card { display: flex; align-items: center; gap: 10px; width: 100%; max-width: 360px; padding: 9px 12px; border-radius: 16px; background: rgba(255,255,255,.1); border: 1px solid rgba(252,211,77,.55); animation: rdin .45s cubic-bezier(.2,.9,.3,1.2); }
+  @keyframes rdin { from { opacity: 0; transform: translateY(10px) scale(.96); } to { opacity: 1; transform: none; } }
+  .rd-card .avatar { flex: none; } .rd-card div { flex: 1; min-width: 0; line-height: 1.5; } .rd-card small { display: block; color: #bbf7d0; font-size: 11.5px; font-weight: 700; } .rd-card b { display: block; font-size: 14px; font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .rd-card button { flex: none; border: 0; border-radius: 11px; padding: 9px 13px; font: inherit; font-size: 12.5px; font-weight: 900; color: #1a1205; background: linear-gradient(135deg, #fcd34d, #b7791f); cursor: pointer; }
   .tr { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
   .tr div { display: flex; flex-direction: column; text-align: center; gap: 4px; align-items: center; background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 10px 6px; font-size: 11.5px; font-weight: 800; line-height: 1.5; }
   .tr span { font-size: 20px; flex: none; }
@@ -43,6 +59,10 @@
     <span class="ch-live off" id="chLive"><i></i><span id="chLiveT">بندوّر على محامين أونلاين…</span></span>
     <h1>كلّم محامي <em>دلوقتي</em> وخد رد على حالتك</h1>
     <p>اختار محامي موثّق من الأونلاين وادخل معاه استشارة فيديو في دقايق، من غير مواعيد ولا مشوار.</p>
+    <div class="rd" id="rd" aria-hidden="true"><div class="rd-bg"></div><div class="rd-sweep" id="rdSw"></div>
+      <svg viewBox="0 0 300 300"><circle class="rd-ring" cx="150" cy="150" r="35"/><circle class="rd-ring" cx="150" cy="150" r="70"/><circle class="rd-ring" cx="150" cy="150" r="105"/><circle class="rd-ring" cx="150" cy="150" r="140"/><line class="rd-ax" x1="150" y1="10" x2="150" y2="290"/><line class="rd-ax" x1="10" y1="150" x2="290" y2="150"/>
+      <g id="rdG"></g><circle class="rd-me-ring" cx="150" cy="150" r="5"/><circle class="rd-me" cx="150" cy="150" r="5"/></svg></div>
+    <div class="rd-cap" id="rdCap" aria-live="polite"><span class="rd-txt">بندوّر على محامين أونلاين…</span></div>
     <div class="ch-steps"><div><b>1</b>اختار المحامي</div><div><b>2</b>اكتب مشكلتك</div><div><b>3</b>ادخل الغرفة</div></div>
   </section>
   <div class="tr"><div><span>🔒</span>فلوسك في أمان لحد ما تأكّد</div><div><span>✅</span>محامين موثّقين</div><div><span>↩️</span>فلوسك بترجع لو مردّش</div></div>
@@ -72,6 +92,58 @@
   let lawyers = [], target = null;
   const LS = { get() { try { return JSON.parse(localStorage.getItem('lg_ct')); } catch { return null; } }, set(v) { try { v ? localStorage.setItem('lg_ct', JSON.stringify(v)) : localStorage.removeItem('lg_ct'); } catch {} } };
 
+
+  // ---------- الرادار ----------
+  const Radar = (() => {
+    const g = $('rdG'), sw = $('rdSw'), cap = $('rdCap'), NS = 'http://www.w3.org/2000/svg';
+    const still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let items = [], T0 = performance.now(), lock = null, lastLock = -1e9, idx = 0, raf = 0;
+    const hash = str => { let h = 2166136261; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; };
+    const mk = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); g.appendChild(e); return e; };
+    const pos = (l, i) => { const h = hash(l.id), a = (i * 137.5 + (h % 40)) % 360, r = 48 + (h >> 6) % 84, rad = a * Math.PI / 180; return { a, x: 150 + r * Math.sin(rad), y: 150 - r * Math.cos(rad) }; };
+    let sig = null;
+    function set(list) {
+      const ns = list.map(l => l.id).join(','); if (ns === sig) return; sig = ns;
+      const old = new Map(items.map(it => [it.l.id, it]));
+      g.innerHTML = ''; lock = null;
+      items = list.map((l, i) => { const p = pos(l, i), prev = old.get(l.id), it = { l, a: p.a, x: p.x, y: p.y, found: prev ? prev.found : still, ping: -1e9 };
+        it.dot = mk('circle', { class: 'rd-b', cx: p.x, cy: p.y, r: 4.5, opacity: 0 }); it.ring = mk('circle', { class: 'rd-bp', cx: p.x, cy: p.y, r: 4.5, opacity: 0 }); return it; });
+      if (!items.length) cap.innerHTML = '<span class="rd-txt">بندوّر على محامين أونلاين…</span>';
+      if (still && items.length) showCap(items[0]);
+      if (!raf && !still) raf = requestAnimationFrame(tick);
+    }
+    function showCap(it) {
+      const l = it.l;
+      cap.innerHTML = `<div class="rd-card">${S.avatar(l, 'sm')}<div><small>✅ لقينا محامي أونلاين</small><b>${esc(l.display_name)}${l.rating_count ? ' • ★ ' + Number(l.rating_avg).toFixed(1) : ''}</b></div><button type="button" data-rid="${esc(l.id)}">اطلب استشارة</button></div>`;
+      cap.querySelector('button').onclick = () => { const b = document.querySelector('.cs-card[data-id="' + l.id + '"] [data-a=ask]'); if (b) b.click(); };
+    }
+    function startLock(it, now) {
+      const len = Math.hypot(it.x - 150, it.y - 150);
+      const line = mk('line', { class: 'rd-line', x1: 150, y1: 150, x2: 150, y2: 150 }), pk = mk('circle', { class: 'rd-pk', cx: 150, cy: 150, r: 3.2 });
+      lock = { it, line, pk, t: now, len }; cap.innerHTML = '<span class="rd-txt">لقينا إشارة… بنوصّلك بيه 📡</span>';
+    }
+    function tick(now) {
+      raf = requestAnimationFrame(tick);
+      const ang = ((now - T0) / 4200 * 360) % 360; sw.style.transform = 'rotate(' + ang + 'deg)';
+      for (const it of items) {
+        const d = (ang - it.a + 360) % 360;
+        if (d < 10 && now - it.ping > 3000) { it.ping = now; it.found = true; }
+        const since = (now - it.ping) / 1000, glow = it.found ? Math.max(.35, 1 - since / 2.6) : 0;
+        it.dot.setAttribute('opacity', glow);
+        const pr = since < 1.4 ? since / 1.4 : 1; it.ring.setAttribute('r', 4.5 + pr * 16); it.ring.setAttribute('opacity', it.found && since < 1.4 ? .9 * (1 - pr) : 0);
+      }
+      const found = items.filter(it => it.found);
+      if (!lock && found.length && now - lastLock > 6500 && (now - T0) > 1500) startLock(found[idx++ % found.length], now);
+      if (lock) {
+        const k = Math.min(1, (now - lock.t) / 1100), e = 1 - Math.pow(1 - k, 3), it = lock.it, x = 150 + (it.x - 150) * e, y = 150 + (it.y - 150) * e;
+        lock.line.setAttribute('x2', x); lock.line.setAttribute('y2', y); lock.pk.setAttribute('cx', x); lock.pk.setAttribute('cy', y);
+        if (k >= 1 && !lock.done) { lock.done = true; lock.t2 = now; it.ping = now; it.dot.setAttribute('r', 6.5); showCap(it); }
+        if (lock.done && now - lock.t2 > 5200) { lock.line.remove(); lock.pk.remove(); lock.it.dot.setAttribute('r', 4.5); lock = null; lastLock = now; }
+      }
+    }
+    return { set };
+  })();
+
   function render() {
     $('list').innerHTML = lawyers.length ? lawyers.map(l => `<article class="cs-card" data-id="${esc(l.id)}">
       <a class="cs-lw" href="/lawyer/${esc(l.id)}">${S.avatar(l)}<span><b><i class="cs-dot"></i>${esc(l.display_name)}${l.verified ? S.badge() : ''}</b><small>${esc(l.city || '')}${l.rating_count ? ` • ★ ${Number(l.rating_avg).toFixed(1)} (${S.num(l.rating_count)})` : ''}</small></span></a>
@@ -80,6 +152,7 @@
       <div class="cs-price"><span>${S.num(l.minutes)} دقيقة</span><b>${S.num(l.price)} ج</b></div>
       <button type="button" class="soc-btn primary" data-a="ask">اطلب استشارة دلوقتي</button></article>`).join('')
       : '<div class="alt"><div style="font-size:34px">⏳</div><h3>مفيش محامي أونلاين الدقيقة دي</h3><p>الصفحة بتتحدّث لوحدها وأول ما محامي يفتح هيظهر هنا. في الأثناء تقدر تاخد إجابة مجانية أو تطلب مستند جاهز.</p><div class="row"><a class="soc-btn primary" href="/qa">اسأل محامي مجاناً</a><a class="soc-btn" href="docs.html">مستندات جاهزة</a></div></div>';
+    Radar.set(lawyers);
     const lv = $('chLive'); if (lv) { lv.classList.toggle('off', !lawyers.length); $('chLiveT').textContent = lawyers.length ? lawyers.length + (lawyers.length === 1 ? ' محامي أونلاين دلوقتي' : ' محامين أونلاين دلوقتي') : 'مفيش محامي أونلاين حالياً'; }
   }
   async function load() {
