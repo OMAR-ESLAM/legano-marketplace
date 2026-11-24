@@ -66,8 +66,8 @@
   }
   function friendly(e) {
     const m = String((e && e.message) || '');
-    if (/referral_limit/.test(m)) return 'عندك 10 إحالات مفتوحة. اقفل أو الغي واحدة قبل ما تضيف.';
-    if (/locked/.test(m)) return 'الإحالة اتسندت، ما ينفعش تعدّل تفاصيلها.';
+    if (/referral_limit/.test(m)) return 'عندك 10 إنابات مفتوحة. اقفل أو الغي واحدة قبل ما تضيف.';
+    if (/locked/.test(m)) return 'الإنابة اتسندت، ما ينفعش تعدّل تفاصيلها.';
     if (/no_offer/.test(m)) return 'العرض ده مش موجود (يمكن اتسحب).';
     if (/bad_status/.test(m)) return 'الحالة اتغيّرت. حدّث الصفحة.';
     if (/wallet_low/.test(m)) return 'رصيد المحفظة مش كفاية للاستشارة دي.';
@@ -91,7 +91,7 @@
     if (/case_limit/.test(m)) return 'وصلت للحد الأقصى من القضايا.';
     if (/not_owner/.test(m)) return 'الصلاحية دي لمؤسس الجروب بس.';
     if (/group_limit/.test(m)) return 'وصلت للحد الأقصى: 5 جروبات لكل محامي.';
-    if (/not_completed/.test(m)) return 'التقييم بيتفتح بعد ما الإحالة تتقفل كمكتملة.';
+    if (/not_completed/.test(m)) return 'التقييم بيتفتح بعد ما الإنابة تتقفل كمكتملة.';
     if (/not_party/.test(m)) return 'العملية دي متاحة لأطرافها بس.';
     if (/not_member/.test(m)) return 'لازم تنضم للجروب الأول علشان تنشر فيه.';
     if (/contact_first/.test(m)) return 'تقدر تقيّم المحامي بعد ما تتصل بيه أو تبعتله واتساب من هنا.';
@@ -287,7 +287,7 @@
     const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
     const act = h => (h === here || (h === 'groups.html' && here === 'group.html')) ? ' on' : '';
     const item = (h, label, icon, extra = '') => `<a href="${h}" class="nav-ic${act(h)}" aria-label="${label}" title="${label}"${act(h) ? ' aria-current="page"' : ''}>${icon}<span class="nav-lb">${label}</span>${extra}</a>`;
-    el.innerHTML = item('feed.html', 'المنشورات', IC.home) + item('groups.html', 'الجروبات', IC.groups) + item('cases.html', 'قضاياي', IC.cases) + item('referrals.html', 'الإحالات', IC.ref) + item('calendar.html', 'المفكرة', IC.cal)
+    el.innerHTML = item('feed.html', 'المنشورات', IC.home) + item('groups.html', 'الجروبات', IC.groups) + item('cases.html', 'قضاياي', IC.cases) + item('referrals.html', 'الإنابات', IC.ref) + item('calendar.html', 'المفكرة', IC.cal)
       + item('consultations.html', 'استشارات', IC.cons, '<span class="nav-live" aria-hidden="true"></span><span class="nav-earn">اكسب 💰</span>').replace('class="nav-ic','class="nav-ic nav-hot')
       + item('notifications.html', 'الإشعارات', BELL, '<span class="nav-dot" hidden></span>')
       + `<div class="nav-me"><button type="button" class="nav-av" id="navAv" aria-haspopup="menu" aria-expanded="false" aria-label="حسابي"><span class="avatar sm">${esc('؟')}</span></button>
@@ -308,7 +308,7 @@
       const t = (h, label, icon, extra = '') => `<a href="${h}" class="tb-i${act(h)}" aria-label="${label}">${icon}<span>${label}</span>${extra}</a>`;
       tb.innerHTML = t('feed.html', 'الرئيسية', IC.home) + t('groups.html', 'الجروبات', IC.groups)
         + `<a href="feed.html?compose=1" class="tb-plus" id="tbPlus" aria-label="منشور جديد">${IC.plus}</a>`
-        + t('consultations.html', 'استشارات', IC.cons, '<span class="nav-live"></span>').replace('class="tb-i','class="tb-i nav-hot') + t('cases.html', 'قضاياي', IC.cases) + t('notifications.html', 'الإشعارات', BELL, '<span class="nav-dot tb-dot" hidden></span>') + t('referrals.html', 'الإحالات', IC.ref) + t('calendar.html', 'المفكرة', IC.cal);
+        + t('consultations.html', 'استشارات', IC.cons, '<span class="nav-live"></span>').replace('class="tb-i','class="tb-i nav-hot') + t('cases.html', 'قضاياي', IC.cases) + t('notifications.html', 'الإشعارات', BELL, '<span class="nav-dot tb-dot" hidden></span>') + t('referrals.html', 'الإنابات', IC.ref) + t('calendar.html', 'المفكرة', IC.cal);
       document.body.appendChild(tb); document.body.classList.add('has-tabbar');
       tb.querySelector('#tbPlus').addEventListener('click', e => { const c = document.querySelector('.comp-input'); if (c) { e.preventDefault(); c.click(); } });
     }
@@ -645,7 +645,7 @@
   const deleteGroup = id => call(`/rest/v1/groups?id=eq.${id}`, { method: 'DELETE' });
   // ---------- تتبّع القضايا ----------
   const STAGES = [
-    ['filed', 'تم رفع الدعوى', '📄'], ['hearing', 'جلسة', '⚖️'], ['adjourned', 'تأجيل الجلسة', '📅'], ['expert', 'إحالة لخبير', '🔎'],
+    ['filed', 'تم رفع الدعوى', '📄'], ['hearing', 'جلسة', '⚖️'], ['adjourned', 'تأجيل الجلسة', '📅'], ['expert', 'إنابة لخبير', '🔎'],
     ['reserved', 'حجز للحكم', '⏳'], ['judgment', 'صدر الحكم', '🏛️'], ['appeal', 'طعن / استئناف', '📤'], ['settled', 'صلح / تسوية', '🤝'],
     ['note', 'مستجد', '📝'], ['closed', 'إقفال القضية', '✅'],
   ];
@@ -668,7 +668,7 @@
   const getCaseByToken = t => call('/rest/v1/rpc/get_case', { method: 'POST', json: { p_token: t } });
   const rateCase = (t, stars) => call('/rest/v1/rpc/rate_case', { method: 'POST', json: { p_token: t, p_stars: stars } });
 
-  // ---------- سوق الإحالات ----------
+  // ---------- سوق الإنابات ----------
   const RCOLS = 'id,author_id,title,case_type,city,court,description,deadline,arrangement,status,assigned_to,assigned_at,offers_count,created_at';
   const lawyersInfo = async ids => {
     ids = [...new Set(ids.filter(x => UUID.test(x || '')))];

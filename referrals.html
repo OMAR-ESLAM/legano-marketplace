@@ -4,7 +4,7 @@
 <meta charset="UTF-8"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#ffffff"><link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex">
-<title>سوق الإحالات | Legano</title>
+<title>سوق الإنابات | Legano</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Syne:wght@800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="js/social.css">
@@ -22,28 +22,28 @@
 </head>
 <body>
 <header class="top"><a class="logo-text" href="index.html?browse=1">LEGANO</a><div id="navSlot"></div></header>
-<div id="gate" class="soc-card gate" hidden><h1>منطقة المحامين</h1><p>سوق الإحالات للمحامين بس. سجّل دخول علشان تشوف الإحالات.</p><a class="soc-btn primary" href="dashboard.html">دخول المحامين</a></div>
+<div id="gate" class="soc-card gate" hidden><h1>منطقة المحامين</h1><p>سوق الإنابات للمحامين بس. سجّل دخول علشان تشوف الإنابات.</p><a class="soc-btn primary" href="dashboard.html">دخول المحامين</a></div>
 <div id="wrap" class="grp-wrap" hidden>
-  <div class="grp-head"><div><h1>سوق الإحالات</h1><p>عندك قضية برّه محافظتك أو تخصصك؟ انشرها (من غير بيانات الموكل) وزميل يستلمها. أو دوّر على إحالات تناسبك.</p></div><button id="newBtn" type="button" class="soc-btn primary">+ إحالة جديدة</button></div>
+  <div class="grp-head"><div><h1>سوق الإنابات</h1><p>عندك قضية برّه محافظتك أو تخصصك؟ انشرها (من غير بيانات الموكل) وزميل يستلمها. أو دوّر على إنابات تناسبك.</p></div><button id="newBtn" type="button" class="soc-btn primary">+ إنابة جديدة</button></div>
   <div class="warn" style="margin:0">⚠️ ما تكتبش اسم الموكل ولا رقمه ولا أي بيانات تعرّفه. اكتب نوع القضية وطلبك بس. أي اتفاق على الأتعاب بين الزميلين بيتم بينهم، وملتزمين بقواعد نقابة المحامين. Legano مش طرف فيه.</div>
-  <div class="feed-tabs" role="tablist"><button class="tab" data-t="market" aria-selected="true" type="button">السوق</button><button class="tab" data-t="mine" aria-selected="false" type="button">إحالاتي <span id="cMine"></span></button><button class="tab" data-t="taken" aria-selected="false" type="button">عروضي والمسندة ليا <span id="cTaken"></span></button></div>
-  <div id="filters" class="ref-filters"><input id="fq" class="f-i" type="search" maxlength="40" placeholder="دوّر في الإحالات…" aria-label="بحث"><input id="fcity" class="f-i" maxlength="40" placeholder="المحافظة / المدينة" aria-label="المدينة"><select id="ftype" class="f-i" aria-label="نوع القضية"><option value="">كل الأنواع</option><option>أحوال شخصية</option><option>جنائي</option><option>مدني</option><option>عمالي</option><option>تجاري</option><option>إيجارات وعقارات</option><option>إداري</option><option>أخرى</option></select></div>
+  <div class="feed-tabs" role="tablist"><button class="tab" data-t="market" aria-selected="true" type="button">السوق</button><button class="tab" data-t="mine" aria-selected="false" type="button">إناباتي <span id="cMine"></span></button><button class="tab" data-t="taken" aria-selected="false" type="button">عروضي والمسندة ليا <span id="cTaken"></span></button></div>
+  <div id="filters" class="ref-filters"><input id="fq" class="f-i" type="search" maxlength="40" placeholder="دوّر في الإنابات…" aria-label="بحث"><input id="fcity" class="f-i" maxlength="40" placeholder="المحافظة / المدينة" aria-label="المدينة"><select id="ftype" class="f-i" aria-label="نوع القضية"><option value="">كل الأنواع</option><option>أحوال شخصية</option><option>جنائي</option><option>مدني</option><option>عمالي</option><option>تجاري</option><option>إيجارات وعقارات</option><option>إداري</option><option>أخرى</option></select></div>
   <div id="list" aria-live="polite"></div>
 </div>
 <div id="newOv" class="modal-ov" hidden><div class="modal" role="dialog" aria-modal="true" aria-labelledby="nT">
-  <div class="modal-h"><h2 id="nT">إحالة جديدة</h2><button type="button" class="modal-x" id="nX" aria-label="إغلاق">×</button></div>
+  <div class="modal-h"><h2 id="nT">إنابة جديدة</h2><button type="button" class="modal-x" id="nX" aria-label="إغلاق">×</button></div>
   <div class="modal-b">
-    <label class="f-l" for="rTitle">عنوان الإحالة</label><input id="rTitle" class="f-i" maxlength="80" placeholder="مثال: حضور جلسة إيجارات في الإسكندرية">
+    <label class="f-l" for="rTitle">عنوان الإنابة</label><input id="rTitle" class="f-i" maxlength="80" placeholder="مثال: حضور جلسة إيجارات في الإسكندرية">
     <div class="cf-row"><div><label class="f-l" for="rType">نوع القضية</label><select id="rType" class="f-i"><option value="">—</option><option>أحوال شخصية</option><option>جنائي</option><option>مدني</option><option>عمالي</option><option>تجاري</option><option>إيجارات وعقارات</option><option>إداري</option><option>أخرى</option></select></div><div><label class="f-l" for="rCity">المحافظة / المدينة</label><input id="rCity" class="f-i" maxlength="60"></div></div>
     <label class="f-l" for="rCourt">المحكمة (اختياري)</label><input id="rCourt" class="f-i" maxlength="80">
     <label class="f-l" for="rDesc">المطلوب بالظبط (بدون بيانات الموكل)</label><textarea id="rDesc" class="f-i" rows="4" maxlength="600" placeholder="مثال: محتاج زميل يحضر جلسة يوم الأحد القادم ويقدّم مذكرة، والتفاصيل نتفق عليها بعد القبول."></textarea>
     <div class="cf-row"><div><label class="f-l" for="rDate">آخر ميعاد (اختياري)</label><input id="rDate" class="f-i" type="date"></div><div><label class="f-l" for="rArr">الاتفاق المقترح (اختياري)</label><input id="rArr" class="f-i" maxlength="200" placeholder="مثال: أتعاب الحضور 500 جنيه"></div></div>
   </div>
-  <div class="modal-f"><button id="nGo" type="button" class="soc-btn primary" disabled>نشر الإحالة</button></div>
+  <div class="modal-f"><button id="nGo" type="button" class="soc-btn primary" disabled>نشر الإنابة</button></div>
 </div></div>
 <div id="offOv" class="modal-ov" hidden><div class="modal" role="dialog" aria-modal="true" aria-labelledby="oT">
   <div class="modal-h"><h2 id="oT">قدّم عرضك</h2><button type="button" class="modal-x" id="oX" aria-label="إغلاق">×</button></div>
-  <div class="modal-b"><p id="oCase" class="m-note" style="margin-top:0"></p><label class="f-l" for="oMsg">رسالة قصيرة لصاحب الإحالة (اختياري)</label><textarea id="oMsg" class="f-i" rows="3" maxlength="300" placeholder="مثال: أنا في الإسكندرية وبحضر في المحكمة دي كل أسبوع."></textarea></div>
+  <div class="modal-b"><p id="oCase" class="m-note" style="margin-top:0"></p><label class="f-l" for="oMsg">رسالة قصيرة لصاحب الإنابة (اختياري)</label><textarea id="oMsg" class="f-i" rows="3" maxlength="300" placeholder="مثال: أنا في الإسكندرية وبحضر في المحكمة دي كل أسبوع."></textarea></div>
   <div class="modal-f"><button id="oGo" type="button" class="soc-btn primary">إرسال العرض</button></div>
 </div></div>
 <script src="js/social.js"></script>
@@ -78,22 +78,22 @@
     let extra = '';
     if (r.status === 'open') extra = r.offers.length ? `<h4 class="ref-h4">العروض (${S.num(r.offers.length)})</h4>${r.offers.map(o => `<div class="ref-offer" data-l="${esc(o.lawyer_id)}">${who(o.a)}${o.message ? `<p>${esc(o.message)}</p>` : ''}<button type="button" class="soc-btn primary" data-a="accept">اختيار الزميل ده</button></div>`).join('')}` : '<div class="grp-empty">لسه ما وصلتش عروض.</div>';
     else if (r.status === 'assigned' || r.status === 'completed') extra = `<h4 class="ref-h4">الزميل اللي استلمها</h4>${who(r.assignee)}${contactBtns(r.id)}${rateBox(r, r.assignee)}`;
-    const acts = r.status === 'open' ? '<button type="button" class="soc-btn" data-a="cancel">إلغاء الإحالة</button>' : r.status === 'assigned' ? '<button type="button" class="soc-btn primary" data-a="complete">✅ تمّت الإحالة</button><button type="button" class="soc-btn danger" data-a="cancel">إلغاء</button>' : '<button type="button" class="soc-btn danger" data-a="del">حذف من السجل</button>';
+    const acts = r.status === 'open' ? '<button type="button" class="soc-btn" data-a="cancel">إلغاء الإنابة</button>' : r.status === 'assigned' ? '<button type="button" class="soc-btn primary" data-a="complete">✅ تمّت الإنابة</button><button type="button" class="soc-btn danger" data-a="cancel">إلغاء</button>' : '<button type="button" class="soc-btn danger" data-a="del">حذف من السجل</button>';
     return `<article class="soc-card ref-card" data-id="${esc(r.id)}"><div class="case-top"><div>${body_(r)}</div><span class="case-st ${st[1]}">${st[0]}</span></div>${extra}<div class="case-act">${acts}</div></article>`;
   }
   function takenHTML(t) {
-    const a = t.assigned.map(r => `<article class="soc-card ref-card" data-id="${esc(r.id)}"><div class="case-top"><div>${body_(r)}</div><span class="case-st ${ST[r.status][1]}">${r.status === 'assigned' ? '🎉 اتسندت ليك' : ST[r.status][0]}</span></div><h4 class="ref-h4">صاحب الإحالة</h4>${who(r.a)}${contactBtns(r.id)}${rateBox(r, r.a)}</article>`).join('');
+    const a = t.assigned.map(r => `<article class="soc-card ref-card" data-id="${esc(r.id)}"><div class="case-top"><div>${body_(r)}</div><span class="case-st ${ST[r.status][1]}">${r.status === 'assigned' ? '🎉 اتسندت ليك' : ST[r.status][0]}</span></div><h4 class="ref-h4">صاحب الإنابة</h4>${who(r.a)}${contactBtns(r.id)}${rateBox(r, r.a)}</article>`).join('');
     const p = t.pending.map(r => `<article class="soc-card ref-card" data-id="${esc(r.id)}"><div class="case-top"><div>${body_(r)}</div><span class="case-st wip">عرضك قيد المراجعة</span></div>${who(r.a)}<div class="case-act"><button type="button" class="soc-btn" data-a="withdraw">سحب العرض</button></div></article>`).join('');
-    return (a ? `<h3 class="cal-grp">إحالات اتسندت ليك</h3>${a}` : '') + (p ? `<h3 class="cal-grp">عروض لسه مستنية رد</h3>${p}` : '') + (t.lost > 0 ? `<p class="grp-empty">${S.num(t.lost)} عرض قديم: الإحالة اتسندت لزميل تاني أو اتقفلت.</p>` : '');
+    return (a ? `<h3 class="cal-grp">إنابات اتسندت ليك</h3>${a}` : '') + (p ? `<h3 class="cal-grp">عروض لسه مستنية رد</h3>${p}` : '') + (t.lost > 0 ? `<p class="grp-empty">${S.num(t.lost)} عرض قديم: الإنابة اتسندت لزميل تاني أو اتقفلت.</p>` : '');
   }
   function render() {
     $('filters').hidden = tab !== 'market';
     $('cMine').textContent = data.mine.filter(r => r.status === 'open' && r.offers_count).length ? '(' + S.num(data.mine.filter(r => r.status === 'open').reduce((n, r) => n + r.offers_count, 0)) + ')' : '';
     $('cTaken').textContent = data.taken.assigned.filter(r => r.status === 'assigned').length ? '(' + S.num(data.taken.assigned.filter(r => r.status === 'assigned').length) + ')' : '';
     let h;
-    if (tab === 'market') h = data.market.length ? data.market.map(marketCard).join('') : '<div class="empty">مفيش إحالات مفتوحة دلوقتي. كن أول واحد ينشر.</div>';
-    else if (tab === 'mine') h = data.mine.length ? data.mine.map(mineCard).join('') : '<div class="empty">ما نشرتش إحالات لسه. اضغط «إحالة جديدة».</div>';
-    else h = takenHTML(data.taken) || '<div class="empty">مفيش عروض ولا إحالات مسندة ليك لسه. قدّم عرضك على إحالة من السوق.</div>';
+    if (tab === 'market') h = data.market.length ? data.market.map(marketCard).join('') : '<div class="empty">مفيش إنابات مفتوحة دلوقتي. كن أول واحد ينشر.</div>';
+    else if (tab === 'mine') h = data.mine.length ? data.mine.map(mineCard).join('') : '<div class="empty">ما نشرتش إنابات لسه. اضغط «إنابة جديدة».</div>';
+    else h = takenHTML(data.taken) || '<div class="empty">مفيش عروض ولا إنابات مسندة ليك لسه. قدّم عرضك على إنابة من السوق.</div>';
     $('list').innerHTML = h;
   }
   async function loadMarket() { try { data.market = await S.listMarket({ q: $('fq').value, type: $('ftype').value, city: $('fcity').value }); } catch (e) { S.toast(S.friendly(e)); } }
@@ -118,13 +118,13 @@
     try {
       await S.createReferral({ title: $('rTitle').value, case_type: $('rType').value, city: $('rCity').value, court: $('rCourt').value, description: $('rDesc').value, deadline: $('rDate').value, arrangement: $('rArr').value });
       nOv.hidden = true; ['rTitle', 'rCity', 'rCourt', 'rDesc', 'rDate', 'rArr'].forEach(i => { $(i).value = ''; }); $('rType').value = '';
-      tab = 'mine'; document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', x.dataset.t === 'mine')); await loadAll(); S.toast('اتنشرت الإحالة');
+      tab = 'mine'; document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', x.dataset.t === 'mine')); await loadAll(); S.toast('اتنشرت الإنابة');
     } catch (e) { S.toast(S.friendly(e)); valid(); }
   };
   let offFor = null;
   $('oGo').onclick = async () => {
     if (!offFor) return; $('oGo').disabled = true;
-    try { await S.makeOffer(offFor.id, $('oMsg').value); oOv.hidden = true; $('oMsg').value = ''; await loadAll(); S.toast('اتبعت عرضك لصاحب الإحالة'); }
+    try { await S.makeOffer(offFor.id, $('oMsg').value); oOv.hidden = true; $('oMsg').value = ''; await loadAll(); S.toast('اتبعت عرضك لصاحب الإنابة'); }
     catch (e) { S.toast(S.friendly(e)); }
     $('oGo').disabled = false;
   };
@@ -138,10 +138,10 @@
       if (a === 'offer') { offFor = data.market.find(r => r.id === id); $('oCase').textContent = offFor.title; oOv.hidden = false; $('oMsg').focus(); }
       else if (a === 'withdraw') { await S.withdrawOffer(id); await loadAll(); S.toast('اتسحب العرض'); }
       else if (a === 'accept') { const l = b.closest('.ref-offer').dataset.l; if (confirm('تختار الزميل ده؟ هتظهر لكم بيانات التواصل لبعض.')) { await S.acceptOffer(id, l); await loadAll(); S.toast('تم اختيار الزميل'); } }
-      else if (a === 'cancel') { if (confirm('تلغي الإحالة؟')) { await S.setReferralStatus(id, 'cancelled'); await loadAll(); } }
+      else if (a === 'cancel') { if (confirm('تلغي الإنابة؟')) { await S.setReferralStatus(id, 'cancelled'); await loadAll(); } }
       else if (a === 'rate') { const o = b.closest('.ref-rate').dataset.o, n = Number(b.dataset.s); await S.reviewPeer(id, n); rv[o] = n; render(); S.toast('اتسجّل تقييمك'); }
       else if (a === 'complete') { await S.setReferralStatus(id, 'completed'); await loadAll(); S.toast('اتسجّلت كمكتملة'); }
-      else if (a === 'del') { if (confirm('تحذف الإحالة من السجل؟')) { await S.deleteReferral(id); await loadAll(); } }
+      else if (a === 'del') { if (confirm('تحذف الإنابة من السجل؟')) { await S.deleteReferral(id); await loadAll(); } }
       else if (a === 'contact') {
         const c = await S.referralContact(id), holder = b.closest('.ref-contact');
         if (!c || !c.phone) holder.innerHTML = '<small class="grp-empty">الزميل لسه ما حطّش رقم تواصل. افتح بروفايله.</small>';

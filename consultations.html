@@ -128,7 +128,7 @@
         <div class="lg-top"><div class="radar" aria-hidden="true"></div><div><h3>أنت على الهواء 🟢</h3><div class="lg-st" id="lgSt"></div><div>أونلاين من <span class="lg-clock" id="lgClk">00:00:00</span></div></div></div>
         <div class="lg-g"><div><b id="lgOn">–</b><small>محامين أونلاين معاك</small></div><div><b id="lgPos">–</b><small>ترتيبك في القايمة</small></div><div><b id="lgTd">0</b><small>طلبات النهارده</small></div></div>
         <div class="lg-tip" id="lgTip"></div>
-        <div class="lg-act"><a href="referrals.html">🔁 اتفرج على سوق الإحالات</a><a href="feed.html">📰 المنشورات</a><a href="calendar.html">📅 مفكرتك</a><a href="/qa">❓ جاوب أسئلة وابني سمعتك</a><label><input type="checkbox" id="lgSnd" checked> 🔔 تنبيه صوتي</label></div>
+        <div class="lg-act"><a href="referrals.html">🔁 اتفرج على سوق الإنابات</a><a href="feed.html">📰 المنشورات</a><a href="calendar.html">📅 مفكرتك</a><a href="/qa">❓ جاوب أسئلة وابني سمعتك</a><label><input type="checkbox" id="lgSnd" checked> 🔔 تنبيه صوتي</label></div>
       </div>
       <div id="list" aria-live="polite"></div>
     </section>
@@ -202,7 +202,7 @@
     presence();
   }
   const STS = ['بندوّر لك على موكل محتاج محامي دلوقتي…', 'ظاهر لكل الموكلين اللي فاتحين صفحة الاستشارات 👀', 'أول ما حد يطلبك هتسمع تنبيه 🔔', 'سيبك مرتاح، إحنا بنراقب لك الطلبات', 'ردّك السريع بيزوّد فرصتك في شارة «الأسرع ردّاً» ⚡'];
-  const TIPS = ['💡 اكتب في بروفايلك نبذة وتخصصاتك: الموكل بيختار المحامي اللي ملفه مكتمل.', '💡 الرد على الطلب في أقل من 90 ثانية بيجيبلك شارة «الأسرع ردّاً» ⚡', '💡 4.5 نجمة فما فوق بعد 5 تقييمات بتجيبلك شارة «الأعلى تقييماً» 🏆', '💡 ادعُ زميل وحسابه يتوثّق: عمولتك بتقل 1% عن كل زميل.', '💡 اقعد جاهز: الصفحة لازم تفضل مفتوحة علشان تفضل ظاهر للموكلين.', '💡 استغل الانتظار: اعمل منشور أو شوف إحالات في سوق الإحالات.'];
+  const TIPS = ['💡 اكتب في بروفايلك نبذة وتخصصاتك: الموكل بيختار المحامي اللي ملفه مكتمل.', '💡 الرد على الطلب في أقل من 90 ثانية بيجيبلك شارة «الأسرع ردّاً» ⚡', '💡 4.5 نجمة فما فوق بعد 5 تقييمات بتجيبلك شارة «الأعلى تقييماً» 🏆', '💡 ادعُ زميل وحسابه يتوثّق: عمولتك بتقل 1% عن كل زميل.', '💡 اقعد جاهز: الصفحة لازم تفضل مفتوحة علشان تفضل ظاهر للموكلين.', '💡 استغل الانتظار: اعمل منشور أو شوف إنابات في سوق الإنابات.'];
   let lgT = null, lgS = null, lgK = 0, t0 = 0, wl = null, ctx = null;
   let ringT = null, reqSecs = 120;
   const ringOn = on => { if (on && !ringT) { const go = () => { chime(); try { navigator.vibrate && navigator.vibrate([300, 150, 300]); } catch {} }; go(); ringT = setInterval(go, 3000); } else if (!on && ringT) { clearInterval(ringT); ringT = null; } };
