@@ -18,17 +18,29 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'method' });
   if (!secret || !pub || !priv) return res.status(500).json({ error: 'not_configured' });
   if (!same(req.headers['x-push-secret'], secret)) return res.status(403).json({ error: 'forbidden' });
-  const b = req.body || {}, isQ = typeof b.question === 'string', isD = typeof b.doc === 'string', isT = typeof b.topup === 'string', id = isT ? b.topup : isD ? b.doc : isQ ? b.question : b.consultation;
+  const b = req.body || {}, isQ = typeof b.question === 'string', isD = typeof b.doc === 'string', isT = typeof b.topup === 'string', isA = ['new', 'confirmed', 'wd'].includes(b.admin), id = isT ? b.topup : isA ? b.id : isD ? b.doc : isQ ? b.question : b.consultation;
   if (typeof id !== 'string' || !/^[0-9a-f-]{36}$/i.test(id)) return res.status(400).json({ error: 'bad_id' });
   const webpush = require('web-push');
   webpush.setVapidDetails(process.env.VAPID_SUBJECT || 'mailto:admin@legano.site', pub, priv);
   try {
-    const r = isT ? await rpc('topup_push_targets', { p_secret: secret, p_id: id }) : isD ? await rpc('doc_push_targets', { p_secret: secret, p_order: id }) : isQ ? await rpc('push_targets_q', { p_secret: secret, p_question: id }) : await rpc('push_targets', { p_secret: secret, p_consultation: id });
+    const r = isA ? await rpc('admin_push_targets', { p_secret: secret, p_kind: b.admin, p_id: id }) : isT ? await rpc('topup_push_targets', { p_secret: secret, p_id: id }) : isD ? await rpc('doc_push_targets', { p_secret: secret, p_order: id }) : isQ ? await rpc('push_targets_q', { p_secret: secret, p_question: id }) : await rpc('push_targets', { p_secret: secret, p_consultation: id });
     if (!r.ok) return res.status(502).json({ error: 'targets' });
     const subs = await r.json();
     let sent = 0, dropped = 0;
     await Promise.all((Array.isArray(subs) ? subs : []).map(async s => {
-      const payload = JSON.stringify(isT ? {
+      const A = s.info || {}, payload = JSON.stringify(isA ? (s.kind === 'wd' ? {
+        title: '🏦 طلب سحب جديد: ' + (Number(A.amount) || 0) + ' ج',
+        body: String(A.lawyer || 'محامي').slice(0, 40) + ' طلب يسحب أرباحه',
+        url: '/admin.html', tag: 'wd-' + s.id, urgent: true
+      } : s.kind === 'confirmed' ? {
+        title: '✅ استشارة اتأكدت: حوّل للمحامي',
+        body: `${String(A.lawyer || 'محامي').slice(0, 40)} • صافيه ${Number(A.net) || 0} ج`,
+        url: '/admin.html', tag: 'cf-' + s.id, urgent: true
+      } : {
+        title: '⚖️ استشارة جديدة على المنصة',
+        body: `${String(A.client || 'موكل').slice(0, 30)} مع ${String(A.lawyer || 'محامي').slice(0, 40)} • ${Number(A.price) || 0} ج${A.wallet ? ' (من المحفظة)' : ''}`,
+        url: '/admin.html', tag: 'new-' + s.id, urgent: false
+      }) : isT ? {
         title: '💰 طلب شحن جديد: ' + (Number(s.amount) || 0) + ' ج',
         body: 'راجع الإيصال من لوحة الأدمن ووافق',
         url: '/admin.html', tag: 'topup-' + s.id, urgent: true

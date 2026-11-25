@@ -266,9 +266,13 @@
 
   let av = 0;
   document.querySelector('.wq').addEventListener('click', e => { const b = e.target.closest('[data-q]'); if (!b) return; $('wAmt').value = b.dataset.q === 'all' ? Math.floor(av) : Math.min(+b.dataset.q, Math.floor(av)) || b.dataset.q; });
+  $('wList').addEventListener('click', async e => {
+    const b = e.target.closest('[data-proof]'); if (!b) return;
+    try { const f = await C.withdrawalProof(b.dataset.proof); const w = window.open('', '_blank'); if (w) { w.document.write('<title>إثبات التحويل</title><body style="margin:0;background:#111"><p style="color:#fff;font:14px sans-serif;text-align:center">اتحوّل من: ' + String(f.from || '').replace(/[<>&]/g, '') + '</p><img style="max-width:100%;display:block;margin:auto" src="data:' + f.mime + ';base64,' + f.b64.replace(/\s/g, '') + '">'); w.document.close(); } } catch { S.toast('الإثبات مش متاح دلوقتي.'); }
+  });
   async function loadWallet() {
     try { const w = await C.wallet(); av = Number(w.available) || 0; anim($('wAv'), av); const nx = MS.find(x => (Number(w.total_earned) || 0) < x); $('wMs').textContent = nx ? `🎯 فاضل ${S.num(nx - (Number(w.total_earned) || 0))} ج على «${MN[MS.indexOf(nx)]}»` : '🎉 وصلت للمليون!'; $('wHold').textContent = S.num(w.on_hold) + ' ج'; $('wTot').textContent = S.num(w.total_earned) + ' ج'; } catch {}
-    try { const l = await C.withdrawals(); $('wList').innerHTML = l.length ? l.map(x => `<div class="cs-row"><div><b>${S.num(x.amount)} ج</b> • ${esc(METH[x.method] || x.method)}<small>${fmt(x.created_at)}</small></div><span style="font-weight:800">${WST[x.status] || x.status}</span></div>`).join('') : '<div class="empty">مفيش طلبات سحب.</div>'; } catch {}
+    try { const l = await C.withdrawals(); $('wList').innerHTML = l.length ? l.map(x => `<div class="cs-row"><div><b>${S.num(x.amount)} ج</b> • ${esc(METH[x.method] || x.method)}<small>${fmt(x.created_at)}</small></div><span style="font-weight:800">${WST[x.status] || x.status}${x.status === 'paid' && x.paid_from ? ` <button type="button" class="soc-btn" data-proof="${esc(x.id)}" style="padding:2px 10px;font-size:12px">🧾 إثبات التحويل</button>` : ''}</span></div>`).join('') : '<div class="empty">مفيش طلبات سحب.</div>'; } catch {}
   }
   async function loadInv() {
     try {

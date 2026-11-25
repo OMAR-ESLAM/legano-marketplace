@@ -159,7 +159,7 @@
 
   // نص الموافقة مبدئي، ولازم يتراجع مع المستشار القانوني قبل الإطلاق الفعلي
   const CONSENT = 'تتم هذه الاستشارة عبر اتصال مباشر بين الطرفين داخل منصة ليجانو، ولا يتم تسجيل الصوت ولا الفيديو. الاتصال المباشر يعني أن عنوان الاتصال (IP) لكل طرف قد يظهر للطرف الآخر تقنياً.\n\nيتم تحويل الكلام إلى نص مكتوب أثناء الاستشارة: يحوّل متصفح كل طرف كلامه هو فقط إلى نص، وقد يُرسَل الصوت لهذا الغرض إلى خدمة التعرف على الكلام التابعة لمتصفحك (مثل Google في Chrome). يُحفظ النص دون الصوت، ويراجعه فريق المنصة فقط عند وجود اعتراض. قد لا يكون النص دقيقاً.\n\nتُحذف الملفات والرسائل والملخص والنص تلقائياً بعد انتهاء مهلة الاعتراض. المنصة ليست طرفاً في العلاقة بين المحامي والموكل، والاستشارة لا تُنشئ توكيلاً بأي دعوى.';
-  const FINAL = ['released', 'refunded', 'cancelled', 'expired'];
+  const FINAL = ['confirmed', 'released', 'refunded', 'cancelled', 'expired'];
   let st = null, offset = 0, joining = false, pingTimer = null, filesSig = '', fileList = [], lastStatus = null;
   const my = k => ROLE === 'client' ? st['client_' + k] : st['lawyer_' + k];
   const other = k => ROLE === 'client' ? st['lawyer_' + k] : st['client_' + k];
@@ -395,6 +395,7 @@
     const s = st.status;
     const M = {
       released: ROLE === 'lawyer' ? `<h2>✅ تمّت الاستشارة</h2><p>اتضاف <b>${earn()} ج</b> لمحفظتك (بعد خصم عمولة المنصة).</p>${st.client_stars ? `<p>تقييم الموكل: <b>${'★'.repeat(st.client_stars)}${'☆'.repeat(5 - st.client_stars)}</b></p>` : ''}${st.client_note ? `<p>ملاحظة الموكل: «${esc(st.client_note)}»</p>` : ''}<a class="soc-btn primary" href="consultations.html">رجوع للاستشارات</a>` : `<h2>✅ شكراً ليك</h2><p>اتأكدت الاستشارة وراحت الفلوس للمحامي.</p>${st.my_stars ? `<p>تقييمك: <b>${'★'.repeat(st.my_stars)}${'☆'.repeat(5 - st.my_stars)}</b></p>` : `<div class="cs-stars" id="stars">${[1, 2, 3, 4, 5].map(n => `<button type="button" data-star="${n}" aria-label="${n} نجوم">☆</button>`).join('')}<small>قيّم المحامي (اختياري)</small></div><textarea id="rnote" class="f-i" rows="2" maxlength="500" placeholder="ملاحظات (اختياري)" style="margin:8px 0"></textarea><button class="soc-btn primary" data-a="rate" type="button">ابعت التقييم</button> `}<a class="soc-btn" href="/lawyer/${esc(st.lawyer.id)}">صفحة المحامي</a>`,
+      confirmed: ROLE === 'lawyer' ? `<h2>✅ الموكل أكّد الاستشارة</h2><p>صافي ربحك <b>${earn()} ج</b>. المنصة بتراجع وتحوّلهم لمحفظتك قريب، وهيوصلك إشعار.</p><a class="soc-btn primary" href="consultations.html">رجوع للاستشارات</a>` : `<h2>✅ شكراً ليك</h2><p>تأكيدك اتسجّل. المنصة هتحوّل مستحقات المحامي. تقدر تتابع كل استشاراتك من «حسابي».</p><a class="soc-btn primary" href="account.html">حسابي</a>`,
       disputed: `<h2>قيد المراجعة</h2><p>الفلوس متجمّدة لحد ما فريق المنصة يراجع الاستشارة ويبلّغ الطرفين.</p>`,
       refunded: `<h2>اتردّت</h2><p>الاستشارة اتردّت بالكامل للموكل.</p>`,
       cancelled: `<h2>الاستشارة اتلغت</h2><p>مفيش أي مبلغ اتسحب.</p>`,

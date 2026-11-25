@@ -258,6 +258,9 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--white);
       </div>
       <div style="font-size:12px;color:var(--gray);margin:6px 0 18px">التعديل بيسري على الاستشارات الجديدة بس. الاستشارات الجارية بتفضل بالعمولة اللي اتحجزت بيها.</div>
       <div class="section-title">اعتراضات محتاجة قرار</div>
+      <div class="section-title">✅ جاهزة للتحويل للمحامي</div>
+      <div id="csReady"></div>
+      <div class="section-title" style="margin-top:20px">⚠️ اعتراضات</div>
       <div id="csDisputes"><div class="loading-msg">جارٍ التحميل...</div></div>
       <div class="section-title" style="margin-top:28px">طلبات سحب</div>
       <div class="file-toolbar"><select id="wdFilter" class="search-bar" style="max-width:220px"><option value="pending">المعلّقة</option><option value="paid">اتدفعت</option><option value="rejected">المرفوضة</option><option value="all">الكل</option></select></div>
@@ -566,7 +569,7 @@ async function loadQa() {
 }
 
 /* الاستشارات الفورية: عمولة + اعتراضات + سحب */
-const STL = { requested: 'طلب', accepted: 'اتقبلت', live: 'جارية', awaiting_confirm: 'مستنية تأكيد', disputed: 'اعتراض', released: 'اتحوّلت', refunded: 'اتردّت', cancelled: 'ملغية', expired: 'انتهت' };
+const STL = { requested: 'طلب', accepted: 'اتقبلت', live: 'جارية', awaiting_confirm: 'مستنية تأكيد', disputed: 'اعتراض', confirmed: 'جاهزة للتحويل', released: 'اتحوّلت', refunded: 'اتردّت', cancelled: 'ملغية', expired: 'انتهت' };
 const egp = n => Number(n || 0).toLocaleString('ar-EG') + ' ج';
 const dt = d => d ? new Date(d).toLocaleString('ar-EG') : '—';
 async function loadConsults() {
@@ -593,8 +596,13 @@ function csCard(c, actions) {
 }
 async function loadDisputes() {
   try {
-    const rows = await rpc('consult_admin_list', { p_status: 'disputed' });
-    $('csBadge').textContent = rows.length ? `(${rows.length})` : '';
+    const rows = await rpc('consult_admin_list', { p_status: 'disputed' }), ready = await rpc('consult_admin_list', { p_status: 'confirmed' });
+    $('csBadge').textContent = rows.length + ready.length ? `(${rows.length + ready.length})` : '';
+    $('csReady').innerHTML = ready.length ? ready.map(c => csCard(c, `<button class="pbtn approve" data-pay="${c.id}" data-net="${c.net}" data-fee="${c.fee}">💸 حوّل للمحامي (${egp(c.net)})</button>`).replace('</small><br>\n    <small>الموضوع', (c.from_wallet ? ' • دفع من المحفظة ✅' : ' • <b style="color:#e0556a">ما دفعش من المحفظة، اتأكد من الدفع الأول</b>') + '</small><br>\n    <small>الموضوع')).join('') : '<div class="empty-state">مفيش استشارات مستنية تحويل</div>';
+    $('csReady').querySelectorAll('[data-pay]').forEach(b => b.onclick = async () => {
+      if (!confirm('هتخصم عمولتك ' + b.dataset.fee + ' ج وتنزّل ' + b.dataset.net + ' ج في محفظة المحامي. متأكد؟')) return;
+      try { await rpc('consult_admin_release', { p_id: b.dataset.pay }); toast('اتحوّل للمحامي'); loadDisputes(); loadAllConsults(); } catch (e) { toast('خطأ: ' + e.message); }
+    });
     $('csDisputes').innerHTML = rows.length ? rows.map(c => csCard(c, `<button class="pbtn" data-chat="${c.id}">المحادثة والملخص</button><button class="pbtn approve" data-rel="${c.id}">حوّل للمحامي</button><button class="pbtn reject" data-ref="${c.id}">رجّع للموكل</button>`)).join('') : '<div class="empty-state">مفيش اعتراضات</div>';
     $('csDisputes').querySelectorAll('[data-chat]').forEach(b => b.onclick = async () => {
       const card = b.closest('.user-card'); let box = card.nextElementSibling; if (box && box.classList.contains('cs-chatbox')) { box.remove(); return; }
@@ -613,11 +621,28 @@ async function loadDisputes() {
 async function loadWd() {
   try {
     const rows = await rpc('withdrawals_admin_list', { p_status: $('wdFilter').value });
-    $('csWd').innerHTML = rows.length ? rows.map(w => `<div class="user-card"><div class="info"><b>${esc(w.lawyer_name || '—')}</b> • ${egp(w.amount)}<br><small>${esc(w.method)}: <span dir="ltr">${esc(w.account)}</span> • ${dt(w.created_at)}</small> <span class="status-tag ${w.status === 'paid' ? 'approved' : w.status === 'rejected' ? 'rejected' : 'pending'}">${{ pending: 'معلّق', paid: 'اتدفع', rejected: 'مرفوض' }[w.status] || esc(w.status)}</span></div>
-      ${w.status === 'pending' ? `<div class="payment-actions"><button class="pbtn approve" data-pd="${w.id}">اتدفع</button><button class="pbtn reject" data-rj="${w.id}">ارفض</button></div>` : ''}</div>`).join('') : '<div class="empty-state">مفيش طلبات</div>';
-    $('csWd').querySelectorAll('[data-pd],[data-rj]').forEach(b => b.onclick = async () => {
-      const paid = !!b.dataset.pd; if (!confirm(paid ? 'اتأكدت إنك حوّلت المبلغ فعلاً للمحامي؟' : 'رفض الطلب هيرجّع المبلغ لرصيد المحامي. متأكد؟')) return;
-      try { await rpc('withdrawal_admin_set', { p_id: b.dataset.pd || b.dataset.rj, p_status: paid ? 'paid' : 'rejected' }); toast('تم'); loadWd(); } catch (e) { toast('خطأ: ' + e.message); }
+    $('csWd').innerHTML = rows.length ? rows.map(w => `<div class="user-card" style="display:block"><div class="info"><b>${esc(w.lawyer_name || '—')}</b> • ${egp(w.amount)}<br><small>${esc(w.method)}: <span dir="ltr">${esc(w.account)}</span> • ${dt(w.created_at)}${w.paid_from ? ' • اتحوّل من: <span dir="ltr">' + esc(w.paid_from) + '</span>' : ''}</small> <span class="status-tag ${w.status === 'paid' ? 'approved' : w.status === 'rejected' ? 'rejected' : 'pending'}">${{ pending: 'معلّق', paid: 'اتدفع', rejected: 'مرفوض' }[w.status] || esc(w.status)}</span></div>
+      <div class="payment-actions" style="margin-top:8px"><button class="pbtn" data-wl="${w.lawyer_id}">💼 فلوس المحامي</button>${w.has_proof ? `<button class="pbtn" data-wp="${w.id}">🧾 الإثبات</button>` : ''}${w.status === 'pending' ? `<button class="pbtn approve" data-pd="${w.id}">اتدفع</button><button class="pbtn reject" data-rj="${w.id}">ارفض</button>` : ''}</div><div class="wd-box" data-box="${w.id}"></div></div>`).join('') : '<div class="empty-state">مفيش طلبات</div>';
+    const shrink = f => new Promise((ok, no) => { const im = new Image(), u = URL.createObjectURL(f); im.onload = () => { const k = Math.min(1, 1200 / Math.max(im.width, im.height)), c = document.createElement('canvas'); c.width = Math.round(im.width * k); c.height = Math.round(im.height * k); c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); URL.revokeObjectURL(u); ok(c.toDataURL('image/jpeg', 0.72).split(',')[1]); }; im.onerror = () => no(new Error('الصورة مش مقروءة')); im.src = u; });
+    const show = async id => { const f = await rpc('withdrawal_proof', { p_id: id }); const w = window.open('', '_blank'); if (w) { w.document.write('<title>إثبات التحويل</title><body style="margin:0;background:#111"><img style="max-width:100%;display:block;margin:auto" src="data:' + f.mime + ';base64,' + f.b64.replace(/\s/g, '') + '">'); w.document.close(); } };
+    $('csWd').querySelectorAll('[data-wp]').forEach(b => b.onclick = () => show(b.dataset.wp).catch(e => toast('خطأ: ' + e.message)));
+    $('csWd').querySelectorAll('[data-wl]').forEach(b => b.onclick = async () => {
+      const box = b.closest('.user-card').querySelector('.wd-box');
+      try { const w = await rpc('admin_lawyer_wallet', { p_lawyer: b.dataset.wl }); box.innerHTML = `<div style="margin-top:8px;padding:10px;background:#F8FAFC;border-radius:10px;font-size:13px;line-height:1.9">المتاح للسحب: <b>${egp(w.available + w.pending)}</b> (منه طلبات معلّقة ${egp(w.pending)})<br>معلّق لحد التأكيد: <b>${egp(w.on_hold)}</b><br>إجمالي أرباحه: <b>${egp(w.total_earned)}</b> • اتحوّل له قبل كده: <b>${egp(w.paid)}</b></div>`; } catch (e) { toast('خطأ: ' + e.message); }
+    });
+    $('csWd').querySelectorAll('[data-pd]').forEach(b => b.onclick = () => {
+      const box = b.closest('.user-card').querySelector('.wd-box');
+      box.innerHTML = `<div style="margin-top:8px;padding:10px;background:#F8FAFC;border-radius:10px"><div style="font-size:13px;margin-bottom:6px">حوّل المبلغ للحساب المكتوب فوق، وبعدين املا ده وارفع سكرين التحويل:</div>
+        <input class="search-bar" id="wdFrom" dir="ltr" placeholder="الرقم اللي حوّلت منه" style="margin-bottom:6px"><input type="file" id="wdFile" accept="image/*" style="margin-bottom:6px;display:block"><button class="pbtn approve" id="wdGo">تأكيد الدفع</button></div>`;
+      box.querySelector('#wdGo').onclick = async () => {
+        const f = box.querySelector('#wdFile').files[0], from = box.querySelector('#wdFrom').value.trim();
+        if (!f || from.length < 4) { toast('اكتب الرقم وارفع سكرين التحويل'); return; }
+        try { const b64 = await shrink(f); await rpc('withdrawal_admin_pay', { p_id: b.dataset.pd, p_from: from, p_proof: b64, p_mime: 'image/jpeg' }); toast('تم تسجيل الدفع'); loadWd(); } catch (e) { toast('خطأ: ' + e.message); }
+      };
+    });
+    $('csWd').querySelectorAll('[data-rj]').forEach(b => b.onclick = async () => {
+      if (!confirm('رفض الطلب هيرجّع المبلغ لرصيد المحامي. متأكد؟')) return;
+      try { await rpc('withdrawal_admin_set', { p_id: b.dataset.rj, p_status: 'rejected' }); toast('تم'); loadWd(); } catch (e) { toast('خطأ: ' + e.message); }
     });
   } catch (e) { $('csWd').innerHTML = `<div class="empty-state">${esc(e.message)}</div>`; }
 }

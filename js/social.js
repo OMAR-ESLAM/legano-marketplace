@@ -785,8 +785,9 @@
     mine: () => call(`/rest/v1/consultations?select=${CONSULT_COLS}&order=created_at.desc&limit=60`),
     limits: async () => (await call('/rest/v1/consult_settings?select=fee_pct,fee_flat,min_price,max_price,min_minutes,confirm_hours,retain_hours,request_secs&id=eq.1'))[0],
     wallet: () => rpc('wallet_summary'),
+    withdrawalProof: id => rpc('withdrawal_proof', { p_id: id }),
     inviteInfo: () => rpc('my_invite_info', {}),
-    withdrawals: () => call('/rest/v1/withdrawal_requests?select=id,amount,method,status,created_at&order=created_at.desc&limit=20'),
+    withdrawals: () => call('/rest/v1/withdrawal_requests?select=id,amount,method,status,created_at,paid_from&order=created_at.desc&limit=20'),
     withdraw: (amount, method, account) => rpc('request_withdrawal', { p_amount: Number(amount), p_method: method, p_account: account }),
     // الغرفة: دالة السيرفر بتتأكد إنك طرف وإن الاتنين وافقوا، وبترجّع رابط الفيديو
     room: async (id, token) => {
@@ -796,7 +797,7 @@
       if (!r.ok) { const e = new Error(j.error || 'room_error'); e.status = r.status; throw e; }
       return j;
     },
-    ST: { requested: 'في انتظار رد المحامي', accepted: 'مقبولة: في انتظار الموافقة والدخول', live: 'جارية', awaiting_confirm: 'في انتظار تأكيد الموكل', released: 'تمّت وتحوّلت للمحفظة', disputed: 'قيد المراجعة', refunded: 'اتردّت للموكل', cancelled: 'اتلغت', expired: 'انتهت من غير رد' },
+    ST: { requested: 'في انتظار رد المحامي', accepted: 'مقبولة: في انتظار الموافقة والدخول', live: 'جارية', awaiting_confirm: 'في انتظار تأكيد الموكل', confirmed: 'الموكل أكّد، في انتظار تحويل المنصة لمحفظتك', released: 'تمّت وتحوّلت للمحفظة', disputed: 'قيد المراجعة', refunded: 'اتردّت للموكل', cancelled: 'اتلغت', expired: 'انتهت من غير رد' },
   };
 
   try { const r = new URLSearchParams(location.search).get('ref'); if (r && /^[0-9a-f]{8}$/i.test(r)) localStorage.setItem('lg_ref', r.toLowerCase()); } catch {}
