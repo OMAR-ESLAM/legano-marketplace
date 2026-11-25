@@ -71,6 +71,7 @@
     if (/no_offer/.test(m)) return 'العرض ده مش موجود (يمكن اتسحب).';
     if (/bad_status/.test(m)) return 'الحالة اتغيّرت. حدّث الصفحة.';
     if (/wallet_low/.test(m)) return 'رصيد المحفظة مش كفاية للاستشارة دي.';
+    if (/pay_required/.test(m)) return 'الدفع من المحفظة بس: سجّل دخول، واشحن رصيدك من «حسابي»، وبعدين ابعت الطلب.';
     if (/wallet_login/.test(m)) return 'سجّل دخول بحسابك الأول علشان تدفع من المحفظة.';
     if (/lawyer_offline/.test(m)) return 'المحامي مش أونلاين دلوقتي. جرّب محامي تاني.';
     if (/lawyer_busy/.test(m)) return 'المحامي في استشارة دلوقتي. جرّب محامي تاني أو استنى شوية.';

@@ -195,6 +195,7 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--white);
       <button class="tab-btn" data-view="reports">البلاغات</button>
       <button class="tab-btn" data-view="ratings">التقييمات</button>
       <button class="tab-btn" data-view="consults">الاستشارات <span id="csBadge"></span></button>
+      <button class="tab-btn" data-view="topups">الشحن <span id="tpBadge"></span></button>
       <button class="tab-btn" data-view="docs">المستندات <span id="docBadge"></span></button>
       <button class="tab-btn" data-view="qa">الأسئلة <span id="qaBadge"></span></button>
       <button class="tab-btn" data-view="files">ملفات الموقع</button>
@@ -224,6 +225,13 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--white);
       <div class="section-title">تقييمات الموكلين</div>
       <div style="font-size:12px;color:var(--gray);margin-bottom:12px">آخر 100 تقييم. لو لقيت تقييم مشبوه (تقييمات كتير من نفس الشخص أو تلاعب) امسحه والمتوسط بيتحدث لوحده.</div>
       <div id="ratingsWrap"><div class="loading-msg">جارٍ التحميل...</div></div>
+    </div>
+    <div class="view" id="view-topups">
+      <div class="section-title">طلبات شحن الرصيد</div>
+      <div style="font-size:12px;color:var(--gray);margin-bottom:10px">اتأكد من فودافون كاش إن المبلغ وصل من الرقم المكتوب قبل ما توافق. الموافقة بتضيف الرصيد فوراً ومينفعش تتراجع.</div>
+      <div id="tpSet"></div>
+      <select id="tpFlt" class="search-bar" style="max-width:220px"><option value="pending">المعلّقة</option><option value="approved">اللي اتقبلت</option><option value="rejected">المرفوضة</option><option value="all">الكل</option></select>
+      <div id="tpWrap"><div class="loading-msg">جارٍ التحميل...</div></div>
     </div>
     <div class="view" id="view-docs">
       <div class="section-title">المستندات القانونية</div>
@@ -321,6 +329,7 @@ document.querySelectorAll('.tab-btn').forEach(b => b.onclick = () => {
   if (b.dataset.view === 'consults') loadConsults();
   if (b.dataset.view === 'qa') loadQa();
   if (b.dataset.view === 'docs') loadDocs();
+  if (b.dataset.view === 'topups') loadTopups();
 });
 $('lightbox').onclick = () => $('lightbox').classList.remove('show');
 const lightbox = src => { $('lightboxImg').src = src; $('lightbox').classList.add('show'); };
@@ -464,6 +473,32 @@ function renderLawyers() {
 $('lSearch').oninput = renderLawyers;
 
 
+
+/* شحن الرصيد اليدوي */
+async function loadTopups() {
+  try {
+    const pi = await rpc('pay_info');
+    $('tpSet').innerHTML = `<div class="user-card" style="display:block;margin-bottom:12px"><b>إعدادات الدفع</b><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:8px 0">
+      <label style="font-size:12px">رقم استلام الفلوس<input id="pyNum" value="${esc(pi.number)}" dir="ltr" style="width:100%;padding:6px;border:1px solid #E2E8F0;border-radius:8px"></label>
+      <label style="font-size:12px">حساب إنستا باي (اختياري)<input id="pyIp" value="${esc(pi.instapay || '')}" dir="ltr" style="width:100%;padding:6px;border:1px solid #E2E8F0;border-radius:8px"></label>
+      <label style="font-size:12px">أقل شحن<input id="pyMin" type="number" value="${pi.min}" style="width:100%;padding:6px;border:1px solid #E2E8F0;border-radius:8px"></label>
+      <label style="font-size:12px">أعلى شحن<input id="pyMax" type="number" value="${pi.max}" style="width:100%;padding:6px;border:1px solid #E2E8F0;border-radius:8px"></label></div>
+      <label style="font-size:13px;display:block;margin-bottom:8px"><input type="checkbox" id="pyEnf" ${pi.enforce ? 'checked' : ''}> الدفع إجباري (الطلب مش بيتبعت غير من الرصيد). فعّلها بعد ما تشغّل دخول جوجل.</label>
+      <button class="pbtn approve" id="pySave">حفظ</button></div>`;
+    $('pySave').onclick = async () => { try { await rpc('pay_admin_save', { p_number: $('pyNum').value.trim(), p_instapay: $('pyIp').value, p_min: Math.round(Number($('pyMin').value)), p_max: Math.round(Number($('pyMax').value)), p_enforce: $('pyEnf').checked }); toast('اتحفظ'); } catch (e) { toast('خطأ: ' + e.message); } };
+    $('tpFlt').onchange = loadTopups;
+    const rows = await rpc('topup_admin_list', { p_status: $('tpFlt').value });
+    const pend = $('tpFlt').value === 'pending' ? rows.length : (await rpc('topup_admin_list', { p_status: 'pending' })).length; $('tpBadge').textContent = pend ? `(${pend})` : '';
+    const MT = { vodafone_cash: 'فودافون كاش', instapay: 'إنستا باي' };
+    $('tpWrap').innerHTML = rows.length ? rows.map(t => `<div class="user-card" style="display:block"><b>${esc(t.amount)} ج</b> • ${MT[t.method] || ''} <span class="status-tag ${t.status === 'rejected' ? 'rejected' : 'approved'}">${esc(t.status)}</span><br><small>${esc(t.client || '')} • من: <span dir="ltr">${esc(t.sender)}</span>${t.ref ? ' • عملية: ' + esc(t.ref) : ''} • ${dt(t.at)}</small>
+      ${t.status === 'pending' ? `<div style="display:flex;gap:6px;margin-top:8px"><button class="pbtn approve" data-ta="1" data-ti="${t.id}" data-am="${t.amount}">وصل — أضف الرصيد</button><button class="pbtn reject" data-ta="0" data-ti="${t.id}">ارفض</button></div>` : (t.note ? `<small>ملاحظة: ${esc(t.note)}</small>` : '')}</div>`).join('') : '<div class="empty-state">مفيش طلبات هنا.</div>';
+    $('tpWrap').querySelectorAll('[data-ta]').forEach(b => b.onclick = async () => {
+      const ok = b.dataset.ta === '1'; let note = null;
+      if (ok) { if (!confirm('تأكدت إن ' + b.dataset.am + ' ج وصلوا على الرقم؟ الرصيد هيتضاف فوراً.')) return; } else { note = prompt('سبب الرفض (هيظهر للموكل):', 'التحويل مش ظاهر عندنا'); if (note === null) return; }
+      try { await rpc('topup_admin_review', { p_id: b.dataset.ti, p_approve: ok, p_note: note }); toast('تم'); loadTopups(); } catch (e) { toast('خطأ: ' + e.message); }
+    });
+  } catch (e) { $('tpWrap').innerHTML = `<div class="empty-state">${esc(e.message)}</div>`; }
+}
 
 /* المستندات القانونية: خدمات، إعدادات، طلبات، حل الشكاوى */
 let docStatus = 'disputed';

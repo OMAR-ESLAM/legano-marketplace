@@ -50,7 +50,7 @@
   const $ = id => document.getElementById(id), S = window.Social, esc = S.esc, CA = window.ClientAuth;
   S.mountNav($('navSlot'));
   const rpc = (fn, json) => S.call('/rest/v1/rpc/' + fn, { method: 'POST', json: json || {} });
-  const ERR = { doc_rate: 'وصلت للحد المسموح (5 طلبات في اليوم). جرّب بكرة.', wallet_login: 'سجّل بجوجل الأول علشان تدفع من المحفظة.', wallet_low: 'رصيد المحفظة مش كفاية.', doc_down: 'الخدمة دي مش متاحة حالياً.' };
+  const ERR = { doc_rate: 'وصلت للحد المسموح (5 طلبات في اليوم). جرّب بكرة.', wallet_login: 'سجّل بجوجل الأول علشان تدفع من المحفظة.', wallet_low: 'رصيد المحفظة مش كفاية. اشحن من «حسابي».', pay_required: 'الدفع من المحفظة بس: سجّل دخول، واشحن رصيدك من «حسابي»، وبعدين ابعت الطلب.', doc_down: 'الخدمة دي مش متاحة حالياً.' };
   const errMsg = e => { const m = String((e && e.message) || ''); const mm = m.match(/doc_(missing|bad_value|too_long):?(\w+)?/); if (mm) return mm[1] === 'missing' ? 'في بيان مطلوب ناقص: ' + (lab[mm[2]] || mm[2]) : 'القيمة مش صحيحة في خانة: ' + (lab[mm[2]] || mm[2]); const k = Object.keys(ERR).find(x => m.includes(x)); return k ? ERR[k] : S.friendly(e); };
   let svcs = [], lab = {}, cur = null, bal = null;
   async function wallet() { if (!CA) return; try { await CA.handleHash(); if (CA.get()) bal = Number((await CA.me()).balance) || 0; } catch {} }
