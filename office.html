@@ -18,23 +18,23 @@
   #navSlot { display: none; }
   main { max-width: 560px; margin: 0 auto; padding: 0 0 120px; }
   .hello { padding: 16px 18px 6px; } .hello h1 { margin: 0; font-size: 1.35rem; font-weight: 900; } .hello p { margin: 2px 0 0; color: #94a3b8; font-size: .88rem; }
-  .scene { position: relative; margin: 8px 10px 0; border-radius: 22px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,.5), inset 0 0 0 1px rgba(255,255,255,.08); background: #1a2540; }
+  .scene { position: relative; margin: 8px 10px 0; border-radius: 20px; overflow: hidden; box-shadow: 0 14px 36px rgba(0,0,0,.4); background: #1c2a49; }
   .scene svg { display: block; width: 100%; height: auto; }
   .hs { cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent; }
   .hs .lift { transition: transform .18s ease; transform-box: fill-box; transform-origin: center bottom; }
   .hs:hover .lift, .hs:focus-visible .lift, .hs:active .lift { transform: translateY(-3px) scale(1.04); }
   .hs:focus-visible .ring, .hs:hover .ring { opacity: 1; }
   .ring { fill: none; stroke: #fcd34d; stroke-width: 2; stroke-dasharray: 5 4; opacity: 0; transition: opacity .15s; pointer-events: none; }
-  .lbl { font: 800 11.5px 'Cairo', sans-serif; fill: #fff; paint-order: stroke; stroke: rgba(0,0,0,.55); stroke-width: 3px; text-anchor: middle; pointer-events: none; }
+  .lbl { font: 700 11px 'Cairo', sans-serif; fill: #f1e9d2; text-anchor: middle; pointer-events: none; }
   .bd { opacity: 0; transform: scale(.4); transform-box: fill-box; transform-origin: center; transition: .3s cubic-bezier(.2,1.6,.4,1); pointer-events: none; } .bd.on { opacity: 1; transform: none; }
-  .bd circle { fill: #ef4444; stroke: #fff; stroke-width: 1.5; } .bd text { font: 900 11px 'Cairo', sans-serif; fill: #fff; text-anchor: middle; }
+  .bd circle { fill: #e8b84a; stroke: #1c2a49; stroke-width: 1.5; } .bd text { font: 900 11px 'Cairo', sans-serif; fill: #1c2a49; text-anchor: middle; }
   .ring-phone.on { animation: shake .55s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
   @keyframes shake { 0%,100% { transform: rotate(0); } 20% { transform: rotate(-9deg); } 40% { transform: rotate(8deg); } 60% { transform: rotate(-6deg); } 80% { transform: rotate(5deg); } }
   .glow { animation: glow 3s ease-in-out infinite; } @keyframes glow { 50% { opacity: .65; } }
   .dust circle { animation: float 7s ease-in-out infinite; } @keyframes float { 50% { transform: translateY(-14px); opacity: .15; } }
   .status { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin: 14px 10px 0; }
   .chip { display: inline-flex; align-items: center; gap: 7px; padding: 7px 14px; border-radius: 999px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); font-size: 12.5px; font-weight: 800; color: #e2e8f0; text-decoration: none; }
-  .chip i { width: 9px; height: 9px; border-radius: 50%; background: #94a3b8; } .chip.on i { background: #22c55e; box-shadow: 0 0 0 0 rgba(34,197,94,.7); animation: pl 1.8s infinite; } @keyframes pl { 70% { box-shadow: 0 0 0 9px rgba(34,197,94,0); } 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); } }
+  .chip i { width: 9px; height: 9px; border-radius: 50%; background: #94a3b8; } .chip.on i { background: #e8b84a; box-shadow: 0 0 0 0 rgba(34,197,94,.7); animation: pl 1.8s infinite; } @keyframes pl { 70% { box-shadow: 0 0 0 9px rgba(34,197,94,0); } 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); } }
   .gate { margin: 40px 16px; padding: 24px; border-radius: 18px; background: rgba(255,255,255,.08); text-align: center; } .gate a { color: #fcd34d; font-weight: 800; }
   /* مدخل المكتب */
   #door { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; background: #0B1220; overflow: hidden; }
@@ -75,65 +75,32 @@
   <div id="office" hidden>
     <div class="hello"><h1 id="hello">أهلاً بيك في مكتبك</h1><p id="sub">كل شغلك قدامك. اضغط على أي حاجة على المكتب.</p></div>
     <div class="scene" id="scene">
-      <svg id="sv" viewBox="0 0 380 640" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="مكتب المحامي">
-        <defs>
-          <linearGradient id="gWall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#26365c"/><stop offset="1" stop-color="#1b2848"/></linearGradient>
-          <linearGradient id="gWood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a5a2b"/><stop offset="1" stop-color="#5e3a1a"/></linearGradient>
-          <linearGradient id="gDesk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a06a35"/><stop offset="1" stop-color="#6f4521"/></linearGradient>
-          <linearGradient id="gSky" x1="0" y1="0" x2="0" y2="1"><stop id="sk1" offset="0" stop-color="#7cc0ff"/><stop id="sk2" offset="1" stop-color="#d9efff"/></linearGradient>
-          <radialGradient id="gLamp" cx="0.5" cy="0.2" r="0.7"><stop offset="0" stop-color="#fde68a" stop-opacity=".75"/><stop offset="1" stop-color="#fde68a" stop-opacity="0"/></radialGradient>
-        </defs>
-        <rect width="380" height="640" fill="url(#gWall)"/>
-        <rect y="250" width="380" height="64" fill="#3b2a1e"/><rect y="250" width="380" height="3" fill="#fcd34d" opacity=".35"/>
-        <rect y="314" width="380" height="326" fill="url(#gWood)"/>
-        <g stroke="#00000030" stroke-width="1"><line x1="0" y1="352" x2="380" y2="352"/><line x1="0" y1="398" x2="380" y2="398"/><line x1="0" y1="450" x2="380" y2="450"/><line x1="0" y1="508" x2="380" y2="508"/><line x1="0" y1="572" x2="380" y2="572"/></g>
-        <ellipse cx="205" cy="520" rx="170" ry="62" fill="#7a1f2b"/><ellipse cx="205" cy="520" rx="156" ry="54" fill="none" stroke="#fcd34d" stroke-width="2" opacity=".7"/>
+      <svg id="sv" viewBox="0 0 380 600" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="مكتب المحامي">
+        <rect width="380" height="600" fill="#1c2a49"/>
+        <rect y="300" width="380" height="300" fill="#5a3a22"/><rect y="296" width="380" height="5" fill="#e8b84a" opacity=".5"/>
 
-        <rect x="22" y="40" width="104" height="146" rx="6" fill="#2a1a10"/>
-        <rect x="29" y="47" width="90" height="132" rx="3" fill="url(#gSky)"/>
-        <g id="stars" opacity="0"><circle cx="45" cy="70" r="1.2" fill="#fff"/><circle cx="82" cy="62" r="1.5" fill="#fff"/><circle cx="104" cy="96" r="1" fill="#fff"/><circle cx="58" cy="118" r="1.3" fill="#fff"/><circle cx="96" cy="140" r="1.1" fill="#fff"/><circle cx="108" cy="66" r="14" fill="#fef9c3"/></g>
-        <g id="sun"><circle cx="86" cy="82" r="16" fill="#fde68a"/></g>
-        <path d="M29 170 L50 150 L72 168 L96 146 L119 166 L119 179 L29 179 Z" fill="#1b2848" opacity=".55"/>
-        <line x1="74" y1="47" x2="74" y2="179" stroke="#2a1a10" stroke-width="3"/><line x1="29" y1="113" x2="119" y2="113" stroke="#2a1a10" stroke-width="3"/>
+        <a class="hs" href="#" id="hProfile" aria-label="بروفايلي"><g class="lift"><rect x="34" y="40" width="150" height="100" rx="4" fill="#f5efe0"/><rect x="40" y="46" width="138" height="88" rx="2" fill="none" stroke="#e8b84a" stroke-width="1.5"/>
+          <text x="109" y="74" text-anchor="middle" font-family="Cairo" font-weight="700" font-size="11" fill="#8a6a1f">شهادة</text><text id="certName" x="109" y="98" text-anchor="middle" font-family="Cairo" font-weight="900" font-size="15" fill="#1c2a49">محامي</text><text id="certSub" x="109" y="120" text-anchor="middle" font-family="Cairo" font-weight="700" font-size="11" fill="#8a6a1f">Legano</text></g><rect class="ring" x="29" y="35" width="160" height="110" rx="6"/><text class="lbl" x="109" y="162">بروفايلي</text></a>
 
-        <a class="hs" href="#" id="hProfile" aria-label="بروفايلي"><g class="lift"><rect x="146" y="46" width="116" height="92" rx="4" fill="#fcd34d"/><rect x="152" y="52" width="104" height="80" rx="2" fill="#fffbeb"/><rect x="152" y="52" width="104" height="80" rx="2" fill="none" stroke="#b7791f" stroke-width="1.2"/>
-          <text x="204" y="76" text-anchor="middle" font-family="Cairo" font-weight="900" font-size="12" fill="#7c4a03">شهادة تقدير</text><text id="certName" x="204" y="98" text-anchor="middle" font-family="Cairo" font-weight="800" font-size="13" fill="#1e293b">محامي</text><text id="certSub" x="204" y="116" text-anchor="middle" font-family="Cairo" font-weight="700" font-size="10.5" fill="#92620C">Legano</text></g><rect class="ring" x="141" y="41" width="126" height="102" rx="6"/><text class="lbl" x="204" y="158">بروفايلي</text></a>
+        <a class="hs" href="referrals.html" id="hRef" aria-label="الإنابات"><g class="lift"><rect x="212" y="40" width="134" height="100" rx="4" fill="#3a2a1c"/><rect x="218" y="46" width="122" height="88" rx="2" fill="#7a5a3a"/>
+          <g fill="#f5efe0"><rect x="228" y="58" width="40" height="28" rx="2" transform="rotate(-3 248 72)"/><rect x="284" y="56" width="42" height="28" rx="2" transform="rotate(2 305 70)"/><rect x="230" y="94" width="42" height="28" rx="2" transform="rotate(2 251 108)"/><rect x="286" y="94" width="40" height="28" rx="2" transform="rotate(-2 306 108)"/></g></g><rect class="ring" x="207" y="35" width="144" height="110" rx="6"/><text class="lbl" x="279" y="162">الإنابات</text><g transform="translate(340 46)"><g class="bd" id="bRef"><circle r="11"/><text y="4"></text></g></g></a>
 
-                <g transform="translate(298 40)"><circle cx="30" cy="30" r="25" fill="#fffbeb" stroke="#fcd34d" stroke-width="4"/><g id="tick" fill="#1e293b"></g><line id="hH" x1="30" y1="30" x2="30" y2="16" stroke="#1e293b" stroke-width="2.6" stroke-linecap="round"/><line id="hM" x1="30" y1="30" x2="30" y2="10" stroke="#92620C" stroke-width="1.8" stroke-linecap="round"/><circle cx="30" cy="30" r="2.4" fill="#ef4444"/></g>
+        <a class="hs" href="cases.html" id="hCases" aria-label="قضاياي"><g class="lift"><rect x="22" y="190" width="92" height="206" rx="5" fill="#34425c"/>
+          <g fill="#2b3750"><rect x="30" y="198" width="76" height="56" rx="3"/><rect x="30" y="262" width="76" height="56" rx="3"/><rect x="30" y="326" width="76" height="58" rx="3"/></g>
+          <g fill="#e8b84a"><rect x="58" y="222" width="20" height="5" rx="2.5"/><rect x="58" y="286" width="20" height="5" rx="2.5"/><rect x="58" y="351" width="20" height="5" rx="2.5"/></g></g><rect class="ring" x="17" y="185" width="102" height="216" rx="7"/><text class="lbl" x="68" y="416">قضاياي</text><g transform="translate(108 196)"><g class="bd" id="bCases"><circle r="11"/><text y="4"></text></g></g></a>
 
-        <a class="hs" href="referrals.html" id="hRef" aria-label="الإنابات"><g class="lift"><rect x="268" y="108" width="98" height="88" rx="5" fill="#2a1a10"/><rect x="274" y="114" width="86" height="76" rx="2" fill="#c08a4b"/>
-          <rect x="282" y="122" width="30" height="24" rx="2" fill="#fef3c7" transform="rotate(-4 297 134)"/><rect x="318" y="120" width="30" height="24" rx="2" fill="#fbcfe8" transform="rotate(3 333 132)"/><rect x="284" y="152" width="30" height="24" rx="2" fill="#bbf7d0" transform="rotate(2 299 164)"/><rect x="320" y="150" width="28" height="26" rx="2" fill="#ddd6fe" transform="rotate(-3 334 163)"/>
-          <circle cx="297" cy="123" r="2.5" fill="#ef4444"/><circle cx="333" cy="121" r="2.5" fill="#2563eb"/></g><rect class="ring" x="263" y="103" width="108" height="98" rx="7"/><text class="lbl" x="317" y="214">الإنابات</text><g transform="translate(358 112)"><g class="bd" id="bRef"><circle r="11"/><text y="4"></text></g></g></a>
+        <rect x="136" y="372" width="228" height="12" rx="3" fill="#a06a35"/><rect x="144" y="384" width="212" height="84" rx="5" fill="#7a4d26"/>
+        <rect x="150" y="468" width="10" height="40" fill="#4a2e17"/><rect x="340" y="468" width="10" height="40" fill="#4a2e17"/>
 
-        <a class="hs" href="cases.html" id="hCases" aria-label="قضاياي"><g class="lift"><rect x="14" y="214" width="96" height="214" rx="6" fill="#33404f"/><rect x="14" y="214" width="96" height="214" rx="6" fill="none" stroke="#00000040" stroke-width="2"/>
-          <g fill="#475569"><rect x="22" y="224" width="80" height="58" rx="3"/><rect x="22" y="290" width="80" height="58" rx="3"/><rect x="22" y="356" width="80" height="60" rx="3"/></g>
-          <g fill="#fcd34d"><rect x="52" y="248" width="20" height="6" rx="3"/><rect x="52" y="314" width="20" height="6" rx="3"/><rect x="52" y="381" width="20" height="6" rx="3"/></g>
-          <g fill="#fffbeb" opacity=".95"><rect x="32" y="232" width="26" height="9" rx="1"/><rect x="32" y="298" width="26" height="9" rx="1"/><rect x="32" y="364" width="26" height="9" rx="1"/></g></g><rect class="ring" x="9" y="209" width="106" height="224" rx="8"/><text class="lbl" x="62" y="448">قضاياي</text><g transform="translate(104 222)"><g class="bd" id="bCases"><circle r="11"/><text y="4"></text></g></g></a>
+        <a class="hs" href="doc-orders.html" id="hDocs" aria-label="طلبات المستندات"><g class="lift"><rect x="140" y="354" width="50" height="18" rx="3" fill="#34425c"/><rect x="144" y="342" width="42" height="13" rx="1" fill="#f5efe0" transform="rotate(-3 165 348)"/><rect x="146" y="332" width="40" height="13" rx="1" fill="#f5efe0"/></g><rect class="ring" x="136" y="326" width="58" height="52" rx="6"/><text class="lbl" x="165" y="404">الطلبات</text><g transform="translate(190 334)"><g class="bd" id="bDocs"><circle r="11"/><text y="4"></text></g></g></a>
 
-        <rect x="112" y="386" width="260" height="14" rx="3" fill="#b9793a"/>
-        <rect x="118" y="400" width="248" height="94" rx="6" fill="url(#gDesk)"/><rect x="118" y="400" width="248" height="94" rx="6" fill="none" stroke="#00000040"/>
-        <rect x="132" y="412" width="104" height="70" rx="4" fill="#00000026"/><rect x="250" y="412" width="104" height="70" rx="4" fill="#00000026"/>
-        <rect x="124" y="494" width="12" height="42" fill="#4c2d14"/><rect x="348" y="494" width="12" height="42" fill="#4c2d14"/>
-        <rect x="266" y="440" width="70" height="20" rx="4" fill="#fcd34d" opacity=".9"/><text id="plaque" x="301" y="454.5" text-anchor="middle" font-family="Cairo" font-weight="900" font-size="10.5" fill="#3a2203">أ. محامي</text>
+        <a class="hs" href="calendar.html" id="hCal" aria-label="المفكرة"><g class="lift"><rect x="222" y="338" width="36" height="34" rx="3" fill="#f5efe0"/><rect x="222" y="338" width="36" height="10" rx="3" fill="#e8b84a"/><text id="calD" x="240" y="365" text-anchor="middle" font-family="Cairo" font-weight="900" font-size="15" fill="#1c2a49">1</text></g><rect class="ring" x="217" y="333" width="46" height="44" rx="6"/><text class="lbl" x="240" y="404">المفكرة</text><g transform="translate(260 340)"><g class="bd" id="bCal"><circle r="11"/><text y="4"></text></g></g></a>
 
-        <ellipse cx="225" cy="372" rx="110" ry="50" fill="url(#gLamp)" class="glow" id="lampGlow" opacity="0"/>
+        <a class="hs" href="consultations.html" id="hPhone" aria-label="الاستشارات"><g class="lift"><g class="ring-phone" id="phone"><rect x="294" y="348" width="42" height="24" rx="6" fill="#2b3750"/><rect x="288" y="342" width="54" height="9" rx="4.5" fill="#34425c"/><circle cx="315" cy="362" r="5" fill="#1c2a49"/><circle id="phLed" cx="332" cy="355" r="2.4" fill="#64748b"/></g></g><rect class="ring" x="284" y="336" width="62" height="42" rx="6"/><text class="lbl" x="315" y="404">الاستشارات</text><g transform="translate(342 340)"><g class="bd" id="bPhone"><circle r="11"/><text y="4"></text></g></g></a>
 
-        <a class="hs" transform="translate(-16 0)" href="doc-orders.html" id="hDocs" aria-label="طلبات المستندات"><g class="lift"><rect x="140" y="366" width="52" height="20" rx="3" fill="#475569"/><rect x="144" y="354" width="44" height="14" rx="1" fill="#fffbeb" transform="rotate(-3 166 361)"/><rect x="146" y="346" width="42" height="14" rx="1" fill="#e0f2fe" transform="rotate(2 167 353)"/><rect x="150" y="338" width="38" height="12" rx="1" fill="#fffbeb"/></g><rect class="ring" x="136" y="332" width="60" height="58" rx="6"/><text class="lbl" x="166" y="410">الطلبات</text><g transform="translate(190 340)"><g class="bd" id="bDocs"><circle r="11"/><text y="4"></text></g></g></a>
+        <a class="hs" href="consultations.html#wallet" id="hWallet" aria-label="الخزنة"><g class="lift"><rect x="288" y="478" width="64" height="72" rx="6" fill="#34425c"/><circle cx="320" cy="512" r="16" fill="#2b3750" stroke="#e8b84a" stroke-width="2"/><circle cx="320" cy="512" r="3.5" fill="#e8b84a"/></g><rect class="ring" x="283" y="473" width="74" height="82" rx="8"/><text class="lbl" x="320" y="570">الخزنة</text><text id="walletAmt" class="lbl" x="320" y="586" style="fill:#e8b84a"></text></a>
 
-        <a class="hs" transform="translate(-28 0)" href="feed.html" id="hFeed" aria-label="المنشورات"><g class="lift"><path d="M206 386 L206 356 Q206 350 212 350 L262 350 Q268 350 268 356 L268 386 Z" fill="#cbd5e1"/><rect x="211" y="355" width="52" height="27" rx="2" fill="#0f172a"/><rect x="216" y="361" width="30" height="3" rx="1.5" fill="#38bdf8"/><rect x="216" y="368" width="42" height="3" rx="1.5" fill="#64748b"/><rect x="216" y="374" width="24" height="3" rx="1.5" fill="#64748b"/><rect x="198" y="386" width="78" height="5" rx="2" fill="#94a3b8"/></g><rect class="ring" x="194" y="344" width="86" height="52" rx="6"/><text class="lbl" x="237" y="410">المنشورات</text></a>
-
-        <a class="hs" transform="translate(-27 0)" href="calendar.html" id="hCal" aria-label="المفكرة"><g class="lift"><rect x="284" y="352" width="34" height="34" rx="3" fill="#fffbeb"/><rect x="284" y="352" width="34" height="10" rx="3" fill="#ef4444"/><text id="calD" x="301" y="379" text-anchor="middle" font-family="Cairo" font-weight="900" font-size="15" fill="#1e293b">1</text></g><rect class="ring" x="279" y="347" width="44" height="44" rx="6"/><text class="lbl" x="301" y="410">المفكرة</text><g transform="translate(318 354)"><g class="bd" id="bCal"><circle r="11"/><text y="4"></text></g></g></a>
-
-        <a class="hs" transform="translate(-4 0)" href="consultations.html" id="hPhone" aria-label="الاستشارات"><g class="lift"><g class="ring-phone" id="phone"><rect x="326" y="362" width="34" height="24" rx="6" fill="#0f172a"/><rect x="320" y="356" width="46" height="9" rx="4.5" fill="#1e293b"/><circle cx="343" cy="376" r="5" fill="#334155"/><circle id="phLed" cx="357" cy="369" r="2.4" fill="#64748b"/></g></g><rect class="ring" x="316" y="350" width="54" height="42" rx="6"/><text class="lbl" x="343" y="410">الاستشارات</text><g transform="translate(364 352)"><g class="bd" id="bPhone"><circle r="11"/><text y="4"></text></g></g></a>
-
-        <a class="hs" href="notifications.html" id="hBell" aria-label="الإشعارات"><g class="lift"><ellipse cx="236" cy="470" rx="16" ry="4" fill="#00000040"/><path d="M222 468 Q222 452 236 452 Q250 452 250 468 Z" fill="#fcd34d" stroke="#b7791f" stroke-width="1.2"/><circle cx="236" cy="449" r="3" fill="#b7791f"/></g><rect class="ring" x="216" y="440" width="40" height="36" rx="6"/><text class="lbl" x="236" y="492">الجرس</text><g transform="translate(252 444)"><g class="bd" id="bBell"><circle r="11"/><text y="4"></text></g></g></a>
-
-        <a class="hs" href="consultations.html#wallet" id="hWallet" aria-label="الخزنة"><g class="lift"><rect x="300" y="520" width="66" height="76" rx="6" fill="#334155"/><rect x="300" y="520" width="66" height="76" rx="6" fill="none" stroke="#0f172a" stroke-width="2"/><circle cx="333" cy="556" r="17" fill="#1e293b" stroke="#fcd34d" stroke-width="2"/><circle cx="333" cy="556" r="4" fill="#fcd34d"/><g stroke="#fcd34d" stroke-width="2"><line x1="333" y1="542" x2="333" y2="546"/><line x1="333" y1="566" x2="333" y2="570"/><line x1="319" y1="556" x2="323" y2="556"/><line x1="343" y1="556" x2="347" y2="556"/></g></g><rect class="ring" x="295" y="515" width="76" height="86" rx="8"/><text class="lbl" x="333" y="614">الخزنة</text><text id="walletAmt" class="lbl" x="333" y="630" style="font-size:11px;fill:#fde68a"></text></a>
-
-        <a class="hs" href="feed.html" id="hDoor" aria-label="اخرج للسوق"><g class="lift"><rect x="22" y="478" width="76" height="132" rx="4" fill="#5e3a1a"/><rect x="30" y="486" width="60" height="116" rx="2" fill="#7a4d24"/><rect x="38" y="496" width="44" height="40" rx="2" fill="#00000026"/><rect x="38" y="544" width="44" height="50" rx="2" fill="#00000026"/><circle cx="80" cy="548" r="4" fill="#fcd34d"/></g><rect class="ring" x="17" y="473" width="86" height="142" rx="6"/><text class="lbl" x="60" y="628">اخرج للسوق</text></a>
-
-                <g class="dust" fill="#fde68a" opacity=".5"><circle cx="150" cy="300" r="1.6"/><circle cx="240" cy="270" r="1.2" style="animation-delay:-2s"/><circle cx="60" cy="330" r="1.4" style="animation-delay:-4s"/><circle cx="330" cy="300" r="1.3" style="animation-delay:-1s"/></g>
-        <rect id="dim" width="380" height="640" fill="#0b1220" opacity="0" pointer-events="none"/>
+        <a class="hs" href="feed.html" id="hDoor" aria-label="اخرج للسوق"><g class="lift"><rect x="30" y="448" width="70" height="116" rx="4" fill="#4a2e17"/><rect x="38" y="456" width="54" height="100" rx="2" fill="#6b4423"/><circle cx="84" cy="508" r="3.5" fill="#e8b84a"/></g><rect class="ring" x="25" y="443" width="80" height="126" rx="6"/><text class="lbl" x="65" y="586">اخرج للسوق</text></a>
       </svg>
     </div>
     <div class="status" id="status"></div>
@@ -151,14 +118,6 @@
   $('office').hidden = false;
   S.mountNav($('navSlot'));
 
-  // الوقت: لون السما والإضاءة
-  const hr = new Date().getHours(), night = hr >= 19 || hr < 5, dusk = (hr >= 17 && hr < 19) || (hr >= 5 && hr < 7);
-  $('sk1').setAttribute('stop-color', night ? '#0b1220' : dusk ? '#f59e0b' : '#7cc0ff'); $('sk2').setAttribute('stop-color', night ? '#1b2848' : dusk ? '#fde68a' : '#d9efff');
-  $('stars').setAttribute('opacity', night ? 1 : 0); $('sun').setAttribute('opacity', night ? 0 : 1);
-  $('dim').setAttribute('opacity', night ? .32 : dusk ? .12 : 0); $('lampGlow').setAttribute('opacity', night || dusk ? 1 : .35);
-  const tk = $('tick'); for (let i = 0; i < 12; i++) { const a = i * 30 * Math.PI / 180, c = document.createElementNS(NS, 'circle'); c.setAttribute('cx', 30 + 20 * Math.sin(a)); c.setAttribute('cy', 30 - 20 * Math.cos(a)); c.setAttribute('r', i % 3 ? 1 : 1.7); tk.appendChild(c); }
-  const tickClock = () => { const d = new Date(), m = d.getMinutes(), h = (d.getHours() % 12) + m / 60; $('hH').setAttribute('transform', `rotate(${h * 30} 30 30)`); $('hM').setAttribute('transform', `rotate(${m * 6} 30 30)`); };
-  tickClock(); setInterval(tickClock, 20000);
   $('calD').textContent = S.num(new Date().getDate());
 
   const setBadge = (id, n) => { const g = $(id); if (!g) return; g.querySelector('text').textContent = n > 99 ? '99+' : S.num(n); g.classList.toggle('on', n > 0); };
@@ -171,11 +130,11 @@
     const a = (await S.call(`/rest/v1/public_lawyers?select=id,display_name,verified&id=eq.${S.me()}`))[0];
     if (a) {
       D.me = a; const nm = (a.display_name || '').trim(), f = nm.replace(/^(أ\.?|د\.?|المستشار)\s*/, '').trim().split(/\s+/)[0] || '';
-      first = f; $('certName').textContent = nm.length > 20 ? nm.slice(0, 19) + '…' : nm; $('certSub').textContent = a.verified ? 'محامي موثّق ✓' : 'Legano';
-      $('plaque').textContent = 'أ. ' + (f || 'محامي'); $('hProfile').setAttribute('href', '/lawyer/' + a.id);
+      first = f; $('certName').textContent = nm.length > 20 ? nm.slice(0, 19) + '…' : nm; $('certSub').textContent = a.verified ? 'محامي موثّق ✓' : 'Legano'; $('hProfile').setAttribute('href', '/lawyer/' + a.id);
     }
   } catch {}
   $('doorName').textContent = first ? 'الأستاذ ' + first : 'الأستاذ';
+  const hr = new Date().getHours();
   $('hello').textContent = `${hr < 12 ? 'صباح الخير' : hr < 18 ? 'نهارك سعيد' : 'مساء الخير'}${first ? ' يا أستاذ ' + first : ''}`;
 
   // دخول المكتب
@@ -211,7 +170,7 @@
       b: () => sBody.querySelectorAll('[data-doc]').forEach(b => b.onclick = async () => { b.disabled = true; try { await rpcc('doc_accept', { p_id: b.dataset.doc }); S.toast('اتقبل الطلب. كمّله من صفحة الطلبات'); open('docs'); } catch (e) { S.toast(/doc_taken/.test(e.message) ? 'حد تاني سبقك' : /doc_limit/.test(e.message) ? 'عندك طلبات شغّالة كتير' : S.friendly(e)); b.disabled = false; } }) },
     feed: { t: 'اللابتوب: المنشورات', href: () => 'feed.html', f: async () => { const d = await S.listPosts({ mode: 'all', limit: 4 }); return d.posts.length ? d.posts.map(p => { const a = d.authors[p.author_id]; return `<div class="sh-r"><div><b>${esc(a ? a.display_name : 'محامي')}</b><small>${esc(String(p.body || '').slice(0, 110))}</small></div></div>`; }).join('') : empty('مفيش منشورات جديدة.'); } },
     bell: { t: 'الجرس: الإشعارات', href: () => 'notifications.html', f: async () => { const d = await S.listNotifications(), r = d.rows.slice(0, 8); return r.length ? r.map(n => `<div class="sh-r"><div><b style="${n.read ? 'font-weight:600' : ''}">${NT(n, d)}</b><small>${esc(S.ago(n.created_at))}</small></div></div>`).join('') + (r.some(n => !n.read) ? '<div style="padding-top:8px"><button class="sh-b g" id="allRd" type="button">علّم الكل مقروء</button></div>' : '') : empty('مفيش إشعارات لسه.'); },
-      b: () => { const b = $('allRd'); if (b) b.onclick = async () => { try { await S.markAllRead(); setBadge('bBell', 0); S.toast('تم'); open('bell'); } catch (e) { S.toast(S.friendly(e)); } }; } },
+      b: () => { const b = $('allRd'); if (b) b.onclick = async () => { try { await S.markAllRead();  S.toast('تم'); open('bell'); } catch (e) { S.toast(S.friendly(e)); } }; } },
     wallet: { t: 'الخزنة: محفظتك', href: () => 'consultations.html#wallet', f: async () => { const w = await C.wallet(), n = x => S.num(Number(x) || 0); return `<div class="sh-n"><div><small>المتاح للسحب</small><b>${n(w.available)} ج</b></div><div><small>إجمالي أرباحك</small><b>${n(w.total_earned)} ج</b></div></div>${w.on_hold != null ? `<div class="sh-n" style="grid-template-columns:1fr"><div><small>معلّق لحد تأكيد الموكل</small><b>${n(w.on_hold)} ج</b></div></div>` : ''}<p class="sh-e" style="padding-top:4px;text-align:start">طلب السحب من صفحة المحفظة.</p>`; } }
   };
   let curK = null;
@@ -219,14 +178,14 @@
     Promise.resolve(r.f()).then(h => { if (curK !== kk) return; sBody.innerHTML = h; if (r.b) r.b(); }).catch(e => { if (curK === kk) sBody.innerHTML = empty(esc(S.friendly(e))); }); }
   const close = () => { sheet.classList.remove('on'); document.body.style.overflow = ''; curK = null; };
   $('sX').onclick = close; $('sOv').onclick = close; document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
-  const MAP = { hProfile: 'profile', hRef: 'refs', hCases: 'cases', hDocs: 'docs', hFeed: 'feed', hCal: 'cal', hPhone: 'phone', hBell: 'bell', hWallet: 'wallet' };
+  const MAP = { hProfile: 'profile', hRef: 'refs', hCases: 'cases', hDocs: 'docs', hCal: 'cal', hPhone: 'phone', hWallet: 'wallet' };
   Object.keys(MAP).forEach(id => { const a = $(id); a.addEventListener('click', e => { if (e.metaKey || e.ctrlKey || e.shiftKey || e.button) return; e.preventDefault(); open(MAP[id]); }); });
   // لوحات الأسماء (pills) خلف كل عنوان
-  const pills = () => document.querySelectorAll('#sv .lbl').forEach(t => { if (t.previousSibling && t.previousSibling.classList && t.previousSibling.classList.contains('pill')) t.previousSibling.remove(); if (!t.textContent.trim()) return; const b = t.getBBox(), r = document.createElementNS(NS, 'rect'); r.setAttribute('class', 'pill'); r.setAttribute('x', b.x - 6); r.setAttribute('y', b.y - 1); r.setAttribute('width', b.width + 12); r.setAttribute('height', b.height + 2); r.setAttribute('rx', (b.height + 2) / 2); t.parentNode.insertBefore(r, t); });
+  const pills = () => {};
   (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(() => { pills(); setTimeout(pills, 1500); });
 
   const jobs = [
-    async () => { const n = await S.unreadCount(); D.unread = n; setBadge('bBell', n); },
+    
     async () => { const cs = await S.listCases(), act = cs.filter(c => c.status === 'active'); D.cases = act; setBadge('bCases', act.length); const td = act.filter(c => S.nextHearing(c) === todayISO).length; setBadge('bCal', td); if (td) status.push(chip(`${S.num(td)} جلسة النهارده`, true, 'calendar.html')); },
     async () => { const rs = await S.referralStats(), n = rs.offers + rs.tasks.length; D.refs = rs; setBadge('bRef', n); if (n) status.push(chip(`${S.num(n)} جديد في الإنابات`, true, 'referrals.html')); },
     async () => { const d = await S.call('/rest/v1/rpc/doc_board', { method: 'POST', json: {} }); const n = (d.orders || []).length; setBadge('bDocs', n); if (n) status.push(chip(`${S.num(n)} طلب مستند متاح`, true, 'doc-orders.html')); },
