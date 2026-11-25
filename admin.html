@@ -174,6 +174,46 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--white);
 
 #dashboard{display:none}#dashboard.show{display:block}.stat-card .label{font-size:12px;color:var(--gray);font-weight:700;margin-bottom:8px}.stat-card .value{font-family:'Syne',sans-serif;font-size:32px;font-weight:800}.user-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.user-card .info{flex:1;min-width:200px;line-height:2}#pendBadge{color:var(--danger);font-weight:900}
 
+/* ══ نسخة الموبايل: شريط سفلي قابل للسحب + ألوان أقوى ══ */
+body { background:#F5F1E8; }
+.topbar { background:linear-gradient(135deg,#0F1B33,#1C2A49); border-bottom:0; backdrop-filter:none; color:#fff; box-shadow:0 6px 22px rgba(15,27,51,.18); }
+.topbar .logo { background:linear-gradient(90deg,#F4CF6A,#D9A62E); -webkit-background-clip:text; background-clip:text; }
+.logout-btn { background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.2); color:#F5EFE0; }
+.section-title { display:flex; align-items:center; gap:10px; }
+.section-title::before { content:''; width:5px; height:22px; border-radius:3px; background:linear-gradient(#E8B84A,#B8860B); }
+.stat-card { border:0; box-shadow:0 8px 24px rgba(28,42,73,.08); border-top:4px solid var(--gold); background:linear-gradient(180deg,#FFFBEF,#fff 60%); }
+.stat-card.success { border-top-color:var(--success); background:linear-gradient(180deg,#EAFBF3,#fff 60%); }
+.stat-card.danger { border-top-color:var(--danger); background:linear-gradient(180deg,#FFEFEF,#fff 60%); }
+.stat-card.cyber { border-top-color:var(--cyber); background:linear-gradient(180deg,#E8F4FB,#fff 60%); }
+.user-card, .payment-card, .chart-card, .inv-row, .feedback-card, .file-row { border:1px solid rgba(28,42,73,.08); box-shadow:0 4px 16px rgba(28,42,73,.06); }
+.pbtn { box-shadow:0 2px 8px rgba(0,0,0,.12); }
+.pbtn:not(.approve):not(.reject):not(.copy):not(.wa) { background:#1C2A49; color:#F5EFE0; }
+.tab-btn i { font-style:normal; } .tab-btn b { font-weight:700; }
+.tab-btn { position:relative; }
+.bdg { background:#E5484D; color:#fff !important; font-size:10.5px; font-weight:800; min-width:18px; height:18px; padding:0 5px; border-radius:9px; display:inline-flex; align-items:center; justify-content:center; line-height:1; }
+.bdg:empty { display:none; }
+@media (min-width:901px) {
+  .topbar .tab-btn { color:#CBD5E1; display:inline-flex; gap:6px; align-items:center; } .topbar .tab-btn:hover { background:rgba(255,255,255,.1); color:#fff; } .topbar .tab-btn.active { background:#E8B84A; color:#1C2A49; }
+  .topbar .tab-btn .bdg { margin-inline-start:2px; }
+}
+@media (max-width:900px) {
+  .topbar { padding:12px 16px; } .topbar .logo { font-size:14px; letter-spacing:4px; }
+  .wrap { padding:18px 14px 130px; }
+  .toast { bottom:112px; }
+  .topbar .tabs { position:fixed; z-index:200; left:10px; right:10px; bottom:calc(10px + env(safe-area-inset-bottom)); display:flex; flex-wrap:nowrap; gap:4px; overflow-x:auto; overflow-y:hidden; scroll-snap-type:x proximity; -webkit-overflow-scrolling:touch; scrollbar-width:none; padding:8px 8px 7px; border-radius:24px; background:rgba(15,27,51,.96); box-shadow:0 14px 40px rgba(15,27,51,.42), inset 0 0 0 1px rgba(232,184,74,.22); }
+  .topbar .tabs::-webkit-scrollbar { display:none; }
+  .topbar .tab-btn { flex:0 0 auto; width:66px; padding:0; display:flex; flex-direction:column; align-items:center; gap:4px; background:none; color:#C9D2E3; scroll-snap-align:center; border-radius:16px; }
+  .topbar .tab-btn:hover { background:none; color:#fff; }
+  .topbar .tab-btn i { width:42px; height:42px; border-radius:14px; display:grid; place-items:center; font-size:21px; background:var(--tc,#34425C); transition:transform .18s, box-shadow .18s; }
+  .topbar .tab-btn b { font-size:10.5px; line-height:1.2; white-space:nowrap; }
+  .topbar .tab-btn.active { background:none; color:#F4CF6A; }
+  .topbar .tab-btn.active i { transform:translateY(-4px) scale(1.06); box-shadow:0 8px 18px rgba(232,184,74,.45); outline:2px solid #F4CF6A; }
+  .topbar .tab-btn .bdg { position:absolute; top:-3px; right:8px; border:2px solid #0F1B33; }
+  .topbar .tab-btn:nth-child(1){--tc:linear-gradient(135deg,#E8B84A,#B8860B)} .topbar .tab-btn:nth-child(2){--tc:linear-gradient(135deg,#10B981,#047857)} .topbar .tab-btn:nth-child(3){--tc:linear-gradient(135deg,#38BDF8,#0369A1)} .topbar .tab-btn:nth-child(4){--tc:linear-gradient(135deg,#34D399,#0F766E)} .topbar .tab-btn:nth-child(5){--tc:linear-gradient(135deg,#A78BFA,#6D28D9)}
+  .topbar .tab-btn:nth-child(6){--tc:linear-gradient(135deg,#FB923C,#C2410C)} .topbar .tab-btn:nth-child(7){--tc:linear-gradient(135deg,#F472B6,#BE185D)} .topbar .tab-btn:nth-child(8){--tc:linear-gradient(135deg,#F87171,#B91C1C)} .topbar .tab-btn:nth-child(9){--tc:linear-gradient(135deg,#FACC15,#A16207)} .topbar .tab-btn:nth-child(10){--tc:linear-gradient(135deg,#94A3B8,#475569)}
+  .pbtn { min-height:40px; padding:9px 14px; }
+  .user-card { gap:10px; }
+}
 </style></head><body>
 <div id="loginScreen">
   <div class="login-box">
@@ -188,17 +228,17 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--white);
 <div id="dashboard">
   <div class="topbar">
     <div class="logo">LEGANO — Admin</div>
-    <div class="tabs">
-      <button class="tab-btn active" data-view="overview">نظرة عامة</button>
-      <button class="tab-btn" data-view="verify">طلبات التوثيق <span id="pendBadge"></span></button>
-      <button class="tab-btn" data-view="lawyers">المحامين</button>
-      <button class="tab-btn" data-view="reports">البلاغات</button>
-      <button class="tab-btn" data-view="ratings">التقييمات</button>
-      <button class="tab-btn" data-view="consults">الاستشارات <span id="csBadge"></span></button>
-      <button class="tab-btn" data-view="topups">الشحن <span id="tpBadge"></span></button>
-      <button class="tab-btn" data-view="docs">المستندات <span id="docBadge"></span></button>
-      <button class="tab-btn" data-view="qa">الأسئلة <span id="qaBadge"></span></button>
-      <button class="tab-btn" data-view="files">ملفات الموقع</button>
+    <div class="tabs" id="tabs">
+      <button class="tab-btn active" data-view="overview"><i>🏠</i><b>الرئيسية</b></button>
+      <button class="tab-btn" data-view="topups"><i>💰</i><b>الشحن</b><span class="bdg" id="tpBadge"></span></button>
+      <button class="tab-btn" data-view="consults"><i>🎥</i><b>الاستشارات</b><span class="bdg" id="csBadge"></span></button>
+      <button class="tab-btn" data-view="verify"><i>✅</i><b>التوثيق</b><span class="bdg" id="pendBadge"></span></button>
+      <button class="tab-btn" data-view="lawyers"><i>⚖️</i><b>المحامين</b></button>
+      <button class="tab-btn" data-view="docs"><i>📄</i><b>المستندات</b><span class="bdg" id="docBadge"></span></button>
+      <button class="tab-btn" data-view="qa"><i>❓</i><b>الأسئلة</b><span class="bdg" id="qaBadge"></span></button>
+      <button class="tab-btn" data-view="reports"><i>🚩</i><b>البلاغات</b></button>
+      <button class="tab-btn" data-view="ratings"><i>⭐</i><b>التقييمات</b></button>
+      <button class="tab-btn" data-view="files"><i>📁</i><b>الملفات</b></button>
     </div>
     <button class="logout-btn" id="bOut">خروج</button>
   </div>
@@ -312,7 +352,7 @@ async function enter() {
   try { if (await rpc('is_admin') !== true) throw new Error('الحساب ده مش أدمن'); }
   catch (e) { S = null; store.set(null); $('loginErr').textContent = e.message; $('loginErr').style.display = 'block'; return; }
   $('loginScreen').style.display = 'none'; $('dashboard').classList.add('show');
-  loadOverview(); loadVerify(); loadLawyers(); loadDisputes();
+  loadOverview(); loadVerify(); loadLawyers(); loadDisputes(); initBadges();
 }
 async function login() {
   $('loginErr').style.display = 'none';
@@ -326,6 +366,7 @@ function logout() { S = null; store.set(null); location.reload(); }
 $('lBtn').onclick = login; $('bOut').onclick = logout; $('lPass').onkeydown = e => { if (e.key === 'Enter') login(); };
 document.querySelectorAll('.tab-btn').forEach(b => b.onclick = () => {
   document.querySelectorAll('.tab-btn').forEach(x => x.classList.toggle('active', x === b));
+  try { b.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' }); window.scrollTo({ top: 0 }); } catch {}
   document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === 'view-' + b.dataset.view));
   if (b.dataset.view === 'files') loadFiles();
   if (b.dataset.view === 'reports') loadReports();
@@ -477,6 +518,13 @@ function renderLawyers() {
 $('lSearch').oninput = renderLawyers;
 
 
+
+/* أرقام التنبيه على الشريط: بتتحدّث لوحدها من البداية */
+new MutationObserver(ms => ms.forEach(m => { const t = m.target.nodeType === 3 ? m.target.parentElement : m.target; if (t.classList && t.classList.contains('bdg')) { const v = t.textContent.replace(/[()\s]/g, ''); if (v !== t.textContent) t.textContent = v; } })).observe(document.getElementById('tabs'), { subtree: true, childList: true, characterData: true });
+async function initBadges() {
+  try { const n = (await rpc('topup_admin_list', { p_status: 'pending' })).length; $('tpBadge').textContent = n ? String(n) : ''; } catch {}
+  try { const n = (await rpc('doc_admin_list', { p_status: 'disputed' })).length; $('docBadge').textContent = n ? String(n) : ''; } catch {}
+}
 
 /* إشعار الموبايل لطلبات الشحن */
 const VAPID = 'BOm9arFMQ3k9axgNhe179YUq95IgirOILm5X_Q7uV6pX0IYPT-mdy9MGuzV_B2g_zTaD7gigGzCBlvc4XNUch60';
