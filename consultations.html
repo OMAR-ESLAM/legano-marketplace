@@ -121,7 +121,7 @@
         <small class="dis">الرقم ده حساب افتراضي من سعرك الحالي بعد عمولة المنصة، مش ضمان دخل. الطلب الفعلي بيعتمد على عدد الموكلين المتاحين.</small></div>
       <div class="cs-box vip"><label class="cs-sw"><input type="checkbox" id="on"><span id="onTxt">أنا أونلاين</span></label>
         <p id="onHint" style="margin-top:6px"></p>
-        <div class="cs-fields"><div><label class="f-l" for="price">سعر الاستشارة (جنيه)</label><input id="price" class="f-i" type="number" inputmode="numeric" min="1"></div>
+        <div class="cs-fields"><div><label class="f-l" for="price">سعر الاستشارة (جنيه)</label><input id="price" class="f-i" type="number" inputmode="numeric" value="300" readonly style="opacity:.75;cursor:not-allowed"><small style="display:block;margin-top:4px">سعر موحّد من المنصة ومش بيتغيّر.</small></div>
         <div><label class="f-l" for="mins">المدة (دقيقة)</label><select id="mins" class="f-i"><option>10</option><option>15</option><option>20</option><option>30</option><option>45</option><option>60</option></select></div></div>
         <button id="save" class="soc-btn primary" type="button">حفظ</button> <small id="limits"></small><div class="net" id="netNow"></div></div>
       <div class="lg" id="lg" hidden>
@@ -176,7 +176,7 @@
   const anim = (el, to, suf = ' ج') => { const t0 = performance.now(), d = 900; (function f(t) { const k = Math.min(1, (t - t0) / d), v = Math.round(to * (1 - Math.pow(1 - k, 3))); el.textContent = S.num(v) + suf; if (k < 1) requestAnimationFrame(f); })(t0); };
   function sim() {
     const d = +$('mhD').value, m = +$('mhM').value; $('mhDv').textContent = d; $('mhMv').textContent = m;
-    const price = Number($('price').value) || (cfg && cfg.price) || 200, net = Math.max(0, price - fee(price));
+    const price = Number($('price').value) || (cfg && cfg.price) || 300, net = Math.max(0, price - fee(price));
     $('netNow').textContent = `💰 صافيك من كل استشارة بالسعر ده: ${S.num(Math.round(net))} ج (بعد عمولة المنصة)`;
     anim($('mhSim'), Math.round(net * d * m)); $('mhNet').textContent = `صافيك للاستشارة ${S.num(Math.round(net))} ج × ${d} × ${m} يوم`;
   }
@@ -195,10 +195,10 @@
   $('mhGo').onclick = () => { if (!$('on').checked) { $('on').checked = true; $('save').click(); } $('on').scrollIntoView({ behavior: 'smooth', block: 'center' }); };
   async function loadCfg() {
     const [m, lim] = await Promise.all([C.mySettings().catch(() => null), C.limits().catch(() => null)]);
-    cfg = m || { enabled: false, price: 200, minutes: 20 };
+    cfg = m || { enabled: false, price: 300, minutes: 20 };
     $('on').checked = !!cfg.enabled; $('price').value = cfg.price; $('mins').value = String(cfg.minutes);
     lim0 = lim; if (lim && lim.request_secs) reqSecs = Number(lim.request_secs);
-    if (lim) $('limits').textContent = `السعر من ${lim.min_price} لـ ${lim.max_price} ج • عمولة المنصة ${lim.fee_pct}%${Number(lim.fee_flat) ? ' + ' + lim.fee_flat + ' ج' : ''}`;
+    if (lim) $('limits').textContent = `${lim.min_price === lim.max_price ? 'السعر الموحّد ' + lim.min_price : 'السعر من ' + lim.min_price + ' لـ ' + lim.max_price} ج • عمولة المنصة ${lim.fee_pct}%${Number(lim.fee_flat) ? ' + ' + lim.fee_flat + ' ج' : ''}`;
     presence();
   }
   const STS = ['بندوّر لك على موكل محتاج محامي دلوقتي…', 'ظاهر لكل الموكلين اللي فاتحين صفحة الاستشارات 👀', 'أول ما حد يطلبك هتسمع تنبيه 🔔', 'سيبك مرتاح، إحنا بنراقب لك الطلبات', 'ردّك السريع بيزوّد فرصتك في شارة «الأسرع ردّاً» ⚡'];
