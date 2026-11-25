@@ -229,6 +229,7 @@ body { font-family:'Cairo',sans-serif; background:var(--bg); color:var(--white);
     <div class="view" id="view-topups">
       <div class="section-title">طلبات شحن الرصيد</div>
       <div style="font-size:12px;color:var(--gray);margin-bottom:10px">اتأكد من فودافون كاش إن المبلغ وصل من الرقم المكتوب قبل ما توافق. الموافقة بتضيف الرصيد فوراً ومينفعش تتراجع.</div>
+      <div id="tpPush" class="user-card" style="display:block;margin-bottom:12px"></div>
       <div id="tpSet"></div>
       <select id="tpFlt" class="search-bar" style="max-width:220px"><option value="pending">المعلّقة</option><option value="approved">اللي اتقبلت</option><option value="rejected">المرفوضة</option><option value="all">الكل</option></select>
       <div id="tpWrap"><div class="loading-msg">جارٍ التحميل...</div></div>
@@ -474,8 +475,30 @@ $('lSearch').oninput = renderLawyers;
 
 
 
+/* إشعار الموبايل لطلبات الشحن */
+const VAPID = 'BOm9arFMQ3k9axgNhe179YUq95IgirOILm5X_Q7uV6pX0IYPT-mdy9MGuzV_B2g_zTaD7gigGzCBlvc4XNUch60';
+const u8 = s => { const p = '='.repeat((4 - s.length % 4) % 4), r = atob((s + p).replace(/-/g, '+').replace(/_/g, '/')); return Uint8Array.from(r, c => c.charCodeAt(0)); };
+async function pushCard() {
+  const el = $('tpPush'); if (!el) return;
+  const ok = 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+  let sub = null; if (ok) { try { sub = await (await navigator.serviceWorker.getRegistration('/'))?.pushManager.getSubscription(); } catch {} }
+  if (!ok) { el.innerHTML = '<b>🔕 المتصفح ده مبيدعمش الإشعارات.</b> <small>على الآيفون ثبّت الموقع على الشاشة الرئيسية الأول، وافتحه من الأيقونة.</small>'; return; }
+  if (sub && Notification.permission === 'granted') { el.innerHTML = '<b>🔔 هيجيلك إشعار على الجهاز ده مع كل طلب شحن.</b>'; try { const j = sub.toJSON(); await rpc('push_save', { p_endpoint: j.endpoint, p_p256dh: j.keys.p256dh, p_auth: j.keys.auth, p_ua: navigator.userAgent.slice(0, 150) }); } catch {} return; }
+  el.innerHTML = '<b>🔔 فعّل الإشعارات على التليفون ده</b><div style="font-size:12px;color:var(--gray);margin:4px 0 8px">علشان يجيلك رنّة أول ما حد يبعت طلب شحن.</div><button class="pbtn approve" id="tpOn">فعّل الإشعارات</button><div id="tpOnMsg" style="font-size:12px;margin-top:6px"></div>';
+  $('tpOn').onclick = async () => {
+    try {
+      if (await Notification.requestPermission() !== 'granted') throw new Error('denied');
+      await navigator.serviceWorker.register('/sw.js', { scope: '/' }); const r = await navigator.serviceWorker.ready;
+      const s = await r.pushManager.getSubscription() || await r.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: u8(VAPID) });
+      const j = s.toJSON(); await rpc('push_save', { p_endpoint: j.endpoint, p_p256dh: j.keys.p256dh, p_auth: j.keys.auth, p_ua: navigator.userAgent.slice(0, 150) });
+      pushCard();
+    } catch (e) { $('tpOnMsg').textContent = e.message === 'denied' ? 'الإشعارات اترفضت. اسمح بيها من إعدادات المتصفح.' : 'حصل خطأ: ' + e.message; }
+  };
+}
+
 /* شحن الرصيد اليدوي */
 async function loadTopups() {
+  pushCard();
   try {
     const pi = await rpc('pay_info');
     $('tpSet').innerHTML = `<div class="user-card" style="display:block;margin-bottom:12px"><b>إعدادات الدفع</b><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:8px 0">
