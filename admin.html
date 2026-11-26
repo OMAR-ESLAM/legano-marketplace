@@ -222,6 +222,11 @@ body { background:#F5F1E8; }
     <input id="lEmail" type="email" dir="ltr" placeholder="البريد الإلكتروني" autocomplete="email" style="margin-bottom:10px">
     <input id="lPass" type="password" dir="ltr" placeholder="كلمة السر" autocomplete="current-password" style="margin-bottom:12px">
     <button id="lBtn">دخول</button>
+    <div id="mfaBox" style="display:none">
+      <p style="margin:0 0 10px;font-size:14px;line-height:1.8">🔐 اكتب الكود المكوّن من 6 أرقام من تطبيق المصادقة (Google Authenticator أو Authy).</p>
+      <input id="mfaCode" inputmode="numeric" maxlength="6" autocomplete="one-time-code" dir="ltr" placeholder="000000" style="margin-bottom:12px;text-align:center;letter-spacing:8px;font-size:20px">
+      <button id="mfaBtn">تأكيد</button>
+    </div>
   </div>
 </div>
 
@@ -244,6 +249,7 @@ body { background:#F5F1E8; }
   </div>
   <div class="wrap">
     <div class="view active" id="view-overview">
+      <div id="secBox"></div>
       <div class="section-title">نظرة عامة</div><div class="stats-grid" id="stA"></div>
       <div class="section-title" style="margin-top:28px">آخر 30 يوم</div><div class="stats-grid" id="stB"></div>
     </div>
@@ -345,21 +351,74 @@ async function api(path, o = {}) {
   if (!r.ok) throw new Error((j && (j.message || j.msg || j.error_description || j.error)) || 'HTTP ' + r.status);
   return j;
 }
-const rpc = (fn, args = {}) => api('/rest/v1/rpc/' + fn, { method: 'POST', json: args });
+const rpc = (fn, args = {}) => api('/rest/v1/rpc/' + fn, { method: 'POST', json: args }).catch(e => { const m = String(e.message || ''); throw new Error(/bad_value|bad_range|check constraint/.test(m) ? 'القيم دي مش منطقية، راجعها.' : /not_admin|forbidden/.test(m) ? 'مش مسموح' : /bad_status/.test(m) ? 'الحالة اتغيّرت، حدّث الصفحة.' : /bad_number/.test(m) ? 'رقم الموبايل لازم يكون 11 رقم يبدأ بـ 01.' : m); });
+
+/* التحقق بخطوتين + قفل الخمول */
+const jwtAal = () => { try { return JSON.parse(atob(S.access_token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))).aal || ''; } catch { return ''; } };
+const totpFactors = async () => { const u = await api('/auth/v1/user'); return (u.factors || []).filter(f => f.factor_type === 'totp' && f.status === 'verified'); };
+async function start() {
+  try { if (jwtAal() !== 'aal2') { const f = await totpFactors(); if (f.length) return askMfa(f[0].id); } } catch {}
+  enter();
+}
+function askMfa(fid) {
+  $('loginScreen').style.display = ''; $('dashboard').classList.remove('show');
+  ['lEmail', 'lPass', 'lBtn'].forEach(i => $(i).style.display = 'none'); $('mfaBox').style.display = 'block'; $('mfaCode').focus();
+  const go = async () => {
+    $('loginErr').style.display = 'none'; $('mfaBtn').disabled = true;
+    try {
+      const ch = await api(`/auth/v1/factors/${fid}/challenge`, { method: 'POST', json: {} });
+      const j = await api(`/auth/v1/factors/${fid}/verify`, { method: 'POST', json: { challenge_id: ch.id, code: $('mfaCode').value.trim() } });
+      S = j; store.set(j); $('mfaCode').value = ''; enter();
+    } catch (e) { $('loginErr').textContent = 'الكود غلط أو اتأخر. جرّب كود جديد.'; $('loginErr').style.display = 'block'; }
+    $('mfaBtn').disabled = false;
+  };
+  $('mfaBtn').onclick = go; $('mfaCode').onkeydown = e => { if (e.key === 'Enter') go(); };
+}
+let idleT, lastAct = Date.now();
+const IDLE = 15 * 60 * 1000;
+function idleReset() { lastAct = Date.now(); clearTimeout(idleT); if (S) idleT = setTimeout(logout, IDLE); }
+['pointerdown', 'keydown', 'touchstart', 'scroll'].forEach(e => addEventListener(e, () => { if (S) idleReset(); }, { passive: true }));
+document.addEventListener('visibilitychange', () => { if (!document.hidden && S && Date.now() - lastAct > IDLE) logout(); });
+async function secCard() {
+  const box = $('secBox'); let info, fs = [];
+  try { info = await rpc('admin_security_info'); fs = await totpFactors(); } catch { return; }
+  const has = fs.length > 0, btn = (id, t, c = 'approve') => `<button class="pbtn ${c}" id="${id}">${t}</button>`;
+  const card = (cls, h, p, b) => `<div class="stat-card ${cls}" style="margin-bottom:18px;text-align:right"><div class="label" style="font-size:15px;font-weight:800">${h}</div><div style="font-size:13px;line-height:1.8;margin:6px 0 10px;color:var(--gray)">${p}</div>${b}</div>`;
+  if (info.require_mfa) box.innerHTML = card('success', '🔐 التحقق بخطوتين: مفعّل وإجباري', 'مفيش حد يدخل اللوحة من غير الباسورد وكود من تليفونك.', btn('secOff', 'إلغاء الإجبار', 'reject'));
+  else if (has) box.innerHTML = card('cyber', '🔐 التحقق بخطوتين: مفعّل لحسابك', 'الدخول بيطلب الكود. لو عايز تقفل الباب نهائياً على أي حد معندوش تليفونك، خليه إجباري.', btn('secOn', 'اجعله إجباري'));
+  else box.innerHTML = card('danger', '🔓 التحقق بخطوتين مش مفعّل', 'فعّله علشان لو حد عرف الباسورد برضه ما يعرفش يدخل. محتاج تطبيق Google Authenticator أو Authy على تليفونك.', btn('secEnroll', 'فعّل دلوقتي'));
+  const setFlag = async on => { try { await rpc('admin_set_mfa', { p_on: on }); toast(on ? 'بقى إجباري' : 'اتلغى الإجبار'); secCard(); } catch (e) { toast(e.message === 'need_mfa_session' ? 'سجّل خروج وادخل تاني بالكود الأول' : 'خطأ: ' + e.message); } };
+  if ($('secOn')) $('secOn').onclick = () => confirm('بعد كده محدش هيدخل من غير كود التطبيق. لو ضاع تليفونك هتحتاج تتواصل معايا. متأكد؟') && setFlag(true);
+  if ($('secOff')) $('secOff').onclick = () => setFlag(false);
+  if ($('secEnroll')) $('secEnroll').onclick = async () => {
+    try {
+      const e = await api('/auth/v1/factors', { method: 'POST', json: { factor_type: 'totp', issuer: 'Legano Admin', friendly_name: 'admin-' + Date.now() } });
+      const qr = e.totp.qr_code.startsWith('<svg') ? 'data:image/svg+xml;utf-8,' + encodeURIComponent(e.totp.qr_code) : e.totp.qr_code;
+      box.innerHTML = card('', '📱 اربط تطبيق المصادقة', `1) افتح Google Authenticator واختار «+» ثم «مسح رمز QR».<br>2) لو مش عارف تمسح، اكتب المفتاح ده بإيدك: <b dir="ltr" style="user-select:all">${esc(e.totp.secret)}</b><br>3) اكتب الكود اللي ظهر:`, `<img src="${qr}" alt="" style="width:190px;height:190px;background:#fff;border-radius:12px;display:block;margin:0 auto 10px"><input id="secCode" inputmode="numeric" maxlength="6" dir="ltr" placeholder="000000" style="width:100%;padding:10px;border:1px solid #E2E8F0;border-radius:10px;text-align:center;letter-spacing:6px;font-size:18px;margin-bottom:8px">${btn('secVerify', 'تأكيد وتفعيل')}`);
+      $('secVerify').onclick = async () => {
+        try {
+          const ch = await api(`/auth/v1/factors/${e.id}/challenge`, { method: 'POST', json: {} });
+          const j = await api(`/auth/v1/factors/${e.id}/verify`, { method: 'POST', json: { challenge_id: ch.id, code: $('secCode').value.trim() } });
+          S = j; store.set(j); toast('اتفعّل التحقق بخطوتين'); secCard();
+        } catch { toast('الكود غلط، جرّب تاني'); }
+      };
+    } catch (er) { toast('خطأ: ' + er.message); }
+  };
+}
 
 /* دخول */
 async function enter() {
   try { if (await rpc('is_admin') !== true) throw new Error('الحساب ده مش أدمن'); }
   catch (e) { S = null; store.set(null); $('loginErr').textContent = e.message; $('loginErr').style.display = 'block'; return; }
   $('loginScreen').style.display = 'none'; $('dashboard').classList.add('show');
-  loadOverview(); loadVerify(); loadLawyers(); loadDisputes(); initBadges();
+  loadOverview(); loadVerify(); loadLawyers(); loadDisputes(); initBadges(); secCard(); idleReset();
 }
 async function login() {
   $('loginErr').style.display = 'none';
   try {
     const r = await fetch(U + '/auth/v1/token?grant_type=password', { method: 'POST', headers: { apikey: K, 'Content-Type': 'application/json' }, body: JSON.stringify({ email: $('lEmail').value.trim(), password: $('lPass').value }) });
     const j = await r.json(); if (!r.ok) throw new Error('البريد أو كلمة السر غلط');
-    S = j; store.set(j); enter();
+    S = j; store.set(j); start();
   } catch (e) { $('loginErr').textContent = e.message; $('loginErr').style.display = 'block'; }
 }
 function logout() { S = null; store.set(null); location.reload(); }
@@ -512,7 +571,7 @@ function renderLawyers() {
   });
   $('lawyersWrap').querySelectorAll('[data-sp]').forEach(b => b.onclick = async () => {
     const on = b.dataset.on === '1'; if (on && !confirm('إيقاف المحامي هيخفيه من الموقع ومحدش يقدر يظهره غيرك. متأكد؟')) return;
-    try { await rpc('admin_suspend', { p_lawyer: b.dataset.sp, p_suspended: on }); toast(on ? 'تم الإيقاف' : 'تم رفع الإيقاف'); loadLawyers(); loadOverview(); } catch (e) { toast('خطأ: ' + e.message); }
+    try { await rpc('admin_suspend', { p_lawyer: b.dataset.sp, p_suspended: on }); toast(on ? 'تم الإيقاف' : 'تم رفع الإيقاف. المحامي لازم يفعّل ظهور بروفايله بنفسه'); loadLawyers(); loadOverview(); } catch (e) { toast('خطأ: ' + e.message); }
   });
 }
 $('lSearch').oninput = renderLawyers;
@@ -736,5 +795,5 @@ $('fileIn').onchange = e => {
   rd.readAsDataURL(f); e.target.value = '';
 };
 
-S = store.get(); if (S) enter();
+S = store.get(); if (S) start();
 </script></body></html>

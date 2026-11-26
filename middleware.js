@@ -16,7 +16,29 @@ function cookie(req, name) {
 }
 function same(a, b) { if (!a || !b || a.length !== b.length) return false; let d = 0; for (let i = 0; i < a.length; i++) d |= a.charCodeAt(i) ^ b.charCodeAt(i); return d === 0; }
 
+// ── بوابة الأدمن ──
+// لوحة الأدمن (وواجهات ملفاتها) بتدّي 404 لأي حد معاه مش كوكي الأدمن. الكوكي بيتفعّل مرة واحدة بالرابط السري: /a/<ADMIN_KEY>
+// لو ADMIN_KEY مش مضبوط في Vercel، اللوحة بتتقفل خالص (404 للكل).
+const ADMIN_GATED = [/^\/admin(\.html)?\/?$/i, /^\/api\/files-(list|write|delete)\/?$/i];
+const NOT_FOUND = () => new Response('<!doctype html><title>404</title><h1>404: NOT_FOUND</h1>', { status: 404, headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex, nofollow' } });
+
+function adminGate(req, url) {
+  const key = process.env.ADMIN_KEY || '';
+  const m = url.pathname.match(/^\/a\/([^/]+)\/?$/);
+  if (m) {
+    if (!key || key.length < 24 || !same(decodeURIComponent(m[1]), key)) return NOT_FOUND();
+    return new Response(null, { status: 302, headers: { Location: '/admin.html', 'Set-Cookie': 'lg_adm=' + encodeURIComponent(key) + '; Path=/; Max-Age=1209600; HttpOnly; Secure; SameSite=Strict', 'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer' } });
+  }
+  if (ADMIN_GATED.some(r => r.test(url.pathname))) {
+    if (key.length >= 24 && same(cookie(req, 'lg_adm'), key)) return 'pass';
+    return NOT_FOUND();
+  }
+}
+
 export default function middleware(req) {
+  const url0 = new URL(req.url), g = adminGate(req, url0);
+  if (g === 'pass') return;
+  if (g) return g;
   if (process.env.SITE_LOCKED !== '1') return;
   const url = new URL(req.url), key = process.env.PREVIEW_KEY || '';
   if (OPEN.some(r => r.test(url.pathname))) return;

@@ -61,8 +61,14 @@
     {
       "source": "/sw.js",
       "headers": [
-        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
-        { "key": "Service-Worker-Allowed", "value": "/" }
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        },
+        {
+          "key": "Service-Worker-Allowed",
+          "value": "/"
+        }
       ]
     },
     {
@@ -95,6 +101,23 @@
         {
           "key": "Cross-Origin-Opener-Policy",
           "value": "same-origin"
+        }
+      ]
+    },
+    {
+      "source": "/admin.html",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, private"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow, noarchive"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
         }
       ]
     }
