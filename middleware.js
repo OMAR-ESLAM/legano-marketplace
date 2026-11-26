@@ -27,7 +27,7 @@ function adminGate(req, url) {
   const m = url.pathname.match(/^\/a\/([^/]+)\/?$/);
   if (m) {
     if (!key || key.length < 24 || !same(decodeURIComponent(m[1]), key)) return NOT_FOUND();
-    return new Response(null, { status: 302, headers: { Location: '/admin.html', 'Set-Cookie': 'lg_adm=' + encodeURIComponent(key) + '; Path=/; Max-Age=1209600; HttpOnly; Secure; SameSite=Strict', 'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer' } });
+    return new Response(null, { status: 302, headers: { Location: '/admin.html', 'Set-Cookie': 'lg_adm=' + encodeURIComponent(key) + '; Path=/; Max-Age=34560000; HttpOnly; Secure; SameSite=Strict', 'Cache-Control': 'no-store', 'Referrer-Policy': 'no-referrer' } });
   }
   if (ADMIN_GATED.some(r => r.test(url.pathname))) {
     if (key.length >= 24 && same(cookie(req, 'lg_adm'), key)) return 'pass';
