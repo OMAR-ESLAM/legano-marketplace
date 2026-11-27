@@ -25,7 +25,7 @@
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const store = {
     get() { try { return JSON.parse(localStorage.getItem(SKEY)); } catch { return null; } },
-    set(v) { try { v ? localStorage.setItem(SKEY, JSON.stringify(v)) : localStorage.removeItem(SKEY); } catch {} },
+    set(v) { try { v ? localStorage.setItem(SKEY, JSON.stringify(v)) : localStorage.removeItem(SKEY); if (v && v.refresh_token) { const b = JSON.parse(localStorage.getItem('lg_bio') || 'null'); if (b && b.rt !== v.refresh_token) localStorage.setItem('lg_bio', JSON.stringify({ ...b, rt: v.refresh_token })); } } catch {} },
   };
   const pref = {
     get(k) { try { return localStorage.getItem(k); } catch { return null; } },

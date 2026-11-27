@@ -38,7 +38,7 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--white);min-
   <div class="f" id="nameWrap" style="display:none"><label>الاسم (يظهر للزوار)</label><input id="aName" placeholder="مثال: أ. أحمد محمد"></div>
   <div class="f"><label>البريد الإلكتروني</label><input id="aEmail" type="email" dir="ltr" autocomplete="email"></div>
   <div class="f"><label>كلمة السر (8 حروف على الأقل)</label><input id="aPass" type="password" dir="ltr" autocomplete="current-password"></div>
-  <button class="m-submit" id="bLogin">دخول</button><button class="link" id="bSwitch"></button><br><button class="link" id="bForgot" type="button">نسيت كلمة السر؟</button>
+  <button class="m-submit" id="bBio" type="button" style="display:none;margin-bottom:10px;background:#0F172A">👆 دخول بالبصمة</button><button class="m-submit" id="bLogin">دخول</button><button class="link" id="bSwitch"></button><br><button class="link" id="bForgot" type="button">نسيت كلمة السر؟</button>
 </div>
 <div class="login-box hide" id="resetBox">
   <div class="logo">LEGANO</div><h1>اختار كلمة سر جديدة</h1>
@@ -54,6 +54,7 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--white);min-
     <div class="view active" id="v_stats">
       <div class="hello"><h2>أهلاً <span id="hName"></span></h2><span class="status-tag" id="hStat"></span><span class="status-tag" id="hPub"></span></div>
       <div class="stats-grid" id="stats"></div>
+      <div class="card" id="bioCard" style="display:none"><h3>الدخول بالبصمة</h3><p class="hint" style="margin:0 0 10px" id="bioTxt"></p><button class="m-submit" id="bioBtn" type="button" style="width:auto;padding:10px 18px"></button></div>
       <div class="card"><h3>إزاي ترفع أرقامك؟</h3><p class="hint" style="margin:0">كمّل بياناتك وصورتك، وقدّم على التوثيق علشان تظهر بشارة «موثّق» وتاخد ثقة أكتر من الزوار.</p></div>
     </div>
     <div class="view" id="v_profile"><div class="card"><h3>بياناتك العامة</h3><p class="hint">دي اللي بتظهر للزوار في صفحتك.</p>
@@ -77,11 +78,12 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--white);min-
       <button class="m-submit" id="bVer">إرسال للمراجعة</button></div></div>
   </div>
 </div>
+<script src="js/bio.js"></script>
 <script src="js/data.js"></script>
 <script>
 const U = 'https://qlboprdqnjvsmcwfpjwl.supabase.co', K = 'sb_publishable_i-9FiXSNKe5xf_mEawmEfQ_PjSjf2_i', CW = window.CaseWidget, $ = id => document.getElementById(id);
 let S = null; // الجلسة
-const store = { get(){ try { return JSON.parse(localStorage.getItem('lg_s')); } catch { return null; } }, set(v){ try { v ? localStorage.setItem('lg_s', JSON.stringify(v)) : localStorage.removeItem('lg_s'); } catch {} } };
+const store = { get(){ try { return JSON.parse(localStorage.getItem('lg_s')); } catch { return null; } }, set(v){ try { v ? localStorage.setItem('lg_s', JSON.stringify(v)) : localStorage.removeItem('lg_s'); if (v && window.Bio) Bio.sync(v); } catch {} } };
 function say(t, bad){ const m = $('msg'); m.textContent = t; m.className = bad ? 'er' : 'ok'; m.style.display = 'block'; clearTimeout(say.t); say.t = setTimeout(() => m.style.display = 'none', 5000); }
 const lines = s => s.split('\n').map(x => x.trim()).filter(Boolean);
 const checked = id => [...$(id).querySelectorAll('input:checked')].map(i => i.value);
@@ -103,7 +105,9 @@ async function auth(kind){
       ? await api('/auth/v1/signup', { method:'POST', json:{ email, password, data:{ display_name: $('aName').value.trim() } } })
       : await api('/auth/v1/token?grant_type=password', { method:'POST', json:{ email, password } });
     if (!j.access_token) return say('اتبعتلك إيميل تأكيد، افتحه وبعدين سجّل دخول.');
-    S = j; store.set(j); location.href = 'feed.html'; return;
+    S = j; store.set(j);
+    try { if (window.Bio && !Bio.enabled() && await Bio.supported() && !localStorage.getItem('lg_bio_no') && confirm('تحب تدخل المرة الجاية بالبصمة بدل الإيميل والباسورد؟')) { try { await Bio.enable(j); } catch { say('البصمة ماتفعّلتش. هتكمّل بالإيميل والباسورد.', 1); await new Promise(r => setTimeout(r, 1200)); } } else if (!Bio.enabled()) localStorage.setItem('lg_bio_no', '1'); } catch {}
+    location.href = 'feed.html'; return;
   } catch(e){ say(/Invalid login/i.test(e.message) ? 'البريد أو كلمة السر غلط' : e.message, 1); }
 }
 async function load(){
@@ -182,5 +186,16 @@ if (hp.get('type') === 'recovery' && hp.get('access_token')) {
       $('resetBox').classList.add('hide'); document.querySelector('#authBox > .login-box:not(#resetBox)').classList.remove('hide');
     } catch (e) { say(/expired|invalid|JWT/i.test(e.message) ? 'الرابط انتهت صلاحيته، اطلب رابط جديد' : e.message, 1); }
   };
-} else { S = store.get(); if (S) { if (/[?&]panel=1/.test(location.search)) load(); else location.replace('feed.html'); } }
+} else { S = store.get();
+  (async () => {
+    if (!window.Bio || !(await Bio.supported())) return;
+    const draw = () => { const on = Bio.enabled(); $('bioCard').style.display = S ? 'block' : 'none'; $('bioTxt').textContent = on ? 'الدخول بالبصمة شغّال على الجهاز ده.' : 'ادخل بالبصمة أو الوجه أو قفل الشاشة بدل الإيميل والباسورد. لو فيه مشكلة بتدخل بالإيميل والباسورد عادي.'; $('bioBtn').textContent = on ? 'إلغاء الدخول بالبصمة' : 'تفعيل الدخول بالبصمة'; };
+    $('bioBtn').onclick = async () => { if (Bio.enabled()) { Bio.disable(); localStorage.setItem('lg_bio_no', '1'); } else { try { await Bio.enable(S); localStorage.removeItem('lg_bio_no'); say('اتفعّل الدخول بالبصمة'); } catch { say('البصمة ماتفعّلتش على الجهاز ده.', 1); } } draw(); };
+    if (S) { draw(); return; }
+    if (!Bio.enabled()) return;
+    $('bBio').style.display = 'block';
+    const go = async () => { try { S = await Bio.login(); store.set(S); location.href = 'feed.html'; } catch { S = null; say('البصمة مش شغالة دلوقتي، ادخل بالإيميل والباسورد.', 1); } };
+    $('bBio').onclick = go; go();
+  })();
+  if (S) { if (/[?&]panel=1/.test(location.search)) load(); else location.replace('feed.html'); } }
 </script></body></html>
