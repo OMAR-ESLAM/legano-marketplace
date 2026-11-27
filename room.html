@@ -143,7 +143,6 @@
 <body>
 <header class="top"><a class="logo-text" href="index.html?browse=1">LEGANO</a><div id="navSlot"></div></header>
 <main class="cs-wrap">
-  <div class="cs-test">⚠️ وضع تجريبي: الدفع لسه مش مفعّل، والأرقام للتجربة بس.</div>
   <div id="gate" class="soc-card gate" hidden><h1>سجّل دخول</h1><p>الغرفة دي للمحامي صاحب الاستشارة. سجّل دخول بحسابك.</p><a class="soc-btn primary" href="dashboard.html">دخول المحامين</a></div>
   <div id="stage" aria-live="polite"><div class="empty" style="border:0">جاري التحميل...</div></div>
 </main>
@@ -323,7 +322,7 @@
 
   function viewRequested() {
     if (ROLE === 'lawyer') {
-      return set(`<div class="cs-box"><h2>طلب استشارة جديد</h2><p>الموكل <b>${esc(st.client_name)}</b>:</p><div class="cs-consent">${esc(st.topic)}</div><p>${S.num(st.minutes)} دقيقة • ${S.num(st.price)} ج (تجريبي)</p>
+      return set(`<div class="cs-box"><h2>طلب استشارة جديد</h2><p>الموكل <b>${esc(st.client_name)}</b>:</p><div class="cs-consent">${esc(st.topic)}</div><p>${S.num(st.minutes)} دقيقة • ${S.num(st.price)} ج</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="soc-btn primary" data-a="accept" type="button">قبول</button><button class="soc-btn" data-a="reject" type="button">رفض</button></div></div>`);
     }
     const left = Math.max(0, 120 - Math.floor((nowMs() - Date.parse(st.created_at)) / 1000));

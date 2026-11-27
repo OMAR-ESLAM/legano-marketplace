@@ -85,7 +85,7 @@
     if (o.status === 'disputed') h += `<div class="bad">الإدارة بتراجع الطلب وهتقرر رد الفلوس أو تحويلها. ${o.dispute_reason ? 'سبب الشكوى: ' + esc(o.dispute_reason) : ''}</div>`;
     if (o.status === 'completed' && o.my_stars) h += `<p class="note">تقييمك: ${'★'.repeat(o.my_stars)}</p>`;
     if (o.status === 'pending') h += `<div style="margin-top:12px"><button class="soc-btn" id="cx" type="button">إلغاء الطلب واسترداد الفلوس</button></div>`;
-    h += `<div class="box"><h2>بياناتك اللي اتبعتت</h2><dl class="ans"><dt>الاسم</dt><dd>${esc(o.client_name)}</dd>${ansHtml}</dl><p class="note">المبلغ: ${S.num(o.price)} ج (تجريبي). احفظ رابط الصفحة دي، هو طريقك الوحيد للطلب.</p></div><p style="margin-top:12px"><a href="/docs.html" class="soc-btn">← طلب مستند تاني</a></p>`;
+    h += `<div class="box"><h2>بياناتك اللي اتبعتت</h2><dl class="ans"><dt>الاسم</dt><dd>${esc(o.client_name)}</dd>${ansHtml}</dl><p class="note">المبلغ: ${S.num(o.price)} ج. احفظ رابط الصفحة دي، هو طريقك الوحيد للطلب.</p></div><p style="margin-top:12px"><a href="/docs.html" class="soc-btn">← طلب مستند تاني</a></p>`;
     $('app').innerHTML = h;
     const g = id => document.getElementById(id);
     if (g('repGo')) g('repGo').onclick = () => { const v = g('rep').value.trim(); if (v.length < 2) return S.toast('اكتب الرد'); act('doc_client_reply', { p_text: v }, 'اتبعت الرد'); };

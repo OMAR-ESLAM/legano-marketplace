@@ -50,14 +50,14 @@
   const $ = id => document.getElementById(id), S = window.Social, esc = S.esc, CA = window.ClientAuth;
   S.mountNav($('navSlot'));
   const rpc = (fn, json) => S.call('/rest/v1/rpc/' + fn, { method: 'POST', json: json || {} });
-  const ERR = { doc_rate: 'وصلت للحد المسموح (5 طلبات في اليوم). جرّب بكرة.', wallet_login: 'سجّل بجوجل الأول علشان تدفع من المحفظة.', wallet_low: 'رصيد المحفظة مش كفاية. اشحن من «حسابي».', pay_required: 'الدفع من المحفظة بس: سجّل دخول، واشحن رصيدك من «حسابي»، وبعدين ابعت الطلب.', doc_down: 'الخدمة دي مش متاحة حالياً.' };
+  const ERR = { doc_rate: 'وصلت للحد المسموح (5 طلبات في اليوم). جرّب بكرة.', wallet_login: 'سجّل حسابك من «حسابي» الأول علشان تدفع من المحفظة.', wallet_low: 'رصيد المحفظة مش كفاية. اشحن من «حسابي».', pay_required: 'الدفع من المحفظة بس: سجّل دخول، واشحن رصيدك من «حسابي»، وبعدين ابعت الطلب.', doc_down: 'الخدمة دي مش متاحة حالياً.' };
   const errMsg = e => { const m = String((e && e.message) || ''); const mm = m.match(/doc_(missing|bad_value|too_long):?(\w+)?/); if (mm) return mm[1] === 'missing' ? 'في بيان مطلوب ناقص: ' + (lab[mm[2]] || mm[2]) : 'القيمة مش صحيحة في خانة: ' + (lab[mm[2]] || mm[2]); const k = Object.keys(ERR).find(x => m.includes(x)); return k ? ERR[k] : S.friendly(e); };
   let svcs = [], lab = {}, cur = null, bal = null;
   async function wallet() { if (!CA) return; try { await CA.handleHash(); if (CA.get()) bal = Number((await CA.me()).balance) || 0; } catch {} }
   function list() {
     $('app').innerHTML = `<section class="hero"><h1>مستندات قانونية جاهزة 📄</h1><p>اختار المستند، املا البيانات، وادفع. محامٍ موثّق بيجهّزه ويبعتهولك PDF خلال المدة المحددة. لو ما اتسلّمش، فلوسك بترجع.</p></section>
     <div class="grid">${svcs.map(s => `<article class="dc"><h2>${esc(s.title)}</h2><p>${esc(s.blurb || '')}</p><div class="pr"><span>خلال ${S.num(s.due_hours)} ساعة</span><b>${S.num(s.price)} ج</b></div><button type="button" class="soc-btn primary" data-id="${esc(s.id)}">اطلب المستند</button></article>`).join('') || '<div class="empty" style="grid-column:1/-1">مفيش خدمات متاحة حالياً.</div>'}</div>
-    <p class="note">⚠️ المستندات بتتجهّز من محامٍ حسب البيانات اللي بتدخلها وبتتراجع قبل التسليم. الدفع تجريبي حالياً. لو حالتك معقّدة، <a href="/consult.html"><b>استشر محامي أونلاين</b></a>.</p>`;
+    <p class="note">⚠️ المستندات بتتجهّز من محامٍ حسب البيانات اللي بتدخلها وبتتراجع قبل التسليم. الدفع بتحويل فودافون كاش (من رصيد محفظتك). لو حالتك معقّدة، <a href="/consult.html"><b>استشر محامي أونلاين</b></a>.</p>`;
     $('app').querySelectorAll('[data-id]').forEach(b => b.onclick = () => form(svcs.find(s => s.id === b.dataset.id)));
     history.replaceState(null, '', location.pathname);
   }
@@ -78,9 +78,10 @@
     ${(s.fields || []).map(f => `<div class="f"><label for="f_${esc(f.k)}">${esc(f.l)}${f.r ? ' <i>*</i>' : ''}</label>${input(f)}</div>`).join('')}
     <p class="note">⚠️ ما تكتبش رقم قومي أو بيانات حساسة غير المطلوبة. المحامي ممكن يسألك لو محتاج توضيح.</p>
     <label class="f" style="display:${can ? 'flex' : 'none'};gap:8px;align-items:center"><input type="checkbox" id="wChk" checked style="width:auto"> ادفع من محفظتي (رصيدي ${S.num(bal)} ج)</label>
+    ${can ? '' : `<p class="note" style="margin:0">💳 الدفع من رصيد محفظتك. ${CA && CA.get() ? 'رصيدك ' + S.num(bal) + ' ج، ' : ''}<a href="/account.html#topup"><b>${CA && CA.get() ? 'اشحن رصيدك' : 'سجّل حسابك واشحن رصيدك'}</b></a> بتحويل فودافون كاش على <b dir="ltr">01021472439</b> مع سكرين شوت التحويل، وبعد ما نراجعه ارجع هنا وابعت طلبك.</p>`}
     <label style="display:flex;gap:8px;align-items:flex-start;font-size:12.5px"><input type="checkbox" id="ok" style="margin-top:6px"><span>فاهم إن المستند بيتجهّز من محامٍ حسب بياناتي، وإن الفلوس بتتحوّل للمحامي بعد ما أستلم وأأكّد، وبترجع لو ما اتسلّمش في الميعاد.</span></label>
     <div class="err" id="err" role="alert"></div>
-    <button type="button" class="soc-btn primary lg" id="go" disabled>ادفع ${S.num(s.price)} ج (تجريبي) وابعت الطلب</button></div>`;
+    <button type="button" class="soc-btn primary lg" id="go" disabled>ادفع ${S.num(s.price)} ج من رصيدي وابعت الطلب</button></div>`;
     $('back').onclick = e => { e.preventDefault(); list(); };
     $('ok').onchange = () => { $('go').disabled = !$('ok').checked; };
     $('go').onclick = submit;
