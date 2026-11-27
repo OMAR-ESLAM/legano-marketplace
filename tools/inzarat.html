@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>صياغة الإنذارات القانونية (33 صيغة) | Legano</title>
+<meta name="description" content="ولّد إنذارات قانونية جاهزة بـ33 صيغة مختلفة، من إنذار الوفاء لإنذار الإخلاء، في ثوانٍ معدودة.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ffffff">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F8FAFB; --bg2: #FFFFFF; --gold: #0F172A; --gold-soft: #92620C;
+  --cyber: #2563EB; --white: #1E293B; --gray: #64748B;
+  --success: #059669; --surface: #FFFFFF; --border: rgba(146,98,12,0.15);
+  --sidebar-w: 300px;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html, body { height: 100%; overflow: hidden; }
+body { font-family: 'Cairo', sans-serif; background: var(--bg); color: var(--white); cursor: none; display: flex; flex-direction: column; }
+
+#cursor { position: fixed; width: 12px; height: 12px; background: var(--gold); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: width .2s, height .2s; mix-blend-mode: screen; }
+
+/* TOP NAV */
+.top-nav {
+  height: 56px; min-height: 56px;
+  background: rgba(255,255,255,0.9);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; z-index: 100;
+}
+.nav-logo { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; letter-spacing: 5px; background: linear-gradient(90deg, var(--gold), var(--gold-soft)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
+.nav-section { font-size: 11px; letter-spacing: 3px; color: var(--gray); font-weight: 600; }
+.nav-back { font-size: 11px; color: var(--cyber); text-decoration: none; letter-spacing: 1px; border: 1px solid rgba(37,99,235,0.2); padding: 6px 14px; border-radius: 8px; transition: background .2s; }
+.nav-back:hover { background: rgba(37,99,235,0.07); }
+
+/* MAIN LAYOUT */
+.app-layout {
+  display: flex; flex: 1; overflow: hidden;
+}
+
+/* LEFT SIDEBAR — template list */
+.tmpl-sidebar {
+  width: var(--sidebar-w); min-width: var(--sidebar-w);
+  background: var(--bg2);
+  border-left: 1px solid rgba(15,23,42,0.05);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.tmpl-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(15,23,42,0.05);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.tmpl-title { font-size: 13px; font-weight: 700; color: var(--gold); letter-spacing: 1px; }
+.tmpl-search {
+  background: rgba(15,23,42,0.04); border: 1px solid rgba(15,23,42,0.08);
+  border-radius: 8px; padding: 8px 12px; font-family: 'Cairo', sans-serif;
+  font-size: 12px; color: var(--white); outline: none; direction: rtl;
+  caret-color: var(--cyber); transition: border-color .2s;
+}
+.tmpl-search:focus { border-color: rgba(37,99,235,0.4); }
+.tmpl-search::placeholder { color: rgba(15,23,42,0.2); }
+
+.cat-group { overflow-y: auto; flex: 1; padding-bottom: 16px; }
+.cat-group::-webkit-scrollbar { width: 3px; }
+.cat-group::-webkit-scrollbar-track { background: transparent; }
+.cat-group::-webkit-scrollbar-thumb { background: rgba(146,98,12,0.2); border-radius: 2px; }
+
+.cat-label {
+  font-size: 9px; letter-spacing: 3px; color: var(--gold); font-weight: 700;
+  padding: 12px 20px 6px; opacity: .7; direction: rtl;
+}
+.tmpl-item {
+  padding: 10px 20px; font-size: 12px; color: var(--gray);
+  cursor: none; transition: all .15s; direction: rtl;
+  border-right: 2px solid transparent; display: flex; align-items: center; gap: 8px;
+}
+.tmpl-item:hover { color: var(--white); background: rgba(15,23,42,0.04); }
+.tmpl-item.active { color: var(--gold); background: rgba(146,98,12,0.06); border-right-color: var(--gold); }
+.tmpl-num { font-size: 10px; color: rgba(15,23,42,0.2); min-width: 20px; font-family: 'Syne', sans-serif; }
+
+/* CENTER — form + output */
+.workspace-center {
+  flex: 1; overflow-y: auto; display: flex; flex-direction: column;
+  background: var(--bg);
+  position: relative;
+}
+.workspace-center::-webkit-scrollbar { width: 4px; }
+.workspace-center::-webkit-scrollbar-thumb { background: rgba(146,98,12,0.15); }
+
+/* Empty state */
+.empty-state {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 16px; padding: 60px 40px; text-align: center;
+}
+.empty-icon { font-size: 48px; opacity: .3; }
+.empty-title { font-size: 18px; font-weight: 700; color: rgba(15,23,42,0.5); }
+.empty-sub { font-size: 13px; color: var(--gray); line-height: 1.8; max-width: 300px; }
+
+/* FORM AREA */
+.form-area {
+  padding: 32px; display: flex; flex-direction: column; gap: 24px;
+}
+.form-header { display: flex; flex-direction: column; gap: 8px; }
+.form-badge { font-size: 9px; letter-spacing: 4px; color: var(--cyber); font-weight: 700; opacity: .8; }
+.form-title { font-size: 20px; font-weight: 900; }
+.form-refs { display: flex; gap: 6px; flex-wrap: wrap; }
+.form-ref { font-size: 10px; padding: 3px 10px; border: 1px solid rgba(146,98,12,0.2); border-radius: 6px; color: var(--gold); letter-spacing: 1px; }
+
+.fields-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.field-group { display: flex; flex-direction: column; gap: 6px; }
+.field-group.full { grid-column: span 2; }
+.field-label { font-size: 10px; letter-spacing: 2px; color: var(--gold); font-weight: 700; opacity: .8; }
+.field-input {
+  background: var(--surface); border: 1px solid rgba(15,23,42,0.08);
+  border-radius: 10px; padding: 11px 14px; font-family: 'Cairo', sans-serif;
+  font-size: 13px; color: var(--white); outline: none; direction: rtl;
+  caret-color: var(--cyber); transition: border-color .2s, box-shadow .2s;
+}
+.field-input:focus { border-color: rgba(37,99,235,0.4); box-shadow: 0 0 0 2px rgba(37,99,235,0.06); }
+.field-input::placeholder { color: rgba(15,23,42,0.15); }
+textarea.field-input { min-height: 90px; resize: vertical; line-height: 1.7; }
+
+.gen-btn {
+  background: linear-gradient(135deg, var(--gold), #1E293B);
+  border: none; color: #F8FAFB; padding: 14px 32px;
+  border-radius: 12px; font-family: 'Cairo', sans-serif;
+  font-size: 14px; font-weight: 900; cursor: none;
+  display: flex; align-items: center; gap: 8px; justify-content: center;
+  transition: transform .15s, box-shadow .2s; align-self: flex-start;
+}
+.gen-btn:hover { transform: scale(1.03); box-shadow: 0 4px 24px rgba(146,98,12,0.4); }
+.gen-btn:disabled { opacity: .5; transform: none; }
+
+/* OUTPUT AREA */
+.output-area { padding: 0 32px 32px; display: none; flex-direction: column; gap: 16px; }
+.output-area.show { display: flex; }
+.output-header { display: flex; align-items: center; justify-content: space-between; }
+.output-label { font-size: 10px; letter-spacing: 4px; color: var(--success); font-weight: 700; }
+.output-actions { display: flex; gap: 8px; }
+.btn-copy, .btn-print {
+  font-size: 11px; padding: 6px 14px; border-radius: 8px; cursor: none;
+  font-family: 'Cairo', sans-serif; font-weight: 700; letter-spacing: 1px;
+  transition: all .2s; border: 1px solid;
+}
+.btn-copy { background: transparent; border-color: rgba(37,99,235,0.3); color: var(--cyber); }
+.btn-copy:hover { background: rgba(37,99,235,0.07); }
+.btn-print { background: transparent; border-color: rgba(146,98,12,0.3); color: var(--gold); }
+.btn-print:hover { background: rgba(146,98,12,0.07); }
+
+.output-box {
+  background: #FFFFFF;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 4px; padding: 70px 60px; direction: rtl;
+  font-size: 14px; line-height: 2.3; color: #2A2A2E;
+  white-space: pre-wrap; font-family: 'Cairo', sans-serif;
+  max-width: 780px; margin: 0 auto;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06), 0 12px 40px rgba(0,0,0,0.10);
+  border-top: 4px solid var(--gold);
+  position: relative;
+}
+.output-box p {
+  margin-bottom: 20px;
+  text-align: justify;
+  text-indent: 2em;
+  line-height: 2.2;
+  opacity: 0;
+  animation: fadeInPara 0.4s forwards;
+}
+.output-box p:first-child {
+  text-indent: 0;
+  font-weight: 900;
+  color: #EEF2F7;
+  text-align: center;
+  font-size: 20px; letter-spacing: 1px; margin-bottom: 36px;
+  padding-bottom: 20px; border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+.output-box p.doc-heading {
+  text-indent: 0; text-align: center; font-weight: 800; color: var(--gold-soft);
+  font-size: 15px; letter-spacing: 1px; margin: 34px 0 18px;
+}
+.output-box p:last-child { margin-bottom: 0; }
+@keyframes fadeInPara { from { opacity:0; transform: translateY(6px); } to { opacity:1; transform: translateY(0); } }
+.output-box.generating { border-top-color: var(--cyber); }
+.cursor-blink { display: inline-block; width: 2px; height: 1.1em; background: var(--cyber); animation: blink 1s infinite; vertical-align: middle; margin-right: 2px; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* RIGHT PANEL — AI status */
+.ai-panel {
+  width: 260px; min-width: 260px;
+  background: rgba(255,255,255,0.95);
+  border-right: 1px solid rgba(15,23,42,0.05);
+  display: flex; flex-direction: column; padding: 20px;
+  gap: 16px; overflow-y: auto;
+}
+.ai-panel::-webkit-scrollbar { width: 3px; }
+.ai-panel::-webkit-scrollbar-thumb { background: rgba(146,98,12,0.15); }
+
+.ai-head { display: flex; align-items: center; gap: 10px; padding-bottom: 16px; border-bottom: 1px solid rgba(15,23,42,0.06); }
+.ai-ava { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, rgba(146,98,12,0.3), rgba(37,99,235,0.2)); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--gold); font-weight: 700; }
+.ai-nm { font-size: 12px; font-weight: 700; }
+.ai-st { font-size: 9px; color: var(--success); letter-spacing: 1px; }
+
+.ai-msg-box { font-size: 12px; line-height: 1.8; color: rgba(15,23,42,0.7); background: rgba(15,23,42,0.04); border-radius: 10px; padding: 12px; direction: rtl; border-right: 2px solid var(--gold); }
+.panel-section-title { font-size: 9px; letter-spacing: 3px; color: var(--gray); font-weight: 700; }
+.info-row { display: flex; justify-content: space-between; align-items: center; font-size: 11px; padding: 6px 0; border-bottom: 1px solid rgba(15,23,42,0.04); direction: rtl; }
+.info-key { color: var(--gray); }
+.info-val { color: var(--white); font-weight: 600; }
+.info-val.active { color: var(--success); }
+.info-val.cyber { color: var(--cyber); }
+
+.progress-step { display: flex; align-items: center; gap: 10px; font-size: 11px; color: var(--gray); direction: rtl; padding: 4px 0; }
+.step-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(15,23,42,0.1); flex-shrink: 0; }
+.step-dot.done { background: var(--success); }
+.step-dot.running { background: var(--cyber); animation: pulse 1s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+.progress-step.done-step { color: var(--white); }
+.progress-step.active-step { color: var(--cyber); }
+
+/* canvas */
+#bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+.app-layout, .top-nav { position: relative; z-index: 1; }
+
+/* ===================== PAYWALL ===================== */
+#paywallOverlay {
+  position: fixed; inset: 0; z-index: 5000;
+  background: rgba(15,23,42,0.92);
+  backdrop-filter: blur(12px);
+  display: none;
+  align-items: center; justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity .3s;
+}
+
+.pw-card {
+  background: linear-gradient(160deg, #16161f, #0e0e16);
+  border: 1px solid rgba(146,98,12,0.25);
+  border-radius: 24px;
+  padding: 40px 36px;
+  max-width: 860px; width: 100%;
+  position: relative;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(146,98,12,0.08);
+  animation: pwIn .35s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes pwIn { from { opacity:0; transform:scale(.92) translateY(24px); } to { opacity:1; transform:none; } }
+
+.pw-close {
+  position: absolute; top: 16px; left: 16px;
+  width: 32px; height: 32px; border-radius: 8px;
+  background: rgba(15,23,42,0.05); border: 1px solid rgba(15,23,42,0.08);
+  color: var(--gray); font-size: 16px; cursor: none;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s;
+}
+.pw-close:hover { background: rgba(15,23,42,0.1); color: var(--white); }
+
+.pw-badge { font-size: 9px; letter-spacing: 4px; color: var(--cyber); font-weight: 700; margin-bottom: 10px; }
+.pw-title { font-size: 26px; font-weight: 900; margin-bottom: 6px; }
+.pw-sub { font-size: 13px; color: var(--gray); margin-bottom: 32px; line-height: 1.7; }
+
+/* PLANS */
+.pw-plans { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 28px; }
+.pw-plan {
+  background: rgba(15,23,42,0.03);
+  border: 1px solid rgba(15,23,42,0.07);
+  border-radius: 16px; padding: 22px 18px;
+  cursor: none; transition: border-color .2s, transform .2s, background .2s;
+  position: relative; text-align: center;
+}
+.pw-plan:hover { border-color: rgba(146,98,12,0.3); background: rgba(146,98,12,0.04); transform: translateY(-3px); }
+.pw-plan.selected { border-color: var(--gold); background: rgba(146,98,12,0.07); transform: translateY(-3px); }
+.pw-plan.featured { border-color: rgba(146,98,12,0.4); }
+.pw-plan-badge {
+  position: absolute; top: -11px; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--gold), #1E293B);
+  color: #F8FAFB; font-size: 9px; font-weight: 900;
+  padding: 3px 12px; border-radius: 20px; letter-spacing: 2px;
+  white-space: nowrap;
+}
+.pw-plan-period { font-size: 11px; letter-spacing: 2px; color: var(--gray); margin-bottom: 10px; font-weight: 600; }
+.pw-plan-price { font-family: 'Syne', sans-serif; font-size: 38px; font-weight: 800; color: var(--white); line-height: 1; }
+.pw-plan-price span { font-size: 14px; color: var(--gray); font-weight: 400; }
+.pw-plan-save { font-size: 10px; color: var(--success); margin-top: 6px; font-weight: 700; letter-spacing: 1px; min-height: 16px; }
+.pw-plan-features { margin-top: 14px; display: flex; flex-direction: column; gap: 5px; }
+.pw-feat { font-size: 11px; color: rgba(15,23,42,0.6); display: flex; align-items: center; gap: 6px; justify-content: center; }
+.pw-feat::before { content: '✓'; color: var(--success); font-weight: 900; font-size: 10px; }
+
+/* CTA */
+.pw-cta {
+  background: linear-gradient(135deg, var(--gold), #1E293B);
+  border: none; color: #F8FAFB;
+  width: 100%; padding: 16px;
+  border-radius: 12px; font-family: 'Cairo', sans-serif;
+  font-size: 15px; font-weight: 900; cursor: none;
+  transition: transform .15s, box-shadow .2s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.pw-cta:hover { transform: scale(1.02); box-shadow: 0 4px 28px rgba(146,98,12,0.4); }
+.pw-skip { display: block; text-align: center; margin-top: 12px; font-size: 12px; color: var(--gray); cursor: none; transition: color .2s; }
+.pw-skip:hover { color: var(--white); }
+
+/* PAYMENT SCREEN */
+.pay-screen { display: none; }
+.pay-screen.show { display: block; }
+.plans-screen { display: block; }
+.plans-screen.hide { display: none; }
+
+.pay-back { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--cyber); cursor: none; margin-bottom: 24px; width: fit-content; }
+.pay-back:hover { opacity: .8; }
+.pay-methods { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 24px; }
+.pay-method {
+  background: rgba(15,23,42,0.03); border: 1px solid rgba(15,23,42,0.07);
+  border-radius: 12px; padding: 16px 12px; text-align: center; cursor: none;
+  transition: border-color .2s, background .2s;
+}
+.pay-method:hover, .pay-method.active { border-color: rgba(146,98,12,0.4); background: rgba(146,98,12,0.05); }
+.pay-method-icon { font-size: 22px; margin-bottom: 8px; display: flex; justify-content: center; }
+.pay-icon-box { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.pay-icon-box.wide { width: 58px; }
+.pay-icon-box img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.pay-method-name { font-size: 12px; font-weight: 700; }
+.pay-method-num { font-size: 11px; color: var(--cyber); margin-top: 3px; font-family: 'Syne', sans-serif; letter-spacing: 1px; }
+
+.pay-detail-box {
+  background: rgba(37,99,235,0.04); border: 1px solid rgba(37,99,235,0.12);
+  border-radius: 12px; padding: 16px 20px; margin-bottom: 20px;
+  direction: rtl; display: none;
+}
+.pay-detail-box.show { display: block; }
+.pay-detail-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(15,23,42,0.04); font-size: 12px; }
+.pay-detail-row:last-child { border-bottom: none; }
+.pay-detail-key { color: var(--gray); }
+.pay-detail-val { color: var(--white); font-weight: 700; font-family: 'Syne', sans-serif; letter-spacing: 1px; }
+.pay-detail-val.copy-btn { color: var(--cyber); cursor: none; }
+.pay-detail-val.copy-btn:hover { text-decoration: underline; }
+
+.pay-form { display: flex; flex-direction: column; gap: 12px; }
+.pay-input {
+  background: var(--surface); border: 1px solid rgba(15,23,42,0.08);
+  border-radius: 10px; padding: 12px 14px; font-family: 'Cairo', sans-serif;
+  font-size: 13px; color: var(--white); outline: none; direction: rtl;
+  caret-color: var(--cyber); transition: border-color .2s;
+  width: 100%;
+}
+.pay-input:focus { border-color: rgba(37,99,235,0.4); }
+.pay-input::placeholder { color: rgba(15,23,42,0.2); }
+.pay-submit {
+  background: linear-gradient(135deg, var(--gold), #1E293B);
+  border: none; color: #F8FAFB; padding: 14px;
+  border-radius: 12px; font-family: 'Cairo', sans-serif;
+  font-size: 14px; font-weight: 900; cursor: none;
+  transition: transform .15s, box-shadow .2s; width: 100%;
+}
+.pay-submit:hover { transform: scale(1.02); box-shadow: 0 4px 24px rgba(146,98,12,0.3); }
+.pay-success { display: none; text-align: center; padding: 20px 0; }
+.pay-success.show { display: block; }
+.pay-success-icon { font-size: 48px; margin-bottom: 16px; }
+.pay-success-title { font-size: 20px; font-weight: 900; color: var(--success); margin-bottom: 8px; }
+.pay-success-sub { font-size: 13px; color: var(--gray); line-height: 1.8; }
+@media (max-width: 768px) {
+  html, body { height: auto !important; overflow-x: hidden !important; overflow-y: auto !important; }
+  .top-nav { padding: 0 14px; height: 52px; min-height: 52px; position: sticky; top: 0; z-index: 200; }
+  .nav-section { display: none; }
+  .nav-logo { font-size: 14px; letter-spacing: 3px; }
+  .nav-back { font-size: 11px; padding: 6px 12px; }
+  .app-layout { flex-direction: column; height: auto; overflow: visible; }
+  .tmpl-sidebar { width: 100%; min-width: unset; border-left: none; border-bottom: 1px solid rgba(146,98,12,0.15); }
+  .tmpl-sidebar.mob-hidden { display: none; }
+  .tmpl-header { padding: 14px 16px; }
+  .tmpl-search { width: 100%; font-size: 14px; padding: 10px 14px; }
+  .cat-group { flex: unset; overflow-y: visible; max-height: none; padding-bottom: 80px; }
+  .tmpl-item { padding: 13px 16px; font-size: 14px; }
+  .workspace-center { display: none; overflow: visible; height: auto; width: 100%; }
+  .workspace-center.mob-visible { display: flex; }
+  .form-area { padding: 16px; gap: 14px; box-sizing: border-box; }
+  .fields-grid { grid-template-columns: 1fr !important; }
+  .field-group.full { grid-column: span 1 !important; }
+  .field-input, textarea.field-input { width: 100%; max-width: 100%; box-sizing: border-box; font-size: 14px; }
+  .gen-btn { width: 100%; margin-bottom: 80px; }
+  .output-area { padding: 0 16px 100px; }
+  .output-box { padding: 18px 14px; font-size: 13px; }
+  .ai-panel { display: none !important; }
+  .mob-back-btn { display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 300; background: var(--surface); border: 1px solid rgba(146,98,12,0.4); color: var(--gold); padding: 11px 24px; border-radius: 30px; font-family: 'Cairo',sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,0.5); align-items: center; gap: 8px; white-space: nowrap; }
+  .mob-back-btn.show { display: flex; }
+  .pw-plans { grid-template-columns: 1fr; }
+  .pw-title { font-size: 20px; }
+  .pay-methods { grid-template-columns: 1fr 1fr; }
+}
+/* ══ ESTESHARA PAYMENT MODAL ══ */
+.modal-overlay {
+  display: none; position: fixed; inset: 0; z-index: 5000;
+  background: rgba(26,26,46,0.45); backdrop-filter: blur(4px);
+  align-items: flex-start; justify-content: center;
+  padding: 60px 16px; overflow-y: auto;
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+  position: relative; width: 100%; max-width: 560px;
+  background: var(--surface); border: 1px solid rgba(15,23,42,0.08);
+  border-radius: 22px; padding: 32px; direction: rtl;
+}
+.modal-close {
+  position: absolute; top: 16px; left: 16px; width: 32px; height: 32px;
+  border-radius: 50%; border: 1px solid rgba(15,23,42,0.1); background: rgba(15,23,42,0.03);
+  color: var(--white); font-size: 14px; cursor: none;
+}
+.modal-eyebrow { font-size: 10px; letter-spacing: 3px; color: var(--cyber); font-weight: 700; margin-bottom: 8px; }
+.modal-title { font-size: 19px; font-weight: 900; margin-bottom: 22px; }
+.modal-section-label { font-size: 12.5px; font-weight: 800; color: var(--gold-soft); margin: 20px 0 12px; }
+
+.m-packages { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.m-package {
+  position: relative; cursor: none; text-align: center;
+  background: rgba(15,23,42,0.02); border: 2px solid rgba(15,23,42,0.08);
+  border-radius: 12px; padding: 14px 8px; transition: border-color .2s;
+}
+.m-package.selected { border-color: var(--gold); background: rgba(146,98,12,0.06); }
+.m-package-check { position: absolute; top: 8px; left: 8px; width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(15,23,42,0.15); font-size: 9px; display: flex; align-items: center; justify-content: center; color: transparent; }
+.m-package.selected .m-package-check { border-color: var(--gold); background: var(--gold); color: #fff; }
+.m-package-icon { font-size: 17px; margin-bottom: 6px; }
+.m-package-name { font-size: 12px; font-weight: 800; margin-bottom: 2px; }
+.m-package-desc { font-size: 10px; color: var(--gray); margin-bottom: 8px; line-height: 1.4; }
+.m-package-price { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; color: var(--gold); }
+.m-package-price span { font-size: 10px; color: var(--gray); font-weight: 400; }
+
+.m-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.m-field { margin-bottom: 14px; }
+.m-field label { font-size: 12px; color: var(--gray); margin-bottom: 6px; display: block; font-weight: 600; }
+.m-field input, .m-field textarea {
+  width: 100%; padding: 12px 14px; background: rgba(15,23,42,0.02);
+  border: 1px solid rgba(15,23,42,0.08); border-radius: 10px; color: var(--white);
+  font-family: 'Cairo', sans-serif; font-size: 13px; outline: none; transition: border-color .2s; cursor: text;
+}
+.m-field input:focus, .m-field textarea:focus { border-color: rgba(146,98,12,0.4); }
+.m-field textarea { resize: vertical; min-height: 90px; line-height: 1.7; }
+
+.wallets-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.wallet-card {
+  position: relative; cursor: none; text-align: center;
+  background: rgba(15,23,42,0.02); border: 2px solid rgba(15,23,42,0.08);
+  border-radius: 14px; padding: 16px 10px; transition: border-color .2s;
+}
+.wallet-card.selected { border-color: var(--gold); background: rgba(146,98,12,0.06); }
+.wallet-check { position: absolute; top: 10px; left: 10px; width: 18px; height: 18px; border-radius: 50%; border: 2px solid rgba(15,23,42,0.15); font-size: 10px; display: flex; align-items: center; justify-content: center; color: transparent; }
+.wallet-card.selected .wallet-check { border-color: var(--gold); background: var(--gold); color: #fff; }
+.wallet-logo { width: 40px; height: 40px; object-fit: contain; margin: 0 auto 8px; display: block; }
+.wallet-name { font-size: 13px; font-weight: 800; margin-bottom: 4px; }
+.wallet-number { font-size: 12px; color: var(--gold-soft); font-weight: 700; }
+
+.m-upload {
+  position: relative; border: 2px dashed rgba(146,98,12,0.3); border-radius: 10px;
+  padding: 12px; text-align: center; cursor: none; font-size: 12px; color: var(--gray);
+  transition: border-color .2s, background .2s;
+}
+.m-upload:hover { border-color: rgba(146,98,12,0.5); background: rgba(146,98,12,0.03); }
+.m-upload input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+#mScreenshotPreviewWrap { margin-top: 10px; }
+#mScreenshotPreviewWrap img { max-width: 140px; max-height: 140px; border-radius: 10px; border: 1px solid rgba(15,23,42,0.1); }
+
+.m-submit {
+  width: 100%; margin-top: 8px;
+  background: linear-gradient(135deg, var(--gold), #0F172A); color: #FFFDF8;
+  border: none; padding: 15px; border-radius: 12px; font-family: 'Cairo', sans-serif;
+  font-size: 14px; font-weight: 900; cursor: none; transition: transform .15s, box-shadow .2s;
+}
+.m-submit:hover { transform: scale(1.01); box-shadow: 0 8px 28px rgba(146,98,12,0.3); }
+
+.modal-success { display: none; text-align: center; padding: 20px 10px; }
+.modal-success.show { display: block; }
+.modal-success .success-icon { font-size: 42px; margin-bottom: 14px; }
+.modal-success .success-title { font-size: 18px; font-weight: 900; margin-bottom: 10px; }
+.modal-success .success-sub { font-size: 13px; color: var(--gray); line-height: 1.9; }
+
+@media (max-width: 520px) {
+  .m-packages { grid-template-columns: 1fr; }
+  .m-field-row { grid-template-columns: 1fr; }
+  .wallets-grid { grid-template-columns: 1fr; }
+}
+
+</style>
+<link rel="stylesheet" href="../js/social.css">
+<link rel="stylesheet" href="tools.css">
+<script>
+/* الأدوات مجانية لكل محامي مسجّل في المنصة: مفيش اشتراك ولا حد تجربة */
+window.isUserSubscribed = true;
+function ensureSubscriptionChecked() { return Promise.resolve(); }
+function checkTrial() { return false; }
+function markUsed() {}
+function showPaywall() {}
+function closePaywall() {}
+function openSubscribeModal() {}
+function closeSubscribeModal() {}
+function showLegistaToast() {}
+function withLegistaDb() {}
+</script>
+</head>
+<body>
+<header class="top"><a class="logo-text" href="../index.html?browse=1">LEGANO</a><div id="navSlot"></div></header><div class="tool-crumb"><a href="../tools.html">← أدوات المحامي</a><span>صياغة الإنذارات</span></div><div id="toolGate" class="soc-card gate" hidden><h1>منطقة المحامين</h1><p>الأدوات القانونية مجانية لكل محامي مسجّل في المنصة. سجّل دخول علشان تفتحها.</p><a class="soc-btn primary" href="../dashboard.html">دخول المحامين</a></div>
+
+<div id="cursor"></div>
+<canvas id="bg-canvas"></canvas>
+
+<!-- TOP NAV -->
+
+
+<!-- APP LAYOUT -->
+<div class="app-layout">
+
+  <!-- LEFT SIDEBAR -->
+  <div class="tmpl-sidebar">
+    <div class="tmpl-header">
+      <div class="tmpl-title">◈ مكتبة الإنذارات</div>
+      <input class="tmpl-search" type="text" id="searchInput" placeholder="بحث في الصيغ..." oninput="filterTemplates(this.value)">
+    </div>
+    <div class="cat-group" id="catGroup">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+
+  <!-- CENTER WORKSPACE -->
+  <div class="workspace-center" id="workspaceCenter">
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon">📨</div>
+      <div class="empty-title">اختر صيغة من القائمة</div>
+      <div class="empty-sub">اختر أي صيغة من الـ 33 إنذاراً المتاحة لبدء التوليد الفوري</div>
+    </div>
+    <div class="form-area" id="formArea" style="display:none"></div>
+    <div class="output-area" id="outputArea">
+      <div class="output-header">
+        <span class="output-label">✓ المحرر القانوني المُولَّد</span>
+        <div class="output-actions">
+          <button class="btn-copy" onclick="copyOutput()">نسخ النص</button>
+          <button class="btn-print" onclick="printOutput()">طباعة</button>
+        </div>
+      </div>
+      <div class="output-box" id="outputBox"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT AI PANEL -->
+  <div class="ai-panel">
+    <div class="ai-head">
+      <div class="ai-ava">⚖</div>
+      <div>
+        <div class="ai-nm">مساعد الصياغة</div>
+        <div class="ai-st">● ONLINE</div>
+      </div>
+    </div>
+    <div class="ai-msg-box" id="aiMsg">اختر صيغة من المكتبة وأدخل البيانات لبدء التوليد القانوني الفوري.</div>
+
+    <div class="panel-section-title">معلومات الصيغة</div>
+    <div class="info-row"><span class="info-key">الصيغة</span><span class="info-val" id="infoTitle">—</span></div>
+    <div class="info-row"><span class="info-key">القسم</span><span class="info-val" id="infoSection">—</span></div>
+    <div class="info-row"><span class="info-key">الحقول</span><span class="info-val cyber" id="infoFields">—</span></div>
+    <div class="info-row"><span class="info-key">الحالة</span><span class="info-val" id="infoStatus">—</span></div>
+
+    <div class="panel-section-title" style="margin-top:8px">مراحل التوليد</div>
+    <div class="progress-step" id="step1"><div class="step-dot" id="dot1"></div><span>قراءة البيانات</span></div>
+    <div class="progress-step" id="step2"><div class="step-dot" id="dot2"></div><span>تحميل الصيغة</span></div>
+    <div class="progress-step" id="step3"><div class="step-dot" id="dot3"></div><span>توليد النص</span></div>
+    <div class="progress-step" id="step4"><div class="step-dot" id="dot4"></div><span>مراجعة قانونية</span></div>
+    <div class="progress-step" id="step5"><div class="step-dot" id="dot5"></div><span>جاهز للطباعة</span></div>
+  </div>
+</div>
+<button class="mob-back-btn" id="mobBackBtn" onclick="mobShowSidebar()">☰ الصيغ</button>
+<script>
+// ===================== DATA =====================
+const TEMPLATES = [
+  { id:1, cat:'أ', catName:'عروض ومبالغ نقدية', title:'إنذار على يد محضر', refs:[], vars:['يوم_الأسبوع','التاريخ','الساعة','اسم_الطالب','عنوان_الطالب','اسم_المحامي','عنوان_المكتب','اسم_المحضر','اسم_المحكمة','اسم_المنذر_اليه','عنوان_المنذر_اليه','اسم_المخاطب','موضوع_الإنذار'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} الساعة {{الساعة}} بناءً على طلب السيد / {{اسم_الطالب}} والمقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي الكائن {{عنوان_المكتب}} أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} الجزئية قد انتقلت في تاريخه إلى محل إقامة السيد / {{اسم_المنذر_اليه}} والمقيم {{عنوان_المنذر_اليه}} مخاطباً مع / {{اسم_المخاطب}} وأنذرته بالآتي:\n{{موضوع_الإنذار}}\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت إلى حيث إقامة المنذر إليه وسلمته صورة من أصل هذا الإنذار وأنذرته بما جاء به ونبهت عليه سريان مفعوله.\nولأجل العلم /` },
+  { id:2, cat:'أ', catName:'عروض ومبالغ نقدية', title:'إنذار عرض مبلغ من النقود', refs:['م487 مرافعات','م488 مرافعات','م490 مرافعات'], vars:['يوم_الأسبوع','التاريخ','الساعة','اسم_الطالب','عنوان_الطالب','اسم_المحامي','عنوان_المكتب','اسم_المحضر','اسم_المحكمة','اسم_المنذر_اليه','عنوان_المنذر_اليه','اسم_المخاطب','قيمة_الدين_رقماً','تاريخ_السند','تاريخ_الاستحقاق'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} الساعة {{الساعة}} بناءً على طلب السيد / {{اسم_الطالب}} والمقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي الكائن {{عنوان_المكتب}} أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} الجزئية قد انتقلت في تاريخه إلى محل إقامة السيد / {{اسم_المنذر_اليه}} والمقيم {{عنوان_المنذر_اليه}} مخاطباً مع / {{اسم_المخاطب}} وأنذرته بالآتي:\nيداين المنذر إليه الطالب بمبلغ {{قيمة_الدين_رقماً}} جنيهاً بموجب سند الدين المؤرخ {{تاريخ_السند}} إلا أن المنذر إليه رفض استلام المبلغ المذكور قيمة الدين وقدره {{قيمة_الدين_رقماً}} جنيهاً المستحق الأداء في {{تاريخ_الاستحقاق}} إضراراً بالطالب.\nوحيث يجري نص المادة 487 من قانون المرافعات على أن يحصل العرض الحقيقي بإعلان الدائن على يد محضر ويشتمل محضر العرض على بيان الشيء المعروض وشروط العرض وقبول المعروض أو امتناعه، وتنص المادة 488 على أنه إذا رفض العرض وكان المعروض نقوداً قام المحضر بإيداعها خزانة المحكمة في اليوم التالي لتاريخ المحضر على الأكثر وعلى المحضر أن يعلن الدائن بصورة من محضر الإيداع خلال ثلاثة أيام من تاريخه.\nوهو الأمر الذي يحق معه للطالب عرض مبلغ {{قيمة_الدين_رقماً}} جنيهاً وهو قيمة الدين عرضاً قانونياً صحيحاً على يد محضر لإبراء ذمته، وفي حالة رفض المنذر إليه الاستلام يودع المبلغ خزانة المحكمة في اليوم التالي لتاريخ المحضر.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت في التاريخ أعلاه إلى حيث محل إقامة المنذر إليه وسلمته صورة من هذا الإنذار للعلم بما جاء به ونفاذ مفعوله قانوناً وعرضت عليه مبلغ {{قيمة_الدين_رقماً}} جنيهاً عرضاً قانونياً لإبراء ذمة الطالب، وفي حالة رفضه الاستلام فسوف يتم إيداع المبلغ خزانة المحكمة على أن يكون له الحق في صرف المبلغ في أي وقت دون قيد أو شرط بعد خصم مصروفات الإيداع. مع حفظ كافة الحقوق القانونية الأخرى للطالب.\nولأجل العلم /` },
+  { id:3, cat:'أ', catName:'عروض ومبالغ نقدية', title:'إنذار عزم بصرف المبلغ المودع خزينة المحكمة', refs:['م491 مرافعات'], vars:['يوم_الأسبوع','التاريخ','الساعة','اسم_الطالب','عنوان_الطالب','اسم_المحامي','عنوان_المكتب','اسم_المحضر','اسم_المحكمة','اسم_المنذر_اليه','عنوان_المنذر_اليه','اسم_المخاطب','تاريخ_الإنذار_الأول','اسم_المحكمة_المودع','قيمة_المبلغ_المودع','الأشهر_المودعة','موقع_العقار','رقم_العقار','المحافظة','تاريخ_الإيداع'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} الساعة {{الساعة}} بناءً على طلب السيد / {{اسم_الطالب}} والمقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي الكائن {{عنوان_المكتب}} أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} الجزئية قد انتقلت في تاريخه إلى محل إقامة السيد / {{اسم_المنذر_اليه}} والمقيم {{عنوان_المنذر_اليه}} مخاطباً مع / {{اسم_المخاطب}} وأنذرته بالآتي:\nبموجب إنذار عرض على يد محضر مؤرخ {{تاريخ_الإنذار_الأول}} أودع المنذر إليه بخزينة محكمة {{اسم_المحكمة_المودع}} مبلغ {{قيمة_المبلغ_المودع}} جنيهاً قيمة الأجرة عن الأشهر {{الأشهر_المودعة}} وذلك إيجاراً للعقار الكائن بناحية {{موقع_العقار}} بالعقار رقم {{رقم_العقار}} محافظة {{المحافظة}}.\nوحيث أن المنذر عازم على صرف المبلغ المودع بخزينة المحكمة الذي رفض قبوله سابقاً.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت إلى حيث إقامة المنذر إليه وأنذرته بصورة من هذا الإنذار ونبهت عليه بعزم المنذر على صرف المبلغ المودع بخزينة محكمة {{اسم_المحكمة_المودع}} بتاريخ {{تاريخ_الإيداع}} قيمة الأشهر {{الأشهر_المودعة}}. هذا مع كافة حقوق المنذر الأخرى.\nولأجل العلم /` },
+  { id:4, cat:'أ', catName:'عروض ومبالغ نقدية', title:'إنذار بالرجوع عن عرض المبلغ واسترداده', refs:['م492 مرافعات'], vars:['يوم_الأسبوع','التاريخ','الساعة','اسم_الطالب','عنوان_الطالب','اسم_المحامي','عنوان_المكتب','اسم_المحضر','اسم_المحكمة','اسم_المنذر_اليه','عنوان_المنذر_اليه','اسم_المخاطب','تاريخ_الإنذار_الأول','قيمة_المبلغ','تاريخ_الإيداع','رقم_القسيمة','تاريخ_التقرير'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} الساعة {{الساعة}} بناءً على طلب السيد / {{اسم_الطالب}} والمقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي الكائن {{عنوان_المكتب}} أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} الجزئية قد انتقلت في تاريخه إلى محل إقامة السيد / {{اسم_المنذر_اليه}} والمقيم {{عنوان_المنذر_اليه}} مخاطباً مع / {{اسم_المخاطب}} وأنذرته بالآتي:\nبموجب إنذار عرض على يد محضر معلن بتاريخ {{تاريخ_الإنذار_الأول}} عرض الطالب على المنذر إليه مبلغاً وقدره {{قيمة_المبلغ}} جنيهاً، وحيث أن المنذر إليه رفض استلام المبلغ المذكور وتم إيداعه بخزينة المحكمة بتاريخ {{تاريخ_الإيداع}} بالقسيمة رقم {{رقم_القسيمة}}.\nوحيث أن الطالب قد قرر بتاريخ {{تاريخ_التقرير}} بقلم الكتاب بمحكمة {{اسم_المحكمة}} عزمه سحب المبلغ السابق عرضه واسترداده.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت إلى حيث إقامة المنذر إليه وأنذرته بصورة من هذا الإنذار ونبهت عليه بأن الطالب عازم على صرف المبلغ المذكور بعد مرور ثلاثة أيام من تاريخ هذا الإنذار.\nولأجل العلم /` },
+  { id:5, cat:'أ', catName:'عروض ومبالغ نقدية', title:'تقرير بقلم الكتاب بالرجوع في عرض مبلغ', refs:['م192 مرافعات'], vars:['يوم_الأسبوع','التاريخ','اسم_المحامي','اسم_الموكل','رقم_التوكيل','سنة_التوكيل','مكتب_التوثيق','تاريخ_العرض','رقم_القسيمة','توقيع_المقرر','توقيع_رئيس_القلم'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} أمامنا نحن / رئيس قلم الودائع قد حضر السيد الأستاذ / {{اسم_المحامي}} المحامي بصفته وكيلاً عن {{اسم_الموكل}} بموجب التوكيل الرسمي رقم {{رقم_التوكيل}} السنة {{سنة_التوكيل}} مكتب توثيق {{مكتب_التوثيق}}\nوقرر بأنه قد رجع في عرض المبلغ المعروض بتاريخ {{تاريخ_العرض}} بالقسيمة رقم {{رقم_القسيمة}} وقرر أنه يعتبر العرض بالمبلغ المذكور لاغياً وكأن لم يكن وطلب عدم صرف المبلغ المودع لأي شخص آخر خلافه وقد حرر هذا المحضر بما ذكر.\nالمقرر: {{توقيع_المقرر}}\nرئيس قلم الودائع: {{توقيع_رئيس_القلم}}` },
+  { id:6, cat:'أ', catName:'عروض ومبالغ نقدية', title:'دعوى صحة عرض وبراءة ذمة', refs:['م487 مرافعات','م339 مدني'], vars:['يوم_الأسبوع','التاريخ','الساعة','اسم_الطالب','عنوان_الطالب','اسم_المحامي','عنوان_المكتب','اسم_المحضر','اسم_المحكمة','اسم_المعلن_اليه','عنوان_المعلن_اليه','اسم_المخاطب','تاريخ_السند','قيمة_الدين','اسم_محكمة_النظر','رقم_الدائرة','يوم_الجلسة','تاريخ_الجلسة'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} الساعة {{الساعة}} بناءً على طلب السيد / {{اسم_الطالب}} والمقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي الكائن {{عنوان_المكتب}} أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} الجزئية قد انتقلت في تاريخه إلى محل إقامة السيد / {{اسم_المعلن_اليه}} والمقيم {{عنوان_المعلن_اليه}} مخاطباً مع / {{اسم_المخاطب}} وأعلنته بالآتي:\nبموجب سند بتاريخ {{تاريخ_السند}} يداين المعلن إليه الطالب بمبلغ وقدره {{قيمة_الدين}} جنيهاً فقط لا غير، وحيث أن الطالب يرغب في إبراء ذمته من هذا الدين الأمر الذي حداه إلى رفع هذه الدعوى ابتغاء إثبات براءة ذمته.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت إلى حيث إقامة المعلن إليه وأعلنته بصورة من هذه الصحيفة وكلفته بالحضور أمام محكمة {{اسم_محكمة_النظر}} الدائرة ({{رقم_الدائرة}}) بجلستها التي ستنعقد علناً في يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} من الثامنة صباحاً وما بعدها ليسمع المعلن إليه الحكم بصحة العرض وببراءة ذمة الطالب من الدين المبين بصدر هذه العريضة مع إلزامه بالمصروفات ومقابل أتعاب المحاماة وشمول الحكم بالنفاذ المعجل وبلا كفالة. مع حفظ كافة حقوق الطالب الأخرى.\nولأجل العلم /` },
+  { id:7, cat:'أ', catName:'عروض ومبالغ نقدية', title:'إنذار بالعزم على صرف مبلغ نقدي مودع بخزانة المحكمة', refs:['م491 مرافعات'], vars:['يوم_الأسبوع','التاريخ','الساعة','اسم_الطالب','عنوان_الطالب','اسم_المحامي','عنوان_المكتب','اسم_المحضر','اسم_المحكمة','اسم_المنذر_اليه','عنوان_المنذر_اليه','اسم_المخاطب','قيمة_المبلغ','تاريخ_الإنذار_الأول','اسم_محكمة_الإيداع','تاريخ_الإيداع','رقم_الإيداع'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} الساعة {{الساعة}} بناءً على طلب السيد / {{اسم_الطالب}} والمقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي الكائن {{عنوان_المكتب}} أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} الجزئية قد انتقلت في تاريخه إلى محل إقامة السيد / {{اسم_المنذر_اليه}} والمقيم {{عنوان_المنذر_اليه}} مخاطباً مع / {{اسم_المخاطب}} وأنذرته بالآتي:\nعرض المنذر إليه مبلغ {{قيمة_المبلغ}} جنيهاً على الطالب وفاءً لمديونيته بموجب إنذار رسمي على يد محضر مؤرخ {{تاريخ_الإنذار_الأول}} إلا أن الطالب رفض استلام المبلغ لذلك تم إيداعه بخزانة محكمة {{اسم_محكمة_الإيداع}} بتاريخ {{تاريخ_الإيداع}} تحت رقم {{رقم_الإيداع}}.\nوحيث أن الطالب عازم على صرف المبلغ قيمة الدين المودع بخزانة المحكمة لحسابه إعمالاً لنص المادة 491 من قانون المرافعات.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت في التاريخ أعلاه إلى حيث محل إقامة المنذر إليه وسلمته صورة من هذا الإنذار ونبهت عليه بعزم الطالب على صرف المبلغ المودع بخزانة محكمة {{اسم_محكمة_الإيداع}} بتاريخ {{تاريخ_الإيداع}} تحت رقم {{رقم_الإيداع}} لحسابه على أن يكون الصرف خلال ثلاثة أيام من تاريخ هذا الإنذار طبقاً لنص المادة 491 من قانون المرافعات. مع حفظ كافة الحقوق القانونية الأخرى للطالب.\nولأجل العلم /` },
+  { id:8, cat:'أ', catName:'عروض ومبالغ نقدية', title:'طلب صرف مبلغ مودع بخزينة المحكمة', refs:[], vars:['اسم_المحكمة','اسم_الطالب','عنوان_الطالب','اسم_المحامي','اسم_المودع','تاريخ_الإنذار','قيمة_المبلغ','رقم_اليومية','الشهر_المودع','تاريخ_إنذار_المودع','تاريخ_الطلب','توقيع_الطالب'], template:`السيد / كاتب أول محكمة {{اسم_المحكمة}} تحية طيبة وبعد\nمقدمه لسيادتكم السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي بصفته وكيلاً عن الطالب.\nأتشرف بعرض الآتي:\nبموجب إنذار عرض على يد محضر مؤرخ {{تاريخ_الإنذار}} أودع السيد / {{اسم_المودع}} بخزينة محكمة {{اسم_المحكمة}} مبلغ {{قيمة_المبلغ}} جنيهاً برقم يومية {{رقم_اليومية}} قيمة الأجرة المتأخرة عن شهر {{الشهر_المودع}}.\nوحيث أنني أرغب في صرف هذا المبلغ المودع بخزينة المحكمة، وحيث أنني أنذرت المودع بإنذار على يد محضر مؤرخ {{تاريخ_إنذار_المودع}} ومرفق طيه صورة من الإنذار.\nلذلك يلتمس مقدمه من سيادتكم السماح له بصرف المبلغ المودع بخزينة المحكمة وقدره {{قيمة_المبلغ}} جنيهاً برقم يومية {{رقم_اليومية}} ومستعد لسداد الرسوم المقررة لذلك.\nتفضلوا بقبول فائق الاحترام\nتحريراً في {{تاريخ_الطلب}}\nمقدمه لسيادتكم: {{توقيع_الطالب}}` },
+  { id:9, cat:'ب', catName:'إيجار وأجرة', title:'إنذار عرض أجرة', refs:['م487 مرافعات','م488 مرافعات'], vars:['يوم_الأسبوع','التاريخ','الساعة','اسم_الطالب','عنوان_الطالب','اسم_المحامي','عنوان_المكتب','اسم_المحضر','اسم_المحكمة','اسم_المعلن_اليه','عنوان_المعلن_اليه','اسم_المخاطب','تاريخ_عقد_الإيجار','رقم_الشقة','رقم_العقار','اسم_الشارع','الأجرة_الشهرية','إجمالي_الأجرة_الشهرية','شهر_بداية_الامتناع','بداية_فترة_العرض','نهاية_فترة_العرض','عدد_الأشهر','إجمالي_المبلغ_المعروض'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} الساعة {{الساعة}} بناءً على طلب السيد / {{اسم_الطالب}} والمقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي الكائن {{عنوان_المكتب}} أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} الجزئية قد انتقلت في تاريخه إلى محل إقامة السيد / {{اسم_المعلن_اليه}} والمقيم {{عنوان_المعلن_اليه}} مخاطباً مع / {{اسم_المخاطب}} وأعلنته بالآتي:\nبموجب عقد إيجار مؤرخ {{تاريخ_عقد_الإيجار}} يستأجر الطالب من المعلن إليه الشقة رقم {{رقم_الشقة}} الكائنة بالعقار رقم {{رقم_العقار}} شارع {{اسم_الشارع}} وذلك نظير مبلغ {{الأجرة_الشهرية}} جنيهاً يدفع أول كل شهر شاملاً أجرة البواب والنظافة ومقابل استهلاك المياه والكهرباء وبذلك يكون إجمالي القيمة الإيجارية عن الشهر الواحد بملحقاتها {{إجمالي_الأجرة_الشهرية}} جنيهاً.\nوابتداءً من شهر {{شهر_بداية_الامتناع}} امتنع المنذر إليه عن استلام القيمة الإيجارية رغم عرضها عليه من المنذر أكثر من مرة بصفة ودية.\nمما يحق معه للطالب عرض الأجرة حتى تبرأ ذمته عن المدة من {{بداية_فترة_العرض}} حتى {{نهاية_فترة_العرض}} وبذلك يكون إجمالي القيمة الإيجارية {{إجمالي_الأجرة_الشهرية}} جنيهاً × {{عدد_الأشهر}} شهراً = {{إجمالي_المبلغ_المعروض}} جنيهاً إجمالاً.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت في التاريخ المذكور أعلاه إلى حيث محل إقامة المنذر إليه وسلمته صورة من هذا الإنذار وعرضت عليه مبلغ {{إجمالي_المبلغ_المعروض}} جنيهاً إيجار الشقة رقم {{رقم_الشقة}} بالعقار رقم {{رقم_العقار}} شارع {{اسم_الشارع}} عن المدة من {{بداية_فترة_العرض}} حتى {{نهاية_فترة_العرض}} عرضاً قانونياً لإبراء ذمة الطالب، وفي حالة رفضه الاستلام فسوف يتم إيداع المبلغ خزانة المحكمة.\nولأجل العلم /` },
+  { id:10, cat:'ب', catName:'إيجار وأجرة', title:'إنذار من مستأجر إلى مؤجر بالرجوع عن عرض القيمة الإيجارية واسترداد المبلغ المودع', refs:['م487 مرافعات','م492 مرافعات'], vars:['يوم_الأسبوع','التاريخ','الساعة','اسم_الطالب','عنوان_الطالب','اسم_المحامي','عنوان_المكتب','اسم_المحضر','اسم_المحكمة','اسم_المعلن_اليه','عنوان_المعلن_اليه','اسم_المخاطب','تاريخ_عقد_الإيجار','رقم_الشقة','رقم_العقار','اسم_الشارع','الأجرة_الشهرية','إجمالي_الأجرة_الشهرية','اسم_محكمة_الإيداع','رقم_الوديعة','تاريخ_الإيداع','تاريخ_إيصالات_السداد','تاريخ_الإنذار_الأول','قيمة_المبلغ_المودع'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} الساعة {{الساعة}} بناءً على طلب السيد / {{اسم_الطالب}} والمقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي الكائن {{عنوان_المكتب}} أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} الجزئية قد انتقلت في تاريخه إلى محل إقامة السيد / {{اسم_المعلن_اليه}} والمقيم {{عنوان_المعلن_اليه}} مخاطباً مع / {{اسم_المخاطب}} وأعلنته بالآتي:\nبموجب عقد إيجار مؤرخ {{تاريخ_عقد_الإيجار}} يستأجر الطالب من المعلن إليه الشقة رقم {{رقم_الشقة}} الكائنة بالعقار رقم {{رقم_العقار}} شارع {{اسم_الشارع}} وذلك نظير مبلغ {{الأجرة_الشهرية}} جنيهاً يدفع أول كل شهر وبذلك يكون إجمالي القيمة الإيجارية {{إجمالي_الأجرة_الشهرية}} جنيهاً.\nوقد امتنع المعلن إليه عن استلام الأجرة بدون مبرر قانوني مما حدا بالطالب إلى اتخاذ إجراءات العرض والإيداع وقد رفض المعلن إليه العرض لذا فقد تم إيداع المبلغ بخزينة محكمة {{اسم_محكمة_الإيداع}} وديعة رقم {{رقم_الوديعة}} بتاريخ {{تاريخ_الإيداع}}.\nوبعد إيداع هذه المبالغ تم إنهاء النزاع بصفة ودية وقام الطالب بتسليم المعلن إليه الأجرة المتأخرة بإيصالات سداد مؤرخة {{تاريخ_إيصالات_السداد}} وقد حرر المعلن إليه إقراراً بتنازله عن الودائع وصرّح للطالب بالرجوع في العرض واسترداد هذه المبالغ إعمالاً لنص المادة 492 من قانون المرافعات.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت وأعلنت المعلن إليه بصورة من هذا الإنذار ونبهت عليه بأن الطالب سوف يسترد المبلغ السابق عرضه بالإنذار المؤرخ {{تاريخ_الإنذار_الأول}} والمودع بخزينة محكمة {{اسم_محكمة_الإيداع}} بتاريخ {{تاريخ_الإيداع}} وديعة رقم {{رقم_الوديعة}} ومقداره {{قيمة_المبلغ_المودع}} جنيهاً.\nولأجل العلم /` },
+  { id:11, cat:'ب', catName:'إيجار وأجرة', title:'إنذار من مؤجر إلى مستأجر بسداد متجمد القيمة الإيجارية', refs:['م18 بند ب ق136 لسنة 1981'], vars:['يوم_الأسبوع','التاريخ','الساعة','اسم_الطالب','عنوان_الطالب','اسم_المحامي','عنوان_المكتب','اسم_المحضر','اسم_المحكمة','اسم_المعلن_اليه','عنوان_المعلن_اليه','اسم_المخاطب','تاريخ_عقد_الإيجار','رقم_الشقة','رقم_الدور','رقم_العقار','اسم_الشارع','غرض_الاستخدام','الأجرة_الشهرية','شهر_بداية_الامتناع','بداية_فترة_التجمد','نهاية_فترة_التجمد','عدد_الأشهر','إجمالي_المبلغ_المتجمد'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} الساعة {{الساعة}} بناءً على طلب السيد / {{اسم_الطالب}} والمقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي الكائن {{عنوان_المكتب}} أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} الجزئية قد انتقلت في تاريخه إلى محل إقامة السيد / {{اسم_المعلن_اليه}} والمقيم {{عنوان_المعلن_اليه}} مخاطباً مع / {{اسم_المخاطب}} وأعلنته بالآتي:\nبموجب عقد إيجار مؤرخ {{تاريخ_عقد_الإيجار}} استأجر المعلن إليه من الطالب الشقة رقم {{رقم_الشقة}} بالدور {{رقم_الدور}} بالعقار رقم {{رقم_العقار}} شارع {{اسم_الشارع}} بغرض {{غرض_الاستخدام}} بأجرة شهرية قدرها {{الأجرة_الشهرية}} جنيهاً تدفع أول كل شهر.\nوحيث أن المعلن إليه امتنع عن سداد الأجرة المستحقة عليه ابتداءً من شهر {{شهر_بداية_الامتناع}} وقد أدى ذلك إلى تجمد مبلغ {{إجمالي_المبلغ_المتجمد}} جنيهاً عن الفترة من {{بداية_فترة_التجمد}} وحتى {{نهاية_فترة_التجمد}} وبيانها كالتالي: الأجرة الشهرية {{الأجرة_الشهرية}} جنيهاً × {{عدد_الأشهر}} شهراً = {{إجمالي_المبلغ_المتجمد}} جنيهاً (بخلاف ما يستجد).\nإعمالاً لنص المادة 18 بند «ب» من القانون 136 لسنة 1981 يحق للطالب أن يلجأ إلى القضاء المستعجل بطلب طرد المعلن إليه لعدم سداده متجمد الأجرة المستحقة فضلاً عن حقه في طلب الإخلاء إذا لم يمتثل المعلن إليه بعد هذا الإنذار.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت في التاريخ المذكور أعلاه إلى حيث محل إقامة المنذر إليه وسلمته صورة من هذا الإنذار ونبهت عليه بسداد متجمد القيمة الإيجارية بمبلغ إجمالي {{إجمالي_المبلغ_المتجمد}} جنيهاً عن المدة من {{بداية_فترة_التجمد}} حتى {{نهاية_فترة_التجمد}} (بخلاف ما يستجد) وأنه في حالة عدم السداد خلال خمسة عشر يوماً سيتخذ الطالب الإجراءات القانونية لإخلاء المنذر إليه من الشقة محل هذا الإنذار. مع إلزامه بكافة المصاريف والأتعاب. مع حفظ كافة حقوق الطالب الأخرى.\nولأجل العلم /` },
+  { id:12, cat:'ب', catName:'إيجار وأجرة', title:'إنذار عرض أجرة من مستأجر أرض زراعية', refs:['م487 مرافعات','م488 مرافعات'], vars:['يوم_الأسبوع','التاريخ','الساعة','اسم_الطالب','عنوان_الطالب','اسم_المحامي','عنوان_المكتب','اسم_المحضر','اسم_المحكمة','اسم_المعلن_اليه','عنوان_المعلن_اليه','اسم_المخاطب','تاريخ_عقد_الإيجار','مساحة_الأرض','اسم_الزمام','اسم_الحوض','حدود_الأرض','مدة_الإيجار','تاريخ_بداية_العقد','تاريخ_نهاية_العقد','بداية_فترة_العرض','نهاية_فترة_العرض','قيمة_الأجرة_المعروضة','اسم_محكمة_الإيداع'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} الساعة {{الساعة}} بناءً على طلب السيد / {{اسم_الطالب}} والمقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي الكائن {{عنوان_المكتب}} أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} الجزئية قد انتقلت في تاريخه إلى محل إقامة السيد / {{اسم_المعلن_اليه}} والمقيم {{عنوان_المعلن_اليه}} مخاطباً مع / {{اسم_المخاطب}} وأعلنته بالآتي:\nبموجب عقد إيجار أرض زراعية مؤرخ {{تاريخ_عقد_الإيجار}} استأجر الطالب من المعلن إليه ما هو {{مساحة_الأرض}} بزمام {{اسم_الزمام}} حوض {{اسم_الحوض}} وحدودها كالتالي: {{حدود_الأرض}} وذلك لمدة {{مدة_الإيجار}} سنوات تبدأ من {{تاريخ_بداية_العقد}} وتنتهي في {{تاريخ_نهاية_العقد}} ونص العقد على أن تسدد الأجرة كل ستة أشهر.\nوحيث أن المعلن إليه امتنع عن استلام الأجرة عن الفترة من {{بداية_فترة_العرض}} إلى {{نهاية_فترة_العرض}} بدون مسوغ قانوني رغم عرضها عليه مما حدا بالطالب إلى اتخاذ إجراءات العرض والإيداع المقررة قانوناً إعمالاً لنص المادتين 487 و488 من قانون المرافعات.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت حيث أعلنت المعلن إليه بصورة من هذا الإنذار وعرضت عليه مبلغ {{قيمة_الأجرة_المعروضة}} جنيهاً أجرة الأرض المذكورة عن الفترة من {{بداية_فترة_العرض}} إلى {{نهاية_فترة_العرض}} عرضاً قانونياً مبرئاً للذمة وفي حالة رفضه يودع بخزينة محكمة {{اسم_محكمة_الإيداع}}.\nولأجل العلم /` },
+  { id:13, cat:'ب', catName:'إيجار وأجرة', title:'إنذار من مؤجر أرض زراعية إلى مستأجر بإخلائها لانتهاء مدة العقد', refs:[], vars:['يوم_الأسبوع','التاريخ','الساعة','اسم_الطالب','عنوان_الطالب','اسم_المحامي','عنوان_المكتب','اسم_المحضر','اسم_المحكمة','اسم_المعلن_اليه','عنوان_المعلن_اليه','اسم_المخاطب','تاريخ_عقد_الإيجار','مساحة_الأرض','اسم_الزمام','اسم_الحوض','حدود_الأرض','مدة_الإيجار','تاريخ_بداية_العقد','تاريخ_نهاية_العقد'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} الساعة {{الساعة}} بناءً على طلب السيد / {{اسم_الطالب}} والمقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي الكائن {{عنوان_المكتب}} أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} الجزئية قد انتقلت في تاريخه إلى محل إقامة السيد / {{اسم_المعلن_اليه}} والمقيم {{عنوان_المعلن_اليه}} مخاطباً مع / {{اسم_المخاطب}} وأعلنته بالآتي:\nبموجب عقد إيجار أرض زراعية مؤرخ {{تاريخ_عقد_الإيجار}} أجّر الطالب للمعلن إليه ما هو {{مساحة_الأرض}} بزمام {{اسم_الزمام}} حوض {{اسم_الحوض}} وحدودها كالتالي: {{حدود_الأرض}} وذلك لمدة {{مدة_الإيجار}} سنوات تبدأ من {{تاريخ_بداية_العقد}} وتنتهي في {{تاريخ_نهاية_العقد}}.\nوحيث أن المدة المتفق عليها قد انتهت ومازال المعلن إليه يشغل الأرض السالف بيانها بدون مسوغ قانوني وحيث أن الطالب يرغب في استرداد أرضه ليتصرف فيها كيفما يشاء.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت حيث أعلنت المعلن إليه بصورة من هذا الإنذار ونبهت عليه بإخلاء الأرض موضوع هذا الإنذار وتسليمها للطالب خالية مما يشغلها من محاصيل أو أدوات زراعة أو غيره وذلك لانتهاء مدة الإجارة المتفق عليها في العقد المحرر بتاريخ {{تاريخ_عقد_الإيجار}} وفي حالة امتناعه عن تنفيذ ذلك فإن المنذر ينذره باتخاذ كافة الإجراءات القانونية ومطالبته بالشرط الجزائي المنصوص عليه في العقد لإخلاله ببند التسليم المتفق عليه. مع حفظ كافة حقوق الطالب الأخرى.\nولأجل العلم /` },
+  { id:14, cat:'ب', catName:'إيجار وأجرة', title:'إنذار بعدم الرغبة في تجديد عقد الإيجار في ظل قانون 1996', refs:['ق4 لسنة 1996'], vars:['يوم_الأسبوع','التاريخ','الساعة','اسم_الطالب','عنوان_الطالب','اسم_المحامي','اسم_المحضر','اسم_المحكمة','اسم_المنذر_اليه','عنوان_المنذر_اليه','اسم_المخاطب','تاريخ_عقد_الإيجار','وصف_العين','رقم_العقار','اسم_الشارع','المحافظة','غرض_الاستخدام','الأجرة_الشهرية','رقم_البند','مدة_العقد','تاريخ_بداية_العقد','تاريخ_نهاية_العقد','مهلة_التسليم_بالأيام'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} الساعة {{الساعة}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي الكائن مكتبه أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} الجزئية قد انتقلت في تاريخه وأعلنت السيد / {{اسم_المنذر_اليه}} المقيم {{عنوان_المنذر_اليه}} مخاطباً مع / {{اسم_المخاطب}} وأنذرته بالآتي:\nبموجب عقد إيجار مؤرخ {{تاريخ_عقد_الإيجار}} استأجر المنذر إليه من الطالب {{وصف_العين}} بالعقار رقم {{رقم_العقار}} الكائن شارع {{اسم_الشارع}} محافظة {{المحافظة}} بغرض استخدامه في {{غرض_الاستخدام}} وذلك لقاء أجرة شهرية قدرها {{الأجرة_الشهرية}} جنيهاً تدفع مقدماً أول كل شهر.\nحيث أن البند رقم {{رقم_البند}} من عقد الإيجار ينص على أن مدة العقد هي {{مدة_العقد}} تبدأ في {{تاريخ_بداية_العقد}} وتنتهي في {{تاريخ_نهاية_العقد}} ولا يجدد العقد لمدد أخرى إلا بموافقة المالك بعقد جديد.\nوحيث أن الطالب (المؤجر) لا يرغب في تجديد العقد لمدة أخرى الأمر الذي حداه إلى توجيه هذا الإنذار للمعلن إليه.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت في التاريخ المذكور أعلاه إلى حيث المنذر إليه وسلمته صورة من هذا الإنذار ونبهت عليه بعدم رغبة الطالب في تجديد عقد الإيجار لمدة أخرى وإلزامه بتسليم العين المبينة بصدر هذا الإنذار للطالب خالية من الأشخاص والشواغل وسليمة من أية تلفيات وذلك خلال {{مهلة_التسليم_بالأيام}} يوماً من تاريخ تسلمه هذا الإنذار وإلا تعتبر يده يد غاصب. مع حفظ كافة الحقوق القانونية الأخرى للطالب.\nولأجل العلم /` },
+  { id:15, cat:'ب', catName:'إيجار وأجرة', title:'إنذار بإخلاء محل تجاري', refs:['م594/1 مدني'], vars:['يوم_الأسبوع','التاريخ','اسم_الطالب','عنوان_الطالب','اسم_المحامي','اسم_المحضر','اسم_المحكمة','اسم_المعلن_الأول','عنوان_المعلن_الأول','اسم_المخاطب_الأول','اسم_المعلن_الثاني','عنوان_المعلن_الثاني','اسم_المخاطب_الثاني','رقم_العقار','موقع_العقار','رقم_المحل','تاريخ_عقد_الإيجار','الأجرة_الشهرية','رقم_البند','النشاط_الأصلي','تاريخ_اكتشاف_المخالفة','النشاط_المخالف','مهلة_الإخلاء_بالأيام'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي الكائن مكتبه أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} الجزئية قد انتقلت في تاريخه وأعلنت السيد / {{اسم_المعلن_الأول}} المقيم {{عنوان_المعلن_الأول}} مخاطباً مع / {{اسم_المخاطب_الأول}} والسيد / {{اسم_المعلن_الثاني}} المقيم {{عنوان_المعلن_الثاني}} مخاطباً مع / {{اسم_المخاطب_الثاني}} وأعلنتهما بالآتي:\nيمتلك الطالب العقار رقم {{رقم_العقار}} الكائن {{موقع_العقار}} وقد أجّر المعلن إليه الأول محل رقم {{رقم_المحل}} أسفل هذا العقار بموجب عقد إيجار مؤرخ {{تاريخ_عقد_الإيجار}} بأجرة شهرية {{الأجرة_الشهرية}} جنيهاً تدفع مقدماً أول كل شهر ونص في البند {{رقم_البند}} من العقد أن الغرض من الإيجار هو استعمال المحل لمزاولة نشاط حرفي {{النشاط_الأصلي}}.\nوبتاريخ {{تاريخ_اكتشاف_المخالفة}} فوجئ الطالب بوجود المعلن إليه الثاني بالمحل وقيامه باستغلاله في نشاط آخر وهو {{النشاط_المخالف}}.\nولما كانت المادة 1/594 مدني تنص على شرط مانع يمنع المستأجر من التنازل عن الإيجار أو التأجير من الباطن وقد خرج المعلن إليه على هذه القاعدة المقررة قانوناً.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت حيث أعلنت المعلن إليه بصورة من هذا الإنذار ونبهت عليه بإخلاء العين المبينة وذلك في مدة {{مهلة_الإخلاء_بالأيام}} أيام على الأكثر وإلا فإن الطالب سوف يرفع دعوى ضده بطلب إخلائه استناداً للأسانيد القانونية المشار إليها بصلب الإنذار وطبقاً للشرط الفاسخ في عقد الإيجار.\nولأجل العلم /` },
+  { id:16, cat:'ب', catName:'إيجار وأجرة', title:'إنذار تكليف بالوفاء بالقيمة الإيجارية', refs:[], vars:['يوم_الأسبوع','التاريخ','اسم_الطالب','عنوان_الطالب','اسم_المحامي','اسم_المحضر','اسم_المحكمة','اسم_المنذر_اليه','جهة_العمل','اسم_المخاطب','تاريخ_عقد_الإيجار','وصف_العين','رقم_العقار','اسم_الشارع','الأجرة_الشهرية','الإجمالي_الشهري','شهر_بداية_التقاعس','شهر_نهاية_التقاعس','إجمالي_المبلغ_المستحق'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي الكائن مكتبه أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} الجزئية قد انتقلت في تاريخه وأعلنت السيد / {{اسم_المنذر_اليه}} بصفته ويُعلن سيادته بمقر عمله {{جهة_العمل}} مخاطباً مع / {{اسم_المخاطب}} وأنذرته بالآتي:\nبموجب عقد إيجار مؤرخ {{تاريخ_عقد_الإيجار}} استأجر المنذر إليه من الطالب {{وصف_العين}} بالعقار رقم {{رقم_العقار}} بشارع {{اسم_الشارع}} وذلك لقاء قيمة إيجارية شهرية قدرها {{الأجرة_الشهرية}} جنيهاً تدفع مقدماً أول كل شهر بالإضافة إلى كافة ملحقات الأجرة والإجمالي مبلغ {{الإجمالي_الشهري}} جنيهاً.\nوحيث أن المنذر إليه قد تقاعس عن سداد القيمة الإيجارية المستحقة اعتباراً من شهر {{شهر_بداية_التقاعس}} وحتى تاريخ هذا الإنذار والتي تقدر بمبلغ {{إجمالي_المبلغ_المستحق}} جنيهاً وحيث باءت المحاولات الودية بالفشل.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت في التاريخ المذكور أعلاه إلى حيث محل إقامة المنذر إليه وسلمته صورة من هذا الإنذار وكلفته بسرعة سداد مبلغ وقدره {{إجمالي_المبلغ_المستحق}} جنيهاً القيمة الإيجارية المستحقة اعتباراً من شهر {{شهر_بداية_التقاعس}} وحتى شهر {{شهر_نهاية_التقاعس}} مضافاً إليها الملحقات الرسمية وذلك خلال خمسة عشر يوماً من تاريخ تسلمه هذا الإنذار وفي حالة امتناعه عن الوفاء سوف يضطر الطالب إلى اتخاذ كافة الإجراءات القانونية الكفيلة بحفظ حقوقه. مع حفظ كافة الحقوق القانونية الأخرى للطالب.\nولأجل العلم /` },
+  { id:17, cat:'ب', catName:'إيجار وأجرة', title:'إنذار وإعلان المستأجر بعدم الوفاء بالأجرة بعد تسجيل التنبيه', refs:['م107 مرافعات'], vars:['يوم_الأسبوع','التاريخ','الساعة','اسم_الطالب','عنوان_الطالب','اسم_المحامي','اسم_المحضر','اسم_المحكمة','اسم_المعلن_اليه','عنوان_المعلن_اليه','اسم_المخاطب','اسم_المالك','تاريخ_تسجيل_التنبيه','رقم_التنبيه','رقم_القضية','سنة_القضية','اسم_محكمة_الحكم'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} الساعة {{الساعة}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي الكائن مكتبه أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} الجزئية قد انتقلت في تاريخه وأعلنت السيد / {{اسم_المعلن_اليه}} المقيم {{عنوان_المعلن_اليه}} مخاطباً مع / {{اسم_المخاطب}} وأنذرته بالآتي:\nاتخذ الطالب إجراء نزع ملكية العقار المملوك للسيد / {{اسم_المالك}} مؤجر العقار للمعلن إليه وحيث أن الطالب قد سجّل تنبيه نزع الملكية بمكتب الشهر العقاري بتاريخ {{تاريخ_تسجيل_التنبيه}} تحت رقم {{رقم_التنبيه}} الأمر الذي يحق للطالب بتكليف المعلن إليه بصفته مستأجر العقار الجاري نزع ملكيته وبيعه جبراً عن مالكه لعدم دفعه الدين الثابت بالحكم الصادر في القضية رقم {{رقم_القضية}} لسنة {{سنة_القضية}} من محكمة {{اسم_محكمة_الحكم}} ابتداءً من تاريخ استلام هذا الإعلان بعدم دفع الأجرة المستحقة دون حاجة إلى أي إجراء آخر.\nبناءً عليه أنا المحضر سالف الذكر قد أعلنت المعلن إليه بصورة من هذا الإعلان ونبهت عليه بسريان مفعوله وكلفته بعدم دفع الأجرة المستحقة من تاريخ استلام هذا الإعلان مع التقرير بما في ذمته من دين الأجرة بمحكمة {{اسم_المحكمة}} في أقصاها خمسة عشر يوماً وإلا كان مسئولاً عن ذلك قِبَل الطالب الدائن.\nولأجل العلم /` },
+  { id:18, cat:'ج', catName:'بيع وملكية', title:'إنذار إلى بائع بتسليم المبيع', refs:['م428 مدني','م431 مدني'], vars:['يوم_الأسبوع','التاريخ','الساعة','اسم_الطالب','عنوان_الطالب','اسم_المحامي','عنوان_المكتب','اسم_المحضر','اسم_المحكمة','اسم_المنذر_اليه','عنوان_المنذر_اليه','اسم_المخاطب','تاريخ_عقد_البيع','وصف_المبيع','الثمن_الإجمالي','المهلة_الأصلية_للتسليم','المدة_المنقضية'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} الساعة {{الساعة}} بناءً على طلب السيد / {{اسم_الطالب}} والمقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي الكائن {{عنوان_المكتب}} أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} الجزئية قد انتقلت في تاريخه إلى محل إقامة السيد / {{اسم_المنذر_اليه}} والمقيم {{عنوان_المنذر_اليه}} مخاطباً مع / {{اسم_المخاطب}} وأنذرته بالآتي:\nبموجب عقد بيع المؤرخ {{تاريخ_عقد_البيع}} باع المنذر إليه للطالب ما هو: {{وصف_المبيع}} بثمن إجمالي قدره {{الثمن_الإجمالي}} جنيهاً دفعه الطالب كاملاً عند التوقيع على عقد البيع سالف الذكر على أن يتسلم هذه الأشياء في موعد أقصاه {{المهلة_الأصلية_للتسليم}} من تاريخ التوقيع على العقد إلا أن هذه المهلة قد انقضت ومر عليها {{المدة_المنقضية}} دون أن يتسلم الطالب الأشياء الواردة بصدر هذا الإنذار ولم تجدِ المطالبة الودية.\nإعمالاً لنص المادة 428 و431 من القانون المدني اللتين تُلزمان البائع بتسليم المبيع للمشتري.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت حيث أعلنت المنذر إليه بصورة من هذا الإنذار ونبهت عليه بأن يبادر فوراً بتسليم الطالب الأشياء المباعة ومستندات ملكيتها وأنذرته في حالة عدم الامتثال من اتخاذ الإجراءات القانونية مع تحميله بكافة التعويضات المترتبة على تأخيره في تنفيذ التزامه. مع حفظ كافة حقوق الطالب الأخرى.\nولأجل العلم /` },
+  { id:19, cat:'ج', catName:'بيع وملكية', title:'إنذار من الشفيع إلى البائع والمشتري برغبته في الأخذ بالشفعة', refs:['م935 مدني','م936 مدني','م940 مدني'], vars:['يوم_الأسبوع','التاريخ','الساعة','اسم_الطالب','عنوان_الطالب','اسم_المحامي','عنوان_المكتب','اسم_المحضر','اسم_المحكمة','اسم_البائع','عنوان_البائع','مخاطب_البائع','اسم_المشتري','عنوان_المشتري','مخاطب_المشتري','تاريخ_الإنذار_المبدئي','اسم_الحوض','حدود_الأرض','مساحة_الأرض','ثمن_البيع','تاريخ_عقد_ملكية_الطالب','اسم_محكمة_الإيداع'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} الساعة {{الساعة}} بناءً على طلب السيد / {{اسم_الطالب}} والمقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي الكائن {{عنوان_المكتب}} أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} الجزئية قد انتقلت في تاريخه إلى محل إقامة السيد / {{اسم_البائع}} والمقيم {{عنوان_البائع}} مخاطباً مع / {{مخاطب_البائع}} والسيد / {{اسم_المشتري}} والمقيم {{عنوان_المشتري}} مخاطباً مع / {{مخاطب_المشتري}} وأنذرتهما بالآتي:\nبتاريخ {{تاريخ_الإنذار_المبدئي}} أرسل المعلن إليهما إنذاراً للطالب جاء فيه أن المعلن إليه الأول (البائع) باع المعلن إليه الثاني (المشتري) الأرض الكائنة بحوض {{اسم_الحوض}} والمحددة بالحدود الآتية: {{حدود_الأرض}} والبالغ مساحتها {{مساحة_الأرض}} وذلك نظير ثمن إجمالي قدره {{ثمن_البيع}} جنيهاً.\nوحيث أن الطالب يمتلك قطعة أرض ملاصقة للأرض المباعة لذا يحق له أخذ هذه الأرض بالشفعة بصفته جاراً ملاصقاً بموجب العقد المؤرخ {{تاريخ_عقد_ملكية_الطالب}} طبقاً للمادتين 935 و936 من القانون المدني.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت حيث أعلنت كلاً من المعلن إليهما وسلمتهما صورة من هذا الإنذار ونبهت عليهما بتقديم المستندات اللازمة لتحرير عقد الملكية للطالب وذلك في ظرف أسبوع من تاريخه وإلا فإن الطالب سوف يقوم بإيداع الثمن الحقيقي خزانة محكمة {{اسم_محكمة_الإيداع}} على ذمة الفصل في دعوى الشفعة. ونبّهت كذلك على المعلن إليه الثاني بوصفه مشترياً بعدم إجراء أي تصرف في الأرض المشفوع فيها لتعلق حق الطالب بها.\nولأجل العلم /` },
+  { id:20, cat:'ج', catName:'بيع وملكية', title:'إنذار بتسليم المبيع للمشتري ومستندات ملكيته والتوقيع على البيع النهائي', refs:[], vars:['يوم_الأسبوع','التاريخ','الساعة','اسم_الطالب','عنوان_الطالب','اسم_المحامي','اسم_المحضر','اسم_المحكمة','اسم_المعلن_اليه','عنوان_المعلن_اليه','تاريخ_عقد_البيع','رقم_الشقة','رقم_الدور','رقم_العقار','موقع_العقار','الحد_الشرقي','الحد_الغربي','الحد_البحري','الحد_القبلي','الثمن_الإجمالي','المبلغ_المدفوع_أولاً','المبلغ_المدفوع_ثانياً','تاريخ_الإيصال','المبلغ_الباقي'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} الساعة {{الساعة}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي الكائن مكتبه أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} الجزئية قد انتقلت في تاريخه وأعلنت السيد / {{اسم_المعلن_اليه}} المقيم {{عنوان_المعلن_اليه}} وأنذرته بالآتي:\nبموجب عقد البيع الابتدائي المؤرخ {{تاريخ_عقد_البيع}} باع المعلن إليه للطالب شقة رقم {{رقم_الشقة}} بالدور {{رقم_الدور}} في العقار رقم {{رقم_العقار}} الكائن {{موقع_العقار}} والمحدد بالحدود التالية: الحد الشرقي: {{الحد_الشرقي}} — الحد الغربي: {{الحد_الغربي}} — الحد البحري: {{الحد_البحري}} — الحد القبلي: {{الحد_القبلي}}.\nوقد تم هذا البيع بكافة الضمانات بثمن إجمالي وقدره {{الثمن_الإجمالي}} جنيهاً مصرياً دفع الطالب منها مبلغ {{المبلغ_المدفوع_أولاً}} جنيهاً عند التوقيع ثم دفع مبلغ {{المبلغ_المدفوع_ثانياً}} جنيهاً بإيصال مؤرخ {{تاريخ_الإيصال}} وقد عرض الطالب المبلغ الباقي وقدره {{المبلغ_الباقي}} جنيهاً على المعلن إليه وطلب منه تسليم المبيع واتخاذ إجراءات التسجيل إلا أنه امتنع.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت إلى محل إقامة المعلن إليه وأعلنته بصورة من هذا الإنذار وكلفته بتقديم مستندات ملكيته للشقة المبيعة واتخاذ إجراءات التوقيع على عقد البيع النهائي مع استعداد الطالب لسداد باقي الثمن وذلك في خلال أسبوع من تاريخه وإلا فإن الطالب سوف يضطر إلى إقامة دعوى بطلب صحة ونفاذ عقد البيع مع تحميل المعلن إليه المصروفات القضائية.\nولأجل العلم /` },
+  { id:21, cat:'ج', catName:'بيع وملكية', title:'إنذار من ورثة بعدم الاعتداد ببيع مورثهم في مرض الموت', refs:[], vars:['يوم_الأسبوع','التاريخ','الساعة','اسم_المورث','عنوان_الورثة','اسم_المحامي','عنوان_المكتب','اسم_المحضر','اسم_المحكمة','اسم_المعلن_اليه','عنوان_المعلن_اليه','اسم_المخاطب','تاريخ_العقد','وصف_المبيع','الثمن','العربون'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} الساعة {{الساعة}} بناءً على ورثة المرحوم / {{اسم_المورث}} المقيمين {{عنوان_الورثة}} ومحلهم المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي الكائن {{عنوان_المكتب}} أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} قد انتقلت في تاريخه وأعلنت السيد / {{اسم_المعلن_اليه}} المقيم {{عنوان_المعلن_اليه}} مخاطباً مع / {{اسم_المخاطب}} وأعلنته بالآتي:\nبموجب عقد وعد بالبيع مؤرخ {{تاريخ_العقد}} اتفق المعلن إليه مع المرحوم مورث الطالبين على شراء {{وصف_المبيع}} بمبلغ {{الثمن}} جنيهاً وقد دفع المعلن إليه لمورث الطالبين مبلغ {{العربون}} جنيهاً مصرياً كعربون عند تحرير عقد ابتدائي بالوعد بالبيع وبعد وفاة مورث الطالبين طالب المعلن إليه الورثةَ تنفيذ الوعد.\nوحيث أن الوعد بالبيع قد أُجري في مرض الموت الأمر الذي يحق معه للطالبين عدم الاعتداد به وهم يعرضون المبلغ السابق حصول مورثهم عليه تحللاً من العقد.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت في التاريخ أعلاه وأعلنت المعلن إليه وسلمته صورة من هذا الإنذار وعرضت عليه مبلغ {{العربون}} جنيهاً التي سبق أن دفعها للمورث وهو في مرض الموت ونبّهت عليه بأن العقد يعتبر كأن لم يكن مع ما يترتب على ذلك من آثار.\nولأجل العلم /` },
+  { id:22, cat:'ج', catName:'بيع وملكية', title:'تنبيه نزع ملكية عقار', refs:['م101 مرافعات'], vars:['يوم_الأسبوع','التاريخ','الساعة','اسم_الطالب','عنوان_الطالب','اسم_المحامي','اسم_المحضر','اسم_المحكمة','اسم_المعلن_اليه','عنوان_المعلن_اليه','اسم_المخاطب','اسم_محكمة_الحكم','رقم_القضية','سنة_القضية','تاريخ_الحكم','تاريخ_إعلان_الحكم','أصل_الدين','المصروفات','الأتعاب','رسم_التنفيذ','إجمالي_المبلغ','موقع_العقار','الحد_البحري','الحد_القبلي','الحد_الشرقي','الحد_الغربي','مسطح_العقار','عدد_الطوابق','عدد_الوحدات','عدد_المحلات','رقم_التسجيل','سنة_التسجيل','المهلة'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} الساعة {{الساعة}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي الكائن مكتبه أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} الجزئية قد انتقلت في تاريخه وأعلنت السيد / {{اسم_المعلن_اليه}} المقيم {{عنوان_المعلن_اليه}} مخاطباً مع / {{اسم_المخاطب}} وأنذرته بالآتي:\nبناءً على الحكم الصادر من محكمة {{اسم_محكمة_الحكم}} في القضية رقم {{رقم_القضية}} السنة {{سنة_القضية}} الصادر بتاريخ {{تاريخ_الحكم}} والمعلن سلفاً بتاريخ {{تاريخ_إعلان_الحكم}} نبّهت على المعلن بدفع المبالغ المحكوم بها للطالب وهي: أصل الدين {{أصل_الدين}} جنيهاً — المصروفات {{المصروفات}} جنيهاً — الأتعاب {{الأتعاب}} جنيهاً — رسم تنفيذ الحكم {{رسم_التنفيذ}} جنيهاً والجملة {{إجمالي_المبلغ}} جنيهاً.\nوقد نبّهت على المعلن إليه بأنه إذا لم يدفع الدين يُسجَّل هذا التنبيه ويُباع العقار الكائن بناحية {{موقع_العقار}} والمحدد بالحدود الآتية: الحد البحري {{الحد_البحري}} — الحد القبلي {{الحد_القبلي}} — الحد الشرقي {{الحد_الشرقي}} — الحد الغربي {{الحد_الغربي}} والبالغ مسطحه {{مسطح_العقار}} والمكون من {{عدد_الطوابق}} طوابق وعدد وحداته السكنية {{عدد_الوحدات}} شقة وعدد {{عدد_المحلات}} محل والمسجل بالشهر العقاري تحت رقم {{رقم_التسجيل}} سنة {{سنة_التسجيل}}.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت في التاريخ أعلاه إلى محل إقامة المعلن إليه وسلمته صورة من هذا الإنذار ونبّهت عليه بأن يدفع للطالب في مدة أقصاها {{المهلة}} إجمالي المبالغ المستحقة وقدرها {{إجمالي_المبلغ}} جنيهاً وأنذرته في حالة عدم الدفع بتسجيل التنبيه بنزع ملكية العقار وبيعه جبراً بطريق المزاد العلني.\nولأجل العلم /` },
+  { id:23, cat:'ج', catName:'بيع وملكية', title:'إنذار بإيداع قائمة شروط البيع', refs:['م452 مرافعات'], vars:['يوم_الأسبوع','التاريخ','الساعة','اسم_الطالب','عنوان_الطالب','اسم_المحامي','اسم_المحضر','اسم_المحكمة','اسم_المنذر_اليه','عنوان_المنذر_اليه','اسم_المخاطب','تاريخ_اتخاذ_إجراءات_نزع_الملكية','موقع_العقار','تاريخ_تسجيل_التنبيه','اسم_محكمة_الإيداع'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} الساعة {{الساعة}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي الكائن مكتبه أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} الجزئية قد انتقلت في تاريخه وأعلنت السيد / {{اسم_المنذر_اليه}} المقيم {{عنوان_المنذر_اليه}} مخاطباً مع / {{اسم_المخاطب}} وأنذرته بالآتي:\nبتاريخ {{تاريخ_اتخاذ_إجراءات_نزع_الملكية}} اتخذ المنذر إليه إجراءات نزع ملكية العقار الكائن بناحية {{موقع_العقار}} وذلك بمقتضى تنبيه نزع الملكية المسجّل بمكتب الشهر العقاري بتاريخ {{تاريخ_تسجيل_التنبيه}} ولما كان المنذر إليه لم يقم حتى الآن بإيداع قائمة شروط البيع ومر أكثر من خمسة وأربعين يوماً على تسجيل تنبيه نزع الملكية الأمر الذي يحق معه للطالب بصفته أحد الدائنين إنذاره بإيداع قائمة شروط البيع عملاً بنص المادة 452 مرافعات.\nبناءً عليه أنا المحضر سالف الذكر قد أعلنت المنذر إليه بصورة من هذا الإنذار وكلفته بأن يودع قلم كتاب محكمة {{اسم_محكمة_الإيداع}} أوراق الإجراءات وذلك خلال ثلاثة أيام من تاريخ استلامه لهذا الإنذار مع حفظ كافة حقوق الطالب الأخرى.\nولأجل العلم /` },
+  { id:24, cat:'ج', catName:'بيع وملكية', title:'أمر قضائي بالترخيص للمحضر بدخول العقار لبيان أوصافه وحدوده ومشتملاته', refs:['م401 مرافعات'], vars:['اسم_المحكمة','اسم_مقدم_الطلب','موقع_العقار','المحافظة','تاريخ_الأمر','توقيع_القاضي'], template:`نحن قاضي التنفيذ بمحكمة {{اسم_المحكمة}}\nبعد الاطلاع على الطلب والمستندات المقدمة من السيد / {{اسم_مقدم_الطلب}} والخاصة بالعقار الكائن بناحية {{موقع_العقار}} بمحافظة {{المحافظة}}\nنأذن للمحضر بدخول العقار المذكور بهذا الأمر وبالطلب المرفق وذلك بغرض الحصول على البيانات اللازمة لوصف حدوده ومعالمه ومشتملاته.\nوقد صرّحنا للمحضر باصطحاب من يرى في حضوره ضرورة لتنفيذ ذلك الأمر ومعاونته على إتمامه وذلك طبقاً لأحكام القانون.\nتحريراً في {{تاريخ_الأمر}}\nقاضي التنفيذ: {{توقيع_القاضي}}` },
+  { id:25, cat:'د', catName:'عمل ووكالة ومهن', title:'إنذار من عامل إلى صاحب عمل للمطالبة بأجر متأخر', refs:['م38 ق12 لسنة 2003'], vars:['يوم_الأسبوع','التاريخ','الساعة','اسم_الطالب','عنوان_الطالب','اسم_المحامي','عنوان_المكتب','اسم_المحضر','اسم_المحكمة','اسم_المعلن_اليه','عنوان_المعلن_اليه','اسم_المخاطب','تاريخ_عقد_العمل','المهنة','الأجر_الشهري','ساعات_العمل_اليومية','بداية_فترة_التأخير','نهاية_فترة_التأخير','إجمالي_الأجر_المطالب_به'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} الساعة {{الساعة}} بناءً على طلب السيد / {{اسم_الطالب}} والمقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي الكائن {{عنوان_المكتب}} أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} الجزئية قد انتقلت في تاريخه إلى محل إقامة السيد / {{اسم_المعلن_اليه}} المقيم {{عنوان_المعلن_اليه}} مخاطباً مع / {{اسم_المخاطب}} وأنذرته بالآتي:\nبموجب عقد عمل مؤرخ {{تاريخ_عقد_العمل}} التحق الطالب بالعمل لدى المعلن إليه بمهنة {{المهنة}} وذلك نظير أجر شهري قدره {{الأجر_الشهري}} جنيهاً وكان الطالب يعمل لمدة {{ساعات_العمل_اليومية}} ساعة يومياً بكفاءة عالية.\nوحيث أن المعلن إليه امتنع عن أداء أجر الطالب بحجة تعثره المادي عن المدة من {{بداية_فترة_التأخير}} إلى {{نهاية_فترة_التأخير}} بدون وجه حق أو مسوغ من القانون.\nولذا فإن الطالب إعمالاً لنص المادة 38 من قانون العمل رقم 12 لسنة 2003 يطالب المعلن إليه بأجره عن تلك المدة.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت حيث أعلنت المعلن إليه بصورة من هذا الإنذار ونبّهت عليه بأن يدفع للطالب أجره عن المدة من {{بداية_فترة_التأخير}} إلى {{نهاية_فترة_التأخير}} وقدره {{إجمالي_الأجر_المطالب_به}} جنيهاً فوراً وأنذرته بأنه في حالة عدم الامتثال فإن الطالب سوف يتخذ كافة الإجراءات القانونية الكفيلة بحصوله على أجره.\nولأجل العلم /` },
+  { id:26, cat:'د', catName:'عمل ووكالة ومهن', title:'إنذار من محامٍ إلى موكل بإنهاء الوكالة', refs:['م715 مدني'], vars:['يوم_الأسبوع','التاريخ','اسم_المحامي_الطالب','عنوان_المكتب','اسم_المحضر','اسم_المحكمة','اسم_الموكل','عنوان_الموكل','اسم_المخاطب','تاريخ_عقد_الوكالة','العمل_الأول','تكلفة_العمل_الأول','العمل_الثاني','تكلفة_العمل_الثاني','إجمالي_المبالغ_المنفقة'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد الأستاذ / {{اسم_المحامي_الطالب}} المحامي الكائن مكتبه {{عنوان_المكتب}} أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} انتقلت في تاريخه إلى حيث إقامة السيد / {{اسم_الموكل}} المقيم {{عنوان_الموكل}} مخاطباً مع / {{اسم_المخاطب}} وأنذرته بالآتي:\nبموجب عقد الوكالة المؤرخ {{تاريخ_عقد_الوكالة}} باشر الطالب للمعلن إليه الأعمال الآتية:\n١. {{العمل_الأول}} وأنفق في سبيل القيام به مبلغ {{تكلفة_العمل_الأول}} جنيهاً.\n٢. {{العمل_الثاني}} وأنفق في سبيل القيام به مبلغ {{تكلفة_العمل_الثاني}} جنيهاً.\nوبذلك فإن المنذر قد أنفق مبلغاً إجمالياً وقدره {{إجمالي_المبالغ_المنفقة}} جنيهاً لمباشرة الأعمال الموكلة إليه.\nوحيث أن المنذر طلب من المعلن إليه بعض المستندات والأوراق لإتمام باقي مهام الوكالة كما قدّم له كشف حساب بالمصروفات التي أنفقها ولكنه لم يدفع شيئاً منها وتقاعس عن تقديم الأوراق اللازمة.\nإعمالاً بالمادة 715 من القانون المدني يحق للطالب إخطار المعلن إليه بإنهاء الوكالة.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت حيث أعلنت المعلن إليه بصورة من هذا الإنذار ونبّهت عليه بأنه إذا لم يقدم للطالب الأوراق والمستندات المطلوبة وكذلك المبالغ المنوّه عنها بكشف الحساب وذلك في ظرف أسبوع من تاريخه على الأكثر فإن الطالب ينذره باعتبار الوكالة ملغاة وبإنهائها دون أية مسئولية على الطالب مع استرداد كافة المبالغ التي أنفقها وسائر حقوقه الأخرى.\nولأجل العلم /` },
+  { id:27, cat:'د', catName:'عمل ووكالة ومهن', title:'إنذار على يد محضر من مؤلف إلى ناشر', refs:['ق82 لسنة 2002'], vars:['يوم_الأسبوع','التاريخ','اسم_المؤلف','عنوان_مكتب_المؤلف','اسم_المحضر','اسم_المحكمة','اسم_الناشر','اسم_دار_النشر','عنوان_دار_النشر','اسم_المخاطب','تاريخ_عقد_النشر','عدد_النسخ','عنوان_المؤلَّف','سعر_النسخة','رقم_بند_المدة','بداية_مدة_العقد','نهاية_مدة_العقد','رقم_بند_الفسخ','رقم_بند_المالي'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد الأستاذ / {{اسم_المؤلف}} المحامي الكائن مكتبه {{عنوان_مكتب_المؤلف}} أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} انتقلت في تاريخه إلى حيث إقامة السيد / {{اسم_الناشر}} والمتعاقد مع الطالب كناشر ويُعلن بمقر دار {{اسم_دار_النشر}} للنشر بشارع {{عنوان_دار_النشر}} مخاطباً مع / {{اسم_المخاطب}} وأنذرته بالآتي:\nبموجب عقد طبع ونشر المؤرخ {{تاريخ_عقد_النشر}} المحرر بين الطالب والمعلن إليه اتفق الطرفان على أن يقوم المعلن إليه بصفته ناشراً بطبع وتوزيع {{عدد_النسخ}} نسخة من «{{عنوان_المؤلَّف}}» أحد مؤلفات الطالب بسعر {{سعر_النسخة}} جنيه.\nونص العقد في البند {{رقم_بند_المدة}} على أن مدة العقد تبدأ من {{بداية_مدة_العقد}} وتنتهي في {{نهاية_مدة_العقد}} ولا يجدد إلا بموافقة كتابية من الطالب ونص البند {{رقم_بند_الفسخ}} على أنه في حالة مخالفة أي بند يحق لأحد الطرفين فسخ العقد بموجب إنذار رسمي على يد محضر.\nوحيث أن المعلن إليه لم يلتزم بدفع المبالغ المتفق عليها في البند {{رقم_بند_المالي}} من العقد مما تسبب في ضرر للطالب.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت حيث أعلنت المعلن إليه بصورة من هذا الإنذار ونبّهت عليه بنفاذ مقتضاه وأنذرته في حالة عدم الامتثال باتخاذ الإجراءات الجنائية والمدنية طبقاً لقانون رقم 82 لسنة 2002 بما تضمّنه من عقوبات مشددة والمصادرة فضلاً عن التعويضات.\nولأجل العلم /` },
+  { id:28, cat:'د', catName:'عمل ووكالة ومهن', title:'إنذار بإلغاء توكيل', refs:[], vars:['يوم_الأسبوع','التاريخ','الساعة','اسم_الطالب','عنوان_الطالب','اسم_المحامي','عنوان_المكتب','اسم_المحضر','اسم_المحكمة','اسم_المنذر_اليه','عنوان_المنذر_اليه','اسم_المخاطب','رقم_التوكيل','تاريخ_التوكيل','مكتب_توثيق_التوكيل'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} الساعة {{الساعة}} بناءً على طلب السيد / {{اسم_الطالب}} والمقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي الكائن {{عنوان_المكتب}} أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} الجزئية قد انتقلت في تاريخه إلى محل إقامة السيد / {{اسم_المنذر_اليه}} والمقيم {{عنوان_المنذر_اليه}} مخاطباً مع / {{اسم_المخاطب}} وأنذرته بالآتي:\nسبق أن أصدر الطالب في مصلحة المنذر إليه توكيلاً رسمياً برقم {{رقم_التوكيل}} المؤرخ {{تاريخ_التوكيل}} الصادر من مكتب توثيق {{مكتب_توثيق_التوكيل}}.\nوحيث أن الطالب قرر إلغاء هذا التوكيل وسحبه ولا يُعتد به من تاريخ هذا الإنذار لأسباب يعلمها المنذر إليه.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت إلى حيث إقامة المنذر إليه وأنذرته بصورة من هذا الإنذار ونبهت عليه بأن التوكيل المذكور أصبح لاغياً وملغياً اعتباراً من تاريخ هذا الإنذار ولا يحق له التصرف بموجبه من أي نوع كان وإلا كان مسئولاً مدنياً وجنائياً عن أي تصرف يجريه بموجبه. مع حفظ كافة حقوق الطالب الأخرى.\nولأجل العلم /` },
+  { id:29, cat:'د', catName:'عمل ووكالة ومهن', title:'إنذار تكليف بالوفاء قبل استصدار أمر أداء', refs:['م201 مرافعات','م202 مرافعات'], vars:['يوم_الأسبوع','التاريخ','الساعة','اسم_الطالب','عنوان_الطالب','اسم_المحامي','اسم_المحضر','اسم_المحكمة','اسم_المنذر_اليه','عنوان_المنذر_اليه','اسم_المخاطب','قيمة_الدين','تاريخ_السند','تاريخ_الاستحقاق','عدد_أيام_المهلة'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} الساعة {{الساعة}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي الكائن مكتبه أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} الجزئية قد انتقلت في تاريخه وأعلنت السيد / {{اسم_المنذر_اليه}} المقيم {{عنوان_المنذر_اليه}} مخاطباً مع / {{اسم_المخاطب}} وأنذرته بالآتي:\nيُداين الطالب المنذر إليه بمبلغ وقدره {{قيمة_الدين}} جنيهاً بموجب سند الدين المؤرخ {{تاريخ_السند}} المستحق الأداء بتاريخ {{تاريخ_الاستحقاق}} وهذا الدين ثابت بالكتابة وحال الأداء ومعيّن المقدار وغير متنازع فيه وفقاً لأحكام المادة 201 من قانون المرافعات.\nوإعمالاً لنص المادة 202 من قانون المرافعات التي توجب على الدائن تكليف المدين أولاً بالوفاء بميعاد خمسة أيام على الأقل ثم استصدار أمر بالأداء.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت في التاريخ المذكور أعلاه إلى حيث المنذر إليه وسلمته صورة من هذا الإنذار ونبّهت عليه بسرعة سداد مبلغ وقدره {{قيمة_الدين}} جنيهاً قيمة الدين المستحق الأداء وذلك خلال {{عدد_أيام_المهلة}} يوماً من تاريخ تسلمه هذا الإنذار وفي حالة امتناعه عن الوفاء سوف يضطر الطالب إلى استصدار أمر أداء. مع حفظ كافة الحقوق القانونية الأخرى للطالب.\nولأجل العلم /` },
+  { id:30, cat:'هـ', catName:'متنوعة', title:'إنذار عرض منقولات زوجية', refs:[], vars:['يوم_الأسبوع','التاريخ','الساعة','اسم_الطالب','عنوان_الطالب','اسم_المحامي','عنوان_المكتب','اسم_المحضر','اسم_المحكمة','اسم_المعلن_اليها','عنوان_المعلن_اليها','اسم_المخاطب','تاريخ_وقوع_الخلاف','تاريخ_قائمة_المنقولات','وصف_المنقولات','يوم_الاستلام','تاريخ_الاستلام','ساعة_بدء_الاستلام','ساعة_انتهاء_الاستلام','اسم_قسم_الشرطة'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} الساعة {{الساعة}} بناءً على طلب السيد / {{اسم_الطالب}} والمقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي الكائن {{عنوان_المكتب}} أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} الجزئية قد انتقلت في تاريخه إلى محل إقامة السيدة / {{اسم_المعلن_اليها}} المقيمة {{عنوان_المعلن_اليها}} مخاطباً مع / {{اسم_المخاطب}} وأعلنتها بالآتي:\nالطالب كان زوجاً للمعلن إليها ودخل بها وعاشرها معاشرة الأزواج وبتاريخ {{تاريخ_وقوع_الخلاف}} دبّت الخلافات بينهما فتركت المعلن إليها مسكن الزوجية بدون سبب واضح فقام الطالب بطلاقها وحيث أن الطالب قام بالتوقيع على قائمة منقولات زوجية خاصة بالطالبة محررة بتاريخ {{تاريخ_قائمة_المنقولات}} فإنه يعرض هذه المنقولات عرضاً قانونياً وهي عبارة عن: {{وصف_المنقولات}}.\nوإذ يهم الطالب رد هذه المنقولات إلى المعلن إليها لذلك ينبّه عليها بضرورة استلامها يوم {{يوم_الاستلام}} الموافق {{تاريخ_الاستلام}} وذلك لمدة ساعة بدءاً من الساعة {{ساعة_بدء_الاستلام}} حتى {{ساعة_انتهاء_الاستلام}} أمام قسم شرطة {{اسم_قسم_الشرطة}} على أن تحضر المعلن إليها ومعها قائمة المنقولات وإلا سيحرر الطالب محضر إثبات حالة حتى تبرأ ذمته من عدم رد المنقولات.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت في تاريخه أعلاه إلى محل إقامة المعلن إليها وسلمتها صورة من هذا الإنذار وعرضت عليها منقولاتها الموضحة تفصيلاً بصلب هذا الإنذار ونبّهت عليها بالحضور لاستلامها ابتداءً من الساعة {{ساعة_بدء_الاستلام}} حتى الساعة {{ساعة_انتهاء_الاستلام}} من صباح يوم الموافق {{تاريخ_الاستلام}} أمام قسم شرطة {{اسم_قسم_الشرطة}} وفي حالة رفضها تودع بجهة مختصة وفي حالة عدم حضورها سيحرر الطالب محضر إثبات حالة تبرأ ذمته من عدم رد المنقولات. مع حفظ كافة حقوق الطالب.\nولأجل العلم /` },
+  { id:31, cat:'هـ', catName:'متنوعة', title:'إنذار عرض مقدم الصداق', refs:['م1/20 ق1 لسنة 2000'], vars:['يوم_الأسبوع','التاريخ','اسم_الطالبة','عنوان_الطالبة','اسم_المحامي','اسم_المحضر','اسم_المحكمة','اسم_الزوج','عنوان_الزوج','اسم_المخاطب','تاريخ_عقد_الزواج','تاريخ_وثيقة_الزواج','قيمة_مقدم_الصداق'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيدة / {{اسم_الطالبة}} والمقيمة {{عنوان_الطالبة}} ومحلها المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي الكائن مكتبه أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} الجزئية قد انتقلت في تاريخه وأعلنت السيد / {{اسم_الزوج}} المقيم {{عنوان_الزوج}} مخاطباً مع / {{اسم_المخاطب}} وأنذرته بالآتي:\nالمنذِرة هي زوجة المنذر إليه بصحيح العقد الشرعي المؤرخ {{تاريخ_عقد_الزواج}} ولما كانت المادة 1/20 من القانون رقم 1 لسنة 2000 تنص على أنه «للزوجين أن يتراضيا فيما بينهما على الخلع، فإن لم يتراضيا عليه وأقامت الزوجة دعواها بطلبه وافتدت نفسها وخالعت زوجها بالتنازل عن جميع حقوقها المالية الشرعية وردّت عليه الصداق الذي أعطاه لها».\nولرغبة الزوجة في الخلع لأنها تخاف ألا تقيم حدود الله فإن الطالبة ترد مقدم الصداق الثابت بوثيقة الزواج المؤرخة {{تاريخ_وثيقة_الزواج}} والبالغ قدره {{قيمة_مقدم_الصداق}} جنيهاً فقط لا غير والذي أعطاه لها المنذر إليه وتعرضه عليه عرضاً قانونياً.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت إلى حيث إقامة المعلن إليه وأنذرته بصورة من هذا الإنذار وعرضت عليه مبلغ {{قيمة_مقدم_الصداق}} جنيهاً فقط لا غير عرضاً قانونياً ليتسلمه دون قيد أو شرط أو إجراءات وبمصاريف على عاتق المنذِرة وفي حالة رفضه الاستلام يودع المبلغ بخزينة المحكمة على ذمته. مع حفظ كافة حقوق المنذرة الأخرى.\nولأجل العلم /` },
+  { id:32, cat:'هـ', catName:'متنوعة', title:'إنذار بتنفيذ حكم أو قرار', refs:[], vars:['يوم_الأسبوع','التاريخ','الساعة','اسم_الطالب','عنوان_الطالب','اسم_المحامي','عنوان_المكتب','اسم_المحضر','اسم_المحكمة','اسم_المعلن_اليه','جهة_عمل_المعلن_اليه','اسم_المخاطب','تاريخ_الجلسة','رقم_الدعوى','سنة_الدعوى','منطوق_الحكم','تاريخ_إعلان_الصورة_التنفيذية','عدد_أيام_المهلة'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} الساعة {{الساعة}} بناءً على طلب السيد / {{اسم_الطالب}} والمقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي الكائن {{عنوان_المكتب}} أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} الجزئية قد انتقلت في تاريخه إلى محل إقامة السيد / {{اسم_المعلن_اليه}} بصفته وشخصه أو بجهة عمله الكائنة {{جهة_عمل_المعلن_اليه}} مخاطباً مع / {{اسم_المخاطب}} وأنذرته بالآتي:\nبجلسة {{تاريخ_الجلسة}} تحصّل الطالب على الحكم الصادر في الدعوى رقم {{رقم_الدعوى}} لسنة {{سنة_الدعوى}} والمقامة منه ضد المعلن إليه والقاضي منطوقه: «{{منطوق_الحكم}}».\nوحيث أن هذا الحكم قد صار نهائياً وقد تحصّل الطالب منه على الصورة التنفيذية وأعلنها للمعلن إليه في {{تاريخ_إعلان_الصورة_التنفيذية}} لتنفيذ هذا الحكم إلا أنه لم يقم بتنفيذه.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت إلى حيث أعلنت المنذر إليه وسلمته صورة من أصل هذا الإنذار وأنذرته بما جاء به ونبّهت عليه بضرورة تنفيذ الحكم الصادر في الدعوى رقم {{رقم_الدعوى}} لسنة {{سنة_الدعوى}} والمبيّن منطوقه بصلب هذا الإنذار وذلك خلال {{عدد_أيام_المهلة}} أيام من تاريخ الإنذار وإلا سيتخذ الطالب الإجراءات القانونية للمساءلة الجنائية والمدنية والإدارية عن عدم تنفيذ الحكم.\nولأجل العلم /` },
+  { id:33, cat:'هـ', catName:'متنوعة', title:'إنذار إلى قلم الحفظ بضم مفردات قضية', refs:['م123 قانون العقوبات'], vars:['يوم_الأسبوع','التاريخ','الساعة','اسم_الطالب','عنوان_الطالب','اسم_المحامي','اسم_المحضر','اسم_المحكمة','اسم_الموظف','اسم_محكمة_الموظف','جهة_المحكمة','اسم_المخاطب','رقم_الاستئناف','سنة_الاستئناف','اسم_محكمة_الحكم_الابتدائي','رقم_الحكم_الابتدائي','سنة_الحكم_الابتدائي','تاريخ_الحكم_الابتدائي','تاريخ_جلسة_أمر_الضم','اسم_محكمة_الاستئناف'], template:`أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} الساعة {{الساعة}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي الكائن مكتبه أنا {{اسم_المحضر}} محضر محكمة {{اسم_المحكمة}} الجزئية قد انتقلت في تاريخه وأعلنت السيد / {{اسم_الموظف}} الموظف بمحكمة {{اسم_محكمة_الموظف}} بصفته الشخصية والوظيفية ويُعلن بمقر عمله بسراي المحكمة {{جهة_المحكمة}} مخاطباً مع / {{اسم_المخاطب}} وأعلنته بالآتي:\nأقام الطالب الاستئناف رقم {{رقم_الاستئناف}} لسنة {{سنة_الاستئناف}} عن الحكم الصادر من محكمة {{اسم_محكمة_الحكم_الابتدائي}} رقم {{رقم_الحكم_الابتدائي}} لسنة {{سنة_الحكم_الابتدائي}} الصادر بتاريخ {{تاريخ_الحكم_الابتدائي}}.\nوبجلسة {{تاريخ_جلسة_أمر_الضم}} أمرت محكمة استئناف {{اسم_محكمة_الاستئناف}} بضم المفردات وهي مودعة بقلم الحفظ لدى المعلن إليه وتداولت القضية عدة جلسات وتؤجل لنفس السبب (ضم المفردات) ومع أن المحكمة قامت بتغريم المتسبب في عدم تنفيذ قرارها بالضم إلا أن المعلن إليه لا يزال ممتنعاً عن تنفيذ قرار الهيئة دون سند قانوني وهذا الامتناع يشكّل جريمة جنائية مؤثَّمة بالمادة 123 من قانون العقوبات.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت إلى محل إقامة المعلن إليه وأعلنته بصورة من هذا الإنذار ونبّهت عليه بتنفيذ قرار محكمة {{اسم_محكمة_الاستئناف}} الصادر بجلسة {{تاريخ_جلسة_أمر_الضم}} والقاضي بضم مفردات الحكم رقم {{رقم_الحكم_الابتدائي}} لسنة {{سنة_الحكم_الابتدائي}} وذلك في موعد أقصاه أسبوع من تاريخه حتى لا يضطر الطالب إلى اتخاذ الإجراءات ضده مدنياً وجنائياً مع تحميله كافة التعويضات.\nولأجل العلم /` }
+];
+
+const CATS = [
+  { id:'أ', name:'أ — عروض ومبالغ نقدية' },
+  { id:'ب', name:'ب — إيجار وأجرة' },
+  { id:'ج', name:'ج — بيع وملكية' },
+  { id:'د', name:'د — عمل ووكالة ومهن' },
+  { id:'هـ', name:'هـ — متنوعة' },
+];
+
+// ===================== SIDEBAR BUILD =====================
+function buildSidebar(filter='') {
+  const cg = document.getElementById('catGroup');
+  cg.innerHTML = '';
+  const f = filter.trim().toLowerCase();
+  CATS.forEach(cat => {
+    const items = TEMPLATES.filter(t => t.cat === cat.id && (f==='' || t.title.includes(f) || t.id.toString()===f));
+    if(items.length === 0) return;
+    const lbl = document.createElement('div');
+    lbl.className='cat-label'; lbl.textContent = cat.name;
+    cg.appendChild(lbl);
+    items.forEach(t => {
+      const d = document.createElement('div');
+      d.className='tmpl-item' + (currentTmpl&&currentTmpl.id===t.id?' active':'');
+      d.id='tmpl-'+t.id;
+      d.innerHTML=`<span class="tmpl-num">${String(t.id).padStart(2,'0')}</span><span>${t.title}</span>`;
+      d.onclick=()=>loadTemplate(t.id);
+      cg.appendChild(d);
+    });
+  });
+}
+
+function filterTemplates(val) { buildSidebar(val); }
+
+// ===================== TEMPLATE LOAD =====================
+let currentTmpl = null;
+function loadTemplate(id) {
+  currentTmpl = TEMPLATES.find(t=>t.id===id);
+  if(!currentTmpl) return;
+
+  // sidebar active
+  document.querySelectorAll('.tmpl-item').forEach(el=>el.classList.remove('active'));
+  const el = document.getElementById('tmpl-'+id);
+  if(el){ el.classList.add('active'); el.scrollIntoView({block:'nearest'}); }
+
+  // hide empty
+  document.getElementById('emptyState').style.display='none';
+  document.getElementById('formArea').style.display='flex';
+  document.getElementById('outputArea').classList.remove('show');
+
+  // update ai panel
+  document.getElementById('infoTitle').textContent = currentTmpl.title.slice(0,18)+'…';
+  document.getElementById('infoSection').textContent = currentTmpl.catName;
+  document.getElementById('infoFields').textContent = currentTmpl.vars.length + ' حقل';
+  document.getElementById('infoStatus').textContent='جاهز للإدخال';
+  document.getElementById('infoStatus').className='info-val active';
+  document.getElementById('aiMsg').textContent=`جاهز لتوليد «${currentTmpl.title}» — أدخل البيانات واضغط توليد.`;
+  resetSteps();
+
+  // build form
+  buildForm(currentTmpl);
+  mobShowForm();
+}
+
+function buildForm(tmpl) {
+  const fa = document.getElementById('formArea');
+  fa.innerHTML = '';
+
+  // header
+  const hdr = document.createElement('div');
+  hdr.className='form-header';
+  hdr.innerHTML=`
+    <div class="form-badge">◈ صيغة رقم ${tmpl.id} · ${tmpl.catName.toUpperCase()}</div>
+    <div class="form-title">${tmpl.title}</div>
+    ${tmpl.refs.length?`<div class="form-refs">${tmpl.refs.map(r=>`<span class="form-ref">${r}</span>`).join('')}</div>`:''}
+  `;
+  fa.appendChild(hdr);
+
+  // fields
+  const grid = document.createElement('div');
+  grid.className='fields-grid';
+
+  // special long fields
+  const longFields = ['موضوع_الإنذار','وصف_المبيع','وصف_المنقولات','حدود_الأرض','منطوق_الحكم'];
+
+  tmpl.vars.forEach(v => {
+    const grp = document.createElement('div');
+    const isLong = longFields.includes(v);
+    grp.className='field-group' + (isLong?' full':'');
+    const lbl = v.replace(/_/g,' ');
+    grp.innerHTML=`<label class="field-label">${lbl}</label>`;
+    if(isLong){
+      grp.innerHTML+=`<textarea class="field-input" id="field-${v}" placeholder="${lbl}..."></textarea>`;
+    } else {
+      grp.innerHTML+=`<input class="field-input" id="field-${v}" type="text" placeholder="${lbl}..." autocomplete="off">`;
+    }
+    grid.appendChild(grp);
+  });
+  fa.appendChild(grid);
+
+  // button
+  const btn = document.createElement('button');
+  btn.className='gen-btn'; btn.id='genBtn';
+  btn.innerHTML='⚡ توليد الإنذار';
+  btn.onclick=generateDocument;
+  fa.appendChild(btn);
+}
+
+// ===================== GENERATION =====================
+async function generateDocument() {
+  if(!currentTmpl) return;
+
+  // TRIAL CHECK
+  await ensureSubscriptionChecked();
+  if (checkTrial() && !isUserSubscribed) { showPaywall(); return; }
+
+  const btn = document.getElementById('genBtn');
+  btn.disabled=true; btn.textContent='⟳ جارٍ التوليد...';
+
+  // collect values
+  const vals = {};
+  currentTmpl.vars.forEach(v => {
+    const el = document.getElementById('field-'+v);
+    vals[v] = el ? el.value.trim() : '';
+  });
+
+  // check required
+  const empty = currentTmpl.vars.filter(v => !vals[v]);
+  if(empty.length > 0) {
+    document.getElementById('aiMsg').textContent = `يرجى تعبئة الحقول التالية: ${empty.slice(0,3).map(v=>v.replace(/_/g,' ')).join('، ')}${empty.length>3?` وغيرها (${empty.length-3} حقل)`:''}.`;
+    btn.disabled=false; btn.innerHTML='⚡ توليد الإنذار';
+    return;
+  }
+
+  // fill template locally
+  let filledTemplate = currentTmpl.template;
+  currentTmpl.vars.forEach(v => {
+    filledTemplate = filledTemplate.split(`{{${v}}}`).join(vals[v]);
+  });
+
+  // show output area
+  const outArea = document.getElementById('outputArea');
+  const outBox = document.getElementById('outputBox');
+  outArea.classList.add('show');
+  outBox.className='output-box generating';
+  outBox.textContent='';
+  outArea.scrollIntoView({behavior:'smooth', block:'start'});
+
+  // animate steps
+  animateSteps();
+
+  document.getElementById('infoStatus').textContent='جارٍ التوليد...';
+  document.getElementById('infoStatus').className='info-val cyber';
+
+  // call Groq API
+  try {
+    const result = filledTemplate;
+
+    outBox.className='output-box';
+    outBox.textContent='';
+    await typeText(outBox, result);
+
+    document.getElementById('infoStatus').textContent='✓ مكتمل';
+    document.getElementById('infoStatus').className='info-val active';
+    document.getElementById('aiMsg').textContent='✓ تم توليد الإنذار بنجاح.';
+    finishSteps();
+    markUsed();
+
+  } catch(err) {
+    outBox.className='output-box';
+    await typeText(outBox, filledTemplate);
+    document.getElementById('infoStatus').textContent='✓ مكتمل (محلي)';
+    document.getElementById('infoStatus').className='info-val active';
+    finishSteps();
+    markUsed();
+  }
+
+  btn.disabled=false;
+  btn.innerHTML='⚡ إعادة التوليد';
+}
+
+async function typeText(el, text) {
+  // عرض مباشر بدون typewriter لأن النص القانوني طويل
+  renderFormatted(el, text);
+
+  // أضف cursor بلينك مؤقت في الآخر للإيحاء بالكتابة
+  const cursor = document.createElement('span');
+  cursor.className='cursor-blink';
+  el.appendChild(cursor);
+  await sleep(800);
+  cursor.remove();
+}
+
+function renderFormatted(el, text) {
+  el.innerHTML = '';
+  el.style.whiteSpace = 'normal';
+
+  // نظّف النص: اقطع على أي \n (واحدة أو أكثر)
+  const lines = text
+    .split(/\n+/)
+    .map(l => l.trim())
+    .filter(l => l.length > 0);
+
+  lines.forEach((line, idx) => {
+    const delay = (idx * 0.08).toFixed(2) + 's';
+
+    // جملة "ولأجل العلم" — تنسيق مميز
+    if (/^ولأجل العلم/.test(line)) {
+      const closing = document.createElement('p');
+      closing.style.cssText = `text-align:center; font-weight:900; color:var(--gold); font-size:15px; margin-top:24px; border-top:1px solid rgba(146,98,12,0.2); padding-top:16px; animation-delay:${delay}; text-indent:0;`;
+      closing.textContent = line;
+      el.appendChild(closing);
+      return;
+    }
+
+    // "بناءً عليه" — فاصل قوي
+    if (/^بناءً عليه|^بناء عليه/.test(line)) {
+      const divider = document.createElement('p');
+      divider.style.cssText = `font-weight:900; color:var(--gold-soft); margin-top:8px; animation-delay:${delay}; text-indent:0;`;
+      divider.textContent = line;
+      el.appendChild(divider);
+      return;
+    }
+
+    // باقي الفقرات
+    const para = document.createElement('p');
+    para.style.animationDelay = delay;
+    para.textContent = line;
+    el.appendChild(para);
+  });
+}
+
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+// ===================== STEP ANIMATION =====================
+function resetSteps() {
+  [1,2,3,4,5].forEach(i=>{
+    document.getElementById('step'+i).className='progress-step';
+    document.getElementById('dot'+i).className='step-dot';
+  });
+}
+function animateSteps() {
+  resetSteps();
+  const steps = [300,700,1100,1600,2200];
+  steps.forEach((delay,i)=>{
+    setTimeout(()=>{
+      if(i>0){ document.getElementById('step'+i).className='progress-step done-step'; document.getElementById('dot'+i).className='step-dot done'; }
+      document.getElementById('step'+(i+1)).className='progress-step active-step';
+      document.getElementById('dot'+(i+1)).className='step-dot running';
+    }, delay);
+  });
+}
+function finishSteps() {
+  [1,2,3,4,5].forEach(i=>{
+    document.getElementById('step'+i).className='progress-step done-step';
+    document.getElementById('dot'+i).className='step-dot done';
+  });
+}
+
+// ===================== COPY / PRINT =====================
+function copyOutput(){
+  const t = document.getElementById('outputBox').textContent;
+  navigator.clipboard.writeText(t).then(()=>{
+    const btn=document.querySelector('.btn-copy');
+    btn.textContent='✓ تم النسخ'; setTimeout(()=>btn.textContent='نسخ النص',2000);
+  });
+}
+function printOutput(){
+  const t = document.getElementById('outputBox').textContent;
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html dir="rtl"><head><meta charset="UTF-8"><title>إنذار | Legano</title>
+  <style>
+    body{font-family:'Cairo',Arial,sans-serif;padding:60px;line-height:2.2;font-size:15px;direction:rtl;color:#2A2A2E}
+    h3{margin-bottom:30px;text-align:center;font-size:19px;font-weight:900;color:#EEF2F7;padding-bottom:16px;border-bottom:1px solid #ddd}
+    pre{white-space:pre-wrap;font-family:inherit}
+    .footer{margin-top:40px;font-size:11px;color:#999;text-align:center}
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+  </style></head><body><h3>${currentTmpl.title}</h3><pre>${t}</pre>
+<!-- ===================== PAYWALL OVERLAY ===================== -->
+`);
+  w.document.close(); w.print();
+}
+
+// ===================== CURSOR =====================
+const cur=document.getElementById('cursor');
+document.addEventListener('mousemove',e=>{ cur.style.left=e.clientX+'px'; cur.style.top=e.clientY+'px'; });
+document.addEventListener('mouseenter',()=>cur.style.display='block');
+
+// ===================== BG CANVAS =====================
+const canvas=document.getElementById('bg-canvas');
+const ctx=canvas.getContext('2d');
+let W,H;
+function resize(){ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; }
+resize(); window.addEventListener('resize',resize);
+const streams=Array.from({length:10},()=>({x:Math.random()*1200,y:Math.random()*-500,speed:0.2+Math.random()*0.3,chars:Array.from({length:15},()=>String.fromCharCode(0x600+Math.floor(Math.random()*100))),opacity:0.02+Math.random()*0.025}));
+function drawBG(){
+  ctx.clearRect(0,0,W,H);
+  ctx.strokeStyle='rgba(146,98,12,0.02)'; ctx.lineWidth=0.5;
+  for(let x=0;x<W;x+=80){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=80){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  ctx.font='11px Cairo';
+  streams.forEach(s=>{
+    ctx.fillStyle=`rgba(37,99,235,${s.opacity})`;
+    s.chars.forEach((c,i)=>{if(s.y+i*16>0&&s.y+i*16<H)ctx.fillText(c,s.x%W,s.y+i*16);});
+    s.y+=s.speed; if(s.y>H+200){s.y=-300;s.x=Math.random()*W;}
+  });
+  requestAnimationFrame(drawBG);
+}
+drawBG();
+
+// ===================== INIT =====================
+buildSidebar();
+
+</script>
+<script>
+// الدالة دي بتشتغل أول ما النتيجة ترجع من سيرفر Grok عندك
+function displayFormattedLegalText(generatedText) {
+    const outputArea = document.getElementById('legal-text-output');
+    
+    if (outputArea) {
+        // 1. تحويل رموز المارك داون (النجوم والفواصل) اللي باعتها جروك إلى HTML حقيقي
+        let htmlContent = marked.parse(generatedText);
+
+        // 2. تنسيق ذكي تلقائي لأهم الكلمات القانونية (يجعلها في المنتصف وتحتها خط وبخط عريض)
+        htmlContent = htmlContent
+            .replace(/(بناءً عليه:|بناء عليه:)/g, '<div style="text-align: center; margin: 25px 0; font-weight: 900; text-decoration: underline; font-size: 20px; color: var(--gold);">بناءً عليه</div>')
+            .replace(/(الموضوع:|الموضوع)/g, '<div style="text-align: center; margin: 20px 0; font-weight: 900; text-decoration: underline; font-size: 20px; color: var(--gold);">الموضوع</div>')
+            .replace(/(إنذار:|إنذار قانوني:)/g, '<div style="text-align: center; margin: 20px 0; font-weight: 900; text-decoration: underline; font-size: 22px; color: var(--gold);">إ نـ ذ ا ر</div>');
+
+        // 3. عرض النص النهائي المنسق داخل المربع في موقعك
+        outputArea.innerHTML = htmlContent;
+    }
+}
+
+// ===================== PAYWALL LOGIC =====================
+const SECTION_KEY = 'legista_used_inzarat';
+
+function checkTrial() {
+  return localStorage.getItem(SECTION_KEY) === '1';
+}
+function markUsed() {
+  localStorage.setItem(SECTION_KEY, '1');
+}
+function showPaywall() {
+  const ov = document.getElementById('paywallOverlay');
+  ov.style.display='flex';
+  setTimeout(()=>ov.style.opacity='1',10);
+}
+function closePaywall() {
+  const ov=document.getElementById('paywallOverlay');
+  ov.style.opacity='0';
+  setTimeout(()=>ov.style.display='none',300);
+}
+function isMobile(){ return window.innerWidth <= 768; }
+function mobShowForm(){
+  if(!isMobile()) return;
+  document.querySelector('.tmpl-sidebar').classList.add('mob-hidden');
+  document.querySelector('.workspace-center').classList.add('mob-visible');
+  document.getElementById('mobBackBtn').classList.add('show');
+}
+function mobShowSidebar(){
+  if(!isMobile()) return;
+  document.querySelector('.tmpl-sidebar').classList.remove('mob-hidden');
+  document.querySelector('.workspace-center').classList.remove('mob-visible');
+  document.getElementById('mobBackBtn').classList.remove('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+
+<!-- PAYWALL OVERLAY -->
+
+
+<div id="legistaToast" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#EEF2F7;color:#fff;padding:12px 22px;border-radius:10px;font-size:13px;font-weight:700;font-family:Cairo,sans-serif;z-index:99998;opacity:0;pointer-events:none;transition:opacity .25s, transform .25s;"></div>
+
+<script src="../js/social.js"></script>
+<script>(function(){var S=window.Social;try{S.mountNav(document.getElementById("navSlot"));}catch(e){}if(!S||!S.me()){document.body.classList.add("tool-locked");var g=document.getElementById("toolGate");if(g)g.hidden=false;}})();</script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#ffffff"><link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>أدوات المحامي | Legano</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Syne:wght@800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="js/social.css">
+<style>
+  :root { color-scheme: light; --background:#F8FAFB; --foreground:#1E293B; --card:#FFFFFF; --border:#E2E8F0; --muted-foreground:#64748B; --secondary:#EEF2F7; --gold:#0F172A; --gold-soft:#92620C; }
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Cairo', sans-serif; background: var(--background); color: var(--foreground); line-height: 1.7; }
+  .logo-text { font-family: 'Syne', sans-serif; font-weight: 800; letter-spacing: 5px; font-size: 18px; text-decoration: none; background: linear-gradient(90deg, #0F172A, #92620C); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; }
+  .top { position: sticky; top: 0; z-index: 50; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; padding: 10px 20px; background: rgba(255,255,255,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  #navSlot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .tl-wrap { max-width: 980px; margin: 0 auto; padding: 22px 16px 90px; }
+  .tl-head h1 { margin: 0 0 6px; font-size: 24px; font-weight: 900; color: #0F172A; }
+  .tl-head p { margin: 0 0 18px; color: var(--muted-foreground); font-size: 14px; line-height: 1.9; }
+  .tl-q { width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 12px; background: #fff; font: inherit; font-size: 14px; margin-bottom: 8px; }
+  .tl-q:focus { outline: 2px solid #92620C33; border-color: #92620C; }
+  .tl-sec { margin: 22px 0 10px; font-size: 15px; font-weight: 900; color: #92620C; display: flex; align-items: center; gap: 8px; }
+  .tl-sec::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .tl-grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+  .tl-card { display: flex; gap: 12px; align-items: flex-start; padding: 14px; background: #fff; border: 1px solid var(--border); border-radius: 14px; text-decoration: none; color: inherit; transition: transform .15s, box-shadow .15s, border-color .15s; }
+  .tl-card:hover { transform: translateY(-2px); border-color: #92620C66; box-shadow: 0 8px 22px rgba(15,23,42,.07); }
+  .tl-ic { flex: none; width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; font-size: 21px; background: #FFF8E6; }
+  .tl-card b { display: block; font-size: 14.5px; color: #0F172A; margin-bottom: 2px; }
+  .tl-card small { display: block; color: var(--muted-foreground); font-size: 12.5px; line-height: 1.7; }
+  .tl-empty { text-align: center; color: var(--muted-foreground); padding: 30px 0; font-size: 14px; }
+  .tl-note { margin-top: 26px; padding: 12px 14px; background: #FFF8E6; border: 1px solid #F1D48A; border-radius: 12px; color: #7A5200; font-size: 12.5px; line-height: 1.9; }
+  .gate { max-width: 460px; margin: 40px auto; padding: 24px; text-align: center; }
+  .gate h1 { font-size: 20px; margin: 0 0 8px; color: #0F172A; } .gate p { color: var(--muted-foreground); line-height: 1.9; margin: 0 0 16px; font-size: 14px; }
+</style>
+</head>
+<body>
+<header class="top"><a class="logo-text" href="index.html?browse=1">LEGANO</a><div id="navSlot"></div></header>
+<div id="gate" class="soc-card gate" hidden><h1>منطقة المحامين</h1><p>الأدوات القانونية مجانية لكل محامي مسجّل في المنصة. سجّل دخول علشان تفتحها.</p><a class="soc-btn primary" href="dashboard.html">دخول المحامين</a></div>
+<main id="wrap" class="tl-wrap" hidden>
+  <div class="tl-head"><h1>أدوات المحامي</h1><p>مراجع وصيغ وحاسبات جاهزة للشغل اليومي. كلها مجانية ومفتوحة لك كمحامي على المنصة.</p></div>
+  <input id="q" class="tl-q" type="search" placeholder="دوّر في الأدوات… (مثال: عقد، ميراث، إنذار)" aria-label="بحث في الأدوات">
+  <div id="out"></div>
+  <p class="tl-note">⚠️ الأدوات دي مساعدة للشغل ومرجع سريع، مش بديل عن مراجعتك أنت. راجع النص والمادة والتاريخ بنفسك قبل ما تعتمد عليهم في أي مذكرة أو قضية.</p>
+</main>
+<script src="js/social.js"></script>
+<script>
+(function () {
+  const $ = id => document.getElementById(id), S = window.Social;
+  S.mountNav($('navSlot'));
+  if (!S.me()) { $('gate').hidden = false; return; }
+  $('wrap').hidden = false;
+  const SECS = [
+    ['📚 مراجع ومكتبات', [
+      ['⚖️', 'أحكام النقض الجنائية', 'مبادئ الدوائر الجنائية بمحكمة النقض، بحث بالكلمة أو رقم الطعن.', 'ahkam', 'نقض جنائي مبادئ طعن'],
+      ['🏛️', 'أحكام النقض المدنية', 'مبادئ الدوائر المدنية بمحكمة النقض مبوّبة حسب الموضوع.', 'ahkam_madaniya', 'نقض مدني مبادئ طعن'],
+      ['📖', 'مكتبة التشريعات', 'القوانين المصرية بنصها الكامل، دوّر بالمادة أو الكلمة.', 'tashrieat', 'قانون تشريع مادة نص'],
+      ['📜', 'قانون الإجراءات الجنائية', 'النص الكامل بالكتب والأبواب والفصول، بحث برقم المادة.', 'igraat-jnaeya', 'إجراءات جنائية مادة نيابة'],
+      ['🛡️', 'مكتبة الدفوع', 'دفوع جاهزة في 23 قسم، منها: بطلان، شيك، قتل، خطف.', 'dafou', 'دفع دفوع بطلان شيك جنحة'],
+      ['🩺', 'مرجع الطب الشرعي', 'تصنيف الإصابات حسب الأداة وخصائص الجرح، ومواد قانون العقوبات.', 'tibb-shar3y', 'طب شرعي إصابة جرح تقرير']]],
+    ['✍️ صياغة', [
+      ['📄', 'صياغة العقود', 'صيغ عقود جاهزة بتتعبّى من بياناتك وتطلع نص جاهز للطباعة.', '3oqood', 'عقد بيع إيجار شراكة صيغة'],
+      ['⚖️', 'صيغ الدعاوى', 'صيغ صحف دعاوى وإعلانات حسب النوع، تتعبّى وتتطبع.', 'dawawi', 'دعوى صحيفة إعلان صيغة'],
+      ['🔔', 'صيغ الجنح المباشرة', 'صيغ جنح مباشرة مبوّبة (اعتداء على الأشخاص، نشر وصحافة، أموال، تزوير…) جاهزة للتعبئة.', 'junah', 'جنحة مباشرة سب قذف تبديد'],
+      ['📨', 'صياغة الإنذارات', 'صيغ إنذارات قانونية جاهزة للتعبئة والطباعة.', 'inzarat', 'إنذار محضر صيغة']]],
+    ['🧮 حاسبات', [
+      ['🧮', 'حاسبة المواريث', 'توزيع التركة على الورثة حسب أحكام الشريعة وقانون المواريث.', 'mawareeth', 'ميراث مواريث تركة ورثة'],
+      ['⏳', 'حاسبة المواعيد القانونية', 'أكتر من 48 ميعاد قانوني، اختار الميعاد وتاريخ البداية وهيحسبلك تاريخ الانتهاء.', 'mawaeed', 'مواعيد طعن استئناف معارضة ميعاد']]],
+    ['🏢 المحاكم والجلسات', [
+      ['🗺️', 'دليل المحاكم', 'مواقع المحاكم والنيابات على خرائط جوجل حسب المحافظة.', 'mahakem', 'محكمة نيابة عنوان خريطة'],
+      ['🚪', 'خريطة القاعات والأدوار', 'اعرف قاعة الدائرة ودورها في المجمع واليوم.', 'qaat', 'قاعة دائرة دور مجمع'],
+      ['🔗', 'رول الجلسات', 'روابط مباشرة للاستعلام عن رول الجلسات والنيابات.', 'rol', 'رول جلسات استعلام نيابة']]]
+  ];
+  const norm = s => String(s || '').toLowerCase();
+  function draw() {
+    const q = norm($('q').value).trim();
+    let html = '', n = 0;
+    SECS.forEach(([title, items]) => {
+      const list = items.filter(it => !q || norm(it.join(' ')).includes(q));
+      if (!list.length) return;
+      n += list.length;
+      html += `<div class="tl-sec">${title}</div><div class="tl-grid">` + list.map(([ic, name, desc, page]) =>
+        `<a class="tl-card" href="tools/${page}.html"><span class="tl-ic" aria-hidden="true">${ic}</span><span><b>${name}</b><small>${desc}</small></span></a>`).join('') + '</div>';
+    });
+    $('out').innerHTML = html || '<p class="tl-empty">مفيش أداة بالاسم ده. جرّب كلمة تانية.</p>';
+  }
+  $('q').addEventListener('input', draw);
+  draw();
+})();
+</script>
+</body>
+</html>

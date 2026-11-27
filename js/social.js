@@ -279,16 +279,18 @@
     ref: '<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h12"/><path d="M12 7l5 5-5 5"/><path d="M20 5v14"/></svg>',
     cal: '<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>',
     cons: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="6" width="13" height="12" rx="2.5"/><path d="M15.5 10.5l6-3.5v10l-6-3.5"/></svg>',
+    tools: '<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg>',
     plus: '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
   };
   // الزائر (الموكل) مفيش له منشورات ولا إشعارات. المحامي: 4 أيقونات + قايمة حسابه، وعلى الموبايل شريط سفلي.
   async function mountNav(el) {
     if (!el) return;
-    if (!me()) { if (!el.children.length) el.innerHTML = '<a href="register.html" class="btn-ghost-link">سجّل كمحامي</a><a href="dashboard.html" class="btn-ghost-link">دخول المحامين</a>'; return; }
+    if (!me()) { if (!el.children.length) { const R = location.pathname.includes('/tools/') ? '../' : ''; el.innerHTML = `<a href="${R}register.html" class="btn-ghost-link">سجّل كمحامي</a><a href="${R}dashboard.html" class="btn-ghost-link">دخول المحامين</a>`; }; return; }
     const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
-    const act = h => (h === here || (h === 'groups.html' && here === 'group.html')) ? ' on' : '';
+    const inTools = location.pathname.includes('/tools/'), P = inTools ? '../' : '';
+    const act = h => (h === here || (h === 'groups.html' && here === 'group.html') || (h === 'tools.html' && inTools)) ? ' on' : '';
     const item = (h, label, icon, extra = '') => `<a href="${h}" class="nav-ic${act(h)}" aria-label="${label}" title="${label}"${act(h) ? ' aria-current="page"' : ''}>${icon}<span class="nav-lb">${label}</span>${extra}</a>`;
-    el.innerHTML = item('feed.html', 'المنشورات', IC.home) + item('groups.html', 'الجروبات', IC.groups) + item('cases.html', 'قضاياي', IC.cases) + item('referrals.html', 'الإنابات', IC.ref) + item('calendar.html', 'المفكرة', IC.cal)
+    el.innerHTML = item('feed.html', 'المنشورات', IC.home) + item('groups.html', 'الجروبات', IC.groups) + item('cases.html', 'قضاياي', IC.cases) + item('referrals.html', 'الإنابات', IC.ref) + item('calendar.html', 'المفكرة', IC.cal) + item('tools.html', 'الأدوات', IC.tools)
       + item('consultations.html', 'استشارات', IC.cons, '<span class="nav-live" aria-hidden="true"></span><span class="nav-earn">اكسب 💰</span>').replace('class="nav-ic','class="nav-ic nav-hot')
       + item('notifications.html', 'الإشعارات', BELL, '<span class="nav-dot" hidden></span>')
       + `<div class="nav-me"><button type="button" class="nav-av" id="navAv" aria-haspopup="menu" aria-expanded="false" aria-label="حسابي"><span class="avatar sm">${esc('؟')}</span></button>
@@ -300,7 +302,7 @@
     btn.addEventListener('click', e => { e.stopPropagation(); menu.hidden = !menu.hidden; btn.setAttribute('aria-expanded', String(!menu.hidden)); });
     document.addEventListener('click', e => { if (!menu.contains(e.target)) close(); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
-    el.querySelector('#navOut').addEventListener('click', () => { store.set(null); location.href = 'index.html'; });
+    el.querySelector('#navOut').addEventListener('click', () => { store.set(null); location.href = P + 'index.html'; });
 
     // شريط سفلي للموبايل
     if (!document.getElementById('tabbar')) {
@@ -309,10 +311,11 @@
       const t = (h, label, icon, extra = '') => `<a href="${h}" class="tb-i${act(h)}" aria-label="${label}">${icon}<span>${label}</span>${extra}</a>`;
       tb.innerHTML = t('feed.html', 'الرئيسية', IC.home) + t('groups.html', 'الجروبات', IC.groups)
         + `<a href="feed.html?compose=1" class="tb-plus" id="tbPlus" aria-label="منشور جديد">${IC.plus}</a>`
-        + t('consultations.html', 'استشارات', IC.cons, '<span class="nav-live"></span>').replace('class="tb-i','class="tb-i nav-hot') + t('cases.html', 'قضاياي', IC.cases) + t('notifications.html', 'الإشعارات', BELL, '<span class="nav-dot tb-dot" hidden></span>') + t('referrals.html', 'الإنابات', IC.ref) + t('calendar.html', 'المفكرة', IC.cal);
+        + t('consultations.html', 'استشارات', IC.cons, '<span class="nav-live"></span>').replace('class="tb-i','class="tb-i nav-hot') + t('cases.html', 'قضاياي', IC.cases) + t('notifications.html', 'الإشعارات', BELL, '<span class="nav-dot tb-dot" hidden></span>') + t('referrals.html', 'الإنابات', IC.ref) + t('calendar.html', 'المفكرة', IC.cal) + t('tools.html', 'الأدوات', IC.tools);
       document.body.appendChild(tb); document.body.classList.add('has-tabbar');
       tb.querySelector('#tbPlus').addEventListener('click', e => { const c = document.querySelector('.comp-input'); if (c) { e.preventDefault(); c.click(); } });
     }
+    if (P) document.querySelectorAll('#navSlot a[href], #tabbar a[href]').forEach(a => { const h = a.getAttribute('href'); if (!/^(\/|https?:|#|\.\.)/.test(h)) a.setAttribute('href', P + h); });
     // صورتي + عدّاد الإشعارات
     authors([me()]).then(m => { const a = m[me()]; if (a) btn.innerHTML = avatar(a, 'sm'); }).catch(() => {});
     const n = await unreadCount();

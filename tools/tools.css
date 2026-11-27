@@ -1,0 +1,22 @@
+/* غلاف مشترك لصفحات أدوات المحامي: نفس هوية سوق المحامين (فاتحة، كحلي وذهبي بني) */
+:root { color-scheme: light; --card: #FFFFFF; --muted-foreground: #64748B; --secondary: #EEF2F7; --foreground: #1E293B; }
+body { background: #F8FAFB; color: #1E293B; font-family: 'Cairo', sans-serif; }
+.logo-text { font-family: 'Syne', sans-serif; font-weight: 800; letter-spacing: 5px; font-size: 18px; text-decoration: none; background: linear-gradient(90deg, #0F172A, #92620C); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; }
+.top { position: sticky; top: 0; z-index: 200; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; padding: 10px 20px; background: rgba(255,255,255,.94); backdrop-filter: blur(12px); border-bottom: 1px solid #E2E8F0; }
+#navSlot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.tool-crumb { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 20px; background: #fff; border-bottom: 1px solid #E2E8F0; font-size: 13px; font-weight: 700; }
+.tool-crumb a { color: #92620C; text-decoration: none; font-weight: 800; }
+.tool-crumb span { color: #64748B; }
+#toolGate { max-width: 460px; margin: 40px auto; padding: 24px; text-align: center; }
+#toolGate[hidden] { display: none; }
+#toolGate h1 { font-size: 20px; margin: 0 0 8px; color: #0F172A; }
+#toolGate p { color: #64748B; line-height: 1.9; margin: 0 0 16px; font-size: 14px; }
+body.tool-locked > *:not(.top):not(#toolGate):not(script):not(style):not(link) { display: none !important; }
+body.tool-locked > #toolGate { display: block !important; }
+#cursor, #cursor-glow { display: none !important; }
+@media (max-width: 720px) { .top { padding: 8px 12px; } .tool-crumb { padding: 8px 12px; } body { padding-bottom: 72px; } }
+/* نصوص طويلة من غير مسافات كانت بتوسّع الصفحة على الموبايل */
+body *:not(svg):not(path):not(.tabbar):not(.tabbar *) { overflow-wrap: break-word; }
+.entry-summary, .entry-rule, .entry-card, pre, td, th { overflow-wrap: anywhere; min-width: 0; }
+/* شرائط التنقل القديمة بتاعة الموقع الأصلي واللافتات الترويجية: بنستخدم هيدر المنصة بدلها */
+#mainNav, body > nav:not(.tool-crumb):not(.tabbar), body > .nav, .float-cta, .nav-hamburger, #mobileNav, .mobile-nav, .nav-mobile { display: none !important; }

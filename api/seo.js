@@ -61,8 +61,8 @@ const send = (res, code, type, body, cache) => {
 };
 
 async function robots(req, res, base) {
-  const dis = ['feed', 'dashboard', 'cases', 'calendar', 'referrals', 'groups', 'group', 'notifications', 'track', 'register', 'room', 'consultations', 'consult'].map(p => `Disallow: /${p}.html`).join('\n');
-  send(res, 200, 'text/plain; charset=utf-8', `User-agent: *\nAllow: /\n${dis}\nDisallow: /api/\n\nSitemap: ${base}/sitemap.xml\n`);
+  const dis = ['feed', 'dashboard', 'cases', 'calendar', 'referrals', 'groups', 'group', 'notifications', 'track', 'register', 'room', 'consultations', 'consult', 'tools'].map(p => `Disallow: /${p}.html`).join('\n');
+  send(res, 200, 'text/plain; charset=utf-8', `User-agent: *\nAllow: /\n${dis}\nDisallow: /tools/\nDisallow: /api/\n\nSitemap: ${base}/sitemap.xml\n`);
 }
 
 async function sitemap(req, res, base) {

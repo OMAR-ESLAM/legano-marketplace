@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>صيغ الجنح المباشرة (20 صيغة) | Legano</title>
+<meta name="description" content="مكتبة جاهزة لصيغ الجنح المباشرة الجنائية، بصياغة قانونية دقيقة ومطابقة للإجراءات المصرية.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#ffffff">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  @media (max-width: 768px) {
+  html, body { height: auto !important; overflow-x: hidden !important; overflow-y: auto !important; }
+  .top-nav { padding: 0 14px; height: 52px; min-height: 52px; position: sticky; top: 0; z-index: 200; }
+  .nav-section { display: none; }
+  .nav-logo { font-size: 14px; letter-spacing: 3px; }
+  .nav-back { font-size: 11px; padding: 6px 12px; }
+  .app-layout { flex-direction: column; height: auto; overflow: visible; }
+  .tmpl-sidebar { width: 100%; min-width: unset; border-left: none; border-bottom: 1px solid rgba(146,98,12,0.15); }
+  .tmpl-sidebar.mob-hidden { display: none; }
+  .tmpl-header { padding: 14px 16px; }
+  .tmpl-search { width: 100%; font-size: 14px; padding: 10px 14px; }
+  .cat-group { flex: unset; overflow-y: visible; max-height: none; padding-bottom: 80px; }
+  .tmpl-item { padding: 13px 16px; font-size: 14px; }
+  .workspace-center { display: none; overflow: visible; height: auto; width: 100%; }
+  .workspace-center.mob-visible { display: flex; }
+  .form-area { padding: 16px; gap: 14px; box-sizing: border-box; }
+  .fields-grid { grid-template-columns: 1fr !important; }
+  .field-group.full { grid-column: span 1 !important; }
+  .field-input, textarea.field-input { width: 100%; max-width: 100%; box-sizing: border-box; font-size: 14px; }
+  .gen-btn { width: 100%; margin-bottom: 80px; }
+  .output-area { padding: 0 16px 100px; }
+  .output-box { padding: 18px 14px; font-size: 13px; }
+  .ai-panel { display: none !important; }
+  .mob-back-btn { display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 300; background: var(--surface); border: 1px solid rgba(146,98,12,0.4); color: var(--gold); padding: 11px 24px; border-radius: 30px; font-family: 'Cairo',sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,0.5); align-items: center; gap: 8px; white-space: nowrap; }
+  .mob-back-btn.show { display: flex; }
+  .pw-card { padding: 24px 16px; }
+  .pw-plans { grid-template-columns: 1fr; }
+  .pw-title { font-size: 20px; }
+  .pay-methods { grid-template-columns: 1fr 1fr; }
+}
+:root {
+  --bg: #F8FAFB; --bg2: #FFFFFF; --gold: #0F172A; --gold-soft: #92620C;
+  --cyber: #2563EB; --white: #1E293B; --gray: #64748B;
+  --success: #059669; --surface: #FFFFFF; --border: rgba(146,98,12,0.15);
+  --sidebar-w: 300px;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html, body { height: 100%; overflow: hidden; }
+body { font-family: 'Cairo', sans-serif; background: var(--bg); color: var(--white); cursor: none; display: flex; flex-direction: column; }
+
+#cursor { position: fixed; width: 12px; height: 12px; background: var(--gold); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: width .2s, height .2s; mix-blend-mode: screen; }
+
+.top-nav {
+  height: 56px; min-height: 56px;
+  background: rgba(255,255,255,0.9);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px; z-index: 100;
+}
+.nav-logo { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; letter-spacing: 5px; background: linear-gradient(90deg, var(--gold), var(--gold-soft)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
+.nav-section { font-size: 11px; letter-spacing: 3px; color: var(--gray); font-weight: 600; }
+.nav-back { font-size: 11px; color: var(--cyber); text-decoration: none; letter-spacing: 1px; border: 1px solid rgba(37,99,235,0.2); padding: 6px 14px; border-radius: 8px; transition: background .2s; }
+.nav-back:hover { background: rgba(37,99,235,0.07); }
+
+.app-layout { display: flex; flex: 1; overflow: hidden; }
+
+.tmpl-sidebar {
+  width: var(--sidebar-w); min-width: var(--sidebar-w);
+  background: var(--bg2);
+  border-left: 1px solid rgba(15,23,42,0.05);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.tmpl-header { padding: 16px 20px; border-bottom: 1px solid rgba(15,23,42,0.05); display: flex; flex-direction: column; gap: 10px; }
+.tmpl-title { font-size: 13px; font-weight: 700; color: var(--gold); letter-spacing: 1px; }
+.tmpl-search { background: rgba(15,23,42,0.04); border: 1px solid rgba(15,23,42,0.08); border-radius: 8px; padding: 8px 12px; font-family: 'Cairo', sans-serif; font-size: 12px; color: var(--white); outline: none; direction: rtl; caret-color: var(--cyber); transition: border-color .2s; }
+.tmpl-search:focus { border-color: rgba(37,99,235,0.4); }
+.tmpl-search::placeholder { color: rgba(15,23,42,0.2); }
+
+.cat-group { overflow-y: auto; flex: 1; padding-bottom: 16px; }
+.cat-group::-webkit-scrollbar { width: 3px; }
+.cat-group::-webkit-scrollbar-track { background: transparent; }
+.cat-group::-webkit-scrollbar-thumb { background: rgba(146,98,12,0.2); border-radius: 2px; }
+
+.cat-label { font-size: 9px; letter-spacing: 3px; color: var(--gold); font-weight: 700; padding: 12px 20px 6px; opacity: .7; direction: rtl; }
+.tmpl-item { padding: 10px 20px; font-size: 12px; color: var(--gray); cursor: none; transition: all .15s; direction: rtl; border-right: 2px solid transparent; display: flex; align-items: center; gap: 8px; }
+.tmpl-item:hover { color: var(--white); background: rgba(15,23,42,0.04); }
+.tmpl-item.active { color: var(--gold); background: rgba(146,98,12,0.06); border-right-color: var(--gold); }
+.tmpl-num { font-size: 10px; color: rgba(15,23,42,0.2); min-width: 20px; font-family: 'Syne', sans-serif; }
+
+.workspace-center { flex: 1; overflow-y: auto; display: flex; flex-direction: column; background: var(--bg); position: relative; }
+.workspace-center::-webkit-scrollbar { width: 4px; }
+.workspace-center::-webkit-scrollbar-thumb { background: rgba(146,98,12,0.15); }
+
+.empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 60px 40px; text-align: center; }
+.empty-icon { font-size: 48px; opacity: .3; }
+.empty-title { font-size: 18px; font-weight: 700; color: rgba(15,23,42,0.5); }
+.empty-sub { font-size: 13px; color: var(--gray); line-height: 1.8; max-width: 300px; }
+
+.form-area { padding: 32px; display: flex; flex-direction: column; gap: 24px; }
+.form-header { display: flex; flex-direction: column; gap: 8px; }
+.form-badge { font-size: 9px; letter-spacing: 4px; color: var(--cyber); font-weight: 700; opacity: .8; }
+.form-title { font-size: 20px; font-weight: 900; }
+.form-refs { display: flex; gap: 6px; flex-wrap: wrap; }
+.form-ref { font-size: 10px; padding: 3px 10px; border: 1px solid rgba(146,98,12,0.2); border-radius: 6px; color: var(--gold); letter-spacing: 1px; }
+
+.fields-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.field-group { display: flex; flex-direction: column; gap: 6px; }
+.field-group.full { grid-column: span 2; }
+.field-label { font-size: 10px; letter-spacing: 2px; color: var(--gold); font-weight: 700; opacity: .8; }
+.field-input { background: var(--surface); border: 1px solid rgba(15,23,42,0.08); border-radius: 10px; padding: 11px 14px; font-family: 'Cairo', sans-serif; font-size: 13px; color: var(--white); outline: none; direction: rtl; caret-color: var(--cyber); transition: border-color .2s, box-shadow .2s; }
+.field-input:focus { border-color: rgba(37,99,235,0.4); box-shadow: 0 0 0 2px rgba(37,99,235,0.06); }
+.field-input::placeholder { color: rgba(15,23,42,0.15); }
+textarea.field-input { min-height: 90px; resize: vertical; line-height: 1.7; }
+
+.gen-btn { background: linear-gradient(135deg, var(--gold), #1E293B); border: none; color: #F8FAFB; padding: 14px 32px; border-radius: 12px; font-family: 'Cairo', sans-serif; font-size: 14px; font-weight: 900; cursor: none; display: flex; align-items: center; gap: 8px; justify-content: center; transition: transform .15s, box-shadow .2s; align-self: flex-start; }
+.gen-btn:hover { transform: scale(1.03); box-shadow: 0 4px 24px rgba(146,98,12,0.4); }
+.gen-btn:disabled { opacity: .5; transform: none; }
+
+.output-area { padding: 0 32px 32px; display: none; flex-direction: column; gap: 16px; }
+.output-area.show { display: flex; }
+.output-header { display: flex; align-items: center; justify-content: space-between; }
+.output-label { font-size: 10px; letter-spacing: 4px; color: var(--success); font-weight: 700; }
+.output-actions { display: flex; gap: 8px; }
+.btn-copy, .btn-print { font-size: 11px; padding: 6px 14px; border-radius: 8px; cursor: none; font-family: 'Cairo', sans-serif; font-weight: 700; letter-spacing: 1px; transition: all .2s; border: 1px solid; }
+.btn-copy { background: transparent; border-color: rgba(37,99,235,0.3); color: var(--cyber); }
+.btn-copy:hover { background: rgba(37,99,235,0.07); }
+.btn-print { background: transparent; border-color: rgba(146,98,12,0.3); color: var(--gold); }
+.btn-print:hover { background: rgba(146,98,12,0.07); }
+
+.output-box { background: #FFFFFF; border: 1px solid rgba(0,0,0,0.08); border-radius: 4px; padding: 70px 60px; direction: rtl; font-size: 14px; line-height: 2.3; color: #2A2A2E; font-family: 'Cairo', sans-serif; max-width: 780px; margin: 0 auto; box-shadow: 0 2px 6px rgba(0,0,0,0.06), 0 12px 40px rgba(0,0,0,0.10); border-top: 4px solid var(--gold); position: relative; }
+.output-box p { margin-bottom: 20px; text-align: justify; text-indent: 2em; line-height: 2.2; opacity: 0; animation: fadeInPara 0.4s forwards; }
+.output-box p:first-child { text-indent: 0; font-weight: 900; color: #EEF2F7; text-align: center; font-size: 20px; letter-spacing: 1px; margin-bottom: 36px; padding-bottom: 20px; border-bottom: 1px solid rgba(0,0,0,0.1); }
+.output-box p.doc-heading { text-indent: 0; text-align: center; font-weight: 800; color: var(--gold-soft); font-size: 15px; letter-spacing: 1px; margin: 34px 0 18px; }
+.output-box p:last-child { margin-bottom: 0; }
+@keyframes fadeInPara { from { opacity:0; transform: translateY(6px); } to { opacity:1; transform: translateY(0); } }
+.output-box.generating { border-top-color: var(--cyber); }
+.cursor-blink { display: inline-block; width: 2px; height: 1.1em; background: var(--cyber); animation: blink 1s infinite; vertical-align: middle; margin-right: 2px; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+.ai-panel { width: 260px; min-width: 260px; background: rgba(255,255,255,0.95); border-right: 1px solid rgba(15,23,42,0.05); display: flex; flex-direction: column; padding: 20px; gap: 16px; overflow-y: auto; }
+.ai-panel::-webkit-scrollbar { width: 3px; }
+.ai-panel::-webkit-scrollbar-thumb { background: rgba(146,98,12,0.15); }
+.ai-head { display: flex; align-items: center; gap: 10px; padding-bottom: 16px; border-bottom: 1px solid rgba(15,23,42,0.06); }
+.ai-ava { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, rgba(146,98,12,0.3), rgba(37,99,235,0.2)); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--gold); font-weight: 700; }
+.ai-nm { font-size: 12px; font-weight: 700; }
+.ai-st { font-size: 9px; color: var(--success); letter-spacing: 1px; }
+.ai-msg-box { font-size: 12px; line-height: 1.8; color: rgba(15,23,42,0.7); background: rgba(15,23,42,0.04); border-radius: 10px; padding: 12px; direction: rtl; border-right: 2px solid var(--gold); }
+.panel-section-title { font-size: 9px; letter-spacing: 3px; color: var(--gray); font-weight: 700; }
+.info-row { display: flex; justify-content: space-between; align-items: center; font-size: 11px; padding: 6px 0; border-bottom: 1px solid rgba(15,23,42,0.04); direction: rtl; }
+.info-key { color: var(--gray); }
+.info-val { color: var(--white); font-weight: 600; }
+.info-val.active { color: var(--success); }
+.info-val.cyber { color: var(--cyber); }
+.progress-step { display: flex; align-items: center; gap: 10px; font-size: 11px; color: var(--gray); direction: rtl; padding: 4px 0; }
+.step-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(15,23,42,0.1); flex-shrink: 0; }
+.step-dot.done { background: var(--success); }
+.step-dot.running { background: var(--cyber); animation: pulse 1s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+.progress-step.done-step { color: var(--white); }
+.progress-step.active-step { color: var(--cyber); }
+
+#bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+.app-layout, .top-nav { position: relative; z-index: 1; }
+
+/* ===================== PAYWALL ===================== */
+#paywallOverlay {
+  position: fixed; inset: 0; z-index: 5000;
+  background: rgba(15,23,42,0.92);
+  backdrop-filter: blur(12px);
+  display: none;
+  align-items: center; justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity .3s;
+}
+.pw-card {
+  background: linear-gradient(160deg, #16161f, #0e0e16);
+  border: 1px solid rgba(146,98,12,0.25);
+  border-radius: 24px; padding: 40px 36px;
+  max-width: 860px; width: 100%;
+  position: relative;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(146,98,12,0.08);
+  animation: pwIn .35s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes pwIn { from { opacity:0; transform:scale(.92) translateY(24px); } to { opacity:1; transform:none; } }
+.pw-close { position: absolute; top: 16px; left: 16px; width: 32px; height: 32px; border-radius: 8px; background: rgba(15,23,42,0.05); border: 1px solid rgba(15,23,42,0.08); color: var(--gray); font-size: 16px; cursor: none; display: flex; align-items: center; justify-content: center; transition: background .2s; }
+.pw-close:hover { background: rgba(15,23,42,0.1); color: var(--white); }
+.pw-badge { font-size: 9px; letter-spacing: 4px; color: var(--cyber); font-weight: 700; margin-bottom: 10px; }
+.pw-title { font-size: 26px; font-weight: 900; margin-bottom: 6px; }
+.pw-sub { font-size: 13px; color: var(--gray); margin-bottom: 32px; line-height: 1.7; }
+.pw-plans { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 28px; }
+.pw-plan { background: rgba(15,23,42,0.03); border: 1px solid rgba(15,23,42,0.07); border-radius: 16px; padding: 22px 18px; cursor: none; transition: border-color .2s, transform .2s, background .2s; position: relative; text-align: center; }
+.pw-plan:hover { border-color: rgba(146,98,12,0.3); background: rgba(146,98,12,0.04); transform: translateY(-3px); }
+.pw-plan.selected { border-color: var(--gold); background: rgba(146,98,12,0.07); transform: translateY(-3px); }
+.pw-plan.featured { border-color: rgba(146,98,12,0.4); }
+.pw-plan-badge { position: absolute; top: -11px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--gold), #1E293B); color: #F8FAFB; font-size: 9px; font-weight: 900; padding: 3px 12px; border-radius: 20px; letter-spacing: 2px; white-space: nowrap; }
+.pw-plan-period { font-size: 11px; letter-spacing: 2px; color: var(--gray); margin-bottom: 10px; font-weight: 600; }
+.pw-plan-price { font-family: 'Syne', sans-serif; font-size: 38px; font-weight: 800; color: var(--white); line-height: 1; }
+.pw-plan-price span { font-size: 14px; color: var(--gray); font-weight: 400; }
+.pw-plan-save { font-size: 10px; color: var(--success); margin-top: 6px; font-weight: 700; letter-spacing: 1px; min-height: 16px; }
+.pw-plan-features { margin-top: 14px; display: flex; flex-direction: column; gap: 5px; }
+.pw-feat { font-size: 11px; color: rgba(15,23,42,0.6); display: flex; align-items: center; gap: 6px; justify-content: center; }
+.pw-feat::before { content: '✓'; color: var(--success); font-weight: 900; font-size: 10px; }
+.pw-cta { background: linear-gradient(135deg, var(--gold), #1E293B); border: none; color: #F8FAFB; width: 100%; padding: 16px; border-radius: 12px; font-family: 'Cairo', sans-serif; font-size: 15px; font-weight: 900; cursor: none; transition: transform .15s, box-shadow .2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.pw-cta:hover { transform: scale(1.02); box-shadow: 0 4px 28px rgba(146,98,12,0.4); }
+.pw-skip { display: block; text-align: center; margin-top: 12px; font-size: 12px; color: var(--gray); cursor: none; transition: color .2s; }
+.pw-skip:hover { color: var(--white); }
+.pay-screen { display: none; }
+.pay-screen.show { display: block; }
+.plans-screen.hide { display: none; }
+.pay-back { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--cyber); cursor: none; margin-bottom: 24px; width: fit-content; }
+.pay-methods { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 24px; }
+.pay-method { background: rgba(15,23,42,0.03); border: 1px solid rgba(15,23,42,0.07); border-radius: 12px; padding: 16px 12px; text-align: center; cursor: none; transition: border-color .2s, background .2s; }
+.pay-method:hover, .pay-method.active { border-color: rgba(146,98,12,0.4); background: rgba(146,98,12,0.05); }
+.pay-method-icon { font-size: 22px; margin-bottom: 8px; display: flex; justify-content: center; }
+.pay-icon-box { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.pay-icon-box.wide { width: 58px; }
+.pay-icon-box img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.pay-method-name { font-size: 12px; font-weight: 700; }
+.pay-method-num { font-size: 11px; color: var(--cyber); margin-top: 3px; font-family: 'Syne', sans-serif; letter-spacing: 1px; }
+.pay-detail-box { background: rgba(37,99,235,0.04); border: 1px solid rgba(37,99,235,0.12); border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; direction: rtl; display: none; }
+.pay-detail-box.show { display: block; }
+.pay-detail-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(15,23,42,0.04); font-size: 12px; }
+.pay-detail-row:last-child { border-bottom: none; }
+.pay-detail-key { color: var(--gray); }
+.pay-detail-val { color: var(--white); font-weight: 700; font-family: 'Syne', sans-serif; letter-spacing: 1px; }
+.pay-detail-val.copy-btn { color: var(--cyber); cursor: none; }
+.pay-detail-val.copy-btn:hover { text-decoration: underline; }
+.pay-form { display: flex; flex-direction: column; gap: 12px; }
+.pay-input { background: var(--surface); border: 1px solid rgba(15,23,42,0.08); border-radius: 10px; padding: 12px 14px; font-family: 'Cairo', sans-serif; font-size: 13px; color: var(--white); outline: none; direction: rtl; caret-color: var(--cyber); transition: border-color .2s; width: 100%; }
+.pay-input:focus { border-color: rgba(37,99,235,0.4); }
+.pay-input::placeholder { color: rgba(15,23,42,0.2); }
+.pay-submit { background: linear-gradient(135deg, var(--gold), #1E293B); border: none; color: #F8FAFB; padding: 14px; border-radius: 12px; font-family: 'Cairo', sans-serif; font-size: 14px; font-weight: 900; cursor: none; transition: transform .15s, box-shadow .2s; width: 100%; }
+.pay-submit:hover { transform: scale(1.02); box-shadow: 0 4px 24px rgba(146,98,12,0.3); }
+.pay-success { display: none; text-align: center; padding: 20px 0; }
+.pay-success.show { display: block; }
+.pay-success-icon { font-size: 48px; margin-bottom: 16px; }
+.pay-success-title { font-size: 20px; font-weight: 900; color: var(--success); margin-bottom: 8px; }
+.pay-success-sub { font-size: 13px; color: var(--gray); line-height: 1.8; }
+
+/* ══ ESTESHARA PAYMENT MODAL ══ */
+.modal-overlay {
+  display: none; position: fixed; inset: 0; z-index: 5000;
+  background: rgba(26,26,46,0.45); backdrop-filter: blur(4px);
+  align-items: flex-start; justify-content: center;
+  padding: 60px 16px; overflow-y: auto;
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+  position: relative; width: 100%; max-width: 560px;
+  background: var(--surface); border: 1px solid rgba(15,23,42,0.08);
+  border-radius: 22px; padding: 32px; direction: rtl;
+}
+.modal-close {
+  position: absolute; top: 16px; left: 16px; width: 32px; height: 32px;
+  border-radius: 50%; border: 1px solid rgba(15,23,42,0.1); background: rgba(15,23,42,0.03);
+  color: var(--white); font-size: 14px; cursor: none;
+}
+.modal-eyebrow { font-size: 10px; letter-spacing: 3px; color: var(--cyber); font-weight: 700; margin-bottom: 8px; }
+.modal-title { font-size: 19px; font-weight: 900; margin-bottom: 22px; }
+.modal-section-label { font-size: 12.5px; font-weight: 800; color: var(--gold-soft); margin: 20px 0 12px; }
+
+.m-packages { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.m-package {
+  position: relative; cursor: none; text-align: center;
+  background: rgba(15,23,42,0.02); border: 2px solid rgba(15,23,42,0.08);
+  border-radius: 12px; padding: 14px 8px; transition: border-color .2s;
+}
+.m-package.selected { border-color: var(--gold); background: rgba(146,98,12,0.06); }
+.m-package-check { position: absolute; top: 8px; left: 8px; width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(15,23,42,0.15); font-size: 9px; display: flex; align-items: center; justify-content: center; color: transparent; }
+.m-package.selected .m-package-check { border-color: var(--gold); background: var(--gold); color: #fff; }
+.m-package-icon { font-size: 17px; margin-bottom: 6px; }
+.m-package-name { font-size: 12px; font-weight: 800; margin-bottom: 2px; }
+.m-package-desc { font-size: 10px; color: var(--gray); margin-bottom: 8px; line-height: 1.4; }
+.m-package-price { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; color: var(--gold); }
+.m-package-price span { font-size: 10px; color: var(--gray); font-weight: 400; }
+
+.m-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.m-field { margin-bottom: 14px; }
+.m-field label { font-size: 12px; color: var(--gray); margin-bottom: 6px; display: block; font-weight: 600; }
+.m-field input, .m-field textarea {
+  width: 100%; padding: 12px 14px; background: rgba(15,23,42,0.02);
+  border: 1px solid rgba(15,23,42,0.08); border-radius: 10px; color: var(--white);
+  font-family: 'Cairo', sans-serif; font-size: 13px; outline: none; transition: border-color .2s; cursor: text;
+}
+.m-field input:focus, .m-field textarea:focus { border-color: rgba(146,98,12,0.4); }
+.m-field textarea { resize: vertical; min-height: 90px; line-height: 1.7; }
+
+.wallets-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.wallet-card {
+  position: relative; cursor: none; text-align: center;
+  background: rgba(15,23,42,0.02); border: 2px solid rgba(15,23,42,0.08);
+  border-radius: 14px; padding: 16px 10px; transition: border-color .2s;
+}
+.wallet-card.selected { border-color: var(--gold); background: rgba(146,98,12,0.06); }
+.wallet-check { position: absolute; top: 10px; left: 10px; width: 18px; height: 18px; border-radius: 50%; border: 2px solid rgba(15,23,42,0.15); font-size: 10px; display: flex; align-items: center; justify-content: center; color: transparent; }
+.wallet-card.selected .wallet-check { border-color: var(--gold); background: var(--gold); color: #fff; }
+.wallet-logo { width: 40px; height: 40px; object-fit: contain; margin: 0 auto 8px; display: block; }
+.wallet-name { font-size: 13px; font-weight: 800; margin-bottom: 4px; }
+.wallet-number { font-size: 12px; color: var(--gold-soft); font-weight: 700; }
+
+.m-upload {
+  position: relative; border: 2px dashed rgba(146,98,12,0.3); border-radius: 10px;
+  padding: 12px; text-align: center; cursor: none; font-size: 12px; color: var(--gray);
+  transition: border-color .2s, background .2s;
+}
+.m-upload:hover { border-color: rgba(146,98,12,0.5); background: rgba(146,98,12,0.03); }
+.m-upload input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+#mScreenshotPreviewWrap { margin-top: 10px; }
+#mScreenshotPreviewWrap img { max-width: 140px; max-height: 140px; border-radius: 10px; border: 1px solid rgba(15,23,42,0.1); }
+
+.m-submit {
+  width: 100%; margin-top: 8px;
+  background: linear-gradient(135deg, var(--gold), #0F172A); color: #FFFDF8;
+  border: none; padding: 15px; border-radius: 12px; font-family: 'Cairo', sans-serif;
+  font-size: 14px; font-weight: 900; cursor: none; transition: transform .15s, box-shadow .2s;
+}
+.m-submit:hover { transform: scale(1.01); box-shadow: 0 8px 28px rgba(146,98,12,0.3); }
+
+.modal-success { display: none; text-align: center; padding: 20px 10px; }
+.modal-success.show { display: block; }
+.modal-success .success-icon { font-size: 42px; margin-bottom: 14px; }
+.modal-success .success-title { font-size: 18px; font-weight: 900; margin-bottom: 10px; }
+.modal-success .success-sub { font-size: 13px; color: var(--gray); line-height: 1.9; }
+
+@media (max-width: 520px) {
+  .m-packages { grid-template-columns: 1fr; }
+  .m-field-row { grid-template-columns: 1fr; }
+  .wallets-grid { grid-template-columns: 1fr; }
+}
+
+</style>
+<link rel="stylesheet" href="../js/social.css">
+<link rel="stylesheet" href="tools.css">
+<script>
+/* الأدوات مجانية لكل محامي مسجّل في المنصة: مفيش اشتراك ولا حد تجربة */
+window.isUserSubscribed = true;
+function ensureSubscriptionChecked() { return Promise.resolve(); }
+function checkTrial() { return false; }
+function markUsed() {}
+function showPaywall() {}
+function closePaywall() {}
+function openSubscribeModal() {}
+function closeSubscribeModal() {}
+function showLegistaToast() {}
+function withLegistaDb() {}
+</script>
+</head>
+<body>
+<header class="top"><a class="logo-text" href="../index.html?browse=1">LEGANO</a><div id="navSlot"></div></header><div class="tool-crumb"><a href="../tools.html">← أدوات المحامي</a><span>صيغ الجنح المباشرة</span></div><div id="toolGate" class="soc-card gate" hidden><h1>منطقة المحامين</h1><p>الأدوات القانونية مجانية لكل محامي مسجّل في المنصة. سجّل دخول علشان تفتحها.</p><a class="soc-btn primary" href="../dashboard.html">دخول المحامين</a></div>
+
+<div id="cursor"></div>
+<canvas id="bg-canvas"></canvas>
+
+
+
+<div class="app-layout">
+  <!-- SIDEBAR -->
+  <div class="tmpl-sidebar">
+    <div class="tmpl-header">
+      <div class="tmpl-title">◈ صيغ الجنح المباشرة</div>
+      <input class="tmpl-search" type="text" placeholder="ابحث عن صيغة..." oninput="filterTemplates(this.value)">
+    </div>
+    <div class="cat-group" id="catGroup"></div>
+  </div>
+
+  <!-- CENTER -->
+  <div class="workspace-center">
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon">⚖️</div>
+      <div class="empty-title">اختر صيغة من القائمة</div>
+      <div class="empty-sub">20 صيغة جنحة مباشرة جاهزة للتوليد</div>
+    </div>
+    <div class="form-area" id="formArea" style="display:none;"></div>
+    <div class="output-area" id="outputArea">
+      <div class="output-header">
+        <span class="output-label">◈ الصيغة المولّدة</span>
+        <div class="output-actions">
+          <button class="btn-copy" onclick="copyOutput()">نسخ</button>
+          <button class="btn-print" onclick="printOutput()">طباعة</button>
+        </div>
+      </div>
+      <div class="output-box" id="outputBox"></div>
+    </div>
+  </div>
+
+  <!-- AI PANEL -->
+  <div class="ai-panel">
+    <div class="ai-head">
+      <div class="ai-ava">⚖</div>
+      <div>
+        <div class="ai-nm">مساعد الصياغة</div>
+        <div class="ai-st">● ONLINE</div>
+      </div>
+    </div>
+    <div class="ai-msg-box" id="aiMsg">اختر صيغة جنحة من القائمة للبدء.</div>
+    <div class="panel-section-title">معلومات الصيغة</div>
+    <div class="info-row"><span class="info-key">الصيغة</span><span class="info-val" id="infoTitle">—</span></div>
+    <div class="info-row"><span class="info-key">التصنيف</span><span class="info-val" id="infoSection">—</span></div>
+    <div class="info-row"><span class="info-key">الحقول</span><span class="info-val" id="infoFields">—</span></div>
+    <div class="info-row"><span class="info-key">الحالة</span><span class="info-val active" id="infoStatus">جاهز</span></div>
+    <div class="panel-section-title">خطوات التوليد</div>
+    <div class="progress-step" id="step1"><div class="step-dot" id="dot1"></div><span>استيفاء البيانات</span></div>
+    <div class="progress-step" id="step2"><div class="step-dot" id="dot2"></div><span>معالجة الصيغة</span></div>
+    <div class="progress-step" id="step3"><div class="step-dot" id="dot3"></div><span>الصياغة القانونية</span></div>
+    <div class="progress-step" id="step4"><div class="step-dot" id="dot4"></div><span>مراجعة المراجع</span></div>
+    <div class="progress-step" id="step5"><div class="step-dot" id="dot5"></div><span>الإخراج النهائي</span></div>
+  </div>
+</div>
+<button class="mob-back-btn" id="mobBackBtn" onclick="mobShowSidebar()">☰ الصيغ</button>
+<script>
+// ===================== CURSOR =====================
+document.addEventListener('mousemove', e => {
+  const c = document.getElementById('cursor');
+  c.style.left = e.clientX + 'px'; c.style.top = e.clientY + 'px';
+});
+
+// ===================== BACKGROUND CANVAS =====================
+(function(){
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  window.addEventListener('resize', () => { canvas.width=window.innerWidth; canvas.height=window.innerHeight; });
+  const chars = 'ابتثجحخدذرزسشصضطظعغفقكلمنهوي⚖法律';
+  const cols = Math.floor(window.innerWidth / 20);
+  const drops = Array(cols).fill(1);
+  function draw() {
+    ctx.fillStyle = 'rgba(255,255,255,0.05)';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle = 'rgba(146,98,12,0.06)';
+    ctx.font = '14px monospace';
+    drops.forEach((y,i) => {
+      const ch = chars[Math.floor(Math.random()*chars.length)];
+      ctx.fillText(ch, i*20, y*20);
+      if(y*20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+      drops[i]++;
+    });
+  }
+  setInterval(draw, 60);
+})();
+
+// ===================== STEPS =====================
+function resetSteps() {
+  for(let i=1;i<=5;i++){
+    document.getElementById('step'+i).className='progress-step';
+    document.getElementById('dot'+i).className='step-dot';
+  }
+}
+function animateSteps() {
+  resetSteps();
+  let s=1;
+  const iv = setInterval(()=>{
+    if(s>4){ clearInterval(iv); return; }
+    if(s>1){ document.getElementById('dot'+(s-1)).className='step-dot done'; document.getElementById('step'+(s-1)).className='progress-step done-step'; }
+    document.getElementById('dot'+s).className='step-dot running';
+    document.getElementById('step'+s).className='progress-step active-step';
+    s++;
+  }, 600);
+}
+function finishSteps() {
+  for(let i=1;i<=5;i++){
+    document.getElementById('dot'+i).className='step-dot done';
+    document.getElementById('step'+i).className='progress-step done-step';
+  }
+}
+
+// ===================== TEMPLATES =====================
+const TEMPLATES = [
+  {
+    id: 1, cat: 'أ', catName: 'اعتداء على الأشخاص',
+    title: 'إعلان دعوى مدنية في جنحة سرقة',
+    refs: ['م311 عقوبات'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_المعلن_اليه','عنوان_المعلن_اليه','اسم_المخاطب','تاريخ_الاعتداء','ماركة_السيارة','رقم_لوحة_السيارة','رقم_المحضر','سنة_المحضر','قسم_المحضر','تاريخ_الضبط','تاريخ_الجلسة','اسم_محكمة_الجنح','اسم_شارع_المحكمة','يوم_الجلسة','تاريخ_الجلسة_القادمة','مادة_العقوبة'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:
+أولاً: السيد / {{اسم_المعلن_اليه}} المقيم {{عنوان_المعلن_اليه}} مخاطباً مع / {{اسم_المخاطب}}
+الموضوع:
+بتاريخ {{تاريخ_الاعتداء}} اعتدى المعلن إليه على الطالب بسرقة سيارته ماركة {{ماركة_السيارة}} وتحمل لوحات رقم {{رقم_لوحة_السيارة}} ملاكي، وقد تحرر عن هذا الاعتداء المحضر رقم {{رقم_المحضر}} لسنة {{سنة_المحضر}} م جنح قسم {{قسم_المحضر}}، وقد تم ضبط المتهم والسيارة بتاريخ {{تاريخ_الضبط}}، وقد نظرت الجنحة بجلسة {{تاريخ_الجلسة}} أمام محكمة جنح {{اسم_محكمة_الجنح}} وبها ادعى وكيل الطالب مدنياً بمبلغ 5001 جنيه على سبيل التعويض المؤقت.
+ولما كان ما قام به المعلن إليه يشكل جريمة السرقة المنصوص عليها بالمادة {{مادة_العقوبة}} عقوبات، ولما كان الطالب قد أصابه من جراء ذلك ضرر بالغ يقدّر بمبلغ 5001 جنيه على سبيل التعويض المؤقت.
+بناءً عليه أنا المحضر سالف الذكر قد انتقلت إلى حيث محل إقامة المعلن إليه وأعلنته بصورة من هذا وكلفته الحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} مقرها بشارع {{اسم_شارع_المحكمة}} في يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة_القادمة}} بجلستها العلنية الساعة الثامنة صباحاً ليسمع الحكم عليه بتوقيع أقصى العقوبة المنصوص عليها في المادة {{مادة_العقوبة}} عقوبات وإلزامه بأن يؤدي للطالب مبلغ 5001 جنيهاً مصرياً على سبيل التعويض المؤقت مع إلزامه المصروفات ومقابل أتعاب المحاماة.
+لأنه في يوم {{تاريخ_الاعتداء}} اعتدى على الطالب بسرقة سيارته ماركة {{ماركة_السيارة}} وتحمل لوحات رقم {{رقم_لوحة_السيارة}} مما يشكل جريمة السرقة المنصوص عليها في المادة {{مادة_العقوبة}} عقوبات.
+وذلك مع حفظ كافة حقوق الطالب الأخرى.
+ولأجل العلم /`
+  },
+  {
+    id: 2, cat: 'أ', catName: 'اعتداء على الأشخاص',
+    title: 'جنحة إزعاج بالتليفون',
+    refs: ['م166 مكرراً عقوبات'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','عنوان_الطالب','رقم_التليفون','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_المعلن_اليه_الأول','عنوان_المعلن_اليه','اسم_المخاطب','نيابة_الاختصاص','تفاصيل_الإزعاج','رقم_تليفون_المتهم','مدة_المراقبة','عدد_مرات_الإزعاج','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة','قسم_الاختصاص'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ويمتلك تليفون رقم {{رقم_التليفون}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:
+أولاً: السيد / {{اسم_المعلن_اليه_الأول}} المقيم {{عنوان_المعلن_اليه}} مخاطباً مع / {{اسم_المخاطب}}
+ثانياً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة
+الموضوع:
+دأب المعلن إليه الأول على إزعاج الطالب تليفونياً بالاتصال به على رقمه المذكور ليلاً ونهاراً متضمناً {{تفاصيل_الإزعاج}}، حتى أحال حياة الطالب إلى جحيم لا يطاق.
+وقد عُرض الأمر على القاضي المختص الذي أمر بوضع تليفون الطالب تحت المراقبة لمدة {{مدة_المراقبة}}، وقامت مباحث التليفونات بتنفيذ الأمر وسجّلت عدة أحاديث صادرة بصوت المعلن إليه ومتضمنة ألفاظاً ماسة بالشرف وفقاً لما جاء بالبطاقات المسجّلة بالحاسوب وطبقاً للأشرطة الممغنطة، وتم ضبط المتهم متلبساً بالجريمة وأُحيل إلى النيابة.
+ولما كانت المادة 166 مكرراً عقوبات تنص على أن كل من تسبب في إزعاج غيره بإساءة استعمال أجهزة الاتصالات التليفونية يعاقب بالحبس مدة لا تتجاوز سنة وبغرامة لا تزيد على مائتي جنيه أو بإحدى العقوبتين.
+بناءً عليه أنا المحضر سالف الذكر قد أعلنت كلاً من المعلن إليهما بصورة من هذه الصحيفة مكلفاً الأول والثاني الحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} بجلستها العلنية الساعة الثامنة والنصف من صباح يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} لكي يسمع الحكم بطلبات المعلن إليه الثاني بعقابه بمواد الاتهام وإلزامه بأن يؤدي للطالب مبلغ 5001 جنيه على سبيل التعويض.
+لأنه بتاريخ {{تاريخ_الجلسة}} بدائرة قسم {{قسم_الاختصاص}} قام المعلن إليه الأول عن طريق التليفون بإزعاج الطالب على نحو {{عدد_مرات_الإزعاج}} مرة مرتكباً الجريمة المنصوص عليها بالمادة 166 مكرراً عقوبات.
+مع حفظ كافة الحقوق الأخرى من أي نوع كانت.
+ولأجل العلم /`
+  },
+  {
+    id: 3, cat: 'أ', catName: 'اعتداء على الأشخاص',
+    title: 'جنحة قذف بطريق التليفون',
+    refs: ['م308/1 عقوبات','م251 إجراءات جنائية','م3 إجراءات جنائية'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_المعلن_اليه','عنوان_المعلن_اليه','اسم_المخاطب','نيابة_الاختصاص','رقم_تليفون_المتهم','رقم_تليفون_الطالب','تاريخ_وضع_المراقبة','العبارات_الشائنة','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة','قسم_الاختصاص'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:
+أولاً: السيد / {{اسم_المعلن_اليه}} المقيم {{عنوان_المعلن_اليه}} مخاطباً مع / {{اسم_المخاطب}}
+ثانياً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة
+الموضوع:
+دأب المعلن إليه على سب الطالب وقذفه بطريق التليفون بإسناد عبارات شائنة إليه وإرسال رسائل قصيرة تحتوي على {{العبارات_الشائنة}} وذلك من تليفونه المحمول رقم {{رقم_تليفون_المتهم}} إلى تليفون الطالب رقم {{رقم_تليفون_الطالب}}.
+وحيث أن إسناد العبارات الشائنة تم بطريق التليفون على نحو ما هو ثابت بالتسجيلات التي تمت بمعرفة الهيئة العامة للمواصلات السلكية واللاسلكية بناءً على طلب الطالب بتاريخ {{تاريخ_وضع_المراقبة}} بوضع التليفون تحت المراقبة، وهو ما تحققت به جريمة القذف المشار إليها بالمادة 1/308 عقوبات.
+وإذ كان ما ارتكبه المعلن إليه يشكل جريمة القذف بطريق التليفون المعاقب عليها بالمادة 308 عقوبات، وكان للطالب إزاء الضرر الذي أصابه من الجريمة أن يدعي مدنياً طبقاً لنص المادة 251 إجراءات بتعويض مؤقت بمبلغ 5001 جنيه مع حفظ حق الطالب في التعويض النهائي، وتعتبر صحيفة الجنحة المباشرة الماثلة بمثابة شكوى فتكون الدعوى مقبولة طبقاً للمادة 3 إجراءات جنائية.
+بناءً عليه أنا المحضر سالف الذكر قد أعلنت كلاً من المعلن إليهما بصورة من هذه الصحيفة مكلفاً الأول والثاني الحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} بجلستها العلنية الساعة الثامنة والنصف من صباح يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} لكي يسمع الحكم بطلبات المعلن إليه الثاني بعقابه بمواد الاتهام وإلزامه بأن يؤدي للطالب مبلغ 5001 جنيه على سبيل التعويض.
+لأنه بتاريخ {{تاريخ_الجلسة}} بدائرة قسم {{قسم_الاختصاص}} قام المعلن إليه الأول عن طريق التليفون بالقذف في حق الطالب مرتكباً الجريمة المنصوص عليها بالمادة 1/308 عقوبات.
+مع حفظ كافة الحقوق الأخرى من أي نوع كانت.
+ولأجل العلم /`
+  },
+  {
+    id: 4, cat: 'أ', catName: 'اعتداء على الأشخاص',
+    title: 'جنحة طعن في عرض الأفراد أو سمعة العائلات',
+    refs: ['م171 عقوبات','م302 عقوبات','م306 عقوبات','م307 عقوبات','م308 عقوبات'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_المعلن_اليه','عنوان_المعلن_اليه','اسم_المخاطب','نيابة_الاختصاص','اسم_المجني_عليها','تاريخ_الواقعة','مكان_الواقعة','العبارات_الشائنة','رقم_المحضر','سنة_المحضر','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة','قسم_الاختصاص'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:
+أولاً: السيد / {{اسم_المعلن_اليه}} المقيم {{عنوان_المعلن_اليه}} مخاطباً مع / {{اسم_المخاطب}}
+ثانياً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة
+الموضوع:
+بتاريخ {{تاريخ_الواقعة}} طعن المعلن إليه في عرض السيدة / {{اسم_المجني_عليها}} حرم الطالب وذلك بأن قال {{العبارات_الشائنة}} في وسط {{مكان_الواقعة}}، وقد تحرر عن ذلك المحضر رقم {{رقم_المحضر}} لسنة {{سنة_المحضر}}.
+وحيث أن ما يدعيه المعلن إليه ليس له أي أصل من الحقيقة بل هو مجرد خيال وافتراء محض، وأن المعلن إليه قد أقدم على ذلك انتقاماً وبسوء نية ظاهر بما أضر بالطالب وبسمعة عائلته ضرراً بالغاً.
+بناءً عليه أنا المحضر سالف الذكر قد أعلنت كلاً من المعلن إليهما بصورة من هذه الصحيفة مكلفاً الأول والثاني الحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} بجلستها العلنية الساعة الثامنة والنصف من صباح يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} لكي يسمع الحكم بعقابه بمواد الاتهام وإلزامه بأن يؤدي للطالب مبلغ 5001 جنيه على سبيل التعويض مع إلزامه المصروفات ومقابل أتعاب المحاماة.
+لأنه بتاريخ {{تاريخ_الواقعة}} بدائرة قسم {{قسم_الاختصاص}} طعن في عرض {{اسم_المجني_عليها}} وخدش سمعة عائلة الطالب بالعبارات المشار إليها بالمحضر رقم {{رقم_المحضر}} مرتكباً الجرائم المشار إليها بالمواد 171 و302 و306 و307 و308 عقوبات.
+مع حفظ حقوق الطالب الأخرى من أي نوع كانت.
+ولأجل العلم /`
+  },
+  {
+    id: 5, cat: 'ب', catName: 'النشر والصحافة',
+    title: 'جنحة قذف وسب بطريق النشر في إحدى الصحف',
+    refs: ['م39 عقوبات','م40 عقوبات','م41 عقوبات','م171 عقوبات','م302 عقوبات','م303 عقوبات','م8 ق96/1996','م11 ق96/1996'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_رئيس_التحرير','عنوانه','اسم_محرر_الخبر','عنوانه_الثاني','نيابة_الاختصاص','اسم_الجريدة','تاريخ_العدد','رقم_العدد','الصفحة_والعمود','عنوان_الخبر','الوقائع_المنشورة','قسم_الاختصاص','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة','مبلغ_التعويض'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:
+أولاً: السيد / {{اسم_رئيس_التحرير}} المقيم {{عنوانه}} مخاطباً مع مسئول
+ثانياً: السيد / {{اسم_محرر_الخبر}} المقيم {{عنوانه_الثاني}} مخاطباً مع مسئول
+ثالثاً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة
+الموضوع:
+بتاريخ {{تاريخ_العدد}} نشرت جريدة {{اسم_الجريدة}} في عدد رقم {{رقم_العدد}} صفحة {{الصفحة_والعمود}} خبراً تحت عنوان «{{عنوان_الخبر}}» تضمّن {{الوقائع_المنشورة}}، وهو خبر مكذوب منشور بسوء نية مخالف للقواعد العامة وأحكام القانون رقم 96 لسنة 1996 بتنظيم الصحافة.
+وقد أساء هذا النشر إلى الطالب مساسًا بالغاً بسمعته وكرامته وشرفه في وسط المجتمع، لا سيما أن القضية لا تزال في حوزة جهة التحقيق ولم تنته بعد فيكون حظر النشر قائماً قانوناً وتكون الجريدة قد وقعت في الزلل الخطير بنشرها لهذه الوقائع.
+ولما كانت المادة 302 عقوبات تنص على أن يُعد قاذفاً كل من أسند لغيره بواسطة إحدى الطرق المبينة بالمادة 171 أموراً لو كانت صادقة لأوجبت عقاب من أُسندت إليه، وكانت المادة 303 من ذات القانون تعاقب على القذف بالحبس مدة لا تتجاوز سنتين.
+بناءً عليه أنا المحضر سالف الذكر قد أعلنت كلاً من المعلن إليهم بصورة من هذه الصحيفة مكلفاً الأول والثاني الحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} بجلستها العلنية الساعة الثامنة والنصف من صباح يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} لكي يسمعا الحكم بطلبات المعلن إليه الأخير بعقابهما بالمواد المشار إليها وإلزامهما بأن يؤديا للطالب مبلغ {{مبلغ_التعويض}} جنيهاً على سبيل التعويض مع إلزامهما بنشر الحكم في جريدة {{اسم_الجريدة}} وفي جريدة أخرى تأمر بها المحكمة.
+لأنهما بتاريخ {{تاريخ_العدد}} بدائرة قسم {{قسم_الاختصاص}} أسندا للطالب العبارات المشار إليها بصدر الصحيفة بطريق العلانية وهي الكتابة المنشورة مرتكبَيْن الجرائم المشار إليها بمواد العقاب.
+مع حفظ كافة حقوق الطالب الأخرى.
+ولأجل العلم /`
+  },
+  {
+    id: 6, cat: 'ب', catName: 'النشر والصحافة',
+    title: 'جنحة نشر ما تم في محاكمة سرية',
+    refs: ['م171 عقوبات','م189 عقوبات'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالبة','عنوان_الطالبة','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_الصحفي','عنوان_الصحفي','اسم_رئيس_التحرير','عنوان_رئيس_التحرير','نيابة_الاختصاص','اسم_الجريدة','رقم_الجناية','سنة_الجناية','تاريخ_الجلسة_السرية','ما_تم_نشره','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة','قسم_الاختصاص'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيدة / {{اسم_الطالبة}} المقيمة {{عنوان_الطالبة}} ومحلها المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:
+أولاً: السيد / {{اسم_الصحفي}} المقيم {{عنوان_الصحفي}} مخاطباً مع مسئول
+ثانياً: السيد / {{اسم_رئيس_التحرير}} المقيم {{عنوان_رئيس_التحرير}} مخاطباً مع مسئول
+ثالثاً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة
+الموضوع:
+الطالبة كانت مجنياً عليها في الجناية رقم {{رقم_الجناية}} لسنة {{سنة_الجناية}} جنايات، وأثناء المحاكمة الجنائية ولحساسية موضوع الجناية قررت المحكمة سماع المرافعة والدفاع في جلسة سرية ابتداءً من تاريخ {{تاريخ_الجلسة_السرية}} لما تكشّف من أمور ووقائع شخصية تمسّ الطالبة وأسرتها.
+إلا أن الطالبة فوجئت بأن المعلن إليه الأول يعمل صحفياً بجريدة {{اسم_الجريدة}} والمعلن إليه الثاني رئيس تحريرها قد قاما بنشر {{ما_تم_نشره}} مقترناً باسم الطالبة كمجنيٍّ عليها مما أساء إلى سمعتها وكرامتها في وسط أقرانها وجيرانها وألحق ضرراً بالغاً بها وبأسرتها.
+ولما كان هذا التصرف يُشكّل الجريمة المنصوص عليها بالمادتين 171 و189 عقوبات، وكان الهدف من اختصام المعلن إليه الثالث مباشرة الدعوى العمومية قبل المعلن إليهما الأول والثاني.
+بناءً عليه أنا المحضر سالف الذكر قد أعلنت كلاً من المعلن إليهم بصورة من هذه الصحيفة مكلفاً الأول والثاني الحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} بجلستها العلنية يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} لكي يسمعا الحكم بطلبات سيادة المعلن إليه الثالث والطالبة بعقابهما بمقتضى المادتين 171 و189 عقوبات وإلزامهما متضامنَيْن بأن يؤديا للطالبة مبلغ 5001 جنيه على سبيل التعويض المؤقت والمصروفات ومقابل أتعاب المحاماة.
+لأنهما بتاريخ {{تاريخ_الجلسة}} بدائرة قسم {{قسم_الاختصاص}} نشرا ما جرى في الجلسة السرية المشار إليها على النحو الثابت بصلب هذه الصحيفة.
+مع حفظ كافة حقوق الطالبة الأخرى.
+ولأجل العلم /`
+  },
+  {
+    id: 7, cat: 'ب', catName: 'النشر والصحافة',
+    title: 'جنحة نشر أخبار بشأن تحقيق في دعوى تطليق',
+    refs: ['م193 عقوبات','م171 عقوبات'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالبة','عنوان_الطالبة','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_رئيس_التحرير','عنوانه','اسم_محرر_الخبر','عنوانه_الثاني','نيابة_الاختصاص','رقم_دعوى_الطلاق','سنة_الدعوى','اسم_محكمة_الأسرة','تاريخ_جلسة_التحقيق','اسم_الجريدة','تاريخ_النشر','رقم_العدد','الصفحة','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة','قسم_الاختصاص'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيدة / {{اسم_الطالبة}} المقيمة {{عنوان_الطالبة}} ومحلها المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:
+أولاً: السيد / {{اسم_رئيس_التحرير}} المقيم {{عنوانه}} مخاطباً مع مسئول
+ثانياً: السيد / {{اسم_محرر_الخبر}} المقيم {{عنوانه_الثاني}} مخاطباً مع مسئول
+ثالثاً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة
+الموضوع:
+الطالبة أقامت ضد زوجها دعوى التطليق رقم {{رقم_دعوى_الطلاق}} لسنة {{سنة_الدعوى}} أمام محكمة {{اسم_محكمة_الأسرة}} وقد أحالت المحكمة الدعوى للتحقيق لجلسة {{تاريخ_جلسة_التحقيق}}.
+إلا أن الطالبة فوجئت بأن جريدة {{اسم_الجريدة}} بتاريخ {{تاريخ_النشر}} عدد رقم {{رقم_العدد}} نشرت في صفحة {{الصفحة}} أخبار هذا التحقيق مرفقةً باسم الطالبة وهي شخصية عامة، في انتهاك صريح للمادة 193 عقوبات التي تحظر نشر أخبار التحقيقات في دعاوى الطلاق والتفريق.
+ولما كانت الجريمة تتحقق وتتكامل أركانها بمجرد النشر المحظور، وكانت الطالبة قد أُضيرت من هذا الفعل ضرراً كبيراً مما يحق لها معه أن تدعي مدنياً بطلب التعويض المؤقت وقدره 5001 جنيه.
+بناءً عليه أنا المحضر سالف الذكر قد أعلنت كلاً من المعلن إليهم بصورة من هذه الصحيفة مكلفاً الأول والثاني الحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} بجلستها العلنية يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} لكي يسمعا الحكم بطلبات المعلن إليه الثالث بعقابهما بمواد الاتهام وتوقيع أقصى العقوبة المنصوص عليها في المادة 193 عقوبات وإلزامهما بالتعويض المؤقت والمصروفات.
+لأنهما بتاريخ {{تاريخ_النشر}} بدائرة قسم {{قسم_الاختصاص}} نشرا أخبار التحقيق في دعوى الطلاق المشار إليها بصدر الصحيفة على النحو المحظور قانوناً.
+مع حفظ كافة حقوق الطالبة.
+ولأجل العلم /`
+  },
+  {
+    id: 8, cat: 'ج', catName: 'الأموال والممتلكات',
+    title: 'جنحة دخول أرض زراعية أو منزل بدون إذن',
+    refs: ['م373 عقوبات'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_المعلن_اليه','عنوان_المعلن_اليه','اسم_المخاطب','نيابة_الاختصاص','نوع_الملكية','موقع_الملكية','رقم_المحضر_الإداري','قسم_المحضر','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة','قسم_الاختصاص'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:
+أولاً: السيد / {{اسم_المعلن_اليه}} المقيم {{عنوان_المعلن_اليه}} مخاطباً مع / {{اسم_المخاطب}}
+ثانياً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة
+الموضوع:
+الطالب يمتلك {{نوع_الملكية}} الكائن بجهة {{موقع_الملكية}}، وحيث فُوجئ بالمعلن إليه الأول متواجداً بملك الطالب دون إذن أو وجه حق، وقد نبّه الطالب على المعلن إليه بالخروج إلا أنه رفض، وقد تحرر بذلك المحضر رقم {{رقم_المحضر_الإداري}} إداري قسم {{قسم_المحضر}}.
+وحيث أن ما أتاه المعلن إليه يشكل أركان الجريمة المنصوص عليها بالمادة 373 عقوبات، وكان يحق للطالب أن يدعي مدنياً بتعويض الأضرار التي أصابته من الجريمة.
+بناءً عليه أنا المحضر سالف الذكر قد أعلنت كلاً من المعلن إليهما بصورة من هذه الصحيفة مكلفاً الأول الحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} بجلستها العلنية الساعة الثامنة والنصف من صباح يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} لكي يسمع الحكم بطلبات المعلن إليه الثاني بعقابه بالمادة 373 عقوبات وإلزامه بأن يؤدي للطالب مبلغ 5001 جنيه على سبيل التعويض المؤقت والمصروفات ومقابل أتعاب المحاماة.
+لأنه بتاريخ {{تاريخ_الجلسة}} بدائرة قسم {{قسم_الاختصاص}} دخل {{نوع_الملكية}} المملوك للطالب ورفض المغادرة بدون وجه حق على النحو المبيّن بصلب الصحيفة.
+مع حفظ كافة حقوق الطالب.
+ولأجل العلم /`
+  },
+  {
+    id: 9, cat: 'ج', catName: 'الأموال والممتلكات',
+    title: 'جنحة تعطيل مزاد علني',
+    refs: ['م344 عقوبات','ق29/1982'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_المعلن_اليه','عنوان_المعلن_اليه','اسم_المخاطب','نيابة_الاختصاص','تاريخ_الحجز','اسم_المدين','تاريخ_المزاد','ملابسات_التعطيل','رقم_المحضر','سنة_المحضر','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة','قسم_الاختصاص'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:
+أولاً: السيد / {{اسم_المعلن_اليه}} المقيم {{عنوان_المعلن_اليه}} مخاطباً مع / {{اسم_المخاطب}}
+ثانياً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة
+الموضوع:
+بتاريخ {{تاريخ_الحجز}} وقع الطالب حجزاً تنفيذياً على بعض المنقولات الموجودة لدى السيد / {{اسم_المدين}} وفاءً لحكم قضى بالتعويض للطالب، وتحدد يوم {{تاريخ_المزاد}} لإجراء البيع بالمزاد العلني.
+وفي اليوم المحدد للبيع حضر المحضر المنفذ مع وكيل الطالب وكذلك المزايدون، وعند افتتاح المزاد فُوجئ الحاضرون بالمعلن إليه الأول وقد أحضر بعض الأشخاص وتدخلوا في المزاد بقصد إفشاله وتعطيله كما تعدّوا على بعض الحاضرين، وتحرر بذلك المحضر رقم {{رقم_المحضر}} لسنة {{سنة_المحضر}}، وقد تبيّن من التحقيقات أن {{ملابسات_التعطيل}}.
+ولما كانت المادة 344 عقوبات المعدّلة بالقانون 29 لسنة 1982 تنص على أن كل من عطّل بواسطة تهديد أو إكراه أو تطاول باليد مزاداً يعاقب بالحبس مدة لا تقل عن ثلاثة أشهر وبغرامة أو بإحداهما.
+بناءً عليه أنا المحضر سالف الذكر قد أعلنت كلاً من المعلن إليهما بصورة من هذه الصحيفة مكلفاً الأول الحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} لكي يسمع الحكم بعقابه بالمادة 344 عقوبات معدّلة بالقانون 29 لسنة 1982 وإلزامه بأن يؤدي للطالب مبلغ 5001 جنيه على سبيل التعويض المؤقت والمصروفات.
+لأنه بتاريخ {{تاريخ_المزاد}} بدائرة قسم {{قسم_الاختصاص}} عطّل عمداً بواسطة التهديد والتطاول باليد المزاد الخاص ببيع المنقولات المحجوز عليها على النحو الثابت بصلب الصحيفة.
+مع حفظ كافة حقوق الطالب.
+ولأجل العلم /`
+  },
+  {
+    id: 10, cat: 'ج', catName: 'الأموال والممتلكات',
+    title: 'جنحة إتلاف أشجار خضراء',
+    refs: ['م358 عقوبات','م251 إجراءات جنائية'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_المعلن_اليه_الأول','عنوانه','اسم_المخاطب_الأول','اسم_المعلن_اليه_الثاني','عنوانه_الثاني','نيابة_الاختصاص','موقع_الفيلا','تاريخ_الإتلاف','وصف_الإتلاف','رقم_المحضر','سنة_المحضر','قسم_المحضر','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة','قسم_الاختصاص'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:
+أولاً: السيد / {{اسم_المعلن_اليه_الأول}} المقيم {{عنوانه}} مخاطباً مع / {{اسم_المخاطب_الأول}}
+ثانياً: السيد / {{اسم_المعلن_اليه_الثاني}} المقيم {{عنوانه_الثاني}} مخاطباً مع مسئول
+ثالثاً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة
+الموضوع:
+الطالب يمتلك الفيلا الكائنة بمنطقة {{موقع_الفيلا}} وقد قام بزرع أشجار ومزروعات حولها للحفاظ على خصوصيته، وبتاريخ {{تاريخ_الإتلاف}} قام المعلن إليه الأول وهو يعمل خفيراً لدى المعلن إليه الثاني بقطع وإتلاف {{وصف_الإتلاف}} من أشجار الفيلا بحجة أنها تمنع وصول الضوء.
+وقد اتصل الطالب بشرطة النجدة التي حررت المحضر رقم {{رقم_المحضر}} لسنة {{سنة_المحضر}} قسم {{قسم_المحضر}}، وأقرّ المعلن إليه الأول بأنه قام بذلك تنفيذاً لطلب المعلن إليه الثاني.
+وحيث أن ما قام به المعلن إليهما يشكل جريمة إتلاف أشجار خضراء المنصوص عليها بالمادة 358 عقوبات، وقد أضير الطالب مما يحق له أن يدعي مدنياً قِبَلهما متضامنَيْن بمبلغ 5001 جنيه على سبيل التعويض المؤقت عملاً بالمادة 251 إجراءات جنائية.
+بناءً عليه أنا المحضر سالف الذكر قد أعلنت المعلن إليهما بصورة من هذا وكلّفتهما الحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} لكي يسمعا الحكم بطلبات النيابة بتوقيع أقصى العقوبة الواردة بالمادة 358 عقوبات وإلزامهما متضامنَيْن بأن يؤديا للطالب مبلغ 5001 جنيه على سبيل التعويض المؤقت والمصروفات ومقابل أتعاب المحاماة وشمول الحكم بالنفاذ المعجل.
+لأنهما في يوم {{تاريخ_الإتلاف}} بدائرة قسم {{قسم_الاختصاص}} أتلفا أشجار الطالب على النحو الوارد بالمحضر رقم {{رقم_المحضر}}.
+ولأجل العلم /`
+  },
+  {
+    id: 11, cat: 'ج', catName: 'الأموال والممتلكات',
+    title: 'جنحة إتلاف غيط زراعي',
+    refs: ['م367 عقوبات'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_المعلن_اليه','عنوان_المعلن_اليه','اسم_المخاطب','نيابة_الاختصاص','مساحة_الغيط','رقم_الغيط','تاريخ_الإتلاف','وصف_فعل_الإتلاف','رقم_محضر_المعاينة','اسم_الضابط_المحقق','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة','قسم_الاختصاص'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:
+أولاً: السيد / {{اسم_المعلن_اليه}} المقيم {{عنوان_المعلن_اليه}} مخاطباً مع / {{اسم_المخاطب}}
+ثانياً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة
+الموضوع:
+الطالب يمتلك غيطاً بمساحة {{مساحة_الغيط}} مسجّلاً بالجمعية الزراعية تحت رقم {{رقم_الغيط}}، وبتاريخ {{تاريخ_الإتلاف}} فُوجئ الطالب بالمعلن إليه الأول يقوم بـ {{وصف_فعل_الإتلاف}} في الغيط المملوك للطالب، وقد أمسك الطالب المعلن إليه وأبلغ الشرطة، وثبت من المعاينة التي قام بها النقيب / {{اسم_الضابط_المحقق}} وقوع هذا الإتلاف وتحرّر عن ذلك المحضر رقم {{رقم_محضر_المعاينة}}.
+غير أن النيابة العامة أقدمت على حفظ المحضر دون مسوّغ قانوني، مما يحق معه للطالب تحريك الدعوى الجنائية بطريق الادعاء المباشر عملاً بالمادة 367 عقوبات، مع المطالبة بتعويض مؤقت قدره 5001 جنيه.
+بناءً عليه أنا المحضر سالف الذكر قد أعلنت المعلن إليه الأول بصورة من هذا وكلّفته الحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} لكي يسمع الحكم بطلبات الطالب والمعلن إليه الثاني بعقابه بالمادة 367 عقوبات وإلزامه بأن يؤدي للطالب مبلغ 5001 جنيه على سبيل التعويض المؤقت والمصروفات ومقابل أتعاب المحاماة.
+لأنه في يوم {{تاريخ_الإتلاف}} بدائرة قسم {{قسم_الاختصاص}} قام بـ {{وصف_فعل_الإتلاف}} في الغيط المملوك للطالب على النحو الثابت بمحضر المعاينة المقدَّم منه صورة رسمية.
+مع إلزام الطالب بالمصروفات ومقابل أتعاب المحاماة.
+ولأجل العلم /`
+  },
+  {
+    id: 12, cat: 'ج', catName: 'الأموال والممتلكات',
+    title: 'جنحة إتلاف عمد لسيارة أو منقول',
+    refs: ['م361 عقوبات','م251 إجراءات جنائية'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_المعلن_اليه','عنوان_المعلن_اليه','اسم_المخاطب','نيابة_الاختصاص','وصف_المنقول_المتلف','تاريخ_الإتلاف','موقع_الإتلاف','وصف_فعل_الإتلاف','قيمة_التلفيات','رقم_المحضر','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة','قسم_الاختصاص'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:
+أولاً: السيد / {{اسم_المعلن_اليه}} المقيم {{عنوان_المعلن_اليه}} مخاطباً مع / {{اسم_المخاطب}}
+ثانياً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة
+الموضوع:
+اعتاد الطالب أن يترك {{وصف_المنقول_المتلف}} أمام {{موقع_الإتلاف}}، وبتاريخ {{تاريخ_الإتلاف}} فُوجئ الطالب بأن {{وصف_فعل_الإتلاف}}، وبالسؤال والتحري علم أن المعلن إليه الأول هو الذي قام بهذا الفعل المؤثَّم قانوناً فأبلغ الطالب بذلك وتحرّر المحضر رقم {{رقم_المحضر}}، وهذه التلفيات تُقدَّر بأكثر من {{قيمة_التلفيات}} جنيه.
+وحيث أن ما ارتكبه المعلن إليه تتحقق به الجريمة المنصوص عليها بالمادة 361 عقوبات، وكان الطالب قد أُضير بما يحق له معه أن يدعي مدنياً بطلب تعويض مؤقت عملاً بالمادة 251 إجراءات.
+بناءً عليه أنا المحضر سالف الذكر قد أعلنت المعلن إليه الأول بصورة من هذا وكلّفته الحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} لكي يسمع الحكم بطلبات النيابة بعقابه بالمادة 361 عقوبات وإلزامه بأن يؤدي للطالب مبلغ 5001 جنيه على سبيل التعويض المؤقت والمصروفات ومقابل أتعاب المحاماة وشمول الحكم بالنفاذ.
+لأنه بتاريخ {{تاريخ_الإتلاف}} بدائرة قسم {{قسم_الاختصاص}} أتلف {{وصف_المنقول_المتلف}} الخاصة بالطالب على النحو الوارد بالمحضر رقم {{رقم_المحضر}}.
+ولأجل العلم /`
+  },
+  {
+    id: 13, cat: 'ج', catName: 'الأموال والممتلكات',
+    title: 'جنحة إتلاف منقولات بإهمال (حوادث)',
+    refs: ['م378 عقوبات','ق29/1982'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_المعلن_اليه','عنوان_المعلن_اليه','اسم_المخاطب','نيابة_الاختصاص','وصف_سيارة_الطالب','موقع_الحادث','تاريخ_الحادث','وصف_سيارة_المتهم','وصف_الأضرار','رقم_محضر_الحادث','حكم_المخالفة','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة','قسم_الاختصاص'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:
+أولاً: السيد / {{اسم_المعلن_اليه}} المقيم {{عنوان_المعلن_اليه}} مخاطباً مع / {{اسم_المخاطب}}
+ثانياً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة
+الموضوع:
+بتاريخ {{تاريخ_الحادث}} أثناء وقوف سيارة الطالب {{وصف_سيارة_الطالب}} أمام {{موقع_الحادث}} فُوجئ بالمعلن إليه الذي كان يقود سيارة {{وصف_سيارة_المتهم}} يصطدم بها صدمةً أدّت إلى {{وصف_الأضرار}}، وهو ما ثبت من المعاينة والمحضر رقم {{رقم_محضر_الحادث}}.
+وقد قُدِّم المعلن إليه للمحاكمة الجنائية بتهمة مخالفة قواعد المرور وحُكم عليه بـ{{حكم_المخالفة}}.
+وحيث أن الطالب قد أُضير من الجريمة ضرراً مادياً يتمثّل في إتلاف ممتلكاته على النحو الثابت بالأوراق، وحيث أن المادة 378 من القانون رقم 29 لسنة 1982 بتعديل قانون العقوبات تنص على معاقبة من تسبّب بإهماله في إتلاف شيء من منقولات الغير.
+بناءً عليه أنا المحضر سالف الذكر قد أعلنت المعلن إليه الأول بصورة من هذا وكلّفته الحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} لكي يسمع الحكم بطلبات المعلن إليه الثاني بعقابه بالمادة 378 عقوبات وإلزامه بأن يؤدي للطالب مبلغ 5001 جنيه على سبيل التعويض المؤقت والمصروفات ومقابل أتعاب المحاماة.
+لأنه بتاريخ {{تاريخ_الحادث}} بدائرة قسم {{قسم_الاختصاص}} أتلف بإهماله سيارة الطالب المبيّنة وصفاً بالصحيفة على النحو الوارد بالمحضر رقم {{رقم_محضر_الحادث}}.
+ولأجل العلم /`
+  },
+  {
+    id: 14, cat: 'د', catName: 'الشعائر الدينية والمقدسات',
+    title: 'جنحة تخريب مباني معدة لإقامة شعائر دينية',
+    refs: ['م160/2 عقوبات'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_المعلن_اليه','عنوان_المعلن_اليه','اسم_المخاطب','نيابة_الاختصاص','اسم_المبنى_الديني','موقع_المبنى','تاريخ_الواقعة','وصف_التخريب','رقم_المحضر','سنة_المحضر','قسم_المحضر','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة','قسم_الاختصاص'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:
+أولاً: السيد / {{اسم_المعلن_اليه}} المقيم {{عنوان_المعلن_اليه}} مخاطباً مع / {{اسم_المخاطب}}
+ثانياً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة
+الموضوع:
+الطالب هو المسئول عن {{اسم_المبنى_الديني}} الكائن بجهة {{موقع_المبنى}}، وحيث أنه بتاريخ {{تاريخ_الواقعة}} أثناء إقامة الشعائر الدينية فُوجئ بالمعلن إليه الأول ومعه بعض الأشخاص وقد قاموا بـ {{وصف_التخريب}} مما أصاب الطالب وأبناء الملة بالضرر البالغ.
+وقد قام الطالب بإبلاغ الشرطة وقامت بعمل المعاينة اللازمة وتحرّر عن ذلك المحضر رقم {{رقم_المحضر}} لسنة {{سنة_المحضر}} قسم شرطة {{قسم_المحضر}}.
+ولما كان ما أتاه المعلن إليه الأول تتوافر فيه أركان الجريمة المنصوص عليها في المادة 160/2 عقوبات التي تُعاقب كل من خرّب أو كسر أو أتلف أو دنّس مباني معدّة لإقامة شعائر دين أو رموزاً أو أشياء لها حرمة عند أبناء ملة بالحبس وبغرامة، وحيث أن الطالب يحق له أن يدعي بطلب التعويض للأضرار الناشئة بتعويض مؤقت قدره 5001 جنيه.
+بناءً عليه أنا المحضر سالف الذكر قد أعلنت المعلن إليه الأول بصورة من هذا وكلّفته الحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} لكي يسمع الحكم بطلبات المعلن إليه الثاني بتوقيع أقصى العقوبة الواردة بالمادة 160 عقوبات وإلزامه بأن يؤدي للطالب مبلغ 5001 جنيه على سبيل التعويض المؤقت والمصروفات ومقابل أتعاب المحاماة.
+لأنه في يوم {{تاريخ_الواقعة}} بدائرة قسم {{قسم_الاختصاص}} قام بتخريب {{اسم_المبنى_الديني}} على النحو المبيّن بصلب الصحيفة والمحضر رقم {{رقم_المحضر}}.
+ولأجل العلم /`
+  },
+  {
+    id: 15, cat: 'د', catName: 'الشعائر الدينية والمقدسات',
+    title: 'جنحة تعطيل شعائر دينية',
+    refs: ['م160/1 عقوبات'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','منصب_الطالب','اسم_المسجد_أو_الكنيسة','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_المعلن_اليه','عنوان_المعلن_اليه','نيابة_الاختصاص','نشاط_المعلن_اليه','تفاصيل_التعطيل','رقم_المحضر','سنة_المحضر','قسم_المحضر','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة','قسم_الاختصاص'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} {{منصب_الطالب}} بـ {{اسم_المسجد_أو_الكنيسة}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:
+أولاً: السيد / {{اسم_المعلن_اليه}} المقيم {{عنوان_المعلن_اليه}} مخاطباً مع مسئول
+ثانياً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة
+الموضوع:
+الطالب هو {{منصب_الطالب}} بـ {{اسم_المسجد_أو_الكنيسة}}، وحيث أنه أثناء إقامة الشعائر الدينية فُوجئ بالمعلن إليه الأول صاحب {{نشاط_المعلن_اليه}} القريب من المبنى الديني يقوم بـ {{تفاصيل_التعطيل}} أثناء إقامة الشعائر مما يُشوّش على المصلين ويُعيق إقامة الشعائر.
+وقد نبّه الطالب على المعلن إليه مرات عدة إلا أنه رفض الاستجابة، فاضطر الطالب إلى إبلاغ شرطة النجدة التي انتقلت وحرّرت المحضر رقم {{رقم_المحضر}} لسنة {{سنة_المحضر}} قسم {{قسم_المحضر}}.
+ولما كان ما أتاه المعلن إليه الأول تتوافر به أركان جريمة تعطيل إقامة الشعائر الدينية المنصوص عليها بالمادة 160/1 عقوبات التي تعاقب كل من شوّش على إقامة شعائر ملة أو عطّلها بالعنف أو التهديد بالحبس وبغرامة.
+بناءً عليه أنا المحضر سالف الذكر قد أعلنت المعلن إليه الأول بصورة من هذا وكلّفته الحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} لكي يسمع الحكم بطلبات المعلن إليه الثاني والطالب بتوقيع أقصى العقوبة الواردة بالمادة 160 عقوبات وإلزامه بأن يؤدي للطالب مبلغ 5001 جنيه على سبيل التعويض المؤقت والمصروفات وشمول الحكم بالنفاذ المعجل.
+لأنه بتاريخ {{تاريخ_الجلسة}} بدائرة قسم {{قسم_الاختصاص}} شوّش على إقامة شعائر {{اسم_المسجد_أو_الكنيسة}} بـ{{تفاصيل_التعطيل}} على النحو الوارد بالمحضر رقم {{رقم_المحضر}}.
+ولأجل العلم /`
+  },
+  {
+    id: 16, cat: 'د', catName: 'الشعائر الدينية والمقدسات',
+    title: 'جنحة انتهاك حرمة الجبانات والقبور',
+    refs: ['م160/3 عقوبات'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_المعلن_اليه','عنوان_المعلن_اليه','اسم_المخاطب','نيابة_الاختصاص','موقع_المدفن','رقم_المدفن','تاريخ_الواقعة','وصف_الانتهاك','رقم_المحضر','سنة_المحضر','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة','قسم_الاختصاص'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:
+أولاً: السيد / {{اسم_المعلن_اليه}} المقيم {{عنوان_المعلن_اليه}} مخاطباً مع / {{اسم_المخاطب}}
+ثانياً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة
+الموضوع:
+الطالب يمتلك مدفناً بمنطقة {{موقع_المدفن}} برقم {{رقم_المدفن}}، وبتاريخ {{تاريخ_الواقعة}} فُوجئ الطالب لدى توجهه إلى المدفن لزيارة ذويه والترحم عليهم بوجود المعلن إليه الأول ومعه أشخاص وقد قاموا بـ {{وصف_الانتهاك}} وتحرّر عن ذلك المحضر رقم {{رقم_المحضر}} لسنة {{سنة_المحضر}}.
+ولما كان ما اتخذه المعلن إليه الأول تتحقق به الجريمة المنصوص عليها بالمادة 160/3 عقوبات التي تعاقب كل من انتهك حرمة القبور أو الجبانات أو دنّسها بالحبس وبغرامة.
+بناءً عليه أنا المحضر سالف الذكر قد أعلنت المعلن إليه الأول بصورة من هذا وكلّفته الحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} لكي يسمع الحكم بطلبات المعلن إليه الثاني والطالب بتوقيع أقصى العقوبة الواردة بالمادة 160/3 عقوبات وإلزامه بأن يؤدي للطالب مبلغ 5001 جنيه على سبيل التعويض المؤقت والمصروفات ومقابل أتعاب المحاماة.
+لأنه بتاريخ {{تاريخ_الواقعة}} بدائرة قسم {{قسم_الاختصاص}} انتهك حرمة الجبانة المملوكة للطالب بأن {{وصف_الانتهاك}} على النحو الوارد تفصيلاً بهذه الصحيفة والمحضر رقم {{رقم_المحضر}}.
+ولأجل العلم /`
+  },
+  {
+    id: 17, cat: 'هـ', catName: 'حرية الأشخاص',
+    title: 'جنحة حبس إنسان بدون وجه حق',
+    refs: ['م280 عقوبات'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_المتهم_الأول','صفته','اسم_المتهم_الثاني','صفته_الثاني','نيابة_الاختصاص','تاريخ_الواقعة','ملابسات_الحبس','مدة_الاحتجاز','رقم_شكوى_النيابة','تاريخ_الشكوى','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة','قسم_الاختصاص'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:
+أولاً: السيد / {{اسم_المتهم_الأول}} {{صفته}} مخاطباً مع مسئول
+ثانياً: السيد / {{اسم_المتهم_الثاني}} {{صفته_الثاني}} مخاطباً مع مسئول
+ثالثاً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة
+الموضوع:
+بتاريخ {{تاريخ_الواقعة}} {{ملابسات_الحبس}}، وقد قام المعلن إليهما الأول والثاني بالقبض على الطالب واقتياده إلى قسم الشرطة وإحتجازه بدون تحرير محضر ودون مسوّغ قانوني لمدة {{مدة_الاحتجاز}}، وقد تمّ ذلك أمام شهود موجودين بحجز القسم.
+وقد توجّه الطالب لدى خروجه من القسم إلى نيابة الاختصاص وقدّم شكوى تحت رقم {{رقم_شكوى_النيابة}} بتاريخ {{تاريخ_الشكوى}}.
+ولما كان ما أتاه المعلن إليهما يتحقق به الجريمة الواردة بالمادة 280 عقوبات التي تعاقب كل من قبض على أي شخص أو حبسه أو حجزه بدون أمر من الحاكم المختص وفي غير الأحوال التي تُجيزها القوانين بالحبس أو بغرامة.
+بناءً عليه أنا المحضر سالف الذكر قد أعلنت المعلن إليهما بصورة من هذا وكلّفتهما الحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} لكي يسمعا الحكم بطلبات المعلن إليه الثالث بعقابهما بالمادة 280 عقوبات وإلزامهما بأن يؤديا للطالب مبلغ 5001 جنيه على سبيل التعويض المؤقت والمصروفات ومقابل أتعاب المحاماة.
+لأنهما بتاريخ {{تاريخ_الواقعة}} بدائرة قسم {{قسم_الاختصاص}} اشتركا في حجز الطالب وحبسه بدون حق على النحو الثابت بمحضر النيابة وبصلب هذه الصحيفة.
+مع حفظ كافة حقوق الطالب الأخرى.
+ولأجل العلم /`
+  },
+  {
+    id: 18, cat: 'هـ', catName: 'حرية الأشخاص',
+    title: 'جنحة تعريض طفل للخطر',
+    refs: ['م285 عقوبات'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_المعلن_اليها','عنوانها','اسم_المخاطب','نيابة_الاختصاص','اسم_الصغير','عمر_الصغير','تاريخ_الطلاق','تاريخ_الواقعة','ملابسات_الخطر','وصف_الإصابة','رقم_المحضر','اسم_نقطة_الشرطة','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة','قسم_الاختصاص'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:
+أولاً: السيدة / {{اسم_المعلن_اليها}} المقيمة {{عنوانها}} مخاطباً مع / {{اسم_المخاطب}}
+ثانياً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة
+الموضوع:
+الطالب كان زوجاً للمعلن إليها بصحيح العقد الشرعي وأنجب منها الصغير {{اسم_الصغير}} البالغ من العمر {{عمر_الصغير}} سنوات، وبتاريخ {{تاريخ_الطلاق}} طلّق الطالب المعلن إليها وتُرك الصغير في حضانة والدته.
+وبتاريخ {{تاريخ_الواقعة}} ولدى قيام الطالب بتنفيذ حكم الرؤية فُوجئ بـ {{ملابسات_الخطر}}، وقد تبيّن أن المعلن إليها تركت الصغير دون رعاية مما عرّض حياته للخطر وأدّى إلى {{وصف_الإصابة}}، وتحرّر المحضر رقم {{رقم_المحضر}} بنقطة شرطة {{اسم_نقطة_الشرطة}}.
+ولما كانت المادة 285 عقوبات تنص على أن كل من عرّض للخطر طفلاً لم يبلغ سبع سنوات كاملة وتركه في محل خالٍ من الآدميين يعاقب بالحبس مدة لا تزيد على سنتين.
+بناءً عليه أنا المحضر سالف الذكر قد أعلنت المعلن إليها الأولى بصورة من هذا وكلّفتها الحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} لكي تسمع المعلن إليها الأولى الحكم بطلبات سيادة المعلن إليه الثاني بتوقيع أقصى العقوبة المقررة بالمادة 285 عقوبات وإلزامها بأن تؤدي للطالب مبلغ 5001 جنيه على سبيل التعويض المؤقت والمصروفات ومقابل أتعاب المحاماة.
+لأن المعلن إليها الأولى بتاريخ {{تاريخ_الواقعة}} بدائرة قسم {{قسم_الاختصاص}} عرّضت حياة الصغير {{اسم_الصغير}} للخطر بأن تركته دون رعاية ونتج عن ذلك {{وصف_الإصابة}} الموصوف بالتقرير الطبي المحرر بمحضر الشرطة رقم {{رقم_المحضر}}.
+وذلك مع حفظ كافة حقوق الطالب الأخرى بالتعويض.
+ولأجل العلم /`
+  },
+  {
+    id: 19, cat: 'و', catName: 'الموظفون العامون',
+    title: 'جنحة امتناع موظف عن تنفيذ حكم قضائي',
+    refs: ['م123/2 عقوبات'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_المعلن_اليه_الأول','صفته_الوظيفية','اسم_المعلن_اليه_الثاني','صفته_الوظيفية_الثاني','نيابة_الاختصاص','رقم_الدعوى','تاريخ_الحكم','محكمة_الحكم','منطوق_الحكم','رقم_الاستئناف','تاريخ_الإنذار_السابق','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة','قسم_الاختصاص'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:
+أولاً: السيد / {{اسم_المعلن_اليه_الأول}} {{صفته_الوظيفية}} مخاطباً مع مسئول
+ثانياً: السيد / {{اسم_المعلن_اليه_الثاني}} {{صفته_الوظيفية_الثاني}} مخاطباً مع مسئول
+ثالثاً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة
+الموضوع:
+صدر للطالب الحكم في الدعوى رقم {{رقم_الدعوى}} بتاريخ {{تاريخ_الحكم}} من محكمة {{محكمة_الحكم}} والمؤيَّد استئنافياً بالاستئناف رقم {{رقم_الاستئناف}} والقاضي بـ «{{منطوق_الحكم}}»، وقد رُفضت جميع الإشكالات المرفوعة لوقف تنفيذه.
+لجأ الطالب إلى المعلن إليهما الأول والثاني لمساعدته في تنفيذ الحكم إلا أنهما لم يتحركا وامتنعا عن التنفيذ، فاضطرّ الطالب إلى إنذارهما على يد المحضر بتاريخ {{تاريخ_الإنذار_السابق}} ولكنهما لم يمتثلا، وبذلك تكون الجريمة الواردة بالمادة 2/123 عقوبات قد تحققت، ويحق للطالب والحالة هذه أن يدعي مدنياً بمبلغ 5001 جنيه على سبيل التعويض المؤقت.
+بناءً عليه أنا المحضر سالف الذكر قد أعلنت كلاً من المعلن إليهم بصورة من هذه الصحيفة مكلفاً الأول والثاني الحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} لكي يسمعا الحكم بطلبات المعلن إليه الثالث بعقابهما بالمادة 123 عقوبات وإلزامهما بأن يؤديا للطالب مبلغ 5001 جنيه على سبيل التعويض المؤقت والمصروفات ومقابل أتعاب المحاماة.
+لأنهما بتاريخ {{تاريخ_الجلسة}} بدائرة قسم {{قسم_الاختصاص}} امتنعا عن تنفيذ الحكم الموضّح بيانه بصدر الصحيفة رغم إنذارهما على يد محضر ورغم كون التنفيذ يدخل في اختصاصهما.
+ولأجل العلم /`
+  },
+  {
+    id: 20, cat: 'و', catName: 'الموظفون العامون',
+    title: 'جنحة إهانة شخص مكلف بخدمة عامة',
+    refs: ['م185 عقوبات','م303 عقوبات'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','وظيفة_الطالب','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_المعلن_اليه','عنوان_المعلن_اليه','اسم_المخاطب','نيابة_الاختصاص','تاريخ_الواقعة','وسيلة_الإهانة','العبارات_المسيئة','اسم_الجريدة','تاريخ_النشر','رقم_العدد','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة','قسم_الاختصاص'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} {{وظيفة_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:
+أولاً: السيد / {{اسم_المعلن_اليه}} المقيم {{عنوان_المعلن_اليه}} مخاطباً مع / {{اسم_المخاطب}}
+ثانياً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة
+الموضوع:
+الطالب يشغل منصب {{وظيفة_الطالب}} وهو بذلك شخص مكلّف بخدمة عامة، وبتاريخ {{تاريخ_الواقعة}} فُوجئ الطالب بالمعلن إليه الأول يتعدّى عليه بالإهانة عن طريق {{وسيلة_الإهانة}} بأن وجّه إليه {{العبارات_المسيئة}}.
+وقد قام الطالب بتحرير محضر بالواقعة، وحيث أن المعلن إليه الأول أهان الطالب حال كونه مكلّفاً بخدمة عمومية بما يُشكّل الجريمة المنصوص عليها بالمادتين 185 و303 عقوبات، ويحق للطالب أن يدعي مدنياً بطلب تعويض مؤقت دون انتظار ما سيسفر عنه التحقيق، وقد أُختصم المعلن إليه الثاني لتحريك الدعوى العمومية.
+بناءً عليه أنا المحضر سالف الذكر قد أعلنت المعلن إليه الأول بصورة من هذا وكلّفته الحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} لكي يسمع الحكم بطلبات الطالب والنيابة العامة بعقابه بالمادتين 185 و303 عقوبات وإلزامه بأن يؤدي للطالب مبلغ 5001 جنيه على سبيل التعويض المؤقت والمصروفات ومقابل أتعاب المحاماة.
+لأنه بتاريخ {{تاريخ_الواقعة}} بدائرة قسم {{قسم_الاختصاص}} أهان الطالب حال كونه مكلّفاً بخدمة عامة بأن وجّه إليه العبارات المشار إليها بصدر الصحيفة عن طريق {{وسيلة_الإهانة}}.
+ولأجل العلم /`
+  },
+  {
+    id: 21, cat: 'و', catName: 'الموظفون العامون',
+    title: 'جنحة إهانة موظف عام (م133 مكرر)',
+    refs: ['م133 مكرر عقوبات'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','وظيفة_الطالب','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_المعلن_اليه_الأول','عنوان_المعلن_اليه','اسم_المخاطب','نيابة_الاختصاص','تاريخ_الواقعة','قسم_الواقعة','وسيلة_الإهانة','العبارات_المسيئة','وظيفة_الطالب_تفصيل','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة','مبلغ_التعويض'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} {{وظيفة_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:\nأولاً: السيد / {{اسم_المعلن_اليه_الأول}} المقيم {{عنوان_المعلن_اليه}} مخاطباً مع / {{اسم_المخاطب}}\nثانياً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة\nالموضوع:\nبتاريخ {{تاريخ_الواقعة}} بدائرة قسم {{قسم_الواقعة}} قام المعلن إليه الأول بتوجيه الإهانة إلى الطالب عن طريق {{وسيلة_الإهانة}} بأن {{العبارات_المسيئة}} وذلك أثناء تأدية الطالب لوظيفته بصفته {{وظيفة_الطالب_تفصيل}}.\nولما كان ذلك وقد حدث من المعلن إليه الأول وكان الطالب أثناء تأدية وظيفته وبسببها وهو الذي يعمل موظفاً عمومياً بكونه {{وظيفة_الطالب_تفصيل}}.\nوحيث أن المعلن إليه الأول والأمر كذلك يكون قد ارتكب جريمة إهانة موظف عام المنصوص عليها في المادة 133 مكرراً من قانون العقوبات.\nولما كان الطالب قد أصابته العديد من الأضرار المادية والأدبية مما يحق معه أن يطالب بمبلغ {{مبلغ_التعويض}} جنيهاً على سبيل التعويض المؤقت عن تلك الأضرار.\nوقد تم إدخال السيد المعلن إليه الثاني بصفته صاحب الدعوى الجنائية بتوجيه الإتهام للمعلن إليه الأول.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت وأعلنت المعلن إليهما بصورة من هذه الصحيفة وكلفتهما الحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} بجلستها العلنية الساعة الثامنة صباحاً من يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} لكي يسمع المعلن إليه الأول الحكم عليه بالعقوبة المنصوص عليها في المادة 133 مكرراً من قانون العقوبات مع إلزامه بأن يؤدي للطالب مبلغ {{مبلغ_التعويض}} جنيهاً على سبيل التعويض المؤقت مع إلزامه المصروفات ومقابل أتعاب المحاماة.\nلأنه في يوم {{تاريخ_الواقعة}} بدائرة قسم {{قسم_الواقعة}} قام بإهانة الطالب حال كونه موظفاً عاماً أو أحد رجال الضبط أو شخصاً مكلفاً بخدمة عامة أو أحد أعضاء المحكمة القضائية أو الإدارية وذلك أثناء تأدية الوظيفة أو بسببها عن طريق {{وسيلة_الإهانة}}.\nوذلك مع حفظ كافة حقوق الطالب الأخرى.\nولأجل العلم /`
+  },
+  {
+    id: 22, cat: 'ج', catName: 'الأموال والممتلكات',
+    title: 'جنحة إتلاف عمد (م361)',
+    refs: ['م361 عقوبات'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_المعلن_اليه','عنوان_المعلن_اليه','اسم_المخاطب','نيابة_الاختصاص','تاريخ_الواقعة','قسم_الواقعة','وصف_المتلفات','وصف_فعل_الإتلاف','مبلغ_التعويض','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:\nأولاً: السيد / {{اسم_المعلن_اليه}} المقيم {{عنوان_المعلن_اليه}} مخاطباً مع / {{اسم_المخاطب}}\nثانياً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة\nالموضوع:\nبتاريخ {{تاريخ_الواقعة}} بدائرة قسم {{قسم_الواقعة}} قام المعلن إليه الأول بالتعدي عليه وإتلاف وتخريب {{وصف_المتلفات}} الخاص بالطالب وتم إجراء معاينة للمال محل جريمة الإتلاف والتخريب.\nولما كان ذلك وكان فيما أتاه المعلن إليه الأول ما يشكل جريمة الإتلاف المعاقب عليها قانوناً بالمادة 361 من قانون العقوبات.\nولما كانت هذه الأفعال التي أصابت المدعي بالحق المدني بأضرار مادية وأدبية لا يمكن تقديرها ويحق معها المطالبة بمبلغ {{مبلغ_التعويض}} جنيه على سبيل التعويض المدني.\nوكان الغرض من إعلان سيادة المعلن إليه الثاني هو كونه صاحب الحق في مباشرة الدعوى الجنائية وطلب عقاب المتهم وفقاً لما هو وارد بصحيفة الجنحة من قيود وأوصاف.\nبناءً عليه أنا المحضر سالف الذكر انتقلت إلى حيث إقامة المعلن إليه وسلمته صورة من هذه الصحيفة وكلفته الحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} الكائن مقرها بجلستها المنعقدة علناً في يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} من الساعة التاسعة صباحاً وما بعدها لكي يسمع المعلن إليه الأول طلبات النيابة العامة الحكم عليه بالعقوبة المنصوص عليها في المادة 361 من قانون العقوبات لأنه بتاريخ {{تاريخ_الواقعة}} بدائرة قسم {{قسم_الواقعة}} تعدى على الطالب مما نتج عنه إتلاف وتخريب {{وصف_المتلفات}} المملوكة للمواطن / {{اسم_الطالب}} والذي تزيد قيمته على خمسون جنيهاً.\nمع إلزام المعلن إليه الأول بأن يؤدي للطالب مبلغ {{مبلغ_التعويض}} جنيه على سبيل التعويض المدني مع الرجوع عليه في الرجوع مستقبلاً من تعويض وإلزامه بالمصروفات وأتعاب المحاماة، مع حفظ كافة حقوق الطالب الأخرى.\nولأجل العلم /`
+  },
+  {
+    id: 23, cat: 'و', catName: 'الموظفون العامون',
+    title: 'جنحة امتناع موظف عن تنفيذ حكم قضائي (م123)',
+    refs: ['م1و2/123 عقوبات'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_المعلن_اليه_الأول','صفته_الوظيفية','عنوانه','اسم_المعلن_اليه_الثاني','صفته_الوظيفية_الثاني','عنوانه_الثاني','نيابة_الاختصاص','رقم_الدعوى','سنة_الدعوى','اسم_محكمة_الحكم','تاريخ_الحكم','منطوق_الحكم','رقم_الاستئناف','تاريخ_الإنذار','مبلغ_التعويض','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة','قسم_الاختصاص'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:\nأولاً: السيد / {{اسم_المعلن_اليه_الأول}} {{صفته_الوظيفية}} المقيم {{عنوانه}} مخاطباً مع مسئول\nثانياً: السيد / {{اسم_المعلن_اليه_الثاني}} {{صفته_الوظيفية_الثاني}} المقيم {{عنوانه_الثاني}} مخاطباً مع مسئول\nثالثاً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة\nالموضوع:\nأقام الطالب ضد المدعو / {{اسم_المعلن_اليه_الأول}} الدعوى رقم {{رقم_الدعوى}} لسنة {{سنة_الدعوى}} أمام محكمة {{اسم_محكمة_الحكم}} وبتاريخ {{تاريخ_الحكم}} حصل الطالب على حكم لصالحه ضد المدعو / {{اسم_المعلن_اليه_الأول}}.\nوحيث أن الطالب قد التجأ إلى السلطة المختصة لتنفيذ هذا الحكم ممثلة في شخص (المعلن إليه الأول) لكون تنفيذ هذا الحكم داخلاً في اختصاصه الوظيفي والمكاني إلا أن المعلن إليه الأول ماطله في تنفيذ الحكم بدعوى عدم وجود قوة كافية لتنفيذ هذا الحكم وامتنع عن التنفيذ عن عمد الأمر الذي حدا بالطالب لأن ينذره قانونياً على يد محضر بتاريخ {{تاريخ_الإنذار}} بتنفيذ الحكم وإلا فللطالب الحق لإقامة الدعوى الجنائية المباشرة ضده باعتباره ممتنعاً عن تنفيذ حكم قضائي، إلا أن المعلن إليه الأول لم يمتثل ولم ينفذ هذا الحكم القضائي، ولما كان ذلك فإن ما أتاه المعلن إليه الأول يوفر في حقه أركان وعناصر الجريمة المنصوص عليها بالمادة 123 من قانون العقوبات وهي:\n١. أن يكون الممتنع موظفاً عمومياً ({{صفته_الوظيفية}}).\n٢. أن يكون محل الامتناع حكماً أو أمراً قضائياً صادر من المحكمة.\n٣. أن يكون تنفيذ الحكم أو الأمر داخلاً في اختصاص هذا الموظف.\n٤. أن يسبق إقامة الدعوى بثمانية أيام إنذار على يد محضر.\nولما كانت هذه الشروط الأربعة المكونة للجريمة قد توافرت في حق المعلن إليه الأول فمن ثم حق عقابه بالعقوبة المقررة بنص المادة 123 عقوبات.\nولما كان ذلك وكان فيما أتاه المعلن إليه الأول ما يشكل جريمة امتناع عن تنفيذ حكم قضائي المعاقب عليها قانوناً وكان في هذه الأفعال ما أصاب المدعي بالحق المدني بأضرار مادية وأدبية ومعنوية التي سببها المعلن إليه الأول له مما لا يمكن تقديرها حالياً فهو يدعى مدنياً بمبلغ {{مبلغ_التعويض}} جنيه على سبيل التعويض للرجوع عليه مستقبلاً.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت إلى حيث إقامة المعلن إليهما وسلمتهما صوراً من هذه الصحيفة مكلفاً الأول والثاني الحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} أمام الدائرة {{قسم_الاختصاص}} بجلستها التي ستنعقد علناً في يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} من الساعة التاسعة صباحاً وما بعدها للمرافعة ولكي يسمع المعلن إليه الأول طلبات المعلن إليه الثالث الحكم عليه بالآتي:\nأولاً: الحبس وفقاً لنصوص قانون العقوبات بالمادة 123 لأنه بتاريخ {{تاريخ_الإنذار}} بدائرة قسم {{قسم_الاختصاص}} امتنع عن عمد عن تنفيذ حكم قضائي داخلاً في حدود اختصاصه المكاني والوظيفي رغم إنذاره بالتنفيذ على يد محضر حال كونه المحضر المنوط به تنفيذ هذا الحكم.\nثانياً: لكي يسمع طلبات المدعي بالحق المدني بأن يؤدي له مبلغ {{مبلغ_التعويض}} جنيه مصري على سبيل التعويض المدني عن الأضرار المادية والأدبية والمعنوية التي سببها المعلن إليه الأول له مع إلزامه بالمصروفات وأتعاب المحاماة، مع حفظ كافة حقوق الطالب الأخرى.\nولأجل العلم /`
+  },
+  {
+    id: 24, cat: 'ج', catName: 'الأموال والممتلكات',
+    title: 'جنحة نصب واحتيال (م336)',
+    refs: ['م336 عقوبات'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_المعلن_اليه_الأول','عنوانه','اسم_المخاطب','نيابة_الاختصاص','قسم_الواقعة','تاريخ_الواقعة','ما_استولى_عليه','طريقة_النصب','مبلغ_التعويض','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:\nأولاً: السيد / {{اسم_المعلن_اليه_الأول}} المقيم {{عنوانه}} مخاطباً مع / {{اسم_المخاطب}}\nثانياً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة\nالموضوع:\nبدائرة قسم {{قسم_الواقعة}} وبتاريخ {{تاريخ_الواقعة}} كان الطالب ضحية للمعلن إليه الأول إذ تُوصل إلى الاستيلاء على {{ما_استولى_عليه}} وكان ذلك بـ {{طريقة_النصب}} ولما كان القانون قد نص على أن الطرق الاحتيالية تعد من وسائل النصب إلا أنه يجب أن يكون من شأنها الإيهام بوجود مشروع كاذب أو (٢) واقعة مزورة.\nوحيث أن المعلن إليه الأول بذلك يكون قد ارتكب جريمة النصب المنصوص عليها في المادة 336 عقوبات، وحيث أن الطالب قد أصابته من جراء ذلك إضراراً مادية وأدبية فيحق له أن يطالب بتعويض مؤقت بمبلغ {{مبلغ_التعويض}} جنيه.\nوحيث أن الغرض من اختصام المعلن إليه الثاني بصفته فذلك لتوجيه الاتهام إلى المعلن إليه الأول حيث أن النيابة العامة هي الأمينة على الدعوى الجنائية.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت في تاريخه أعلاه إلى حيث المعلن إليهما وسلمت لكل منهما صوره من أصل هذه الصحيفة وكلفتهما الحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} الجزئية الكائنة في {{قسم_الواقعة}} وذلك بجلستها التي سوف تنعقد علناً في تمام الساعة التاسعة من صباح يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} وذلك لكي يسمع المعلن إليه الأول طلبات المعلن إليه الثاني بتوقيع أقصى العقوبة المنصوص عليها في المادة 336 عقوبات وذلك لأنه في يوم {{تاريخ_الواقعة}} بدائرة قسم {{قسم_الواقعة}} توصل إلى الاستيلاء على {{ما_استولى_عليه}} المملوكة للطالب بطريق النصب بإحدى الطرق الاحتيالية الآتية {{طريقة_النصب}} وذلك بقصد الإضرار به.\nمع إلزامه بدفع مبلغ {{مبلغ_التعويض}} جنيه على سبيل التعويض المؤقت مع إلزامه المصاريف ومقابل أتعاب المحاماة، مع حفظ كافة حقوق الطالب الأخرى.\nولأجل العلم /`
+  },
+  {
+    id: 25, cat: 'ج', catName: 'الأموال والممتلكات',
+    title: 'جنحة خيانة أمانة (م341)',
+    refs: ['م341 عقوبات'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_المعلن_اليه_الأول','عنوانه','اسم_المخاطب','نيابة_الاختصاص','تاريخ_إيصال_الأمانة','وصف_المبلغ_أو_الشيء','اسم_المعلن_اليه_للتسليم','ادعاء_المعلن_اليه','مبلغ_التعويض','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة','قسم_الاختصاص'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:\nأولاً: السيد / {{اسم_المعلن_اليه_الأول}} المقيم {{عنوانه}} مخاطباً مع / {{اسم_المخاطب}}\nثانياً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة\nالموضوع:\nبموجب إيصال أمانة مؤرخ في {{تاريخ_إيصال_الأمانة}} بتوقيع المعلن إليه الأول سلم المعلن إليه الأول إليه الطالب الأول {{وصف_المبلغ_أو_الشيء}} لتسليمها للسيد / {{اسم_المعلن_اليه_للتسليم}} المقيم في ذات اليوم، إلا أن المعلن إليه الأول لم يقم بتسليم المبلغ وادعى {{ادعاء_المعلن_اليه}} ولما كان فعل المعلن إليه الأول يشكل جريمة خيانة الأمانة المنصوص عليها في المادة 341 عقوبات.\nولما كان الطالب قد أصابه بالغة من فعل المعلن إليه الأول لذلك فهو يدعى قبلة مبلغ {{مبلغ_التعويض}} جنية مصري على سبيل التعويض.\nولما كان الهدف من اختصام سيادة المعلن إليه الثاني بصفته هو لتحريك الدعوى العمومية قبل المعلن إليه الأول.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت إلى محل إقامة المعلن إليه أعلنته بصورة من هذا وكلفته الحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} الكائن مقرها بجلستها المنعقدة علناً في يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} الساعة الثامنة صباحاً ليسمع الحكم عليه بتوقيع أقصى العقوبات المنصوص عليها في المادة 341 عقوبات وإلزامه بأن يؤدي للطالب مبلغ {{مبلغ_التعويض}} جنيه على سبيل التعويض المؤقت مع إلزامه المصروفات ومقابل أتعاب المحاماة.\nلأنه في يوم {{تاريخ_إيصال_الأمانة}} بدائرة قسم {{قسم_الاختصاص}} بدّد نقود الطالب المحرر بها إيصال الأمانة المؤرخ في {{تاريخ_إيصال_الأمانة}} مما شكل جريمة تبديد الأمانة المعاقب عليها طبقاً لنص المادة 341 عقوبات، وذلك مع حفظ كافة حقوق الطالبة الأخرى.\nولأجل العلم /`
+  },
+  {
+    id: 26, cat: 'ج', catName: 'الأموال والممتلكات',
+    title: 'جنحة خيانة أمانة لورقة موقعة على بياض (م340)',
+    refs: ['م340 عقوبات'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_المعلن_اليه_الأول','عنوانه','اسم_المخاطب','نيابة_الاختصاص','تاريخ_الاستيقاع','وصف_الورقة_أو_الشيك','الغرض_من_الإيداع','فعل_الخيانة','مبلغ_التعويض','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة','قسم_الاختصاص'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:\nأولاً: السيد / {{اسم_المعلن_اليه_الأول}} المقيم {{عنوانه}} مخاطباً مع / {{اسم_المخاطب}}\nثانياً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة\nالموضوع:\nبتاريخ {{تاريخ_الاستيقاع}} أستوقع المعلن إليه الأول الطالب على {{وصف_الورقة_أو_الشيك}} وفاءً {{الغرض_من_الإيداع}} من المحل الخاص بالمعلن إليه، وقد قام الطالب بسداد كافة الأقساط الخاصة بهذا الجهاز وعندما طالبه بالشيك رفض تسليمه له بحجة فقدانه.\nألا أن الطالب فوجئ بتاريخ {{تاريخ_الاستيقاع}} فوجئ المعلن إليه يقدم هذا الشيك إلى بنك طالباً إعطائه شهادة تفيد عدم وجود رصيد للطالب، وكذلك قام برفع الجنحة المباشرة قبل الطالب بعد أن أضاف بالشيك مبلغ جنيه.\nولما كان فعل المعلن إليه الأول يشكل جريمة خيانة الأمانة في ورقة موقعة على بياض المعاقب عليها طبقاً للمادة 340 عقوبات، ولما كان فعل المعلن إليه قد أصاب الطالب بأضرار بالغة فهو يدعى إليه المعلن إليه بمبلغ {{مبلغ_التعويض}} جنيه على سبيل التعويض المؤقت، ولما كان الهدف من اختصام سيادة المعلن إليه الثاني بصفته لتحريك الدعوى العمومية قبل المعلن إليه الأول.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت إلى محل إقامة المعلن إليه وأعلنته بصورة من هذا وكلفته الحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} الكائن مقرها بشارع بجلستها العلنية الساعة الثامنة صباحاً في يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} الموافق ليسمع الحكم عليه في مادة (٣٤٠) عقوبات وإلزامه بأن يؤدى للطالبة مبلغاً وقدره {{مبلغ_التعويض}} جنيه على سبيل التعويض المؤقت مع إلزامه بالمصروفات ومقابل أتعاب المحاماة.\nلأنه في يوم {{تاريخ_الاستيقاع}} أستوقع إليه الأول الطالب على شيك على بياض وفاء للأقساط المتبقية له من شراء جهاز وقدم بطلب شهادة من بنك بعدم وجود رصيد للشيك المذكور مما شكل جريمة خيانة الأمانة لورقة موقعة على بياض المعاقب عليه قانوناً طبقاً لنص المادة (٣٤٠ع)، وذلك مع حفظ كافة حقوق الطالب الأخرى.\nولأجل العلم /`
+  },
+  {
+    id: 27, cat: 'ج', catName: 'الأموال والممتلكات',
+    title: 'جنحة تزوير وخيانة أمانة ورقة موقعة على بياض',
+    refs: ['م341 عقوبات','م215 عقوبات','م240 عقوبات','م39 عقوبات','م40 عقوبات'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_المعلن_اليه_الأول','عنوانه','اسم_المعلن_اليه_الثاني','عنوانه_الثاني','نيابة_الاختصاص','تاريخ_العقد','وصف_العقار','المبلغ_الإجمالي','تفاصيل_الدفعات','فعل_التزوير','مبلغ_التعويض','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:\nأولاً: السيد / {{اسم_المعلن_اليه_الأول}} المقيم {{عنوانه}} مخاطباً مع مسئول\nثانياً: السيد / {{اسم_المعلن_اليه_الثاني}} المقيم {{عنوانه_الثاني}} مخاطباً مع مسئول\nثالثاً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة\nالموضوع:\nبموجب عقد ابتدائي مؤرخ {{تاريخ_العقد}} محرر من {{اسم_المعلن_اليه_الثاني}} باع الطالب للمعلن إليه الأول العقار الكائن بجهة {{وصف_العقار}} والبالغ مساحته والمحدد الحدود والمعالم الآتية:\n١- الحد البحري /...... ٢- الحد الغربي /......\n٣- الحد الشرقي /...... ٤- الحد القبلي /......\nوذلك لقاء مبلغ إجمالي قدره {{المبلغ_الإجمالي}} جنيه ودفع المعلن إليه مبلغ جنيه للطالب وذلك على النحو التالي بند الثمن في اليوم التالي من تركه فراغ قرين بحيث كتب فيه المعلن إليه الأول أنه سدد كاملاً وذلك بعد أن يعطيه الباقي وقدره جنيه:\n{{تفاصيل_الدفعات}}\nوحيث أن الطالب فوجئ بصحيفة دعوى معلنة له من المعلن إليه الثاني من حيث قام فيها {{فعل_التزوير}} بتغيير الحقيقة في بند الثمن الموجود بالعقد وكتب في الفراغ أن الثمن سدد كاملاً.\nوحيث أنه قد نصت المادة 39 عقوبات على الآتي: من يرتكبها وحده أو مع غيره. وثانياً: من يدخل في ارتكابها إذا كانت تتكون من جملة أعمال فيأتي عمداً عمداً من الأعمال المكونة لها. ومع ذلك إذا وجدت أحوال خاصة بأحد الفاعلين تقتضي تغيير وصف الجريمة أو العقوبة بالنسبة له فلا تتعدى أثرها إلى غيره منهم وكذلك الحال إذا تغير الوصف باعتبار قصد مرتكب الجريمة أو كيفية علمه بها. كما نصت المادة 40 عقوبات: يعد شريكاً في الجريمة.\nوحيث أنه نصت المادة 215 عقوبات: كل شخص ارتكب تزويراً في محررات أحد الناس بواسطة إحدى الطرق السابق بيانها آو استعمال ورقة مـزورة وهـو عـالم بتزويرها يعاقب بالحبس. كما نصت المادة 240 عقوبات: كل من ائتمن على ورقة ممضاة أو مختومة على بياض وكتب في البياض الذي فوق الختم أو الإمضاء سند دين أو مخالصة أو غير ذلك من السندات والتمسكات التي يترتب عليها حصول ضرر لنفس صاحب الإمضاء أو الختم أو لماله عوقب بالحبس وبغرامة لا تجاوز خمسين جنيها مصرياً. وفي حالة ما إذا لم تكن الورقة الممضاة أو المختومة على بياض مسلمة إلى الخائن وإنما ستحصل عليها بأي طريقة كانت فإنه يعد مزوراً ويعاقب بعقوبة التزوير.\nوحيث أنه قد أضير الطالب من جراء هذا التصرف مما يحق له أن يدعى مدنياً بمبلغ {{مبلغ_التعويض}} جنيه على سبيل التعويض المؤقت عملاً بنص المادة 251 إجراءات التي تنص على الآتي: لمن لحقه ضرر من الجريمة أن يقيم نفسه مدعياً بحقوق مدنية أمام المحكمة المنظورة أمامها الدعوى الجنائية في أية حالة كانت عليها الدعوى حتى صدور القرار بإقفال باب المرافعة طبقاً للمادة 275 ولا يقبل منه ذلك أمام المحكمة الاستئنافية. ويحصل الادعاء مدنياً بإعلان المتهم على يد محضر أو بطلب في الجلسة إذا كان المتهم حاضراً وإلا وجب تأجيل الدعوى وتكليف الدعوى بإعلان المتهم بطلباته إليه. وقد تم ادخال سيادة المعلن إليه الثاني لتحريك الدعوى العمومية لذلك تم إدخال سيادته.\nوقد تم اختصام سيادة المعلن إليه الثالث لتحريك الدعوى العمومية لذلك تم إدخال سيادته.\nبناءً عليه أنا المحضر سالف الذكر قد أعلنت أعلنت المعلن إليهما بصورة من هذه الصحيفة وكلفت المعلن إليه الأول بالحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} بجلستها التي ستستعقد علناً في يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} الساعة الثامنة صباحاً:\nأولاً: بتوقيع أقصى العقوبة الواردة بالمادة 341 عقوبات.\nثانياً: وبأي يؤدى للطالب مبلغ {{مبلغ_التعويض}} جنيه على سبيل التعويض المؤقت.\nمع إلزام المعلن إليه الأول بالمصاريف ومقابل أتعاب المحاماة، مع حفظ كافة حقوق الطالب الأخرى.\nولأجل العلم /`
+  },
+  {
+    id: 28, cat: 'ج', catName: 'الأموال والممتلكات',
+    title: 'جنحة تبديد إيصال أمانة (م341)',
+    refs: ['م341 عقوبات'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_المعلن_اليه_الأول','عنوانه','نيابة_الاختصاص','تاريخ_إيصال_الأمانة','مبلغ_إيصال_الأمانة','اسم_المستلم','وصف_التبديد','مبلغ_التعويض','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة','قسم_الاختصاص'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:\nأولاً: السيد / {{اسم_المعلن_اليه_الأول}} المقيم {{عنوانه}} مخاطباً مع مسئول\nثانياً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة\nالموضوع:\nبموجب إيصال أمانة محرر في {{تاريخ_إيصال_الأمانة}} بتوقيع المعلن إليه الأول سلّم المعلن إليه الأول إليه الطالب الأول مبلغ {{مبلغ_إيصال_الأمانة}} لتسليمها للسيد / {{اسم_المستلم}} في ذات اليوم، إلا أن المعلن إليه الأول لم يقم بتسليم المبلغ المذكور وادعى عدم استلامه وكما أفاد السيد / {{اسم_المستلم}} بأنه لم يستلم المبلغ المذكور، ولما كان فعل المعلن إليه الأول يشكل جريمة خيانة الأمانة المنصوص عليها في المادة 341 عقوبات.\nولما كان الطالب قد أصابه بالغة من فعل المعلن إليه الأول لذلك فهو يدعى قبلة مبلغ {{مبلغ_التعويض}} جنية مصري على سبيل التعويض.\nولما كان الهدف من اختصام سيادة المعلن إليه الثاني بصفته هو لتحريك الدعوى العمومية قبل المعلن إليه الأول.\nبناءً عليه أنا المحضر سالف الذكر قد انتقلت إلى محل إقامة المعلن إليه وأعلنته بصورة من هذا وكلفته الحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} الكائن مقرها بجلستها المنعقدة علناً في يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} الساعة الثامنة صباحاً ليسمع الحكم عليه بتوقيع أقصى العقوبات المنصوص عليها في المادة 341 عقوبات وإلزامه بأن يؤدي للطالب مبلغ {{مبلغ_التعويض}} جنيه على سبيل التعويض المؤقت مع إلزامه المصروفات ومقابل أتعاب المحاماة.\nلأنه في يوم {{تاريخ_إيصال_الأمانة}} بدائرة قسم {{قسم_الاختصاص}} بدّد نقود الطالب المحرر بها إيصال الأمانة المؤرخ في {{تاريخ_إيصال_الأمانة}} مما شكل جريمة تبديد الأمانة المعاقب عليها طبقاً لنص المادة 341 عقوبات، وذلك مع حفظ كافة حقوق الطالبة الأخرى.\nولأجل العلم /`
+  },
+  {
+    id: 29, cat: 'ز', catName: 'منقولات الزوجية',
+    title: 'إنذار برد منقولات الزوجية (نموذج 12)',
+    refs: ['م341 عقوبات','م251 إجراءات جنائية'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالبة','عنوان_الطالبة','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_الزوج_المعلن_اليه','عنوانه','اسم_المخاطب','تاريخ_عقد_الزواج','تاريخ_تسليم_المنقولات','بيان_المنقولات','مدة_الإنذار'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيدة / {{اسم_الطالبة}} المقيمة {{عنوان_الطالبة}} ومحلها المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:
+السيد / {{اسم_الزوج_المعلن_اليه}} المقيم {{عنوانه}} مخاطباً مع / {{اسم_المخاطب}}
+الموضوع:
+الطالبة زوجه للمعلن إليه بصحيح العقد الشرعي المؤرخ {{تاريخ_عقد_الزواج}}، وقد قامت الطالبة بتسليم المعلن إليه منقولاتها بموجب القائمة المؤرخة في {{تاريخ_تسليم_المنقولات}} وبيانها كالتالي:
+{{بيان_المنقولات}}
+وحيث أن الطالبة تركت منزل الزوجية على أثر خلافات توشك أن تهدم علاقة الزوجية، وحيث أنها طالبت الزوج برد منقولاتها، فرفض دون مسوّغ، مما لا يسع الطالبة والحالة هذه سوى إنذار المنذر إليه وتكليفه برد منقولات الزوجية الموضّحة بقائمة المنقولات وصلب هذا الإنذار، وإلا ستضطر الطالبة إلى اتخاذ كافة الإجراءات القانونية، ومنها إقامة جنحة تبديد منقولات زوجية، وطلب التعويض المادي أو الأدبي إذا ما أصرّ على رفضه رد المنقولات.
+بناءً عليه أنا المحضر سالف الذكر قد انتقلت وأنذرت المنذر إليه بصورة من هذا وكلّفته برد المنقولات الموضحة بصلب هذا الإنذار خلال {{مدة_الإنذار}} أيام، وإلا ستضطر الطالبة إلى اتخاذ الإجراءات القانونية ضدّكم، ومنها إقامة جنحة تبديد منقولات زوجية، وطلب التعويض المدني عما أصاب الطالبة من أضرار نتيجة فعل المنذر إليه.
+مع حفظ كافة حقوق الطالبة الأخرى، ولأجل العلم /`
+  },
+  {
+    id: 30, cat: 'ز', catName: 'منقولات الزوجية',
+    title: 'إنذار بعرض منقولات الزوجية (نموذج 13)',
+    refs: ['م341 عقوبات'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الزوج_الطالب','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_الزوجة_المعلن_اليها','عنوانها','اسم_المخاطب','تاريخ_عقد_الزواج','تاريخ_تسليم_المنقولات','بيان_المنقولات','يوم_التسليم','تاريخ_التسليم','الساعة','القسم_أو_المركز'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الزوج_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:
+السيدة / {{اسم_الزوجة_المعلن_اليها}} المقيمة {{عنوانها}} مخاطباً مع / {{اسم_المخاطب}}
+الموضوع:
+المعلن إليها زوجة الطالب بصحيح العقد الشرعي المؤرخ {{تاريخ_عقد_الزواج}}، وقد قامت المعلن إليها بتسليم الطالب منقولاتها بموجب القائمة المؤرخة في {{تاريخ_تسليم_المنقولات}} وبيانها كالتالي:
+{{بيان_المنقولات}}
+وحيث أن المعلن إليها تركت منزل الزوجة على أثر خلافات توشك أن تهدم علاقة الزوجية، وحيث أن الطالب أبرياء لذمته فهو يعرض منقولات الزوجية الموضّحة بالإنذار على الزوجة وحدّد لها يوم {{يوم_التسليم}} الموافق {{تاريخ_التسليم}} الساعة {{الساعة}} أمام قسم / مركز شرطة {{القسم_أو_المركز}} لتستلم منقولاتها.
+بناءً عليه أنا المحضر سالف الذكر قد انتقلت وأنذرت المنذر إليها بصورة من هذا وكلّفتها بالحضور أمام قسم / مركز شرطة {{القسم_أو_المركز}} لتستلم منقولاتها وفي حالة تخلفها عن الحضور سيقوم الطالب بعمل محضر إثبات حالة لإثبات عرضه المنقولات على زوجته وإثبات تخلفها عن الحضور لاستلامها.
+ولأجل العلم /`
+  },
+  {
+    id: 31, cat: 'ز', catName: 'منقولات الزوجية',
+    title: 'جنحة تبديد منقولات زوجية (نموذج 14)',
+    refs: ['م341 عقوبات'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالبة','عنوان_الطالبة','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_الزوج_المعلن_اليه_الأول','عنوانه','نيابة_الاختصاص','تاريخ_عقد_الزواج','تاريخ_تسليم_المنقولات','بيان_المنقولات','مبلغ_التعويض','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة','قسم_الاختصاص'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيدة / {{اسم_الطالبة}} المقيمة {{عنوان_الطالبة}} ومحلها المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:
+أولاً: السيد / {{اسم_الزوج_المعلن_اليه_الأول}} المقيم {{عنوانه}} مخاطباً مع مسئول
+ثانياً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة
+الموضوع:
+الطالبة زوجة للمعلن إليه بصحيح العقد الشرعي المؤرخ {{تاريخ_عقد_الزواج}}، وقد قامت الطالبة بتسليم المعلن إليه منقولاتها بموجب القائمة المؤرخة في {{تاريخ_تسليم_المنقولات}} وبيانها كالتالي:
+{{بيان_المنقولات}}
+وحيث أن الطالبة تركت منزل الزوجية على أثر خلافات توشك أن تهدم علاقة الزوجية، وحيث أنها طالبت الزوج برد منقولاتها فرفض دون مسوّغ.
+وحيث أن فعل الزوج (امتناعه عن رد منقولات الزوجة) يعدّ جريمة تبديد منقولات الزوجية المنصوص عليها بالمادة 341 عقوبات.
+وحيث أن الطالبة قد أضيرت من فعل المعلن إليه الأول بإضرار مادية وأدبية تقدّرها الطالبة على سبيل التعويض المدني المؤقت بمبلغ {{مبلغ_التعويض}} جنيه فقط.
+وحيث أن المعلن إليه الثاني هو المهيمن على تحريك الدعوى الجنائية، فقد أدخلت الطالبة المعلن إليه الثاني ليقوم بمباشرة الدعوى الجنائية.
+بناءً عليه أنا المحضر سالف الذكر قد انتقلت وأعلنت المعلن إليه الأول والثاني كلاً بصورة من هذا وكلّفت المعلن إليه الأول بالحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} الكائنة بجلساتها المنعقدة علنا ابتداءً من الساعة الثامنة صباحاً يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} ليسمع المعلن إليه الأول الحكم:
+أولاً: بتوقيع أقصى العقوبة المنصوص عليها في المادة 341 عقوبات لأنه في يوم {{تاريخ_تسليم_المنقولات}} قام بتبديد منقولات الزوجية المسلمة إليه بموجب قائمة المنقولات المؤرخة في {{تاريخ_تسليم_المنقولات}} عارية الاستعمال بموجب قائمة المنقولات المؤرخة في ........../../../...
+ثانياً: بأن يؤدى مبلغ وقدره {{مبلغ_التعويض}} جنية على سبيل التعويض المدني المؤقت مع إلزام المعلن إليه الأول بالمصاريف ومقابل أتعاب المحاماة.
+مع حفظ كافة حقوق الطالبة الأخرى، ولأجل العلم /`
+  },
+  {
+    id: 32, cat: 'ز', catName: 'منقولات الزوجية',
+    title: 'جنحة مباشرة ضد حارس بدل أشياء محجوزة (نموذج 15)',
+    refs: ['م342 عقوبات'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_الحارس_المعلن_اليه','عنوانه','اسم_المعلن_اليه_الثاني_النيابة','نيابة_الاختصاص','تاريخ_الحجز','رقم_الحكم','سنة_الحكم','وصف_المنقولات_المحجوزة','يوم_تعيين_الحارس','تاريخ_تعيين_الحارس','يوم_البيع_المحدد','تاريخ_اختلاس_المنقولات','قسم_الواقعة','مبلغ_التعويض','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:
+أولاً: السيد / {{اسم_الحارس_المعلن_اليه}} المقيم {{عنوانه}} مخاطباً مع مسئول
+ثانياً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة
+الموضوع:
+بتاريخ {{تاريخ_الحجز}} أوقع الطالب حجزاً تنفيذياً للحكم رقم {{رقم_الحكم}} لسنة {{سنة_الحكم}} على المنقولات المبينة وصفاً وقيمة بمحضر الحجز.
+وقد عُيّن المعلن إليه الأول حارساً عليها وقد تحدد يوم {{يوم_تعيين_الحارس}} الموافق {{تاريخ_تعيين_الحارس}} ميعاداً لبيعها، وفي اليوم المحدد للبيع تصرّف المعلن إليه الأول في بعض المنقولات أو في كل المنقولات المحجوز عليها.
+وحيث أن ما قام به المعلن إليه الأول يُشكّل الجريمة المنصوص عليها بالمادة 342 عقوبات.
+وحيث أن الطالب قد أصيب بأضرار مادية وأدبية فأنه والحالة هذه يدعى مدنياً قِبَل المعلن إليه بمبلغ {{مبلغ_التعويض}} جنيه على سبيل التعويض المؤقت فيما يراه مستقبلاً، هذا وأن الغرض من إعلان السيد الأستاذ / المعلن إليه الثاني هو تحريك الدعوى الجنائية قِبَل المتهم وطلب محاكمته بمادة الاتهام سالفة الذكر.
+بناءً عليه أنا المحضر سالف الذكر قد أعلنت المعلن إليهما وسلمت كل منهما صورة من هذا وكلّفتهما بالحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} الجزئية الكائنة مقرها بجلستها التي ستنعقد علنا في يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} من الساعة الثامنة صباحاً وما بعدها لسماع المعلن إليه الأول طلبات النيابة العامة بتوقيع أقصى العقوبة المنصوص عليها بالمادة 342 عقوبات، لأنه بتاريخ {{تاريخ_اختلاس_المنقولات}} بدائرة قسم {{قسم_الواقعة}} اختلس المنقولات المحجوز عليها حال كونها محجوزة مرتكباً بذلك الجريمة المنصوص عليها في المادة 342 عقوبات، مع إلزامه بالمصروفات.
+ولأجل العلم /`
+  },
+  {
+    id: 33, cat: 'ح', catName: 'التزوير والمحررات',
+    title: 'جنحة تزوير إيصال أمانة (نموذج 16)',
+    refs: ['م215 عقوبات','م251 إجراءات جنائية','م201 إجراءات جنائية'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_المعلن_اليه_الأول','عنوانه','اسم_المخاطب','نيابة_الاختصاص','رقم_الجنحة_المباشرة','سنة_الجنحة','اسم_محكمة_الجنحة','المبلغ_المدّعى_به','تاريخ_جلسة_الجنحة_الأصلية','رقم_تقرير_الطب_الشرعي','تاريخ_التقرير','مبلغ_التعويض','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة','قسم_الاختصاص'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:
+أولاً: السيد / {{اسم_المعلن_اليه_الأول}} المقيم {{عنوانه}} مخاطباً مع / {{اسم_المخاطب}}
+ثانياً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة
+الموضوع:
+أقام المعلن إليه الأول ضد الطالب الجنحة المباشرة رقم {{رقم_الجنحة_المباشرة}} لسنة {{سنة_الجنحة}} أمام محكمة جنح {{اسم_محكمة_الجنحة}} يتهمه فيها بأنه تسلّم منه مبلغ وقدره {{المبلغ_المدّعى_به}} جنيه بموجب إيصال أمانة وقام بتبديد المبلغ ولم يرده، وقد حدّدت الجنحة جلسة {{تاريخ_جلسة_الجنحة_الأصلية}}.
+وبجلسة {{تاريخ_جلسة_الجنحة_الأصلية}} طعن الطالب على الإيصال موضوع الجنحة بالتزوير صلباً وتوقيعاً وأُحيلت الدعوى إلى النيابة العامة لاتخاذ شئونها في شأن واقعة التزوير وتم استكتاب الطالب وقُدِّم مستندات مكتوبة وموقعة بخط يده من الطالب وخلص تقرير خبير الطب الشرعي رقم {{رقم_تقرير_الطب_الشرعي}} المؤرخ {{تاريخ_التقرير}} إلى النتيجة الآتية:
+١. أن الطالب لم يحرر التوقيع المنسوب إليه الصادر صدوره عليه أسفل لفظ التوقيع المزيل لعبارات إيصال الأمانة غير المؤرخ موضوع الفحص.
+٢. أن الطالب لم يحرر عبارات صلب الإيصال غير المؤرخ موضوع الفحص.
+وقد أُعيدت الدعوى مرة أخرى للمحكمة بعد الانتهاء من وضع التقرير الذي انتهت معه المحكمة إلى صدور حكمها ببراءة المتهم (الطالب)، وحيث أن النيابة العامة لم تُحرك جنحة التزوير ضد المعلن إليه الأول وإعمالاً لنص المادة (201،251 م) من قانون الإجراءات الجنائية أن يُقيم الطالب دعواه بطريق الادعاء المباشر.
+وحيث أن هذه هي واقعات الدعوى المتمثلة في فعل التزوير، واستعمال الإيصال المزور مع علم المعلن إليه الأول بأن هذا الإيصال مزور وغير صحيح ومع ذلك أظهره وتمسّك بالمطالبة بقيمته كما لو كان صحيحاً وكان ذلك بغيّة الإضرار بالطالب مع سوء القصد والعمدي الإضرار به فهو ما يوفر أركان جريمة التزوير واستعمال محرر مزور عملاً بالمادة 215 عقوبات.
+ولما كان الطالب وكان كذلك قد أصيب بأضرار مدية وأدبية لا يمكن أن يقدّرها بأي حال من الأحوال ولحين الثبات على عناصر التقدير النهائي للتعويض بأقل من مبلغ {{مبلغ_التعويض}} جنيه على سبيل التعويض.
+ولما كان الغرض من اختصام سيادة المعلن إليه الثاني هو كونه صاحب الحق في مباشرة الدعوى الجنائية وطلب عقاب المتهم وفقاً لما هو وارد بصحيفة الدعوى.
+بناءً عليه أنا المحضر سالف الذكر قد انتقلت إلى حيث إقامة المعلن إليهما وسلمتهما صوراً من هذه الصحيفة وكلّفتهما بالحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} الكائنة مقرها بجلستها التي ستنعقد علناً في يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} من الساعة التاسعة صباحاً وما بعدها للمرافعة ولسماع الحكم بالآتي:
+أولاً: طلبات النيابة العامة الحكم عليه بالحبس مع الشغل بنص المادة 215 عقوبات، لأنه بدائرة قسم {{قسم_الاختصاص}} بتاريخ ..../..../.... قام بتزوير إيصال أمانة المقدم في الجنحة رقم {{رقم_الجنحة_المباشرة}} لسنة {{سنة_الجنحة}} جنح {{اسم_محكمة_الجنحة}} وقام باستعمال إيصال الأمانة المزور مع علمه بتزويره كسند للجنحة سالفة الذكر ونسب صدوره كذباً للطالب بغرض الإضرار به وتمسّكه بأحقيّته لقيمة الإيصال المزور.
+ثانياً: طلبات المدعي بالحق المدني بإلزام المعلن إليه الأول بالتعويض المسدعى به وإلزامه بالمصروفات والأتعاب، مع حفظ كافة حقوق الطالب الأخرى.
+ولأجل العلم /`
+  },
+  {
+    id: 34, cat: 'ح', catName: 'التزوير والمحررات',
+    title: 'جنحة تزوير واستعمال محرر مزور (نموذج 17)',
+    refs: ['م215 عقوبات'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_المعلن_اليه_الأول','عنوانه','نيابة_الاختصاص','قسم_الواقعة','تاريخ_الواقعة','رقم_الجنحة','سنة_الجنحة','اسم_محكمة_الجنحة_الأصلية','اسم_البنك','فرع_البنك','مبلغ_الشيك','تاريخ_الاستحقاق','تاريخ_جلسة_الطعن','نتيجة_التقرير','مبلغ_التعويض','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة','قسم_الاختصاص'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:
+أولاً: السيد / {{اسم_المعلن_اليه_الأول}} المقيم {{عنوانه}} مخاطباً مع مسئول
+ثانياً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة
+الموضوع:
+بتاريخ {{تاريخ_الواقعة}} وبدائرة قسم شرطة {{قسم_الواقعة}} أقام المعلن إليه الأول ضد الطالب الجنحة رقم {{رقم_الجنحة}} لسنه {{سنة_الجنحة}} جنح {{اسم_محكمة_الجنحة_الأصلية}} على سند من القول بأن الطالب قد أصدر إليه شيكاً مسحوباً على بنك {{اسم_البنك}} فرع {{فرع_البنك}} مستحق السداد في {{تاريخ_الاستحقاق}}.
+وبجلسة {{تاريخ_جلسة_الطعن}} طعن الطالب على الشيك موضوع الجنحة بالتزوير صلباً وتوقيعاً وأُحيلت الدعوى إلى النيابة العامة لاتخاذ شئونها في شأن واقعة التزوير والتزييف وتم استكتاب الطالب وخلص تقرير أبحاث التزييف والتزوير إلى أن الطالب ليس هو المحرر له أو الموقع عليه وبذلك قضى ببراءة الطالب.
+وحيث إن ما أتاه المعلن إليه الأول يُشكّل جريمة تزوير واستعمال محرر مزور وهي الجريمة المؤثَّمة بنص المادة 215 عقوبات والتي يجري نصها: كل شخص زوّر في محررات أحد الناس بواسطة إحدى الطرق السابق بيانها أو استعمل ورقة مزورة وهو عالم بتزويرها يعاقب بالحبس.
+وحيث أن الطالب قد أصيب بأضرار مادية وأدبية يقدّرها على سبيل التعويض المؤقت بمبلغ {{مبلغ_التعويض}}.
+وحيث أن الغرض من إعلان السيد المعلن إليه الثاني بصفته المنوط به مباشرة الدعوى الجنائية بعد تحريكها بالطريق المباشر.
+بناءً عليه أنا المحضر سالف الذكر قد انتقلت إلى حيث إقامة المعلن إليهما وسلمتهما صوراً من هذا وكلّفتهما الحضور أمام محكمة جنح {{اسم_محكمة_الجنح}} الكائنة مقرها بجلستها التي ستنعقد علناً في يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} من الساعة التاسعة صباحاً وما بعدها للمرافعة ولسماع الحكم بالآتي:
+وما بعدها للمرافعة ولسماع الحكم بتوقيع أقصى عقوبة نصت عليها المادة 215 من قانون العقوبات لأنه في يوم {{تاريخ_الواقعة}} وبدائرة قسم {{قسم_الاختصاص}} استعمل ضد الطالب ورقة مزورة وهو عالم بتزويرها.
+طلبات المدعي بالحق المدني بإلزام المعلن إليه الأول بالتعويض المسدعى به وإلزامه بالمصروفات والأتعاب، مع حفظ كافة حقوق الطالب الأخرى.
+ولأجل العلم /`
+  },
+  {
+    id: 35, cat: 'ح', catName: 'التزوير والمحررات',
+    title: 'جنحة تزوير في اعلام وراثة (نموذج 18)',
+    refs: ['م226 عقوبات'],
+    vars: ['يوم_الأسبوع','التاريخ','اسم_الطالب','عنوان_الطالب','اسم_المحامي','رقم_مكتب_المحامي','اسم_المحضر','اسم_المعلن_اليه_الأول','عنوانه','اسم_المخاطب','نيابة_الاختصاص','اسم_المتوفى','نسبة_المتوفى','تاريخ_الواقعة','قسم_الواقعة','ما_فعله_المعلن_اليه','ما_أغفله','تفاصيل_الإعلام_المزور','مبلغ_التعويض','اسم_محكمة_الجنح','يوم_الجلسة','تاريخ_الجلسة'],
+    template: `أنه في يوم {{يوم_الأسبوع}} الموافق {{التاريخ}} بناءً على طلب السيد / {{اسم_الطالب}} المقيم {{عنوان_الطالب}} ومحله المختار مكتب الأستاذ / {{اسم_المحامي}} المحامي برقم {{رقم_مكتب_المحامي}} أنا {{اسم_المحضر}} محضر المحكمة انتقلت في تاريخه وأعلنت:
+أولاً: السيد / {{اسم_المعلن_اليه_الأول}} المقيم {{عنوانه}} مخاطباً مع / {{اسم_المخاطب}}
+ثانياً: السيد / مدير نيابة {{نيابة_الاختصاص}} ويُعلن سيادته بسراي النيابة
+الموضوع:
+بتاريخ {{تاريخ_الواقعة}} وبدائرة قسم {{قسم_الواقعة}} قام المعلن إليه الأول باستخراج إعلام شرعي وراثة باسم المرحوم / {{اسم_المتوفى}} {{نسبة_المتوفى}}، ولكن قام بالتزوير في ذلك المحرر في أنه {{ما_فعله_المعلن_اليه}} ، مع أنه أحد الورثة الشرعيين أو ذكر أسماء، كورثة شرعيين خلاف الحقيقة بهدف عدم استحقاقه لنصيبه من التركة التي هي عبارة عن (.........) أو (بهدف تمكين الآخرين من الحصول على مال ليس من حقهم شرعاً).
+وحيث أن المعلن إليه الأول والأمر كذلك يكون قد ارتكب جريمة التزوير في الإعلام الشرعي المنصوص عليها في المادة 226 من قانون العقوبات.
+ولما كان الطالب قد أصابته العديد من الأضرار المادية والأدبية مما يحق معه أن يطالب بمبلغ {{مبلغ_التعويض}} جنيها على سبيل التعويض المؤقت عن تلك الأضرار.
+وقد تم ادخال السيد المعلن إليه الثاني بصفته صاحب الدعوى الجنائية بتوجيه الاتهام للمعلن إليه الأول.
+بناءً عليه أنا المحضر سالف الذكر قد انتقلت وأعلنت المعلن إليهما بصورة من هذه الصحيفة وكلّفتهما بالحضور أمام محكمة {{اسم_محكمة_الجنح}} الكائنة بجلستها التي سستعقد علنا في يوم {{يوم_الجلسة}} الموافق {{تاريخ_الجلسة}} لكي يسمع المعلن إليه الأول الحكم عليه بالعقوبة المنصوص عليها بالمادة 226 من قانون العقوبات وذلك لأنه في يوم {{تاريخ_الواقعة}} وبدائرة قسم {{قسم_الواقعة}} قد قرر في اجراءات {{تفاصيل_الإعلام_المزور}} أقوالاً غير صحيحة عن الوراثة والوصية الواجبة أمام السلطات المختصة بأخذ الإعلام الشرعي وضبط الوقائع المرغوب إثباتها وهو يعلم أنها غير صحيحة أو يجهل حقيقتها وضبط الإعلام الشرعي على أساس هذه الأقوال.
+مع إلزام المعلن إليه الأول بأن يؤدى للطالب مبلغ {{مبلغ_التعويض}} جنيها على سبيل التعويض المؤقت والمصاريف ومقابل اتعاب المحاماة، ولأجل العلم /`
+  },
+];
+
+const CATS = [
+  { id: 'أ', name: 'أ — اعتداء على الأشخاص' },
+  { id: 'ب', name: 'ب — النشر والصحافة' },
+  { id: 'ج', name: 'ج — الأموال والممتلكات' },
+  { id: 'د', name: 'د — الشعائر الدينية والمقدسات' },
+  { id: 'هـ', name: 'هـ — حرية الأشخاص' },
+  { id: 'و', name: 'و — الموظفون العامون' },
+  { id: 'ز', name: 'ز — منقولات الزوجية' },
+  { id: 'ح', name: 'ح — التزوير والمحررات' },
+];
+// ===================== SIDEBAR =====================
+function buildSidebar(filter='') {
+  const cg = document.getElementById('catGroup');
+  cg.innerHTML = '';
+  const f = filter.trim().toLowerCase();
+  CATS.forEach(cat => {
+    const items = TEMPLATES.filter(t => t.cat === cat.id && (f==='' || t.title.includes(f)));
+    if(!items.length) return;
+    const lbl = document.createElement('div');
+    lbl.className='cat-label'; lbl.textContent = cat.name;
+    cg.appendChild(lbl);
+    items.forEach(t => {
+      const d = document.createElement('div');
+      d.className='tmpl-item' + (currentTmpl&&currentTmpl.id===t.id?' active':'');
+      d.id='tmpl-'+t.id;
+      d.innerHTML=`<span class="tmpl-num">${String(t.id).padStart(2,'0')}</span><span>${t.title}</span>`;
+      d.onclick=()=>loadTemplate(t.id);
+      cg.appendChild(d);
+    });
+  });
+}
+function filterTemplates(val){ buildSidebar(val); }
+
+// ===================== TEMPLATE LOAD =====================
+let currentTmpl = null;
+function loadTemplate(id) {
+  currentTmpl = TEMPLATES.find(t=>t.id===id);
+  if(!currentTmpl) return;
+  document.querySelectorAll('.tmpl-item').forEach(el=>el.classList.remove('active'));
+  const el = document.getElementById('tmpl-'+id);
+  if(el){ el.classList.add('active'); el.scrollIntoView({block:'nearest'}); }
+  document.getElementById('emptyState').style.display='none';
+  document.getElementById('formArea').style.display='flex';
+  document.getElementById('outputArea').classList.remove('show');
+  document.getElementById('infoTitle').textContent = currentTmpl.title.slice(0,18)+'…';
+  document.getElementById('infoSection').textContent = currentTmpl.catName;
+  document.getElementById('infoFields').textContent = currentTmpl.vars.length + ' حقل';
+  document.getElementById('infoStatus').textContent='جاهز للإدخال';
+  document.getElementById('infoStatus').className='info-val active';
+  document.getElementById('aiMsg').textContent=`جاهز لتوليد «${currentTmpl.title}» — أدخل البيانات واضغط توليد.`;
+  resetSteps();
+  buildForm(currentTmpl);
+  mobShowForm();
+}
+
+function buildForm(tmpl) {
+  const fa = document.getElementById('formArea');
+  fa.innerHTML = '';
+  const hdr = document.createElement('div');
+  hdr.className='form-header';
+  hdr.innerHTML=`
+    <div class="form-badge">◈ صيغة رقم ${tmpl.id} · ${tmpl.catName.toUpperCase()}</div>
+    <div class="form-title">${tmpl.title}</div>
+    ${tmpl.refs.length?`<div class="form-refs">${tmpl.refs.map(r=>`<span class="form-ref">${r}</span>`).join('')}</div>`:''}
+  `;
+  fa.appendChild(hdr);
+  const grid = document.createElement('div');
+  grid.className='fields-grid';
+  const longFields = ['ملابسات_الحبس','ملابسات_التعطيل','وصف_فعل_الإتلاف','تفاصيل_التعطيل','تفاصيل_الإزعاج','العبارات_الشائنة','العبارات_المسيئة','وصف_التخريب','وصف_الانتهاك','الوقائع_المنشورة','ما_تم_نشره','منطوق_الحكم'];
+  tmpl.vars.forEach(v => {
+    const grp = document.createElement('div');
+    const isLong = longFields.includes(v);
+    grp.className='field-group'+(isLong?' full':'');
+    const lbl = v.replace(/_/g,' ');
+    grp.innerHTML=`<label class="field-label">${lbl}</label>`;
+    if(isLong){
+      grp.innerHTML+=`<textarea class="field-input" id="field-${v}" placeholder="${lbl}..."></textarea>`;
+    } else {
+      grp.innerHTML+=`<input class="field-input" id="field-${v}" type="text" placeholder="${lbl}..." autocomplete="off">`;
+    }
+    grid.appendChild(grp);
+  });
+  fa.appendChild(grid);
+  const btn = document.createElement('button');
+  btn.className='gen-btn'; btn.id='genBtn';
+  btn.innerHTML='⚡ توليد الصيغة';
+  btn.onclick=generateDocument;
+  fa.appendChild(btn);
+}
+
+// ===================== GENERATION =====================
+async function generateDocument() {
+  if(!currentTmpl) return;
+  await ensureSubscriptionChecked();
+  if (checkTrial() && !isUserSubscribed) { showPaywall(); return; }
+  const btn = document.getElementById('genBtn');
+  btn.disabled=true; btn.textContent='⟳ جارٍ التوليد...';
+  const vals = {};
+  currentTmpl.vars.forEach(v => {
+    const el = document.getElementById('field-'+v);
+    vals[v] = el ? el.value.trim() : '';
+  });
+  const empty = currentTmpl.vars.filter(v => !vals[v]);
+  if(empty.length > 0) {
+    document.getElementById('aiMsg').textContent = `يرجى تعبئة الحقول التالية: ${empty.slice(0,3).map(v=>v.replace(/_/g,' ')).join('، ')}${empty.length>3?` وغيرها (${empty.length-3} حقل)`:''}.`;
+    btn.disabled=false; btn.innerHTML='⚡ توليد الصيغة';
+    return;
+  }
+  let filledTemplate = currentTmpl.template;
+  currentTmpl.vars.forEach(v => {
+    filledTemplate = filledTemplate.split(`{{${v}}}`).join(vals[v]);
+  });
+  const outArea = document.getElementById('outputArea');
+  const outBox = document.getElementById('outputBox');
+  outArea.classList.add('show');
+  outBox.className='output-box generating';
+  outBox.textContent='';
+  outArea.scrollIntoView({behavior:'smooth', block:'start'});
+  animateSteps();
+  document.getElementById('infoStatus').textContent='جارٍ التوليد...';
+  document.getElementById('infoStatus').className='info-val cyber';
+  try {
+    const result = filledTemplate;
+    outBox.className='output-box';
+    await typeText(outBox, result);
+    document.getElementById('infoStatus').textContent='✓ مكتمل';
+    document.getElementById('infoStatus').className='info-val active';
+    document.getElementById('aiMsg').textContent='✓ تم توليد الصيغة بنجاح.';
+    finishSteps();
+    markUsed();
+  } catch(err) {
+    outBox.className='output-box';
+    await typeText(outBox, filledTemplate);
+    document.getElementById('infoStatus').textContent='✓ مكتمل (محلي)';
+    document.getElementById('infoStatus').className='info-val active';
+    finishSteps();
+    markUsed();
+  }
+  btn.disabled=false;
+  btn.innerHTML='⚡ إعادة التوليد';
+}
+
+async function typeText(el, text) {
+  renderFormatted(el, text);
+  const cursor = document.createElement('span');
+  cursor.className='cursor-blink';
+  el.appendChild(cursor);
+  await sleep(800);
+  cursor.remove();
+}
+
+function renderFormatted(el, text) {
+  el.innerHTML = '';
+  el.style.whiteSpace = 'normal';
+  const lines = text.split(/\n+/).map(l => l.trim()).filter(l => l.length > 0);
+  lines.forEach((line, idx) => {
+    const delay = (idx * 0.08).toFixed(2) + 's';
+    if (/^ولأجل العلم/.test(line)) {
+      const closing = document.createElement('p');
+      closing.style.cssText = `text-align:center; font-weight:900; color:var(--gold); font-size:15px; margin-top:24px; border-top:1px solid rgba(146,98,12,0.2); padding-top:16px; animation-delay:${delay}; text-indent:0;`;
+      closing.textContent = line;
+      el.appendChild(closing);
+      return;
+    }
+    if (/^بناءً عليه|^بناء عليه/.test(line)) {
+      const divider = document.createElement('p');
+      divider.style.cssText = `font-weight:900; color:var(--gold-soft); margin-top:8px; animation-delay:${delay}; text-indent:0;`;
+      divider.textContent = line;
+      el.appendChild(divider);
+      return;
+    }
+    if (/^أولاً|^ثانياً|^ثالثاً|^رابعاً/.test(line)) {
+      const p = document.createElement('p');
+      p.style.cssText = `font-weight:700; color:var(--cyber); animation-delay:${delay}; text-indent:0;`;
+      p.textContent = line;
+      el.appendChild(p);
+      return;
+    }
+    const para = document.createElement('p');
+    para.style.animationDelay = delay;
+    para.textContent = line;
+    el.appendChild(para);
+  });
+}
+
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+function copyOutput() {
+  const box = document.getElementById('outputBox');
+  const text = Array.from(box.querySelectorAll('p')).map(p=>p.textContent).join('\n\n');
+  navigator.clipboard.writeText(text).then(()=>{
+    document.getElementById('aiMsg').textContent='✓ تم النسخ إلى الحافظة.';
+  });
+}
+function printOutput() {
+  const box = document.getElementById('outputBox');
+  const text = Array.from(box.querySelectorAll('p')).map(p=>p.textContent).join('\n\n');
+  const w = window.open('','_blank');
+  w.document.write(`<html dir="rtl"><head><meta charset="UTF-8"><style>body{font-family:'Cairo',Arial,sans-serif;font-size:15px;line-height:2.2;padding:60px;direction:rtl;text-align:justify;color:#2A2A2E;}p{margin-bottom:18px;text-indent:2em;}@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');</style></head><body><pre style="white-space:pre-wrap;font-family:inherit;">${text}</pre>
+`);
+  w.document.close();
+  w.print();
+}
+
+buildSidebar();
+
+// ===================== PAYWALL LOGIC =====================
+const SECTION_KEY = 'legista_used_junah';
+
+function checkTrial() { return localStorage.getItem(SECTION_KEY) === '1'; }
+function markUsed()   { localStorage.setItem(SECTION_KEY, '1'); }
+function showPaywall(){
+  const ov = document.getElementById('paywallOverlay');
+  ov.style.display='flex';
+  setTimeout(()=>ov.style.opacity='1',10);
+}
+function closePaywall(){ const ov=document.getElementById('paywallOverlay'); ov.style.opacity='0'; setTimeout(()=>ov.style.display='none',300); }
+// MOBILE
+function isMobile(){ return window.innerWidth <= 768; }
+function mobShowForm(){
+  if(!isMobile()) return;
+  document.querySelector('.tmpl-sidebar').classList.add('mob-hidden');
+  document.querySelector('.workspace-center').classList.add('mob-visible');
+  document.getElementById('mobBackBtn').classList.add('show');
+}
+function mobShowSidebar(){
+  if(!isMobile()) return;
+  document.querySelector('.tmpl-sidebar').classList.remove('mob-hidden');
+  document.querySelector('.workspace-center').classList.remove('mob-visible');
+  document.getElementById('mobBackBtn').classList.remove('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+<!-- PAYWALL OVERLAY -->
+
+
+<div id="legistaToast" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#EEF2F7;color:#fff;padding:12px 22px;border-radius:10px;font-size:13px;font-weight:700;font-family:Cairo,sans-serif;z-index:99998;opacity:0;pointer-events:none;transition:opacity .25s, transform .25s;"></div>
+
+<script src="../js/social.js"></script>
+<script>(function(){var S=window.Social;try{S.mountNav(document.getElementById("navSlot"));}catch(e){}if(!S||!S.me()){document.body.classList.add("tool-locked");var g=document.getElementById("toolGate");if(g)g.hidden=false;}})();</script>
+</body>
+</html>
