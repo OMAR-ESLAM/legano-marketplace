@@ -12,13 +12,22 @@ function same(a, b) {
 }
 const rpc = (fn, body) => fetch(`${SU}/rest/v1/rpc/${fn}`, { method: 'POST', headers: { apikey: SK, Authorization: 'Bearer ' + SK, 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal: AbortSignal.timeout(6000) });
 
+const T = (x, n) => String(x == null ? '' : x).slice(0, n);
+const AD = {
+  disp: (A, s) => ({ title: '⚠️ نزاع على استشارة: محتاج قرارك', body: `${T(A.client || 'موكل', 30)} مع ${T(A.lawyer || 'محامي', 40)} • ${Number(A.price) || 0} ج`, url: '/admin.html', tag: 'disp-' + (s && s.id), urgent: true }),
+  vr: (A, s) => ({ title: '🪪 طلب توثيق جديد', body: `${T(A.lawyer || 'محامي', 40)} مستني مراجعة القيد`, url: '/admin.html', tag: 'vr-' + (s && s.id), urgent: true }),
+  lawyer: (A, s) => ({ title: '👤 محامي جديد سجّل', body: T(A.lawyer || 'حساب جديد على المنصة', 60), url: '/admin.html', tag: 'law-' + (s && s.id), urgent: false }),
+  rep: (A, s) => ({ title: '🚩 بلاغ جديد', body: 'فيه بلاغ على محتوى محتاج مراجعتك', url: '/admin.html', tag: 'rep-' + (s && s.id), urgent: false }),
+  doc: (A, s) => ({ title: '📄 طلب مستند جديد', body: `${T(A.title || 'مستند', 50)} • ${Number(A.price) || 0} ج`, url: '/admin.html', tag: 'adoc-' + (s && s.id), urgent: false }),
+  ddisp: (A, s) => ({ title: '⚠️ نزاع على مستند: محتاج قرارك', body: `${T(A.title || 'مستند', 50)} • ${Number(A.price) || 0} ج`, url: '/admin.html', tag: 'ddisp-' + (s && s.id), urgent: true })
+};
 module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   const secret = process.env.PUSH_SECRET, pub = process.env.VAPID_PUBLIC_KEY, priv = process.env.VAPID_PRIVATE_KEY;
   if (req.method !== 'POST') return res.status(405).json({ error: 'method' });
   if (!secret || !pub || !priv) return res.status(500).json({ error: 'not_configured' });
   if (!same(req.headers['x-push-secret'], secret)) return res.status(403).json({ error: 'forbidden' });
-  const b = req.body || {}, isQ = typeof b.question === 'string', isD = typeof b.doc === 'string', isT = typeof b.topup === 'string', isA = ['new', 'confirmed', 'wd'].includes(b.admin), id = isT ? b.topup : isA ? b.id : isD ? b.doc : isQ ? b.question : b.consultation;
+  const b = req.body || {}, isQ = typeof b.question === 'string', isD = typeof b.doc === 'string', isT = typeof b.topup === 'string', isA = ['new', 'confirmed', 'wd', 'disp', 'vr', 'lawyer', 'rep', 'doc', 'ddisp'].includes(b.admin), id = isT ? b.topup : isA ? b.id : isD ? b.doc : isQ ? b.question : b.consultation;
   if (typeof id !== 'string' || !/^[0-9a-f-]{36}$/i.test(id)) return res.status(400).json({ error: 'bad_id' });
   const webpush = require('web-push');
   webpush.setVapidDetails(process.env.VAPID_SUBJECT || 'mailto:admin@legano.site', pub, priv);
@@ -28,7 +37,7 @@ module.exports = async (req, res) => {
     const subs = await r.json();
     let sent = 0, dropped = 0;
     await Promise.all((Array.isArray(subs) ? subs : []).map(async s => {
-      const A = s.info || {}, payload = JSON.stringify(isA ? (s.kind === 'wd' ? {
+      const A = s.info || {}, payload = JSON.stringify(isA ? (AD[s.kind] ? AD[s.kind](A, s) : s.kind === 'wd' ? {
         title: '🏦 طلب سحب جديد: ' + (Number(A.amount) || 0) + ' ج',
         body: String(A.lawyer || 'محامي').slice(0, 40) + ' طلب يسحب أرباحه',
         url: '/admin.html', tag: 'wd-' + s.id, urgent: true
