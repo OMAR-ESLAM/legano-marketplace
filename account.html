@@ -33,6 +33,7 @@
 <main id="m"><div class="empty" style="border:0">جاري التحميل...</div></main>
 <script src="js/social.js"></script>
 <script src="js/client.js"></script>
+<script src="js/clientflow.js"></script>
 <script>
 (async () => {
   const $ = id => document.getElementById(id), S = window.Social, A = window.ClientAuth, esc = S.esc;
@@ -54,36 +55,15 @@
       <div class="hello">${d.avatar ? `<img src="${esc(d.avatar)}" alt="" referrerpolicy="no-referrer">` : ''}<div><h1>أهلاً ${esc(d.name || '')} 👋</h1><small style="color:#64748B">${esc(A.get().user.email || '')}</small></div><button class="soc-btn" id="out" type="button" style="margin-inline-start:auto">خروج</button></div>
       <div class="wc"><div class="wc-top"><span>LEGANO WALLET</span><span>👛</span></div><small style="display:block;margin-top:12px">رصيدك</small><div class="bal">${S.num(Math.round(d.balance * 100) / 100)} ج</div><small>أي استشارة اتلغت أو اتردّت فلوسها بترجعلك هنا، وتقدر تدفع بيها في أي استشارة جاية.</small></div>
       <button class="soc-btn primary" id="tpOpen" type="button" style="display:block;width:100%;text-align:center;margin-bottom:8px">➕ اشحن رصيدك</button>
-      <div class="tp" id="tpBox" hidden>
-        <h3 id="topup" style="margin:0 0 6px;font-size:15px">اشحن رصيدك في 3 خطوات</h3>
-        <ol style="margin:0 0 10px;padding-inline-start:20px;font-size:13.5px;line-height:2">
-          <li>حوّل المبلغ على <b dir="ltr" id="tpNum">${esc(pi.number)}</b> <button type="button" class="soc-btn" id="tpCopy" style="padding:2px 10px">نسخ</button> بفودافون كاش${pi.instapay ? ' أو إنستا باي (' + esc(pi.instapay) + ')' : ''}.</li>
-          <li>املا البيانات تحت وارفع سكرين شوت التحويل.</li>
-          <li>بنراجع التحويل ونضيف الرصيد لحسابك، وغالباً بيتم في ساعات.</li></ol>
-        <div class="tpf">
-          <label>المبلغ (ج) <input id="tpAmt" type="number" inputmode="numeric" min="${pi.min}" max="${pi.max}" placeholder="من ${pi.min} لـ ${pi.max}"></label>
-          <label>حوّلت بـ <select id="tpMeth"><option value="vodafone_cash">فودافون كاش</option>${pi.instapay ? '<option value="instapay">إنستا باي</option>' : ''}</select></label>
-          <label>رقم/حساب اللي حوّلت منه <input id="tpSender" dir="ltr" inputmode="tel" placeholder="01xxxxxxxxx"></label>
-          <label>رقم العملية (لو ظاهر) <input id="tpRef" dir="ltr" placeholder="اختياري"></label>
-          <label>سكرين شوت التحويل (مطلوب) <input id="tpFile" type="file" accept="image/*"></label><img id="tpPrev" alt="" hidden style="max-width:100%;max-height:180px;border-radius:10px;border:1px solid var(--border)">
-        </div>
-        <button class="soc-btn primary" id="tpSend" type="button" style="width:100%;margin-top:8px">أكّدت التحويل</button><div id="tpMsg" style="font-size:13px;margin-top:6px"></div>
-      </div>
+      <div class="tp" id="tpBox" hidden><h3 id="topup" style="margin:0 0 10px;font-size:15px">اشحن رصيدك</h3><div id="tpForm"></div></div>
       ${tops.length ? '<h2>طلبات الشحن</h2>' + tops.map(t => `<div class="row"><div>${S.num(t.amount)} ج • ${MT[t.method] || ''}<small>${fmt(t.at)}${t.note ? ' • ' + esc(t.note) : ''}</small></div><b style="color:${(TS[t.status] || [])[1]}">${(TS[t.status] || [t.status])[0]}</b></div>`).join('') : ''}
       <a class="soc-btn" href="consult.html" style="display:block;text-align:center;margin:8px 0 6px">🎥 اطلب استشارة دلوقتي</a>
       <h2>حركات المحفظة</h2>${d.ledger.length ? d.ledger.map(x => `<div class="row"><div>${KIND[x.kind] || x.kind}<small>${fmt(x.at)}</small></div><span dir="ltr" class="${x.amount >= 0 ? 'pos' : 'neg'}">${x.amount >= 0 ? '+' : ''}${S.num(Math.round(x.amount * 100) / 100)} ج</span></div>`).join('') : '<div class="empty">مفيش حركات لسه.</div>'}
       <h2>استشاراتي</h2>${d.consults.length ? d.consults.map(c => `<div class="row"><div><b>${esc(c.lawyer || 'محامي')}</b> • ${S.num(c.price)} ج<small>${esc(c.topic)}</small><small>${fmt(c.at)}</small></div>${['requested', 'accepted', 'live', 'awaiting_confirm'].includes(c.status) ? `<a class="soc-btn primary" href="room.html?t=${encodeURIComponent(c.token)}">ادخل</a>` : `<b>${ST[c.status] || c.status}</b>`}</div>`).join('') : '<div class="empty">لسه ما طلبتش استشارة بحسابك.</div>'}`;
     $('out').onclick = () => { A.signOut(); location.reload(); };
     $('tpOpen').onclick = () => { $('tpBox').hidden = !$('tpBox').hidden; };
-    $('tpCopy').onclick = async () => { try { await navigator.clipboard.writeText(pi.number); $('tpCopy').textContent = 'اتنسخ ✓'; } catch { $('tpCopy').textContent = pi.number; } };
-    const ERR = { topup_amount: `المبلغ لازم يكون رقم صحيح من ${pi.min} لـ ${pi.max} جنيه.`, topup_sender: 'اكتب الرقم اللي حوّلت منه.', topup_receipt: 'ارفع سكرين شوت التحويل (صورة واضحة).', topup_pending_limit: 'عندك 3 طلبات لسه بتتراجع. استنى لما تخلص.', rate_limited: 'طلبات كتير النهارده. جرّب بكرة.' };
-    const shrink = f => new Promise((ok, no) => { const im = new Image(), u = URL.createObjectURL(f); im.onload = () => { const k = Math.min(1, 1200 / Math.max(im.width, im.height)), c = document.createElement('canvas'); c.width = Math.round(im.width * k); c.height = Math.round(im.height * k); c.getContext('2d').drawImage(im, 0, 0, c.width, c.height); URL.revokeObjectURL(u); const d = c.toDataURL('image/jpeg', 0.72); $('tpPrev').src = d; $('tpPrev').hidden = false; ok(d.split(',')[1]); }; im.onerror = () => no(new Error('topup_receipt')); im.src = u; });
-    $('tpSend').onclick = async () => {
-      const b = $('tpSend'); b.disabled = true; $('tpMsg').textContent = '';
-      try { const f = $('tpFile').files[0]; if (!f) throw new Error('topup_receipt'); const b64 = await shrink(f);
-        await A.rpc('topup_create', { p_amount: Number($('tpAmt').value), p_method: $('tpMeth').value, p_sender: $('tpSender').value, p_ref: $('tpRef').value || null, p_receipt: b64, p_mime: 'image/jpeg' }); location.reload(); }
-      catch (e) { $('tpMsg').style.color = '#B91C1C'; $('tpMsg').textContent = ERR[e.message] || 'حصلت مشكلة، جرّب تاني.'; b.disabled = false; }
-    };
+    ClientFlow.style(); ClientFlow.topupForm($('tpForm'), { pi, need: 0, onDone: () => location.reload() });
+    if (location.hash === '#topup') { $('tpBox').hidden = false; $('tpBox').scrollIntoView(); }
   } catch (e) {
     if (/not_client/.test(e.message)) { A.signOut(); login('الحساب ده مش حساب موكل. لو إنت محامي ادخل من صفحة دخول المحامين.'); }
     else if (e.status === 401) { A.signOut(); login(); }

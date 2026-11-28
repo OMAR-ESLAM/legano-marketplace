@@ -83,6 +83,7 @@
 </div></div>
 <script src="js/social.js"></script>
 <script src="js/client.js"></script>
+<script src="js/clientflow.js"></script>
 <script>
 (async () => {
   const $ = id => document.getElementById(id), S = window.Social, C = S.Consult, esc = S.esc;
@@ -172,19 +173,18 @@
   const CA = window.ClientAuth; let bal = null;
   async function acct() {
     await CA.handleHash();
-    if (!CA.get()) { $('acct').hidden = false; $('acct').innerHTML = '<b>💳 الدفع بتحويل فودافون كاش</b><p style="margin:4px 0 10px;font-size:13px;color:var(--muted-foreground);line-height:1.9">علشان تطلب استشارة، سجّل حسابك (بالإيميل) واشحن رصيدك بتحويل فودافون كاش على <b dir="ltr">01021472439</b> وارفع سكرين شوت التحويل. بنراجعه ونضيف الرصيد، وتدفع منه للمحامي.</p><div id="cForm"></div>'; CA.form({ el: $('cForm'), onDone: () => location.reload() }); return; }
-    try { const d = await CA.me(); bal = Number(d.balance) || 0; $('acct').hidden = false; $('acct').innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><span>👛 محفظتك: <b>${S.num(bal)} ج</b></span><a class="soc-btn primary" href="account.html#topup">اشحن رصيدك</a> <a class="soc-btn" href="account.html">حسابي</a></div><p style="margin:8px 0 0;font-size:12.5px;color:var(--muted-foreground);line-height:1.9">الشحن بتحويل فودافون كاش على <b dir="ltr">01021472439</b> وسكرين شوت التحويل، وبنضيف الرصيد بعد المراجعة.</p>`; if (!CA.get().name) {} } catch (e) { if (/not_client/.test(e.message) || e.status === 401) CA.signOut(); }
+    if (!CA.get()) { $('acct').hidden = true; return; }
+    try { const d = await CA.me(); bal = Number(d.balance) || 0; $('acct').hidden = false; $('acct').innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap"><span>👛 رصيدك: <b>${S.num(Math.round(bal * 100) / 100)} ج</b></span><span><button class="soc-btn primary" id="aTop" type="button">➕ اشحن رصيدك</button> <a class="soc-btn" href="account.html">حسابي</a></span></div>`; $('aTop').onclick = () => ClientFlow.open({ price: 0, force: true, back: 'consult.html' }); } catch (e) { if (/not_client/.test(e.message) || e.status === 401) { CA.signOut(); $('acct').hidden = true; } }
   }
   const valid = () => { $('rGo').disabled = !($('rName').value.trim().length >= 2 && $('rTopic').value.trim().length >= 5); };
   ['rName', 'rTopic'].forEach(i => $(i).addEventListener('input', valid));
   $('list').addEventListener('click', e => {
     const b = e.target.closest('[data-a=ask]'); if (!b) return;
     target = lawyers.find(l => l.id === b.closest('.cs-card').dataset.id); if (!target) return;
-    if (!CA.get()) { S.toast('سجّل حسابك الأول علشان تدفع وتطلب الاستشارة.'); $('acct').scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
-    if (bal === null || bal < Number(target.price)) { S.toast(`رصيدك ${S.num(bal || 0)} ج وسعر الاستشارة ${S.num(target.price)} ج. اشحن رصيدك الأول بتحويل فودافون كاش.`); $('acct').scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
-    $('rWho').innerHTML = `هتتواصل مع <b>${esc(target.display_name)}</b>، ${S.num(target.minutes)} دقيقة بـ ${S.num(target.price)} ج.`;
-    const can = bal !== null && bal >= Number(target.price); $('wUse').hidden = !can; $('wChk').checked = can; if (can) $('wTxt').textContent = `هتتخصم ${S.num(target.price)} ج من محفظتك (رصيدك ${S.num(bal)} ج)`;
-    $('reqOv').hidden = false; $('rName').focus();
+    const go = () => { $('rWho').innerHTML = `هتتواصل مع <b>${esc(target.display_name)}</b>، ${S.num(target.minutes)} دقيقة بـ ${S.num(target.price)} ج.`; $('wUse').hidden = false; $('wChk').checked = true; $('wTxt').textContent = `هتتخصم ${S.num(target.price)} ج من رصيدك`; $('reqOv').hidden = false; $('rName').focus(); };
+    try { sessionStorage.setItem('lg_pend', target.id); } catch {}
+    ClientFlow.open({ price: Number(target.price), back: 'consult.html', onReady: m => { if (m) bal = Number(m.balance) || 0; try { sessionStorage.removeItem('lg_pend'); } catch {} go(); } });
+    return;
   });
   $('rX').onclick = () => { $('reqOv').hidden = true; };
   $('reqOv').addEventListener('mousedown', e => { if (e.target === $('reqOv')) $('reqOv').hidden = true; });
@@ -197,6 +197,7 @@
     } catch (e) { S.toast(S.friendly(e)); load(); valid(); }
   };
   await Promise.all([load(), resume(), acct()]);
+  try { const pid = sessionStorage.getItem('lg_pend'); if (pid && CA.get()) { const b = document.querySelector(`.cs-card[data-id="${pid}"] [data-a=ask]`); sessionStorage.removeItem('lg_pend'); if (b) b.click(); } } catch {}
   setInterval(load, 15000);
 })();
 </script>

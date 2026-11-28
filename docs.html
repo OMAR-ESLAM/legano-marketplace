@@ -45,6 +45,7 @@
 
 <script src="js/social.js"></script>
 <script src="js/client.js"></script>
+<script src="js/clientflow.js"></script>
 <script>
 (async () => {
   const $ = id => document.getElementById(id), S = window.Social, esc = S.esc, CA = window.ClientAuth;
@@ -78,8 +79,7 @@
     ${(s.fields || []).map(f => `<div class="f"><label for="f_${esc(f.k)}">${esc(f.l)}${f.r ? ' <i>*</i>' : ''}</label>${input(f)}</div>`).join('')}
     <p class="note">⚠️ ما تكتبش رقم قومي أو بيانات حساسة غير المطلوبة. المحامي ممكن يسألك لو محتاج توضيح.</p>
     <label class="f" style="display:${can ? 'flex' : 'none'};gap:8px;align-items:center"><input type="checkbox" id="wChk" checked style="width:auto"> ادفع من محفظتي (رصيدي ${S.num(bal)} ج)</label>
-    ${can ? '' : `<p class="note" style="margin:0">💳 الدفع من رصيد محفظتك. ${CA && CA.get() ? 'رصيدك ' + S.num(bal) + ' ج، ' : ''}<a href="/account.html#topup"><b>${CA && CA.get() ? 'اشحن رصيدك' : 'سجّل حسابك واشحن رصيدك'}</b></a> بتحويل فودافون كاش على <b dir="ltr">01021472439</b> مع سكرين شوت التحويل، وبعد ما نراجعه ارجع هنا وابعت طلبك.</p>`}
-    <label style="display:flex;gap:8px;align-items:flex-start;font-size:12.5px"><input type="checkbox" id="ok" style="margin-top:6px"><span>فاهم إن المستند بيتجهّز من محامٍ حسب بياناتي، وإن الفلوس بتتحوّل للمحامي بعد ما أستلم وأأكّد، وبترجع لو ما اتسلّمش في الميعاد.</span></label>
+    ${can ? '' : `<p class="note" style="margin:0">💳 الدفع من رصيد محفظتك. أول ما تدوس الزرار هنساعدك تسجّل وتشحن في خطوتين بسيطتين.</p>`}    <label style="display:flex;gap:8px;align-items:flex-start;font-size:12.5px"><input type="checkbox" id="ok" style="margin-top:6px"><span>فاهم إن المستند بيتجهّز من محامٍ حسب بياناتي، وإن الفلوس بتتحوّل للمحامي بعد ما أستلم وأأكّد، وبترجع لو ما اتسلّمش في الميعاد.</span></label>
     <div class="err" id="err" role="alert"></div>
     <button type="button" class="soc-btn primary lg" id="go" disabled>ادفع ${S.num(s.price)} ج من رصيدي وابعت الطلب</button></div>`;
     $('back').onclick = e => { e.preventDefault(); list(); };
@@ -90,6 +90,7 @@
     const s = cur, name = $('cName').value.trim(), ans = {}; $('err').textContent = '';
     if (name.length < 2) { $('err').textContent = 'اكتب اسمك.'; return; }
     for (const f of s.fields || []) { const v = $('f_' + f.k).value.trim(); if (f.r && !v) { $('err').textContent = 'البيان ده مطلوب: ' + f.l; $('f_' + f.k).focus(); return; } if (v) ans[f.k] = v; }
+    if (!(bal !== null && bal >= Number(s.price))) { ClientFlow.open({ price: Number(s.price), back: 'docs.html', onReady: m => { bal = Number(m && m.balance) || 0; $('wChk').parentElement.style.display = 'flex'; $('wChk').checked = true; submit(); } }); return; }
     $('go').disabled = true;
     try {
       const useW = $('wChk').parentElement.style.display !== 'none' && $('wChk').checked;

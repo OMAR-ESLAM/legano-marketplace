@@ -51,7 +51,7 @@
     return { ok: true };
   }
   function form(opts) {
-    const el = opts.el, id = 'cf' + Math.random().toString(36).slice(2, 6); let up = false;
+    const el = opts.el, id = 'cf' + Math.random().toString(36).slice(2, 6); let up = !!opts.signup;
     const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
     const draw = (msg) => { el.innerHTML = `<div class="cfm" style="display:grid;gap:8px;text-align:right;max-width:340px;margin:0 auto">
       ${up ? `<input id="${id}n" class="soc-in" style="width:100%;padding:11px 12px;border:1px solid #E2E8F0;border-radius:10px;font:inherit" placeholder="اسمك" autocomplete="name">` : ''}
