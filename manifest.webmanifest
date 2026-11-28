@@ -5,7 +5,7 @@
   "description": "سوق المحامين في مصر: استشارات فورية وإنابات ومفكرة جلسات",
   "lang": "ar",
   "dir": "rtl",
-  "start_url": "/feed.html?src=pwa",
+  "start_url": "/app.html",
   "scope": "/",
   "display": "standalone",
   "background_color": "#ffffff",
