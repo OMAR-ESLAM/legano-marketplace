@@ -123,6 +123,7 @@
 
   // ---------- سؤال واحد ----------
   async function viewQuestion(id) {
+    window.__qaId = id;
     let q = null;
     try { q = await rpc('qa_get', { p_id: id }); } catch {}
     if (!q) { $('qaApp').innerHTML = `<div class="qa-empty"><b>السؤال ده مش متاح.</b><p><a href="/qa">شوف باقي الأسئلة</a></p></div>`; return; }
@@ -132,9 +133,11 @@
       return `<article class="qa-a" id="a-${esc(a.id)}"><a class="qa-lw" href="/lawyer/${esc(l.id)}">${S.avatar(l)}<span><b>${html(l.display_name)}${l.verified ? S.badge() : ''}</b><small>${html(l.city || '')}${l.rating_count ? ` • ★ ${Number(l.rating_avg).toFixed(1)} (${l.rating_count})` : ''}${a.created_at ? ' • ' + html(S.ago(a.created_at)) : ''}</small></span></a>
         <div class="qa-body">${nl(a.body)}</div>
         <div class="qa-cta">${l.online ? `<a class="soc-btn primary" href="/consult.html?l=${esc(l.id)}">⚡ استشير الأستاذ دلوقتي (${S.num(l.minutes)} د - ${S.num(l.price)} ج)</a>` : ''}<a class="soc-btn" href="/lawyer/${esc(l.id)}">شوف البروفايل</a></div>
+        ${S.me() && S.me() === l.id ? `<div class="qa-edit" id="ed-${esc(a.id)}"><button type="button" class="soc-btn" data-edit="${esc(a.id)}">✏️ تعديل إجابتي</button></div>` : ''}
         <button type="button" class="qa-rep" data-rep="a" data-id="${esc(a.id)}">إبلاغ عن الإجابة</button></article>`;
     }).join('');
-    const canAnswer = !!S.me();
+    const canAnswer = !!S.me() && !(q.answers || []).some(a => a.lawyer && a.lawyer.id === S.me());
+    window.__qaAns = {}; (q.answers || []).forEach(a => { window.__qaAns[a.id] = a.body; });
     $('qaApp').innerHTML = `<div class="qa-crumb"><a href="/qa">اسأل محامي</a> › <a href="/qa/c/${esc(q.category)}">${html(CATS[q.category] || '')}</a></div>
       <article class="qa-q"><h1>${html(q.title)}</h1><div class="qa-body">${nl(q.body)}</div>
         <div class="qa-meta"><span class="qa-tag">${html(CATS[q.category] || '')}</span>${q.city ? `<span>${html(q.city)}</span>` : ''}<span>${html(q.asker_name || 'زائر')}</span><span>${html(S.ago(q.created_at))}</span></div>
@@ -157,6 +160,21 @@
   }
 
   document.addEventListener('click', async e => {
+    const eb = e.target.closest('[data-edit]');
+    if (eb) {
+      const aid = eb.dataset.edit, box = $('ed-' + aid), body = box.closest('.qa-a').querySelector('.qa-body');
+      box.innerHTML = `<textarea class="f-i" rows="8" maxlength="3000" id="et-${esc(aid)}"></textarea><div class="qa-err" id="ee-${esc(aid)}" role="alert"></div><button type="button" class="soc-btn primary" data-save="${esc(aid)}">حفظ التعديل</button> <button type="button" class="soc-btn" data-cancel="1">إلغاء</button>`;
+      $('et-' + aid).value = (window.__qaAns || {})[aid] || ''; body.style.display = 'none'; return;
+    }
+    const cb = e.target.closest('[data-cancel]');
+    if (cb) { return viewQuestion(window.__qaId); }
+    const sb = e.target.closest('[data-save]');
+    if (sb) {
+      const aid = sb.dataset.save, v = $('et-' + aid).value.trim(); sb.disabled = true; $('ee-' + aid).textContent = '';
+      try { await rpc('qa_answer_edit', { p_answer: aid, p_body: v }); S.toast('اتحفظ التعديل ✅'); await viewQuestion(window.__qaId); }
+      catch (er) { $('ee-' + aid).textContent = errMsg(er); sb.disabled = false; }
+      return;
+    }
     const b = e.target.closest('[data-rep]'); if (!b) return;
     if (!confirm('تبلّغ عن المحتوى ده كمحتوى مخالف أو سبام؟')) return;
     try { await rpc('qa_report', { p_kind: b.dataset.rep, p_id: b.dataset.id, p_device: S.deviceId(), p_reason: null }); b.textContent = 'تم الإبلاغ، شكراً'; b.disabled = true; } catch { S.toast('حصل خطأ، جرّب تاني'); }
