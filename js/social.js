@@ -283,8 +283,34 @@
     plus: '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
   };
   // الزائر (الموكل) مفيش له منشورات ولا إشعارات. المحامي: 4 أيقونات + قايمة حسابه، وعلى الموبايل شريط سفلي.
+  // ---------- شريط الموكل (بعد التسجيل): صورته ورصيده وقايمة حسابه ----------
+  function clientMount(el) {
+    let ses = null; try { ses = JSON.parse(localStorage.getItem('lg_c')); } catch {}
+    if (!ses || !ses.access_token) return false;
+    const rd = () => { try { return JSON.parse(localStorage.getItem('lg_cp')) || {}; } catch { return {}; } };
+    const out = () => { try { localStorage.removeItem('lg_c'); localStorage.removeItem('lg_cp'); } catch {} location.href = '/index.html'; };
+    function draw(p) {
+      const nm = (p.name || (ses.user && ses.user.email) || 'حسابي').trim(), ini = esc([...nm][0] || 'ح'), bal = p.balance == null ? '' : Number(p.balance).toLocaleString('ar-EG', { maximumFractionDigits: 0 }) + ' ج';
+      const av = p.avatar ? `<img class="avatar sm" src="${esc(p.avatar)}" alt="" referrerpolicy="no-referrer">` : `<span class="avatar sm">${ini}</span>`;
+      el.innerHTML = `<a href="/qa" class="btn-ghost-link cl-hide">اسأل محامي</a><a href="/docs.html" class="btn-ghost-link cl-hide">مستندات</a><a href="/consult.html" class="btn-ghost-link">استشارة</a>
+        <a href="/account.html" class="cl-chip" aria-label="محفظتي">👛 <b>${bal || 'محفظتي'}</b></a>
+        <div class="nav-me"><button type="button" class="nav-av" id="clAv" aria-haspopup="menu" aria-expanded="false" aria-label="حسابي">${av}</button>
+        <div class="nav-menu" id="clMenu" role="menu" hidden><div class="cl-who"><b>${esc(nm)}</b>${ses.user && ses.user.email ? `<small>${esc(ses.user.email)}</small>` : ''}</div>
+          <a role="menuitem" href="/account.html">👛 محفظتي وحسابي</a><a role="menuitem" href="/account.html#topup">➕ اشحن رصيدك</a><a role="menuitem" href="/consult.html">🎥 اطلب استشارة</a><a role="menuitem" href="/account.html#consults">🗂️ استشاراتي</a><a role="menuitem" href="/docs.html">📄 مستندات جاهزة</a><a role="menuitem" href="/qa">❓ اسأل محامي مجاناً</a>
+          <button role="menuitem" type="button" id="clOut">تسجيل الخروج</button></div></div>`;
+      const m = el.querySelector('#clMenu'), b = el.querySelector('#clAv');
+      b.onclick = e => { e.stopPropagation(); m.hidden = !m.hidden; b.setAttribute('aria-expanded', String(!m.hidden)); };
+      document.addEventListener('click', e => { if (!m.contains(e.target)) { m.hidden = true; b.setAttribute('aria-expanded', 'false'); } });
+      el.querySelector('#clOut').onclick = out;
+    }
+    draw(rd());
+    const go = async () => { try { const d = await window.ClientAuth.me(); const p = { name: d.name, avatar: d.avatar, balance: d.balance }; try { localStorage.setItem('lg_cp', JSON.stringify(p)); } catch {} draw(p); } catch (e) { if (/not_client|not_authenticated/.test(e.message) || e.status === 401) { try { localStorage.removeItem('lg_c'); localStorage.removeItem('lg_cp'); } catch {} el.innerHTML = '<a href="/register.html" class="btn-ghost-link">سجّل كمحامي</a><a href="/dashboard.html" class="btn-ghost-link">دخول المحامين</a>'; } } };
+    if (window.ClientAuth) go(); else { const s = document.createElement('script'); s.src = '/js/client.js'; s.onload = go; document.head.appendChild(s); }
+    return true;
+  }
   async function mountNav(el) {
     if (!el) return;
+    if (!me() && clientMount(el)) return;
     if (!me()) { if (!el.children.length) { const R = location.pathname.includes('/tools/') ? '../' : ''; el.innerHTML = `<a href="${R}register.html" class="btn-ghost-link">سجّل كمحامي</a><a href="${R}dashboard.html" class="btn-ghost-link">دخول المحامين</a>`; }; return; }
     const here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
     const inTools = location.pathname.includes('/tools/'), P = inTools ? '../' : '';
