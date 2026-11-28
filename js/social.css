@@ -526,3 +526,4 @@ a.grp-ico { text-decoration: none; }
 .cl-chip b { font-weight: 900; }
 .cl-who { padding: 8px 12px 10px; border-bottom: 1px solid var(--border, #E2E8F0); margin-bottom: 4px; } .cl-who b { display: block; font-size: 14px; } .cl-who small { display: block; color: var(--muted-foreground, #64748B); font-size: 12px; overflow: hidden; text-overflow: ellipsis; }
 @media (max-width: 560px) { .cl-hide { display: none !important; } }
+@media (max-width: 700px) { #clMenu { position: fixed; top: 64px; left: 12px; right: auto; width: min(290px, calc(100vw - 24px)); max-width: none; z-index: 1000; } }
