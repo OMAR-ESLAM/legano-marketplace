@@ -76,6 +76,7 @@
     if (/lawyer_offline/.test(m)) return 'المحامي مش أونلاين دلوقتي. جرّب محامي تاني.';
     if (/lawyer_busy/.test(m)) return 'المحامي في استشارة دلوقتي. جرّب محامي تاني أو استنى شوية.';
     if (/rate_limited/.test(m)) return 'عدد كبير من الطلبات. جرّب كمان شوية.';
+    if (/contact_blocked/.test(m)) return 'ممنوع كتابة أرقام تليفون أو إيميلات أو روابط أو حسابات تواصل. الاستشارة كلها جوه ليجانو علشان حقك محفوظ.';
     if (/bad_message/.test(m)) return 'الرسالة فاضية أو أطول من 1000 حرف.';
     if (/bad_summary/.test(m)) return 'الملخص لازم يكون من 20 لـ 4000 حرف.';
     if (/already_sent/.test(m)) return 'الملخص اتبعت قبل كده ومينفعش يتعدّل.';
