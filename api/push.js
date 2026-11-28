@@ -19,6 +19,7 @@ const AD = {
   lawyer: (A, s) => ({ title: '👤 محامي جديد سجّل', body: T(A.lawyer || 'حساب جديد على المنصة', 60), url: '/admin.html', tag: 'law-' + (s && s.id), urgent: false }),
   rep: (A, s) => ({ title: '🚩 بلاغ جديد', body: 'فيه بلاغ على محتوى محتاج مراجعتك', url: '/admin.html', tag: 'rep-' + (s && s.id), urgent: false }),
   doc: (A, s) => ({ title: '📄 طلب مستند جديد', body: `${T(A.title || 'مستند', 50)} • ${Number(A.price) || 0} ج`, url: '/admin.html', tag: 'adoc-' + (s && s.id), urgent: false }),
+  flag: (A, s) => ({ title: A.source === 'client_report' ? '🚩 موكل بلّغ عن تواصل برّه المنصة' : (A.suspended ? '⛔ محامي اتحظر تلقائي لمخالفة التواصل' : '⚠️ محامي خد إنذار لمحاولة تواصل برّه المنصة'), body: `${T(A.lawyer || 'محامي', 40)} • مخالفات: ${Number(A.violations) || 0}`, url: '/admin.html', tag: 'flag-' + (s && s.id), urgent: true }),
   ddisp: (A, s) => ({ title: '⚠️ نزاع على مستند: محتاج قرارك', body: `${T(A.title || 'مستند', 50)} • ${Number(A.price) || 0} ج`, url: '/admin.html', tag: 'ddisp-' + (s && s.id), urgent: true })
 };
 module.exports = async (req, res) => {
@@ -27,7 +28,7 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'method' });
   if (!secret || !pub || !priv) return res.status(500).json({ error: 'not_configured' });
   if (!same(req.headers['x-push-secret'], secret)) return res.status(403).json({ error: 'forbidden' });
-  const b = req.body || {}, isQ = typeof b.question === 'string', isD = typeof b.doc === 'string', isT = typeof b.topup === 'string', isA = ['new', 'confirmed', 'wd', 'disp', 'vr', 'lawyer', 'rep', 'doc', 'ddisp'].includes(b.admin), id = isT ? b.topup : isA ? b.id : isD ? b.doc : isQ ? b.question : b.consultation;
+  const b = req.body || {}, isQ = typeof b.question === 'string', isD = typeof b.doc === 'string', isT = typeof b.topup === 'string', isA = ['new', 'confirmed', 'wd', 'disp', 'vr', 'lawyer', 'rep', 'doc', 'ddisp', 'flag'].includes(b.admin), id = isT ? b.topup : isA ? b.id : isD ? b.doc : isQ ? b.question : b.consultation;
   if (typeof id !== 'string' || !/^[0-9a-f-]{36}$/i.test(id)) return res.status(400).json({ error: 'bad_id' });
   const webpush = require('web-push');
   webpush.setVapidDetails(process.env.VAPID_SUBJECT || 'mailto:admin@legano.site', pub, priv);

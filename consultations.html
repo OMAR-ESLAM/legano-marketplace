@@ -100,6 +100,7 @@
 <body>
 <header class="top"><a class="logo-text" href="index.html?browse=1">LEGANO</a><div id="navSlot"></div></header>
 <main class="cs-wrap">
+  <div id="vioBar" class="warn" hidden style="background:#FEF2F2;border-color:#FECACA;color:#991B1B"></div>
   <div id="gate" class="soc-card gate" hidden><h1>منطقة المحامين</h1><p>الاستشارات الفورية للمحامين الموثّقين. سجّل دخول علشان تبدأ.</p><a class="soc-btn primary" href="dashboard.html">دخول المحامين</a></div>
   <div id="wrap" hidden>
     <h1 class="cs-h">الاستشارات الفورية</h1>
@@ -163,6 +164,7 @@
 (async () => {
   const $ = id => document.getElementById(id), S = window.Social, C = S.Consult, esc = S.esc;
   S.mountNav($('navSlot'));
+  try { if (S.me()) S.Consult.myViolations().then(n => { if (n >= 1) { const b = $('vioBar'); b.hidden = false; b.innerHTML = n >= 2 ? '⛔ حسابك موقوف بسبب تكرار محاولة التواصل برّه المنصة.' : '⚠️ <b>عليك إنذار:</b> اتمنعت رسالة فيها بيانات تواصل برّه المنصة. المخالفة الجاية بتوقف حسابك تلقائياً.'; } }).catch(() => {}); } catch {}
   if (!S.me()) { $('gate').hidden = false; return; }
   $('wrap').hidden = false;
   const fmt = d => d ? new Date(d).toLocaleString('ar-EG', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' }) : '';

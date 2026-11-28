@@ -76,6 +76,8 @@
     if (/lawyer_offline/.test(m)) return 'المحامي مش أونلاين دلوقتي. جرّب محامي تاني.';
     if (/lawyer_busy/.test(m)) return 'المحامي في استشارة دلوقتي. جرّب محامي تاني أو استنى شوية.';
     if (/rate_limited/.test(m)) return 'عدد كبير من الطلبات. جرّب كمان شوية.';
+    if (/contact_warned/.test(m)) return '⚠️ إنذار: كتابة بيانات تواصل برّه المنصة ممنوعة. المرة الجاية حسابك هيتحظر.';
+    if (/contact_banned/.test(m)) return '⛔ حسابك اتحظر بسبب تكرار محاولة التواصل برّه المنصة.';
     if (/contact_blocked/.test(m)) return 'ممنوع كتابة أرقام تليفون أو إيميلات أو روابط أو حسابات تواصل. الاستشارة كلها جوه ليجانو علشان حقك محفوظ.';
     if (/bad_message/.test(m)) return 'الرسالة فاضية أو أطول من 1000 حرف.';
     if (/bad_summary/.test(m)) return 'الملخص لازم يكون من 20 لـ 4000 حرف.';
@@ -803,7 +805,9 @@
     fileGet: (id, file, token) => rpc('consult_file_get', { p_id: id, p_file: file, p_token: token || null }),
     signalSend: (id, token, payload) => rpc('consult_signal_send', { p_id: id, p_token: token || null, p_payload: payload }),
     signalPoll: (id, token, after) => rpc('consult_signal_poll', { p_id: id, p_token: token || null, p_after: after || 0 }),
-    msgSend: (id, token, body, mid) => rpc('consult_msg_send', { p_id: id, p_token: token || null, p_body: body, p_mid: mid }),
+    msgSend: async (id, token, body, mid) => { const r = await rpc('consult_msg_send', { p_id: id, p_token: token || null, p_body: body, p_mid: mid }); if (r === 'warned') throw new Error('contact_warned'); if (r === 'banned') throw new Error('contact_banned'); if (r === 'blocked') throw new Error('contact_blocked'); return r; },
+    flag: (id, token, reason) => rpc('consult_flag', { p_id: id, p_token: token || null, p_reason: reason || null }),
+    myViolations: () => rpc('lawyer_my_violations', {}),
     msgs: (id, token) => rpc('consult_msgs_list', { p_id: id, p_token: token || null }),
     notesGet: id => rpc('consult_notes_get', { p_id: id }),
     notesSave: (id, notes, summary) => rpc('consult_notes_save', { p_id: id, p_notes: notes, p_summary: summary }),

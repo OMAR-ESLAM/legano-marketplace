@@ -72,8 +72,8 @@ function render(l, similar) {
 
   const actions = isMe
     ? `<a href="dashboard.html?panel=1" class="btn-main btn-ghost fb-act">تعديل بياناتي</a><a href="feed.html" class="btn-main btn-call fb-act">المنشورات</a>`
-    : `<a id="btnCall" href="#" class="btn-main btn-call fb-act"><i data-lucide="phone"></i>اتصل الآن</a>
-       <a id="btnWa" href="#" class="btn-main btn-wa fb-act"><i data-lucide="message-circle"></i>واتساب</a>
+    : `<a id="btnCall" href="/consult.html?l=${encodeURIComponent(l.id)}" class="btn-main btn-call fb-act"><i data-lucide="video"></i>استشارة فيديو</a>
+       <a id="btnWa" href="/qa" class="btn-main btn-wa fb-act"><i data-lucide="message-circle"></i>اسأل مجاناً</a>
        ${S.me() ? '<button id="fBtn" type="button" class="btn-main btn-ghost fb-act" hidden></button>' : ''}`;
 
   app.innerHTML = `
@@ -92,10 +92,9 @@ function render(l, similar) {
     </div>
     <div class="fb-tags">${feat}${chips}</div>
     ${isMe ? '' : `<div class="fb-more">
-      <button id="btnReveal" type="button" class="btn-main btn-ghost text-xs"><i data-lucide="eye"></i><span>إظهار الرقم</span></button>
       <button id="btnShare" type="button" class="btn-main btn-ghost text-xs"><i data-lucide="share-2"></i>مشاركة</button>
       <button id="btnFav" type="button" class="btn-main btn-ghost text-xs ${isFav(l.id) ? 'fav-on' : ''}"><i data-lucide="heart"></i><span>${isFav(l.id) ? 'محفوظ' : 'حفظ'}</span></button>
-    </div><div id="phoneBox" class="px-4 pb-4 hidden"></div>`}
+    </div>`}
     <div role="tablist" aria-label="أقسام البروفايل" class="fb-tabs">
       <button class="fb-tab" role="tab" data-tab="posts" aria-selected="true">المنشورات</button>
       <button class="fb-tab" role="tab" data-tab="services" aria-selected="false">الخدمات والمحاكم</button>
@@ -150,8 +149,8 @@ function render(l, similar) {
   else {
     bar.classList.remove('hidden'); bar.classList.add('flex');
     bar.innerHTML = `
-      <a id="barCall" href="#" class="btn-main btn-call flex-1"><i data-lucide="phone"></i>اتصل</a>
-      <a id="barWa" href="#" class="btn-main btn-wa flex-1"><i data-lucide="message-circle"></i>واتساب</a>`;
+      <a id="barCall" href="/consult.html?l=${encodeURIComponent(l.id)}" class="btn-main btn-call flex-1"><i data-lucide="video"></i>استشارة فيديو</a>
+      <a id="barWa" href="/qa" class="btn-main btn-wa flex-1"><i data-lucide="message-circle"></i>اسأل مجاناً</a>`;
   }
 
   wire(l, isMe);
@@ -218,35 +217,9 @@ function wire(l, isMe) {
   }));
   if (isMe) return;
 
-  // تتبع الضغط على الاتصال/واتساب
-  ['btnCall', 'barCall'].forEach(id => $(id)?.addEventListener('click', e => { e.preventDefault(); CW.openContact(l.id, 'call'); }));
-  ['btnWa', 'barWa'].forEach(id => $(id)?.addEventListener('click', e => { e.preventDefault(); CW.openContact(l.id, 'whatsapp', `مرحباً أستاذ ${p.displayName}، وصلت لحضرتك من موقع ${SITE}. محتاج استشارة بخصوص: `); }));
-
   // لما الموكل يرجع للصفحة بعد المكالمة/الواتساب نفتحله التقييم
   document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshRate(l); });
   addEventListener('pageshow', e => { if (e.persisted) refreshRate(l); });
-
-  // إظهار الرقم + نسخ
-  const box = $('phoneBox');
-  const revealBtn = $('btnReveal');
-  revealBtn.addEventListener('click', async () => {
-    if (box.classList.contains('hidden')) {
-      let ph = null; try { ph = await CW.getContact(l.id, 'reveal'); } catch {} if (!ph) return toast('الرقم غير متاح دلوقتي'); p.phone = ph;
-      box.classList.remove('hidden'); box.classList.add('reveal-in');
-      box.innerHTML = `<div class="flex items-center justify-between gap-2 rounded-xl border border-app bg-card-c/70 px-4 py-3">
-        <button id="copyPhone" type="button" class="flex items-center gap-1 text-xs font-semibold text-gold-c"><i data-lucide="copy" style="width:14px;height:14px;"></i>نسخ</button>
-        <span dir="ltr" class="text-lg font-extrabold tracking-wider text-fg">${esc(formatPhone(p.phone))}</span>
-      </div>`;
-      revealBtn.querySelector('span').textContent = 'إخفاء الرقم';
-      icons(); refreshRate(l);
-      $('copyPhone').addEventListener('click', async () => {
-        try { await navigator.clipboard.writeText(p.phone); toast('تم نسخ الرقم'); } catch { toast('انسخ الرقم يدوياً'); }
-      });
-    } else {
-      box.classList.add('hidden');
-      revealBtn.querySelector('span').textContent = 'إظهار الرقم';
-    }
-  });
 
   // مشاركة
   $('btnShare').addEventListener('click', async () => {

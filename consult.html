@@ -159,7 +159,7 @@
     try { lawyers = await C.online(); } catch { lawyers = []; } render();
     // فتح طلب الاستشارة مباشرة لمحامي معيّن (من صفحات «اسأل محامي»)
     const pl = new URLSearchParams(location.search).get('l');
-    if (pl && /^[0-9a-f-]{36}$/i.test(pl)) { const b = document.querySelector('.cs-card[data-id="' + pl + '"] [data-a=ask]'); if (b) b.click(); }
+    if (pl && /^[0-9a-f-]{36}$/i.test(pl)) { const b = document.querySelector('.cs-card[data-id="' + pl + '"] [data-a=ask]'); if (b) b.click(); else S.toast('المحامي ده مش أونلاين دلوقتي. اختار محامي أونلاين تاني، أو اسأل مجاناً.'); }
   }
   async function resume() {
     const t = LS.get(); if (!t || !t.t) return;

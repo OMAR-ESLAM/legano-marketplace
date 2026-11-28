@@ -29,6 +29,7 @@
   .cs-docx img { max-width: 100%; height: auto; } .cs-docx table { border-collapse: collapse; max-width: 100%; } .cs-docx td, .cs-docx th { border: 1px solid #cbd5e1; padding: 4px 8px; }
   .cs-follow[hidden] { display: none; }
   .cs-follow { font-size: 12px; display: flex; align-items: center; gap: 4px; cursor: pointer; }
+  .cs-rep { margin-top: 8px; font-size: 12px; color: #64748B; line-height: 1.8; } .cs-rep button { border: 1px solid #FECACA; background: #FEF2F2; color: #B91C1C; border-radius: 10px; padding: 6px 10px; font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; }
   .cs-tabs { display: flex; gap: 4px; margin-bottom: 10px; border-bottom: 1px solid var(--border); }
   .cs-tabs button { flex: 1; font-family: inherit; font-size: 13px; font-weight: 700; padding: 8px 4px; border: 0; border-bottom: 3px solid transparent; background: none; color: var(--muted-foreground); cursor: pointer; position: relative; }
   .cs-tabs button.on { color: var(--foreground, #0F172A); border-bottom-color: var(--gold-soft, #92620C); }
@@ -160,6 +161,7 @@
   const CONSENT = 'تتم هذه الاستشارة عبر اتصال مباشر بين الطرفين داخل منصة ليجانو، ولا يتم تسجيل الصوت ولا الفيديو. الاتصال المباشر يعني أن عنوان الاتصال (IP) لكل طرف قد يظهر للطرف الآخر تقنياً.\n\nيتم تحويل الكلام إلى نص مكتوب أثناء الاستشارة: يحوّل متصفح كل طرف كلامه هو فقط إلى نص، وقد يُرسَل الصوت لهذا الغرض إلى خدمة التعرف على الكلام التابعة لمتصفحك (مثل Google في Chrome). يُحفظ النص دون الصوت، ويراجعه فريق المنصة فقط عند وجود اعتراض. قد لا يكون النص دقيقاً.\n\nتُحذف الملفات والرسائل والملخص والنص تلقائياً بعد انتهاء مهلة الاعتراض. المنصة ليست طرفاً في العلاقة بين المحامي والموكل، والاستشارة لا تُنشئ توكيلاً بأي دعوى.';
   const FINAL = ['confirmed', 'released', 'refunded', 'cancelled', 'expired'];
   let st = null, offset = 0, joining = false, pingTimer = null, filesSig = '', fileList = [], lastStatus = null;
+  const looksContact = s => { const n = String(s || '').toLowerCase().replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)); const m = n.replace(/(?<=\d)[\s.\-_/,()+]+(?=\d)/g, ''); return /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}|https?:\/\/|www\.|wa\.me|t\.me|واتس|whats|تيليجرام|تليجرام|telegram|فيسبوك|facebook|انستجرام|instagram|رقمي|كلمني على|اتصل بيا/.test(n) || /(^|\D)(\+?20)?0?1[0125]\d{8}(\D|$)/.test(m); };
   const my = k => ROLE === 'client' ? st['client_' + k] : st['lawyer_' + k];
   const other = k => ROLE === 'client' ? st['lawyer_' + k] : st['client_' + k];
   const cid = () => ROLE === 'client' ? st.id : CID;
@@ -363,7 +365,7 @@
       <aside class="cs-box" id="room-wrap">
         <div class="cs-tabs"><button type="button" data-tab="files" class="on">الملفات</button><button type="button" data-tab="chat">المحادثة<i id="chatBadge" hidden></i></button>${ROLE === 'lawyer' ? '<button type="button" data-tab="notes">ملاحظاتي</button>' : ''}</div>
         <div class="cs-pane" id="pane-files"><div class="cs-drop" id="drop">اسحب الملفات هنا أو اضغط للاختيار<br><small>PDF أو صور أو Word، حتى 4 ميجا</small></div><input type="file" id="pick" multiple hidden accept=".pdf,.png,.jpg,.jpeg,.webp,.txt,.doc,.docx"><div id="files"></div></div>
-        <div class="cs-pane" id="pane-chat" hidden><div class="cs-chat" id="chatlog"></div><form class="cs-chatform" id="chatform" autocomplete="off"><input id="chatin" maxlength="1000" placeholder="اكتب رسالة..." aria-label="رسالة"><button type="submit">إرسال</button></form></div>
+        <div class="cs-pane" id="pane-chat" hidden><div class="cs-chat" id="chatlog"></div><form class="cs-chatform" id="chatform" autocomplete="off"><input id="chatin" maxlength="1000" placeholder="اكتب رسالة..." aria-label="رسالة"><button type="submit">إرسال</button></form><div id="repWrap" class="cs-rep"${ROLE === 'client' ? '' : ' hidden'}><small>التواصل جوه ليجانو بس لحمايتك.</small> <button type="button" id="flagBtn">🚩 بلّغ عن محاولة تواصل برّه المنصة</button></div></div>
         ${ROLE === 'lawyer' ? `<div class="cs-pane cs-notes" id="pane-notes" hidden>${notesHtml()}</div>` : ''}
       </aside></div>`);
     wireDrop(); renderFiles(); renderChat(); wireDoc(); if (ROLE === 'lawyer') wireNotes(); updateSum(); startP2P();
@@ -475,7 +477,8 @@
   }
   function onApp(o) {
     if (!o || typeof o !== 'object') return;
-    if (o.k === 'chat' && typeof o.body === 'string' && typeof o.mid === 'string') addMsg({ mid: o.mid.slice(0, 40), from: PEER, body: o.body.slice(0, 1000) });
+    if (o.k === 'chat' && typeof o.body === 'string' && typeof o.mid === 'string' && looksContact(o.body)) { addMsg({ mid: o.mid.slice(0, 40), from: PEER, body: '🚫 تم إخفاء رسالة فيها بيانات تواصل (ممنوعة برّه المنصة).' }); if (ROLE === 'client') C.flag(cid(), tk(), 'رسالة بيانات تواصل عبر الاتصال المباشر').catch(() => {}); }
+    else if (o.k === 'chat' && typeof o.body === 'string' && typeof o.mid === 'string') addMsg({ mid: o.mid.slice(0, 40), from: PEER, body: o.body.slice(0, 1000) });
     else if (o.k === 'open' && typeof o.id === 'string') openDoc(o.id, 'remote');
     else if (o.k === 'closedoc') closeDoc('remote');
     else if (o.k === 'scroll' && ROLE === 'client' && typeof o.y === 'number') { lastScrollY = Math.max(0, Math.min(1, o.y)); applyScroll(); }
@@ -527,10 +530,19 @@
   document.addEventListener('click', e => { const b = e.target.closest('[data-tab]'); if (b) setTab(b.dataset.tab); });
   document.addEventListener('submit', async e => {
     if (e.target.id !== 'chatform') return; e.preventDefault();
-    const i = $('chatin'), body = i.value.trim(); if (!body || !st) return; i.value = '';
+    const i = $('chatin'), body = i.value.trim(); if (!body || !st) return;
     const mid = 'm' + Math.random().toString(36).slice(2, 12) + Date.now().toString(36).slice(-4);
-    addMsg({ mid, from: ROLE, body }); appSend({ k: 'chat', mid, body }, { dcOnly: true });
-    try { await C.msgSend(cid(), tk(), body, mid); } catch (er) { S.toast(S.friendly(er)); }
+    // السيرفر بيفحص الرسالة الأول، ومبنبعتهاش للطرف التاني إلا لو عدّت
+    try { await C.msgSend(cid(), tk(), body, mid); } catch (er) { S.toast(S.friendly(er)); if (/contact_(blocked|warned|banned)/.test(er.message)) i.value = ''; return; }
+    i.value = ''; addMsg({ mid, from: ROLE, body }); appSend({ k: 'chat', mid, body }, { dcOnly: true });
+  });
+
+  document.addEventListener('click', async e => {
+    const fb = e.target.closest('#flagBtn'); if (!fb) return;
+    if (!confirm('تبلّغ إن المحامي طلب منك التواصل أو الدفع برّه ليجانو؟ هنراجع البلاغ فوراً.')) return;
+    fb.disabled = true;
+    try { await C.flag(cid(), tk(), 'بلاغ من الموكل داخل الغرفة'); S.toast('وصلنا بلاغك وهنراجعه. شكراً إنك حميت حقك.'); fb.textContent = '✓ اتبعت البلاغ'; }
+    catch (er) { fb.disabled = false; S.toast(S.friendly(er)); }
   });
 
   // ---- ملاحظات المحامي وملخص الموكل ----
