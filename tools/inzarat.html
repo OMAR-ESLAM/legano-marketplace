@@ -546,7 +546,7 @@ function withLegistaDb() {}
     <div class="ai-head">
       <div class="ai-ava">⚖</div>
       <div>
-        <div class="ai-nm">مساعد الصياغة</div>
+        <div class="ai-nm">لوحة الصياغة</div>
         <div class="ai-st">● ONLINE</div>
       </div>
     </div>
@@ -757,7 +757,7 @@ async function generateDocument() {
   document.getElementById('infoStatus').textContent='جارٍ التوليد...';
   document.getElementById('infoStatus').className='info-val cyber';
 
-  // call Groq API
+  // توليد محلي من القالب
   try {
     const result = filledTemplate;
 
