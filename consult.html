@@ -196,9 +196,9 @@
       location.href = 'room.html?t=' + encodeURIComponent(r.token);
     } catch (e) { S.toast(S.friendly(e)); load(); valid(); }
   };
-  await Promise.all([load(), resume(), acct()]);
-  // أول ما الزائر يدخل صفحة الاستشارة من غير حساب: نفتحله التسجيل ثم الشحن (مرة واحدة في الجلسة)
-  try { if (!CA.get() && !sessionStorage.getItem('lg_gate')) { sessionStorage.setItem('lg_gate', '1'); ClientFlow.open({ price: 300, back: 'consult.html', onReady: () => { acct(); } }); } } catch {}
+  // أول ما الزائر يدخل صفحة الاستشارة من غير حساب: نفتحله التسجيل ثم الشحن (قبل ما نستنى أي تحميل)
+  try { if (!CA.get() && !(new URLSearchParams(location.hash.slice(1))).get('access_token') && !sessionStorage.getItem('lg_gate')) { sessionStorage.setItem('lg_gate', '1'); ClientFlow.open({ price: 300, back: 'consult.html', onReady: () => { acct(); } }); } } catch (e) { console.error(e); }
+  await Promise.allSettled([load(), resume(), acct()]);
   try { const pid = sessionStorage.getItem('lg_pend'); if (pid && CA.get()) { const b = document.querySelector(`.cs-card[data-id="${pid}"] [data-a=ask]`); sessionStorage.removeItem('lg_pend'); if (b) b.click(); } } catch {}
   setInterval(load, 15000);
 })();
